@@ -54,12 +54,12 @@ public class SOSDistribution {
             }
 
             // Copy contexts over
-            scp.makePath(path + REMOTE_CONTEXTS_PATH);
-            scp.sendDirectory(REPO_CONTEXTS_PATH, path + node.getContextsPath());
+//            scp.makePath(path + REMOTE_CONTEXTS_PATH);
+//            scp.sendDirectory(REPO_CONTEXTS_PATH, path + node.getContextsPath());
 
             // Copy users/roles over
-            scp.makePath(path + REMOTE_USRO_PATH);
-            scp.sendDirectory(REPO_USRO_PATH, path + node.getUsroPath());
+//            scp.makePath(path + REMOTE_USRO_PATH);
+//            scp.sendDirectory(REPO_USRO_PATH, path + node.getUsroPath());
 
             scp.disconnect();
         }
@@ -92,6 +92,7 @@ public class SOSDistribution {
     public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+            System.out.println("Starting the node " + node.getName());
 
             String path = node.getPath() + node.getSsh().getUser() + "/";
 

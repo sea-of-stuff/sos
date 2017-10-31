@@ -5,7 +5,7 @@
     "description" : "PO_1 experiment - on hogun.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
-      "iterations" : 1
+      "iterations" : 5
     },
     "nodes" : [
       {
@@ -52,7 +52,7 @@
       "configurationfile" : "hogun_1.json",
       "certificatefile" : "hogun_1.crt",
       "keyfile" : "hogun_1.key",
-      "dataset" : "alice",
+      "dataset" : "masc_500k_texts",
       "behaviour": {
         "start": 0,
         "stop": -1,

@@ -12,8 +12,10 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # Read the CVS file
-d <- read.csv("output/po_1__2017_10_27T14_40_19_356Z.tsv", header=TRUE, sep="\t")
-d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
+d <- read.csv("output/po_1__2017_10_31T12_43_49_502Z.tsv", header=TRUE, sep="\t")
+d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
+d$Message <- droplevels(d$Message)
+d$ContextName <- d$Message
 
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
@@ -29,12 +31,18 @@ d_processed$se <- d_processed[,3] / sqrt(d_processed[,4])
 colnames(d_processed) <- c("Configuration", "mean", "sd", "n", "se")
 d_processed$names <- d_processed$Config
 
+colors = c(rep("red",1),rep("deepskyblue",2),rep("green",1))
+
 ##################
 # BOXPLOT
-par(mar=c(20,4,4,2)+3) # Add space to show all labels
+par(mar=c(10,4,4,2)+3) # Add space to show all labels
 x <- boxplot(d$Measures~d$ContextName, data=d,
              outline=FALSE,
              las=2, # Draw x labels vertically
              ylab="Time (s) - log scale", 
-             log = "y")
+             log = "y",
+             col=colors)
 
+
+legend("topright", legend=c("Remote", "Local", "Base"),
+       fill=c("red", "deepskyblue", "green"), cex=0.8, inset=.05)

@@ -333,10 +333,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         // Here we build a circular dependency between the NDS and the MDS, but it is necessary to handle nodes as first class entities
         Node localNode = new SOSNode(this);
         nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
+        SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
+
         manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
         nodeDiscoveryService.setMDS(manifestsDataService);
-
-        SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
     }
 
     /**
