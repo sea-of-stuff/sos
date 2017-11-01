@@ -68,7 +68,38 @@ public interface ExperimentUnit {
                 // System.out.println("File " + file.toUri().toString());
 
                 try {
-                    AtomBuilder atomBuilder = new AtomBuilder().setLocation(new URILocation(file.toUri().toString()));
+                    AtomBuilder atomBuilder = new AtomBuilder()
+                            .setLocation(new URILocation(file.toUri().toString()));
+                    VersionBuilder versionBuilder = new VersionBuilder()
+                            .setAtomBuilder(atomBuilder);
+
+                    Version version = node.getAgent().addData(versionBuilder);
+                    InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
+                } catch (URISyntaxException  | ServiceException e) {
+                    e.printStackTrace();
+                }
+
+                return FileVisitResult.CONTINUE;
+            }
+        };
+
+        long start = System.nanoTime();
+        Files.walkFileTree(folder.toPath(), fv);
+        System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+    }
+
+    default void addFolderContentToNode(SOSLocalNode node, File folder, Role role) throws URISyntaxException, MetadataException, IOException {
+
+        SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                // System.out.println("File " + file.toUri().toString());
+
+                try {
+                    AtomBuilder atomBuilder = new AtomBuilder()
+                            .setLocation(new URILocation(file.toUri().toString()))
+                            .setRole(role);
                     VersionBuilder versionBuilder = new VersionBuilder()
                             .setAtomBuilder(atomBuilder);
 
