@@ -1,57 +1,20 @@
 install.packages("PMCMR")
-install.packages("FSA")
+# install.packages("FSA")
 library("PMCMR", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-
-library("fitdistrplus", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-
-install.packages("stargazer")
-library(stargazer)
-
+# library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+# library("fitdistrplus", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+# install.packages("stargazer")
+# library(stargazer)
 library(ggplot2)
 
-
-summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
-                      conf.interval=.95, .drop=TRUE) {
-  library(plyr)
-  
-  # New version of length which can handle NA's: if na.rm==T, don't count them
-  length2 <- function (x, na.rm=FALSE) {
-    if (na.rm) sum(!is.na(x))
-    else       length(x)
-  }
-  
-  # This does the summary. For each group's data frame, return a vector with
-  # N, mean, and sd
-  datac <- ddply(data, groupvars, .drop=.drop,
-                 .fun = function(xx, col) {
-                   c(N    = length2(xx[[col]], na.rm=na.rm),
-                     mean = mean   (xx[[col]], na.rm=na.rm),
-                     sd   = sd     (xx[[col]], na.rm=na.rm)
-                   )
-                 },
-                 measurevar
-  )
-  
-  # Rename the "mean" column    
-  datac <- rename(datac, c("mean" = measurevar))
-  
-  datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
-  
-  # Confidence interval multiplier for standard error
-  # Calculate t-statistic for confidence interval: 
-  # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
-  ciMult <- qt(conf.interval/2 + .5, datac$N-1)
-  datac$ci <- datac$se * ciMult
-  
-  return(datac)
-}
 
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
+source("r_scripts/utils_stats.r")
+
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_11_01T11_06_54_704Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_11_01T11_46_00_142Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
@@ -86,7 +49,7 @@ colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), r
 # BOXPLOT
 par(mar=c(20,4,4,2)+3) # Add space to show all labels
 x <- boxplot(d$Measures~d$ContextName, data=d,
-             outline=TRUE,
+             outline=FALSE,
              las=2, # Draw x labels vertically
              main="Predicate performance against different settings",
              ylab="Time (s) - linear scale",
@@ -97,28 +60,54 @@ legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manife
 
 
 
+# This plot is weird because we cannot exclude very large outliers
+# PLOT PRED TIMES PER ASSET
+#dd <- d[d$Subtype == 'predicate',]
+#dd$Message <- droplevels(dd$Message)
+#ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
+#  geom_boxplot(outlier.alpha = 0.5, outlier.color = "red") +
+#  geom_point(color="grey50", position="jitter", alpha=.1) +
+#  theme_bw() +
+#  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+#  labs(title="Predicates per asset....", x="Predicate", y="Time (s)")
 
 
-ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
-  geom_boxplot(outlier.alpha = 0.5, outlier.color = "red") +
-  geom_point(color="grey50", position="jitter", alpha=.1) +
-  theme(axis.text.x=element_text(angle=90,hjust=1)) +
-  labs(title="Predicates per asset....", x="Predicate", y="Time (s)")
-
-
-d <- d[d$Subtype != 'predicate',]
-d$Message <- droplevels(d$Message)
+# PLOT TIME TO RUN PREDICATE, PRE-PHASE, POST-PRED-PHASE ETC OVER DATASET
+dd <- d[d$Subtype != 'predicate',]
+dd$Message <- droplevels(dd$Message)
 
 # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-dd <- summarySE(d, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE", "Subtype"))
+dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE", "Subtype"))
 
 ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, fill=dd$Subtype)) + 
   geom_bar(stat="identity", width=.5) +
-  geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),
+  geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se),
                 width=.2) +
-  theme(axis.text.x=element_text(angle=90,hjust=1), axis.text=element_text(size=14),
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1), 
+        axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
   labs(title="Predicates per asset....", x="Predicate", y="Time (s)", fill="Run section")
+
+
+
+
+# TIME TO RUN PREDICATE OVER DATASET
+dd <- d[d$Subtype == 'predicate_dataset',]
+dd$Message <- droplevels(dd$Message)
+
+# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
+
+ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
+  geom_bar(stat="identity", width=.5) +
+  geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se),
+                width=.2) +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1), 
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=16,face="bold")) +
+  labs(title="Time to run all predicates on entire dataset", x="Predicate", y="Time (s)")
 
 
 ##################
@@ -176,6 +165,10 @@ posthoc.kruskal.dunn.test(d$User.Measure ~ d$Kruskal, data=d)
 # NEMENYI (not suitable for this dataset)
 # https://www.rdocumentation.org/packages/PMCMR/versions/4.1/topics/posthoc.kruskal.nemenyi.test
 posthoc.kruskal.nemenyi.test(d$User.Measure ~ d$Kruskal, data=d)
+
+
+
+
 # 
 # Resources:
 # https://rcompanion.org/rcompanion/d_06.html
