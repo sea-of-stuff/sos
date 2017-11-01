@@ -42,7 +42,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
     public void finishIteration() {
         super.finishIteration();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, "END OF EXPERIMENT PR_1. # times a predicate was runIteration: " + counter);
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PR_1. # times a predicate was runIteration: " + counter);
     }
 
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
@@ -51,7 +51,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"SETTING UP EXPERIMENT");
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
 
             try {
                 cms = node.getCMS();
@@ -66,7 +66,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment,"RUNNING EXPERIMENT");
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
             try {
                 counter = cms.runPredicates();

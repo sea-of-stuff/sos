@@ -48,4 +48,5 @@ https://stats.stackexchange.com/questions/132652/how-to-determine-which-distribu
 
 ### About boxplots in R
 
-https://flowingdata.com/2008/02/15/how-to-read-and-use-a-box-and-whisker-plot/
+- https://flowingdata.com/2008/02/15/how-to-read-and-use-a-box-and-whisker-plot/
+- http://informationandvisualization.de/blog/box-plot

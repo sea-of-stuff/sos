@@ -18,8 +18,8 @@ public class DummyInstrument implements Instrument {
     public void measure(String message) {}
 
     @Override
-    public void measure(StatsTYPE statsTYPE, String message) {}
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message) {}
 
     @Override
-    public void measure(StatsTYPE statsTYPE, String message, long measure) {}
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure) {}
 }

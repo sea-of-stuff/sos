@@ -5,8 +5,15 @@ package uk.ac.standrews.cs.sos.instrument;
  */
 public enum StatsTYPE {
 
+    none,
     any,
-    predicate, predicate_dataset,
+
+    predicate, // time to run the predicate function per asset
+    predicate_dataset, // time to run the predicate on all the assets
+    predicate_prep, // time to prepare before running the predicate for all assets
+    predicate_check, // time spent to check if predicate has to be run (for all assets - cumulative)
+    predicate_update_context, // time to update context with all the predicate results
+
     policies, checkPolicies,
     experiment
 }

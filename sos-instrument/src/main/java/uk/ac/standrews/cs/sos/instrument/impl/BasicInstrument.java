@@ -31,10 +31,10 @@ public class BasicInstrument implements Instrument {
 
                 switch (outputTYPE) {
                     case CSV:
-                        bufferedWriter.write("StatsTYPE" + COMMA);
+                        bufferedWriter.write("StatsTYPE" + COMMA + "Subtype" + COMMA);
                         break;
                     case TSV:
-                        bufferedWriter.write("StatsTYPE" + TAB);
+                        bufferedWriter.write("StatsTYPE" + TAB + "Subtype" + TAB);
                 }
 
                 writeHeader(bufferedWriter, new AppMetrics(), true);
@@ -68,16 +68,16 @@ public class BasicInstrument implements Instrument {
     @Override
     public void measure(String message) {
 
-       measure(StatsTYPE.any, message);
+       measure(StatsTYPE.any, StatsTYPE.none, message);
     }
 
     @Override
-    public void measure(StatsTYPE statsTYPE, String message) {
-        measure(statsTYPE, message, -1);
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message) {
+        measure(statsTYPE, subtype, message, -1);
     }
 
     @Override
-    public void measure(StatsTYPE statsTYPE, String message, long measure) {
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure) {
 
         if (statistics.isEnabled(statsTYPE)) {
 
@@ -86,10 +86,10 @@ public class BasicInstrument implements Instrument {
 
                 switch (outputTYPE) {
                     case CSV:
-                        bufferedWriter.write(statsTYPE.toString() + COMMA);
+                        bufferedWriter.write(statsTYPE.toString() + COMMA + subtype.toString() + TAB);
                         break;
                     case TSV:
-                        bufferedWriter.write(statsTYPE.toString() + TAB);
+                        bufferedWriter.write(statsTYPE.toString() + TAB + subtype.toString() + TAB);
                 }
 
                 AppMetrics appMeasure = AppMetrics.measure(message);

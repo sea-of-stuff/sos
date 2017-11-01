@@ -71,11 +71,12 @@ public abstract class BaseExperiment implements Experiment {
                 configFile = new File(experiment.getExperimentNode().getConfigurationFile());
             }
 
-            // Copy node certificate and keys
-            makepath("sos/node/");
-            FileUtils.copyFile(new File("id_rsa.crt"), new File("sos/node/id_rsa.crt"));
-            FileUtils.copyFile(new File("id_rsa.key"), new File("sos/node/id_rsa.key"));
-
+            if (new File("id_rsa.crt").exists() && new File("id_rsa.key").exists()) {
+                // Copy node certificate and keys
+                makepath("sos/node/");
+                FileUtils.copyFile(new File("id_rsa.crt"), new File("sos/node/id_rsa.crt"));
+                FileUtils.copyFile(new File("id_rsa.key"), new File("sos/node/id_rsa.key"));
+            }
 
             System.out.println("CONFIG FILE " + configFile.getAbsolutePath());
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);

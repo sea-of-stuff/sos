@@ -9,13 +9,28 @@ public class Statistics {
 
     private boolean experiment;
     private boolean predicate;
-    private boolean predicate_dataset;
     private boolean policies;
     private boolean checkPolicies;
-    private boolean io_store; // any IO operations on the store
-    private boolean network; // any network operations
 
     public Statistics() {}
+
+    /**
+     * Returns true if we should collects stats about this statsTYPE
+     * @param statsTYPE
+     * @return
+     */
+    public boolean isEnabled(StatsTYPE statsTYPE) {
+
+        switch (statsTYPE) {
+            case any: return true;
+            case experiment: return isExperiment();
+            case predicate: return isPredicate();
+            case policies: return isPolicies();
+            case checkPolicies: return isCheckPolicies();
+        }
+
+        return false;
+    }
 
     public boolean isPredicate() {
         return predicate;
@@ -49,30 +64,4 @@ public class Statistics {
         this.experiment = experiment;
     }
 
-    public boolean isPredicate_dataset() {
-        return predicate_dataset;
-    }
-
-    public void setPredicate_dataset(boolean predicate_dataset) {
-        this.predicate_dataset = predicate_dataset;
-    }
-
-    /**
-     * Returns true if we should collects stats about this statsTYPE
-     * @param statsTYPE
-     * @return
-     */
-    public boolean isEnabled(StatsTYPE statsTYPE) {
-
-        switch (statsTYPE) {
-            case any: return true;
-            case experiment: return isExperiment();
-            case predicate: return isPredicate();
-            case policies: return isPolicies();
-            case checkPolicies: return isCheckPolicies();
-            case predicate_dataset: return isPredicate_dataset();
-        }
-
-        return false;
-    }
 }

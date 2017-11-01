@@ -12,9 +12,9 @@ public interface Instrument {
 
     void measure(String message);
 
-    void measure(StatsTYPE statsTYPE, String message);
+    void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message);
 
-    void measure(StatsTYPE statsTYPE, String message, long measure);
+    void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure);
 
     // TODO - maybe pass specific objects to collect stats from sos-core????
     // for example, we could have a contextInstrument object to pass to the instrument

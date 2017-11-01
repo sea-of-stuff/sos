@@ -5,7 +5,7 @@
     "description": "The experiment PR 1 investigates the performance of predicates when run against different types of contents",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 1
+      "iterations": 50
     },
     "nodes": [],
     "experimentnode": {
@@ -13,12 +13,11 @@
       "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json",
-      "dataset" : "random_1"
+      "dataset" : "masc_500k_texts"
     },
     "stats": {
       "experiment": false,
       "predicate": true,
-      "predicate_dataset": true,
       "policies": false,
       "checkPolicies": false
     }
