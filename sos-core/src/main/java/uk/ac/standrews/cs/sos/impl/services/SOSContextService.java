@@ -68,7 +68,7 @@ public class SOSContextService implements ContextService {
     private ContextsContentsDirectory contextsContentsDirectory;
 
     // This executor service will be used to schedule any background tasks
-    private static final int CMS_SCHEDULER_PS = 5;
+    private static final int CMS_SCHEDULER_PS = 4;
     private ScheduledExecutorService service;
     private Queue<Pair<Long, Long>> predicateThreadSessionStatistics;
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
@@ -107,8 +107,7 @@ public class SOSContextService implements ContextService {
                 runPredicatesPeriodic();
                 runPoliciesPeriodic();
                 checkPoliciesPeriodic();
-                getDataPeriodic();
-                spawnContextsPeriodic();
+                spawnContextsOverDomainPeriodic();
             } else {
                 service = new ScheduledThreadPoolExecutor(1); // ThreadPool for triggered requests only
             }
@@ -628,51 +627,43 @@ public class SOSContextService implements ContextService {
     }
 
     /**
-     * Periodically get data (or references?) from other nodes
-     * as specified by the sources of a context
-     */
-    private void getDataPeriodic() {
-
-        SettingsConfiguration.Settings.ThreadSettings getDataPeriodicThreadSettings = SOSLocalNode.settings.getServices().getCms().getGetdataThread();
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.WARN, "N/A yet - Get data from other nodes - this is a periodic background thread");
-
-            for (Context context : getContexts()) {
-
-                // TODO - run this only for those contexts/nodes that have been marked (data-periodic) by the spawnContextsPeriodic logic (see comments in there)
-                NodesCollection domain = context.domain();
-
-
-                // TODO - before downloading data, we should check the following:
-                // Instead of downloading the data straight away, better to get a list of the data first and then request only what we need
-                //
-                // 1. do we have the data already?
-                // 2. does another node have this data and this context? if so, do we have any results from there?
-                // 3. if the answer to all the above if no, then download data from some known location
-            }
-
-        }, getDataPeriodicThreadSettings.getInitialDelay(), getDataPeriodicThreadSettings.getPeriod(), TimeUnit.SECONDS);
-    }
-
-    /**
      * Periodically spawn/replicate contexts to other nodes
+     *
+     * Some notes:
+     * 1. Iterate over all known local contexts
+     * 2. filter by contexts that should be run over multiple nodes
+     * 3. make a call to the ContextDefinitionReplication TASK
+     * ADDITIONAL - 4. if the context cannot be spawned (maybe other node does not want us to run the context there! or it is a storage node),
+     * then mark that and use #getDataPeriodic to get data to be processed from that node
      */
-    private void spawnContextsPeriodic() {
+    private void spawnContextsOverDomainPeriodic() {
 
         SettingsConfiguration.Settings.ThreadSettings spawnThreadSettings = SOSLocalNode.settings.getServices().getCms().getSpawnThread();
 
         service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.WARN, "N/A yet - Spawn contexts to other nodes - this is a periodic background thread");
+            SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes of the specified domain - this is a periodic background thread");
 
-            // TODO
-            // 1. Iterate over all known local contexts
-            // 2. filter by contexts that should be run over multiple nodes
-            // 3. make a call to the ContextDefinitionReplication TASK
-            // 4. if the context cannot be spawned (maybe other node does not want us to run the context there! or it is a storage node),
-            // then mark that and use #getDataPeriodic to get data to be processed from that node
+            for (Context context : getContexts()) {
+
+                NodesCollection nodesCollection = context.domain();
+                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
+
+                    spawnContext(context);
+                }
+            }
 
         }, spawnThreadSettings.getInitialDelay(), spawnThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
+
+    /**
+     * Replicate the context to the nodes within the domain.
+     *
+     * @param context
+     */
+    private void spawnContext(Context context) {
+
+        // Create task and submit
+        // TODO - how to deal with conflicting contexts?
     }
 
     /////////////////////

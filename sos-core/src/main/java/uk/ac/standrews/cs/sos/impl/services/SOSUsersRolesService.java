@@ -78,7 +78,6 @@ public class SOSUsersRolesService implements UsersRolesService {
             }
         }
 
-
         return users;
     }
 
@@ -98,9 +97,7 @@ public class SOSUsersRolesService implements UsersRolesService {
             }
         }
 
-
         return roles;
-
     }
 
     @Override

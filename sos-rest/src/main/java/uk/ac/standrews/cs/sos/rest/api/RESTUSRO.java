@@ -32,7 +32,7 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
  */
 @Path("/sos/usro/")
 @RMSNode
-public class RESTRMS {
+public class RESTUSRO {
 
     @GET
     @Path("/guid/{guid}")

@@ -119,6 +119,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         contentToHash += "C" + content().toMultiHash();
         contentToHash += "DO" + domain().toUniqueString();
         contentToHash += "CO" + codomain().toUniqueString();
+        contentToHash += "MA" + Long.toString(maxAge);
 
         return IO.StringToInputStream(contentToHash);
     }

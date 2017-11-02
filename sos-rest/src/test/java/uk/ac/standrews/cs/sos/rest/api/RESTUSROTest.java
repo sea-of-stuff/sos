@@ -16,7 +16,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class RESTRMSTest extends CommonRESTTest {
+public class RESTUSROTest extends CommonRESTTest {
 
     @Test
     public void addUserTest() {
