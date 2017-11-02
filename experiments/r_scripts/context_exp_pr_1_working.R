@@ -12,9 +12,10 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 source("r_scripts/utils_stats.r")
+source("r_scripts/kruskal.r")
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_11_01T11_46_00_142Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_10_26T16_24_38_828Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
@@ -146,44 +147,7 @@ arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
 
 
 ## STAT ANALYSIS
-# Kruskal-Wallis Test
-# http://www.r-tutor.com/elementary-statistics/non-parametric-methods/kruskal-wallis-test
-d$Kruskal <- as.factor(d$ContextName)
-kruskal.test(d$User.Measure ~ d$Kruskal, data=d)
-# POSTHOC TESTS
-# adjustments to the p-value can be made. See ?p.adjust for allowed methods
-#
-# - Zar (2010) states that the Dunn test is appropriate for groups with unequal numbers of observations.
-# - Zar (2010) suggests that the Nemenyi test is not appropriate for groups with unequal numbers of observations.
-#
-# Zar, J.H. 2010. Biostatistical Analysis, 5th ed.  Pearson Prentice Hall: Upper Saddle River, NJ.
-#
-# DUNN
-# https://www.rdocumentation.org/packages/PMCMR/versions/4.1/topics/posthoc.kruskal.dunn.test
-posthoc.kruskal.dunn.test(d$User.Measure ~ d$Kruskal, data=d)
-#
-# NEMENYI (not suitable for this dataset)
-# https://www.rdocumentation.org/packages/PMCMR/versions/4.1/topics/posthoc.kruskal.nemenyi.test
-posthoc.kruskal.nemenyi.test(d$User.Measure ~ d$Kruskal, data=d)
+kruskal(d, d$User.Measure, d$ContextName)
 
-
-
-
-# 
-# Resources:
-# https://rcompanion.org/rcompanion/d_06.html
-
-# WRONG 
-# Testing pairs of sets using the t-test will lead to the Type1 error. 
-# Instead we need to do:
-# - a non-parametric test if the sets do not have a normal distribution
-# - a posthoc test to check which sets are significantly different with which one
-# 
-# I am keeping the code below just to remember myself that this type of stats is wrong
-# P-test for two sets
-# x = subset(d, ContextName=="ALL")
-# y = subset(d, ContextName=="META")
-# t.test(x$Measures, y$Measures)
-
-# Power test
-# https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html
+kruskal_dunn(d, d$User.Measure, d$ContextName)
+kruskal_nemenyi(d, d$User.Measure, d$ContextName)

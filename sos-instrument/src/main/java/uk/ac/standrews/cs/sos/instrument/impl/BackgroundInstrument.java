@@ -185,7 +185,6 @@ public class BackgroundInstrument implements Metrics {
         osMetrics.setProcessPID(monitor.currentPid());
         osMetrics.setProcessName(processInfo.getName());
 
-
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
 
         // What % CPU load this current JVM is taking, from 0.0-1.0
@@ -226,7 +225,7 @@ public class BackgroundInstrument implements Metrics {
                     System.out.println("Unable to write stats from BackgroundInstrument to file");
                 }
 
-            }, 0, 1, TimeUnit.SECONDS);
+            }, 0, 500, TimeUnit.MILLISECONDS);
         }
     }
 
