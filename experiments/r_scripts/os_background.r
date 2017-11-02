@@ -1,7 +1,9 @@
+library(ggplot2)
+
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-d <- read.csv("output/pr_1__2017_10_26T14_53_38_374Z_os.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_11_02T11_11_07_818Z_os.tsv", header=TRUE, sep="\t")
 
 # Convert to MB
 d$Mem.Used.Bytes <- d$Mem.Used.Bytes / 1000000
@@ -38,10 +40,8 @@ legend("topright",
 
 #####################################################
 d$CPU.Process.Load <- d$CPU.Process.Load * 100
-plot(d$User.Uptime, d$CPU.Process.Load, 
-     col="red",
-     type="b", pch=20,
-     ylim=c(0, 100),
-     ylab="CPU (%)",
-     xlab="Time (s)")
 
+ggplot(data=d, aes(x=d$User.Uptime, y=d$CPU.Process.Load, fill=d$Type)) + 
+  geom_bar(stat="identity", width=.4) +
+  theme_bw() +
+  labs(title="CPU performance", x="Time (s)", y="CPU (%)", fill="Type")

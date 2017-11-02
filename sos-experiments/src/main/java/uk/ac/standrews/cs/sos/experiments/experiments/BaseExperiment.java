@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
+import uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +99,9 @@ public abstract class BaseExperiment implements Experiment {
     public void runIteration() throws ExperimentException {
         start = System.nanoTime();
 
+        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.experiment;
         currentExperimentUnit.run();
+        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.non_experiment;
     }
 
     @Override

@@ -27,6 +27,13 @@ public class BackgroundInstrument implements Metrics {
 
     private String filename;
 
+    // e.g. exp, non-exp, etc...
+    public static METRIC_TYPE type = METRIC_TYPE.non_experiment;
+
+    public enum METRIC_TYPE {
+        experiment, non_experiment
+    }
+
     // METRICS
     private long residentBytes;
     private long totalBytes;
@@ -232,6 +239,7 @@ public class BackgroundInstrument implements Metrics {
         }
     }
 
+    // FIXME - outdated
     @Override
     public String toString() {
 
@@ -244,11 +252,13 @@ public class BackgroundInstrument implements Metrics {
                 "User/Sys Uptime Milliseconds: " + getUserUptime() + "/" + getSysUptime() + "\n\n";
     }
 
+    // FIXME - outdated
     @Override
     public String csvHeader() {
         return "OS,No CPUs,CPU Hz,Mem Free Bytes,Mem Total Bytes,PID,Process Name,Resident Bytes,Total Bytes,User Uptime,System Uptime";
     }
 
+    // FIXME - outdated
     @Override
     public String csv() {
 
@@ -259,14 +269,14 @@ public class BackgroundInstrument implements Metrics {
 
     @Override
     public String tsvHeader() {
-        return "OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Used Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+
+        return "Type"+TAB+"OS"+TAB+"No CPUs"+TAB+"CPU Hz"+TAB+"Mem Used Bytes"+TAB+"Mem Total Bytes"+TAB+"PID"+TAB+"Process Name"+TAB+
                 "Resident Bytes"+TAB+"Total Bytes"+TAB+"User Uptime"+TAB+"System Uptime"+TAB+"CPU Process Load"+TAB+
                 "System Load Average"+TAB+"Physical Mem Total Bytes"+TAB+"Physical Mem Used Bytes";
     }
 
     @Override
     public String tsv() {
-        return getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemUsedBytes() + TAB + getMemTotalBytes() + TAB +
+        return getType() + TAB + getOsName() + TAB + getNoCPUs() + TAB + getCpuHZ() + TAB + getMemUsedBytes() + TAB + getMemTotalBytes() + TAB +
                 getProcessPID() + TAB + getProcessName() + TAB + getResidentBytes() + TAB + getTotalBytes() + TAB +
                 getUserUptime() + TAB + getSysUptime() + TAB + getProcessLoad() + TAB + getSystemLoadAverage() + TAB +
                 getPhyMemTotalBytes() + TAB + getPhyMemUsedBytes();
@@ -294,5 +304,9 @@ public class BackgroundInstrument implements Metrics {
 
     public void setPhyMemUsedBytes(long phyMemUsedBytes) {
         this.phyMemUsedBytes = phyMemUsedBytes;
+    }
+
+    public String getType() {
+        return type.toString();
     }
 }

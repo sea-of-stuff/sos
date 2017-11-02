@@ -50,3 +50,6 @@ https://stats.stackexchange.com/questions/132652/how-to-determine-which-distribu
 
 - https://flowingdata.com/2008/02/15/how-to-read-and-use-a-box-and-whisker-plot/
 - http://informationandvisualization.de/blog/box-plot
+
+- http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+- http://rstudio-pubs-static.s3.amazonaws.com/3256_bb10db1440724dac8fa40da5e658ada5.html
