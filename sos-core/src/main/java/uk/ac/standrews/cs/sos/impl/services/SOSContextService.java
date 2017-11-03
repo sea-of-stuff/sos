@@ -316,6 +316,12 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
+    public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
+
+        return contextsContentsDirectory.getEntry(context, version);
+    }
+
+    @Override
     public void flush() {
 
         try {
@@ -336,6 +342,11 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    ////////////////////////////////////////////////////////////
+    ////////////////////// STATS ///////////////////////////////
+    ////////////////////////////////////////////////////////////
+
+    @Override
     public Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics() {
 
         return predicateThreadSessionStatistics;
@@ -353,11 +364,9 @@ public class SOSContextService implements ContextService {
         return checkPolicyThreadSessionStatistics;
     }
 
-    @Override
-    public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
-
-        return contextsContentsDirectory.getEntry(context, version);
-    }
+    ////////////////////////////////////////////////////////////
+    ////////////////////// BYPASS THREADS //////////////////////
+    ////////////////////////////////////////////////////////////
 
     @Override
     public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
@@ -380,9 +389,9 @@ public class SOSContextService implements ContextService {
         runContextPoliciesCheckNow(context);
     }
 
-    ////////////////////
-    // PERIODIC TASKS //
-    ////////////////////
+    ////////////////////////////////////////////////////////////
+    ////////////////////// PREDICATE ///////////////////////////
+    ////////////////////////////////////////////////////////////
 
     private void runContextPredicateNow(Context context) {
 
@@ -426,6 +435,10 @@ public class SOSContextService implements ContextService {
         }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
+    /**
+     * This method is public so that it is accessible to the experiments too
+     * @return number of assets processed by all contexts
+     */
     public int runPredicates() {
 
         int counter = 0;
@@ -518,158 +531,6 @@ public class SOSContextService implements ContextService {
         return counter;
     }
 
-    private void runContextPoliciesNow(Context context) {
-
-        service.schedule(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
-
-            long start = System.currentTimeMillis();
-            runPolicies(context);
-            long end = System.currentTimeMillis();
-            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, 0, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Run PERIODIC policies.
-     *
-     * Iterate over contexts
-     * For each context:
-     * - Get all versions for the context such that:
-     *  (1) predicate result was true and
-     *  (2) no policies has been apply yet
-     *
-     */
-    private void runPoliciesPeriodic() {
-
-        SettingsConfiguration.Settings.ThreadSettings policiesThreadSettings = SOSLocalNode.settings.getServices().getCms().getPoliciesThread();
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
-
-            long start = System.currentTimeMillis();
-            runPolicies();
-            long end = System.currentTimeMillis();
-            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void runPolicies() {
-
-        for (Context context : getContexts()) {
-            runPolicies(context);
-        }
-
-    }
-
-    private void runPolicies(Context context) {
-
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
-        contentsToProcess.forEach((guid, row) -> {
-
-            if (row.predicateResult && !row.policySatisfied) {
-                runPolicies(context, guid);
-            }
-
-        });
-    }
-
-    private void runContextPoliciesCheckNow(Context context) {
-
-        service.schedule(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
-
-            long start = System.currentTimeMillis();
-            checkPolicies(context);
-            long end = System.currentTimeMillis();
-            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, 0, TimeUnit.MILLISECONDS);
-    }
-
-    private void checkPoliciesPeriodic() {
-
-        SettingsConfiguration.Settings.ThreadSettings checkPoliciesThreadSettings = SOSLocalNode.settings.getServices().getCms().getCheckPoliciesThread();
-
-        service.scheduleWithFixedDelay(() -> {
-
-            long start = System.currentTimeMillis();
-            checkPolicies();
-            long end = System.currentTimeMillis();
-            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
-    }
-
-    private void checkPolicies() {
-
-        for (Context context : getContexts()) {
-            checkPolicies(context);
-        }
-    }
-
-    private void checkPolicies(Context context) {
-
-        long start = System.nanoTime();
-
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
-        contentsToProcess.forEach((guid, row) -> {
-            if (row.predicateResult) {
-                checkPolicies(context, guid);
-            }
-        });
-
-        long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.checkPolicies, context.getName(), duration);
-    }
-
-    /**
-     * Periodically spawn/replicate contexts to other nodes
-     *
-     * Some notes:
-     * 1. Iterate over all known local contexts
-     * 2. filter by contexts that should be run over multiple nodes
-     * 3. make a call to the ContextDefinitionReplication TASK
-     * ADDITIONAL - 4. if the context cannot be spawned (maybe other node does not want us to run the context there! or it is a storage node),
-     * then mark that and use #getDataPeriodic to get data to be processed from that node
-     */
-    private void spawnContextsOverDomainPeriodic() {
-
-        SettingsConfiguration.Settings.ThreadSettings spawnThreadSettings = SOSLocalNode.settings.getServices().getCms().getSpawnThread();
-
-        service.scheduleWithFixedDelay(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes of the specified domain - this is a periodic background thread");
-
-            for (Context context : getContexts()) {
-
-                NodesCollection nodesCollection = context.domain();
-                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
-
-                    spawnContext(context);
-                }
-            }
-
-        }, spawnThreadSettings.getInitialDelay(), spawnThreadSettings.getPeriod(), TimeUnit.SECONDS);
-    }
-
-    /**
-     * Replicate the context to the nodes within the domain.
-     *
-     * @param context
-     */
-    private void spawnContext(Context context) {
-
-        // Create task and submit
-        // TODO - how to deal with conflicting contexts?
-    }
-
-    /////////////////////
-    // PRIVATE METHODS //
-    /////////////////////
-
     /**
      * Run the predicate of the given context against the specified version
      *
@@ -729,6 +590,101 @@ public class SOSContextService implements ContextService {
     }
 
     /**
+     * Check if the predicate of a context is still valid a given version or not
+     *
+     * @param context for which the predicate should be checked
+     * @param versionGUID to evaluate
+     * @return true if the predicate is still valid
+     */
+    private boolean predicateHasExpired(Context context, IGUID versionGUID) {
+
+        ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
+
+        long max_age = context.maxAge();
+        long contentLastRun = content.timestamp;
+        long now = System.currentTimeMillis();
+
+        return (now - contentLastRun) > max_age;
+    }
+
+    private Predicate getPredicate(Context context) {
+
+        IGUID predicateRef = context.predicate();
+
+        try {
+            return (Predicate) manifestsDataService.getManifest(predicateRef, NodeType.CMS);
+
+        } catch (ManifestNotFoundException e) {
+
+            JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
+            return new ReferencePredicate(emptyJsonNode);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////
+    ////////////////////// POLICIES ////////////////////////////
+    ////////////////////////////////////////////////////////////
+
+    private void runContextPoliciesNow(Context context) {
+
+        service.schedule(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
+
+            long start = System.currentTimeMillis();
+            runPolicies(context);
+            long end = System.currentTimeMillis();
+            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, 0, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Run PERIODIC policies.
+     *
+     * Iterate over contexts
+     * For each context:
+     * - Get all versions for the context such that:
+     *  (1) predicate result was true and
+     *  (2) no policies has been apply yet
+     *
+     */
+    private void runPoliciesPeriodic() {
+
+        SettingsConfiguration.Settings.ThreadSettings policiesThreadSettings = SOSLocalNode.settings.getServices().getCms().getPoliciesThread();
+
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running policies - this is a periodic background thread");
+
+            long start = System.currentTimeMillis();
+            runPolicies();
+            long end = System.currentTimeMillis();
+            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void runPolicies() {
+
+        for (Context context : getContexts()) {
+            runPolicies(context);
+        }
+
+    }
+
+    private void runPolicies(Context context) {
+
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
+        contentsToProcess.forEach((guid, row) -> {
+
+            if (row.predicateResult && !row.policySatisfied) {
+                runPolicies(context, guid);
+            }
+
+        });
+    }
+
+    /**
      * Run the policies of a given context for the specified entity
      *
      * @param context for which policies have to run
@@ -762,6 +718,84 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    private Set<Policy> getPolicies(Context context) {
+
+        Set<Policy> retval = new LinkedHashSet<>();
+
+        for(IGUID policyRef:context.policies()) {
+
+            try {
+                Policy policy = (Policy) manifestsDataService.getManifest(policyRef, NodeType.CMS);
+                retval.add(policy);
+
+            } catch (ManifestNotFoundException e) {
+
+                retval.clear();
+
+                JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
+                Policy referencePolicy = new ReferencePolicy(emptyJsonNode);
+                retval.add(referencePolicy);
+                break;
+            }
+        }
+
+
+        return retval;
+    }
+
+    //////////////////////////////////////////////////////////////////
+    ////////////////////// CHECK POLICIES ////////////////////////////
+    //////////////////////////////////////////////////////////////////
+
+    private void runContextPoliciesCheckNow(Context context) {
+
+        service.schedule(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
+
+            long start = System.currentTimeMillis();
+            checkPolicies(context);
+            long end = System.currentTimeMillis();
+            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, 0, TimeUnit.MILLISECONDS);
+    }
+
+    private void checkPoliciesPeriodic() {
+
+        SettingsConfiguration.Settings.ThreadSettings checkPoliciesThreadSettings = SOSLocalNode.settings.getServices().getCms().getCheckPoliciesThread();
+
+        service.scheduleWithFixedDelay(() -> {
+
+            long start = System.currentTimeMillis();
+            checkPolicies();
+            long end = System.currentTimeMillis();
+            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+
+        }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
+
+    private void checkPolicies() {
+
+        for (Context context : getContexts()) {
+            checkPolicies(context);
+        }
+    }
+
+    private void checkPolicies(Context context) {
+
+        long start = System.nanoTime();
+
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
+        contentsToProcess.forEach((guid, row) -> {
+            if (row.predicateResult) {
+                checkPolicies(context, guid);
+            }
+        });
+
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.checkPolicies, context.getName(), duration);
+    }
+
     private void checkPolicies(Context context, IGUID guid) {
 
         try {
@@ -788,62 +822,48 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    /////////////////////////////////////////////////////////////////
+    ////////////////////// SPAWN CONTEXT ////////////////////////////
+    /////////////////////////////////////////////////////////////////
 
     /**
-     * Check if the predicate of a context is still valid a given version or not
+     * Periodically spawn/replicate contexts to other nodes
      *
-     * @param context for which the predicate should be checked
-     * @param versionGUID to evaluate
-     * @return true if the predicate is still valid
+     * Some notes:
+     * 1. Iterate over all known local contexts
+     * 2. filter by contexts that should be run over multiple nodes
+     * 3. make a call to the ContextDefinitionReplication TASK
+     * ADDITIONAL - 4. if the context cannot be spawned (maybe other node does not want us to run the context there! or it is a storage node),
+     * then mark that and use #getDataPeriodic to get data to be processed from that node
      */
-    private boolean predicateHasExpired(Context context, IGUID versionGUID) {
+    private void spawnContextsOverDomainPeriodic() {
 
-        ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
+        SettingsConfiguration.Settings.ThreadSettings spawnThreadSettings = SOSLocalNode.settings.getServices().getCms().getSpawnThread();
 
-        long max_age = context.maxAge();
-        long contentLastRun = content.timestamp;
-        long now = System.currentTimeMillis();
+        service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes of the specified domain - this is a periodic background thread");
 
-        return (now - contentLastRun) > max_age;
-    }
+            for (Context context : getContexts()) {
 
-    private Predicate getPredicate(Context context) {
+                NodesCollection nodesCollection = context.domain();
+                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
 
-        IGUID predicateRef = context.predicate();
-
-        try {
-            return (Predicate) manifestsDataService.getManifest(predicateRef, NodeType.CMS);
-
-        } catch (ManifestNotFoundException e) {
-
-            JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
-            return new ReferencePredicate(emptyJsonNode);
-        }
-    }
-
-    private Set<Policy> getPolicies(Context context) {
-
-        Set<Policy> retval = new LinkedHashSet<>();
-
-        for(IGUID policyRef:context.policies()) {
-
-            try {
-                Policy policy = (Policy) manifestsDataService.getManifest(policyRef, NodeType.CMS);
-                retval.add(policy);
-
-            } catch (ManifestNotFoundException e) {
-
-                retval.clear();
-
-                JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
-                Policy referencePolicy = new ReferencePolicy(emptyJsonNode);
-                retval.add(referencePolicy);
-                break;
+                    spawnContext(context);
+                }
             }
-        }
 
+        }, spawnThreadSettings.getInitialDelay(), spawnThreadSettings.getPeriod(), TimeUnit.SECONDS);
+    }
 
-        return retval;
+    /**
+     * Replicate the context to the nodes within the domain.
+     *
+     * @param context
+     */
+    private void spawnContext(Context context) {
+
+        // Create task and submit
+        // TODO - how to deal with conflicting contexts?
     }
 
 }

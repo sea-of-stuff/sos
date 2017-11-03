@@ -119,7 +119,6 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         contentToHash += "C" + content().toMultiHash();
         contentToHash += "DO" + domain().toUniqueString();
         contentToHash += "CO" + codomain().toUniqueString();
-        contentToHash += "MA" + Long.toString(maxAge);
 
         return IO.StringToInputStream(contentToHash);
     }
@@ -189,6 +188,8 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         if (policies != null && !policies.isEmpty()) {
             contentToHash += "PO" + getCollectionToHashOrSign(policies);
         }
+
+        contentToHash += "MA" + Long.toString(maxAge);
 
         IGUID guid;
         try {
