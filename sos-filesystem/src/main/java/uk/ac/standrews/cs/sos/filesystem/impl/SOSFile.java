@@ -135,13 +135,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get atom content for GUID " + contentGUID);
         }
 
-        IGUID meta = version.getMetadata();
-        if (meta != null && !meta.isInvalid()) {
-            try {
-                this.metadata = sos.getMetadata(meta);
-            } catch (ServiceException e) {
-                SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get metadata for GUID " + meta);
-            }
+        try {
+            this.metadata = sos.getMetadata(version);
+        } catch (ServiceException e) {
+            SOS_LOG.log(LEVEL.ERROR, "WEBDAV - Creating SOS CreateFile - Unable to get metadata for version with GUID " + version.guid().toMultiHash());
         }
 
         this.guid = version.guid();

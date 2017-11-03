@@ -286,12 +286,13 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata getMetadata(IGUID guid) throws ServiceException {
+    public Metadata getMetadata(Version version) throws ServiceException {
 
-        try {
-            return metadataService.getMetadata(guid);
-        } catch (MetadataNotFoundException e) {
-            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        IGUID meta = version.getMetadata();
+        if (meta != null && !meta.isInvalid()) {
+            return getMetadata(meta);
+        } else {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find metadata for version");
         }
     }
 
@@ -307,6 +308,15 @@ public class SOSAgent implements Agent {
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         manifestsDataService.addManifest(manifest);
+    }
+
+    private Metadata getMetadata(IGUID guid) throws ServiceException {
+
+        try {
+            return metadataService.getMetadata(guid);
+        } catch (MetadataNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
     }
 
 }

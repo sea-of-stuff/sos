@@ -29,12 +29,7 @@ public class WMetadata {
             if (manifest.getType() == ManifestType.VERSION) {
 
                 Version version = (Version) manifest;
-                IGUID metadataGUID = version.getMetadata();
-                if (metadataGUID == null || metadataGUID.isInvalid()) {
-                    return "N/A";
-                }
-
-                Metadata metadata = agent.getMetadata(metadataGUID);
+                Metadata metadata = agent.getMetadata(version);
                 return metadata.toString();
             } else {
                 return "N/A";

@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
@@ -238,10 +237,10 @@ public class WData {
         String type = "Raw";
         try {
             if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                Metadata metadata = sos.getMMS().getMetadata(nodesCollection, version.getMetadata());
+                Metadata metadata = sos.getAgent().getMetadata(nodesCollection, version.getMetadata());
                 type = metadata.getPropertyAsString("Content-Type");
             }
-        } catch (MetadataNotFoundException ignored) { }
+        } catch (ServiceException ignored) { }
 
         return GetData(type, data, limit);
     }
@@ -261,7 +260,7 @@ public class WData {
 
                     String extension = "";
                     if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                        Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                        Metadata metadata = sos.getAgent().getMetadata(version);
                         String contentType = metadata.getPropertyAsString("Content-Type");
                         response.type(contentType);
 
@@ -277,7 +276,7 @@ public class WData {
                 }
             }
 
-        } catch (ServiceException | ManifestNotFoundException | MetadataNotFoundException | AtomNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException | AtomNotFoundException e) {
             return "Unable to get data for download";
         }
 
@@ -334,7 +333,7 @@ public class WData {
 
                     String extension = "";
                     if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                        Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                        Metadata metadata = sos.getAgent().getMetadata(version);
                         String contentType = metadata.getPropertyAsString("Content-Type");
                         response.type(contentType);
 
@@ -354,7 +353,7 @@ public class WData {
                     return "";
                 }
             }
-        } catch (ServiceException | MetadataNotFoundException | ManifestNotFoundException e) {
+        } catch (ServiceException | ManifestNotFoundException e) {
             return "Unable to get Protected Data for download";
         }
 
@@ -457,10 +456,10 @@ public class WData {
         String type = "Raw";
         try {
             if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
-                Metadata metadata = sos.getMMS().getMetadata(version.getMetadata());
+                Metadata metadata = sos.getAgent().getMetadata(version);
                 type = metadata.getPropertyAsString("Content-Type");
             }
-        } catch (MetadataNotFoundException ignored) { }
+        } catch (ServiceException ignored) { }
 
         return GetData(type, data, LARGE_DATA_LIMIT);
     }

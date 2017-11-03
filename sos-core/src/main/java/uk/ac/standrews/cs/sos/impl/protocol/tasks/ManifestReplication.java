@@ -134,7 +134,7 @@ public class ManifestReplication extends Task {
 
         } else if (node.isCMS()) {
 
-            // one for context, predicate, policy
+            // TODO: one for context, predicate, policy
 
             return SOSURL.CMS_POST_MANIFEST(node);
 

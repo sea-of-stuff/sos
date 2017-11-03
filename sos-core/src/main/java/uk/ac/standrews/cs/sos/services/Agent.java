@@ -120,12 +120,13 @@ public interface Agent {
     // TODO - add secure metadata method
 
     /**
-     * Get the metadata mapped to the specified guid
+     * Get the metadata of version
      *
-     * @param guid for the metadata
-     * @return SOSMetadata mapped with the guid
+     * @param version
+     * @return SOSMetadata mapped with the version
      */
-    Metadata getMetadata(IGUID guid) throws ServiceException;
+    Metadata getMetadata(Version version) throws ServiceException;
+
     Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws ServiceException;
 
     /**
