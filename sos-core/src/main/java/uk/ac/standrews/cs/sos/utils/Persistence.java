@@ -21,25 +21,27 @@ public class Persistence {
             }
         }
 
-        FileOutputStream ostream = new FileOutputStream(file.toFile());
-        ObjectOutputStream p = new ObjectOutputStream(ostream);
+        try (FileOutputStream ostream = new FileOutputStream(file.toFile());
+             ObjectOutputStream p = new ObjectOutputStream(ostream)) {
 
-        p.writeObject(object);
-        p.flush();
-        ostream.close();
+            p.writeObject(object);
+            p.flush();
+        }
     }
 
     public static Object Load(IFile file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
-        BufferedReader br = new BufferedReader(new FileReader(file.getPathname()));
-        if (br.readLine() == null) {
-            return null;
+        try (BufferedReader br = new BufferedReader(new FileReader(file.getPathname()))) {
+            if (br.readLine() == null) {
+                return null;
+            }
+
+            try (FileInputStream istream = new FileInputStream(file.toFile());
+                 ObjectInputStream q = new ObjectInputStream(istream)) {
+
+                return q.readObject();
+            }
         }
-
-        FileInputStream istream = new FileInputStream(file.toFile());
-        ObjectInputStream q = new ObjectInputStream(istream);
-
-        return q.readObject();
     }
 }
