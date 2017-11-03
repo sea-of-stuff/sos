@@ -6,10 +6,11 @@ import java.util.Enumeration;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class IP {
+public class InternetProtocol {
 
-    // https://stackoverflow.com/a/9482369/2467938
     /*
+     * https://stackoverflow.com/a/9482369/2467938
+     *
         - Any address in the range 127.xxx.xxx.xxx is a "loopback" address. It is only visible to "this" host.
         - Any address in the range 192.168.xxx.xxx is a private (aka site local) IP address. These are reserved for use within an organization.
             The same applies to 10.xxx.xxx.xxx addresses, and 172.16.xxx.xxx through 172.31.xxx.xxx.
@@ -28,6 +29,8 @@ public class IP {
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            // NOTHING WAS FOUND
+            return null;
         }
 
         try {

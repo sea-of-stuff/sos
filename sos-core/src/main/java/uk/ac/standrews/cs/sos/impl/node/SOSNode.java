@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.utils.IP;
+import uk.ac.standrews.cs.sos.utils.InternetProtocol;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSNode extends BasicManifest implements Node { // TODO - implements Manifest
+public class SOSNode extends BasicManifest implements Node {
 
     protected PublicKey signatureCertificate;
     protected IGUID nodeGUID;
@@ -64,7 +64,7 @@ public class SOSNode extends BasicManifest implements Node { // TODO - implement
     protected SOSNode(SettingsConfiguration.Settings settings) {
         super(ManifestType.NODE);
 
-        InetAddress address = IP.findLocalAddress();
+        InetAddress address = InternetProtocol.findLocalAddress();
         assert(address != null);
 
         int port = settings.getRest().getPort();

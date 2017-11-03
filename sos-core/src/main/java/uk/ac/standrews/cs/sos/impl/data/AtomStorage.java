@@ -86,7 +86,9 @@ public class AtomStorage {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
             SymmetricEncryption.decrypt(decryptedKey, encryptedData.getInputStream(), out);
-            return new InputStreamData(IO.OutputStreamToInputStream(out));
+            try (InputStream inputStream = IO.OutputStreamToInputStream(out)) {
+                return new InputStreamData(inputStream);
+            }
 
         } catch (CryptoException | IOException e) {
             throw new ProtectionException(e);
@@ -167,13 +169,14 @@ public class AtomStorage {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
             SecretKey key = SymmetricEncryption.generateRandomKey();
-
             SymmetricEncryption.encrypt(key, originalData.getInputStream(), out);
-            InputStream encryptedData = IO.OutputStreamToInputStream(out);
 
-            String encryptedKey = role.encrypt(key);
+            try (InputStream encryptedData = IO.OutputStreamToInputStream(out)) {
 
-            return new Pair<>(new InputStreamData(encryptedData), encryptedKey);
+                String encryptedKey = role.encrypt(key);
+                return new Pair<>(new InputStreamData(encryptedData), encryptedKey);
+            }
+
         } catch (CryptoException | ProtectionException | IOException e) {
             throw new ProtectionException(e);
         }
