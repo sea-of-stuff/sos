@@ -668,7 +668,8 @@ public class SOSContextService implements ContextService {
     @Override
     public void runPolicies() {
 
-        for (Context context : getContexts()) {
+        Set<Context> contexts = getContexts();
+        for (Context context : contexts) {
             runPolicies(context);
         }
 

@@ -32,13 +32,13 @@
     },
     {
       "type" : "Policy",
-      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor);",
-      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_two);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_two);",
       "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
-          "name" : "factor",
+          "name" : "factor_two",
           "value" : "1"
         }
       ]

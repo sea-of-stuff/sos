@@ -5,7 +5,7 @@
     "description": "The experiment PO 3 investigates....",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 1
     },
     "nodes": [],
     "experimentnode": {
@@ -13,10 +13,10 @@
       "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json",
-      "dataset" : "random_1"
+      "dataset" : "alice"
     },
     "stats": {
-      "experiment": false,
+      "experiment": true,
       "predicate": false,
       "policies": true,
       "checkPolicies": false
