@@ -1,0 +1,57 @@
+{
+  "context": {
+    "name": "one_policy_local",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_9b65c46a4e181d2aff362a3e0a7a65c9a2da9d621608602dbde81f66f4238241\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_9b65c46a4e181d2aff362a3e0a7a65c9a2da9d621608602dbde81f66f4238241\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_5e489cc6e203038c9a6dcc823233abb72ba1d7be7e2ca223ec94d3d3964887c6\")"
+        }
+      ]
+    }
+  ]
+}

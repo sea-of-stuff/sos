@@ -1,0 +1,9 @@
+{
+  "type" : "Role",
+  "GUID" : "SHA256_16_8c1d1427fbb85afab7b1877677d60246c89332372bf72752d5fe5ec37b8b612c",
+  "User" : "SHA256_16_39680a08e44af7cf01e5c055c2a7c2fd223b9fe37a3fcc1a994492251f94a0d1",
+  "Name" : "GRANTEE_ROLE_6",
+  "Signature" : "gA5k/D9fyqwj9Hti1UrTDZRk94mI7S8bPvTWS8fbDqUC4oJNIa1sBAeNNh0KdOU5yseNexRPb92cUK/JhoiftA==",
+  "Certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK8Rcy2/hSLCProCyy+zkamkg1f+PEadkMnX2oi7SrfnvBK2UUhDdpbXSiEWgzQPhU5G38S39ii9z3wRu4HWpgUCAwEAAQ==",
+  "PublicKey" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK83bsi92rqhqujB1no35Tijtm5xquIYbT6bLVdB3Ods4/K+v88kiOb/lUUmlHNWGI8VvU8yktbqb2XkcG8clh8CAwEAAQ=="
+}

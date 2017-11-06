@@ -1,0 +1,183 @@
+{
+  "context": {
+    "name": "one_policy_local",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_9b65c46a4e181d2aff362a3e0a7a65c9a2da9d621608602dbde81f66f4238241\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_9b65c46a4e181d2aff362a3e0a7a65c9a2da9d621608602dbde81f66f4238241\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_5e489cc6e203038c9a6dcc823233abb72ba1d7be7e2ca223ec94d3d3964887c6\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_5e489cc6e203038c9a6dcc823233abb72ba1d7be7e2ca223ec94d3d3964887c6\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_ae43250196cf6fec21a7ca82f56fb87c1f80b39ae6269b55aaa3ba79c51540b5\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_ae43250196cf6fec21a7ca82f56fb87c1f80b39ae6269b55aaa3ba79c51540b5\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_c34460a87f85934164618ef954ce901c9c278bf9346f945c3c139d5945403efb\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_c34460a87f85934164618ef954ce901c9c278bf9346f945c3c139d5945403efb\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_6fac84881d41f05e338b149f173368feb12aa6f70d221c99fee7ab258fba64fa\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_6fac84881d41f05e338b149f173368feb12aa6f70d221c99fee7ab258fba64fa\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_8c1d1427fbb85afab7b1877677d60246c89332372bf72752d5fe5ec37b8b612c\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_8c1d1427fbb85afab7b1877677d60246c89332372bf72752d5fe5ec37b8b612c\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_85095a1f1ff5f8395b8d64aef95e879bd6a48a8ba76e67c98bc8615ee012d718\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_85095a1f1ff5f8395b8d64aef95e879bd6a48a8ba76e67c98bc8615ee012d718\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_4c58a39c413737643ccb11175e0d4bb4c8c5134166ae6152494effafc9e58d4d\")"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
+      "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "IGUID",
+          "name" : "granter",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_4c58a39c413737643ccb11175e0d4bb4c8c5134166ae6152494effafc9e58d4d\")"
+        },
+        {
+          "type" : "IGUID",
+          "name" : "grantee",
+          "value" : "GUIDFactory.recreateGUID(\"SHA256_16_5b4b9dc228ad82d599b8fef935f9d0764f6f357a312cbdac764e791139a26b51\")"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,0 @@
-{
-  "type" : "Role",
-  "GUID" : "SHA256_16_9c98506d1c25f38e1030a25f249e65bfec751d87c788a9f07c050b412af45e4e",
-  "User" : "SHA256_16_34855adfd7144ed4dade494568a6665c5da0d5f07429cc02d5203ebe742f6627",
-  "Name" : "Home",
-  "Signature" : "KTAXF/8wuVBcpom2Gup8Sfn7aqJ3T+QDLw1xyB27Az1shHEPOCcXvcj7l2d7Ks1hC0cfuDSpBlSn6ye6Uyqeug==",
-  "Certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKpXZqzM/E8gS9g1arMpXMuCZgotPvTRBiQHxftIJOkt8HmAaSnTaW04WVmllklF3A3x6OpksW8igAoEyIarDBECAwEAAQ==",
-  "PublicKey" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK6iSNQSOcbvLjqT3cx6x2LT4T7ivD2q87lMGoyWmVp8phsfdG+BzEk+2yKv+GwJHebPqcA2+YsJDg1Rxa9tQGcCAwEAAQ=="
-}
