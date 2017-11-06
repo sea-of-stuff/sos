@@ -14,7 +14,7 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # Read the CVS file
-d <- read.csv("output/po_2__2017_11_06T14_58_41_690Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/po_2__2017_11_06T15_13_04_348Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
@@ -48,8 +48,7 @@ colors = c(rep("red",1),rep("deepskyblue",2),rep("green",1))
 
 ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
   geom_boxplot(outlier.alpha = 1) +
-  geom_point(color="tomato", position="jitter", alpha=.5) +
-  geom_rug(side="1") +
+  #geom_point(color="tomato", position="jitter", alpha=.5) +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
@@ -60,5 +59,8 @@ ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) +
 ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
   geom_bar(position=position_dodge(), stat="identity", width=.5) +
   geom_point(color="tomato", position="jitter", alpha=.5) +
-  geom_rug(side="1") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1), 
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=16,face="bold")) +
   labs(title="Policies per asset....", x="Policy", y="Time (s)")

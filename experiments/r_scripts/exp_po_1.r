@@ -57,7 +57,7 @@ legend("topright", legend=c("Remote", "Local", "Base"),
 ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
   geom_boxplot(outlier.alpha = 0.1) +
   geom_point(color="tomato", position="jitter", alpha=.05) +
-  geom_rug(side="1") +
+  geom_rug(sides="l") +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
@@ -67,5 +67,5 @@ ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) +
 ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
   geom_bar(position=position_dodge(), stat="identity", width=.5) +
   geom_point(color="tomato", position="jitter", alpha=.05) +
-  geom_rug(side="1") +
+  geom_rug(sides="l") +
   labs(title="Policies per asset....", x="Policy", y="Time (s)")
