@@ -58,9 +58,8 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
                 cms = node.getCMS();
 
-                String datasetPath = experiment.getExperimentNode().getDatasetPath();
-
                 System.out.println("Adding content to node");
+                String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 Role role = node.getUSRO().getRole(GUIDFactory.recreateGUID("SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317"));
                 addFolderContentToNode(node, new File(datasetPath), role);
 
