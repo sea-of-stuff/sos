@@ -103,7 +103,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     }
 
-    // REMOVEME
     public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");

@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.model.*;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -167,10 +168,20 @@ public class FileUtils {
         return manifest;
     }
 
+    public static User UserFromFile(File file) throws UserNotFoundException {
+
+        try {
+            return JSONHelper.JsonObjMapper().readValue(file, UserImpl.class);
+
+        } catch (IOException e) {
+            throw new UserNotFoundException();
+        }
+    }
+
     public static User UserFromFile(IFile file) throws UserNotFoundException {
 
         try {
-            return JSONHelper.JsonObjMapper().readValue(file.toFile(), UserImpl.class);
+            return UserFromFile(file.toFile());
 
         } catch (IOException e) {
             throw new UserNotFoundException();

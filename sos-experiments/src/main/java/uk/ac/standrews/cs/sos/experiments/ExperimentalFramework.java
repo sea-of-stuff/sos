@@ -35,7 +35,6 @@ public class ExperimentalFramework {
         */
     public static void main(String[] args) throws InterruptedException, ConfigurationException, ChicShockException {
 
-
         System.out.println("Options: run, cron, stop, stopall, check, stats, clean");
         in = new Scanner(System.in);
         String option = in.nextLine();

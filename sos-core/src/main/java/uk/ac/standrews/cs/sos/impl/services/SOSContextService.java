@@ -301,6 +301,7 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<IGUID> getContents(IGUID contextGUID) {
 
+        // FIXME - iterate through previous versions of context
         try {
             Context context = getContext(contextGUID);
 
@@ -513,6 +514,7 @@ public class SOSContextService implements ContextService {
         start = System.nanoTime();
 
         try {
+            // The context will contain only the new processed assets. To get all assets, we need to go back through the previous versions.
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
             ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
             IGUID newContextRef = updateContext(context, contextBuilder);

@@ -129,7 +129,6 @@ public class SOSAddVersionTest extends AgentTest {
         JSONAssert.assertEquals(manifest.toString(), retrievedManifest.toString(), false);
     }
 
-
     @Test
     public void testAddVersionWithMetadata() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
@@ -188,7 +187,7 @@ public class SOSAddVersionTest extends AgentTest {
         IGUID retrievedMetadataGUID = retrievedVersion.getMetadata();
         assertEquals(metadata.guid(), retrievedMetadataGUID);
 
-        Metadata retrievedMetadata = agent.getMetadata(retrievedMetadataGUID);
+        Metadata retrievedMetadata = agent.getMetadata(retrievedVersion);
         assertEquals(metadata.guid(), retrievedMetadata.guid());
     }
 
