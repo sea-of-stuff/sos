@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "one_policy_local",
+    "name": "six_policies_local",
     "domain": {
       "type": "LOCAL",
       "nodes": []

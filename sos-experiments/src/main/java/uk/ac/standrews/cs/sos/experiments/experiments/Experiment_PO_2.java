@@ -83,8 +83,7 @@ public class Experiment_PO_2 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws Exception {
 
-            // Will apply the role granting policies
-
+            // Will apply the role granting policies in cascade (e.g. the grantee becomes granters on the next subpolicy)
             addContext(cms, experiment, "no_policies");
             addContext(cms, experiment, "one_policy_local");
             addContext(cms, experiment, "two_policies_local");
