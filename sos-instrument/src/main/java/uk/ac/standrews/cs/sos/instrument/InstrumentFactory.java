@@ -12,26 +12,26 @@ import java.io.IOException;
  */
 public class InstrumentFactory {
 
-    private static BasicInstrument instance;
+    private static BasicInstrument basicInstrument;
     private static BackgroundInstrument backgroundInstrument;
 
     public static Instrument instance() {
 
-        if (instance == null) {
+        if (basicInstrument == null) {
             return new DummyInstrument();
         }
 
-        return instance;
+        return basicInstrument;
     }
 
     public static Instrument instance(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
 
-        if (instance == null) {
-            instance = new BasicInstrument(statistics, outputTYPE, filename);
+        if (basicInstrument == null) {
+            basicInstrument = new BasicInstrument(statistics, outputTYPE, filename);
             backgroundInstrument = new BackgroundInstrument(filename);
         }
 
-        return instance;
+        return basicInstrument;
     }
 
     public static void start() {
@@ -40,6 +40,16 @@ public class InstrumentFactory {
             backgroundInstrument.start();
         }
 
+    }
+
+    public static void flush() {
+        if (basicInstrument != null) {
+            basicInstrument.flush();
+        }
+
+        if (backgroundInstrument != null) {
+            backgroundInstrument.flush();
+        }
     }
 
     public static void stop() {

@@ -6,8 +6,9 @@ import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import static uk.ac.standrews.cs.sos.instrument.Metrics.COMMA;
 import static uk.ac.standrews.cs.sos.instrument.Metrics.TAB;
 
 /**
@@ -19,24 +20,22 @@ public class BasicInstrument implements Instrument {
     private OutputTYPE outputTYPE;
     private String filename;
 
+    private static final Object LOCK_MEASUREMENTS_QUEUE = new Object();
+    private Queue<Metrics> measurementsQueue;
+
     public BasicInstrument(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
         this.statistics = statistics;
         this.outputTYPE = outputTYPE;
         this.filename = filename;
+
+        this.measurementsQueue = new LinkedList<>();
 
         boolean fileIsEmpty = fileIsEmpty(filename);
         if (fileIsEmpty) {
             try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
-                switch (outputTYPE) {
-                    case CSV:
-                        bufferedWriter.write("StatsTYPE" + COMMA + "Subtype" + COMMA);
-                        break;
-                    case TSV:
-                        bufferedWriter.write("StatsTYPE" + TAB + "Subtype" + TAB);
-                }
-
+                bufferedWriter.write("StatsTYPE" + TAB + "Subtype" + TAB);
                 writeHeader(bufferedWriter, new AppMetrics(), true);
             }
         }
@@ -68,7 +67,7 @@ public class BasicInstrument implements Instrument {
     @Override
     public void measure(String message) {
 
-       measure(StatsTYPE.any, StatsTYPE.none, message);
+        measure(StatsTYPE.any, StatsTYPE.none, message);
     }
 
     @Override
@@ -81,25 +80,34 @@ public class BasicInstrument implements Instrument {
 
         if (statistics.isEnabled(statsTYPE)) {
 
+            synchronized (LOCK_MEASUREMENTS_QUEUE) {
+                AppMetrics appMeasure = AppMetrics.measure(message);
+                appMeasure.setUserMeasure(measure);
+                appMeasure.setStatsType(statsTYPE);
+                appMeasure.setSubType(subtype);
+
+                measurementsQueue.add(appMeasure);
+            }
+        }
+    }
+
+    @Override
+    public void flush() {
+
+        synchronized (LOCK_MEASUREMENTS_QUEUE) {
+
             try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
-                switch (outputTYPE) {
-                    case CSV:
-                        bufferedWriter.write(statsTYPE.toString() + COMMA + subtype.toString() + TAB);
-                        break;
-                    case TSV:
-                        bufferedWriter.write(statsTYPE.toString() + TAB + subtype.toString() + TAB);
+                for (Metrics metrics : measurementsQueue) {
+                    write(bufferedWriter, metrics, true);
                 }
 
-                AppMetrics appMeasure = AppMetrics.measure(message);
-                appMeasure.setUserMeasure(measure);
-                write(bufferedWriter, appMeasure, true);
-
-                // TODO - measure other things...network?
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            measurementsQueue.clear();
 
         }
     }
@@ -110,10 +118,6 @@ public class BasicInstrument implements Instrument {
             case STRING:
                 bufferedWriter.write(metrics.toString());
                 if (last) bufferedWriter.newLine();
-                break;
-            case CSV:
-                bufferedWriter.write(metrics.csv());
-                if (!last) bufferedWriter.write(COMMA);
                 break;
             case TSV:
                 bufferedWriter.write(metrics.tsv());
@@ -129,10 +133,6 @@ public class BasicInstrument implements Instrument {
         switch (outputTYPE) {
             case STRING:
                 break;
-            case CSV:
-                bufferedWriter.write(metrics.csvHeader());
-                if (!last) bufferedWriter.write(COMMA);
-                break;
             case TSV:
                 bufferedWriter.write(metrics.tsvHeader());
                 if (!last) bufferedWriter.write(TAB);
@@ -146,7 +146,6 @@ public class BasicInstrument implements Instrument {
 
         if (!new File(filename).exists()) return true;
 
-
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             if (br.readLine() == null) {
                 return true;
@@ -159,7 +158,11 @@ public class BasicInstrument implements Instrument {
     public static void main(String[] args) throws IOException {
 
         Instrument instrument = new BasicInstrument(new Statistics(), OutputTYPE.TSV, "TEST");
-        instrument.measure("test message");
+        instrument.measure("test one");
+        instrument.flush();
+        instrument.measure("test two");
+        instrument.measure("test three");
+        instrument.flush();
     }
 
 }

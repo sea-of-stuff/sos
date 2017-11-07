@@ -110,6 +110,8 @@ public abstract class BaseExperiment implements Experiment {
         long timeToFinish = end - start;
         System.out.println("Experiment iteration {" + (iteration + 1) + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
 
+        InstrumentFactory.flush();
+
         ServerState.kill();
     }
 

@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.instrument.impl;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.sos.instrument.Metrics;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,16 +78,6 @@ public class DatasetMetrics implements Metrics {
         return retval;
     }
 
-    @Override
-    public String csvHeader() {
-        return null;
-    }
-
-    @Override
-    public String csv() {
-        return null;
-    }
-
     // FIXME - not considering folders?
     @Override
     public String tsvHeader() {
@@ -103,6 +94,16 @@ public class DatasetMetrics implements Metrics {
         }
 
         return retval;
+    }
+
+    @Override
+    public void setStatsType(StatsTYPE statsType) {
+        // NOTHING
+    }
+
+    @Override
+    public void setSubType(StatsTYPE subtype) {
+        // NOTHING
     }
 
     public double getMean() {

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.instrument.impl;
 
 import uk.ac.standrews.cs.sos.instrument.Metrics;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.time.Instant;
 
@@ -13,6 +14,8 @@ public class AppMetrics implements Metrics {
     private String message = "n/a";
     private long userMeasure = -1;
     private StackTraceElement stackTraceElement;
+    private StatsTYPE statsTYPE;
+    private StatsTYPE subType;
 
     public Instant getNow() {
         return now;
@@ -58,34 +61,25 @@ public class AppMetrics implements Metrics {
     }
 
     @Override
-    public String toString() {
-
-        return "Timestamp / Time (UTC): " + getNow().toEpochMilli() + " / " + getNow().toString() + "\n" +
-                "Message: " + getMessage() + "\n" +
-                "User Measure: " + getMessage() + "\n" +
-                "Class / Method name: " + getStackTraceElement().getClassName() + " / " + getStackTraceElement().getMethodName();
-    }
-
-    @Override
-    public String csvHeader() {
-        return "Timestamp (ms),Time(UTC),Message,User Measure,Class Name,Method Name";
-    }
-
-    @Override
-    public String csv() {
-        return getNow().toEpochMilli() + COMMA + getNow().toString() + COMMA + getMessage() + COMMA +
-                getStackTraceElement().getClassName() + COMMA + getStackTraceElement().getMethodName();
-    }
-
-    @Override
     public String tsvHeader() {
         return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+"Message"+TAB+"User Measure"+TAB+"Class Name"+TAB+"Method Name";
     }
 
     @Override
     public String tsv() {
-        return getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB + getUserMeasure() + TAB +
+        return statsTYPE.toString() + TAB + subType.toString() + TAB +
+                getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB + getUserMeasure() + TAB +
                 getStackTraceElement().getClassName() + TAB + getStackTraceElement().getMethodName();
+    }
+
+    @Override
+    public void setStatsType(StatsTYPE statsType) {
+        this.statsTYPE = statsType;
+    }
+
+    @Override
+    public void setSubType(StatsTYPE subtype) {
+        this.subType = subtype;
     }
 
 }

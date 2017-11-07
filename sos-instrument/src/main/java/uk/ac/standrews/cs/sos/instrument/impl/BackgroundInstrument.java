@@ -6,12 +6,15 @@ import com.jezhumble.javasysmon.OsProcess;
 import com.jezhumble.javasysmon.ProcessInfo;
 import com.sun.management.OperatingSystemMXBean;
 import uk.ac.standrews.cs.sos.instrument.Metrics;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,6 +24,9 @@ import java.util.concurrent.TimeUnit;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class BackgroundInstrument implements Metrics {
+
+    private static final Object LOCK_MEASUREMENTS_QUEUE = new Object();
+    private Queue<Metrics> measurementsQueue;
 
     private ScheduledExecutorService scheduler;
     private Future future;
@@ -58,6 +64,8 @@ public class BackgroundInstrument implements Metrics {
 
     public BackgroundInstrument(String filename) {
         this.filename = filename;
+
+        this.measurementsQueue = new LinkedList<>();
     }
 
     private BackgroundInstrument() {}
@@ -158,6 +166,34 @@ public class BackgroundInstrument implements Metrics {
         this.processLoad = processLoad;
     }
 
+    public double getSystemLoadAverage() {
+        return systemLoadAverage;
+    }
+
+    public void setSystemLoadAverage(double systemLoadAverage) {
+        this.systemLoadAverage = systemLoadAverage;
+    }
+
+    public long getPhyMemTotalBytes() {
+        return phyMemTotalBytes;
+    }
+
+    public void setPhyMemTotalBytes(long phyMemTotalBytes) {
+        this.phyMemTotalBytes = phyMemTotalBytes;
+    }
+
+    public long getPhyMemUsedBytes() {
+        return phyMemUsedBytes;
+    }
+
+    public void setPhyMemUsedBytes(long phyMemUsedBytes) {
+        this.phyMemUsedBytes = phyMemUsedBytes;
+    }
+
+    public String getType() {
+        return type.toString();
+    }
+
     public static BackgroundInstrument measure() {
         JavaSysMon monitor = new JavaSysMon();
 
@@ -213,19 +249,33 @@ public class BackgroundInstrument implements Metrics {
             scheduler = Executors.newScheduledThreadPool(1);
             future = scheduler.scheduleAtFixedRate(() -> {
 
-                Metrics metrics = measure();
-
-                try (FileWriter fileWriter = new FileWriter(new File(filename + "_os.tsv"), true);
-                     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-
-                    bufferedWriter.write(metrics.tsv());
-                    bufferedWriter.newLine();
-
-                } catch (IOException e) {
-                    System.out.println("Unable to write stats from BackgroundInstrument to file");
+                synchronized (LOCK_MEASUREMENTS_QUEUE) {
+                    Metrics metrics = measure();
+                    measurementsQueue.add(metrics);
                 }
 
             }, 0, 500, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    public void flush() {
+
+        synchronized (LOCK_MEASUREMENTS_QUEUE) {
+
+            try (FileWriter fileWriter = new FileWriter(new File(filename + "_os.tsv"), true);
+                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+
+                for (Metrics metrics : measurementsQueue) {
+                    bufferedWriter.write(metrics.tsv());
+                    bufferedWriter.newLine();
+                }
+
+            } catch (IOException e) {
+                System.out.println("Unable to write stats from BackgroundInstrument to file");
+            }
+
+            measurementsQueue.clear();
+
         }
     }
 
@@ -236,34 +286,6 @@ public class BackgroundInstrument implements Metrics {
             scheduler.shutdown();
             future = null;
         }
-    }
-
-    // FIXME - outdated
-    @Override
-    public String toString() {
-
-        return "OSName: " + getOsName() + "\n" +
-                "NoCPUs: " + getNoCPUs() + "\n" +
-                "CPU Hz: " + getCpuHZ() + "\n" +
-                "Free OS Memory: " + getMemUsedBytes() + "/" + getMemTotalBytes() + "\n" +
-                "Process ID/Name: " + getProcessPID() + "/" + getProcessName() + "\n" +
-                "Resident/Total Bytes: " + getResidentBytes() + "/" + getTotalBytes() + "\n" +
-                "User/Sys Uptime Milliseconds: " + getUserUptime() + "/" + getSysUptime() + "\n\n";
-    }
-
-    // FIXME - outdated
-    @Override
-    public String csvHeader() {
-        return "OS,No CPUs,CPU Hz,Mem Free Bytes,Mem Total Bytes,PID,Process Name,Resident Bytes,Total Bytes,User Uptime,System Uptime";
-    }
-
-    // FIXME - outdated
-    @Override
-    public String csv() {
-
-        return getOsName() + COMMA + getNoCPUs() + COMMA + getCpuHZ() + COMMA + getMemUsedBytes() + COMMA + getMemTotalBytes() + COMMA +
-                getProcessPID() + COMMA + getProcessName() + COMMA + getResidentBytes() + COMMA + getTotalBytes() + COMMA +
-                getUserUptime() + COMMA + getSysUptime();
     }
 
     @Override
@@ -281,31 +303,14 @@ public class BackgroundInstrument implements Metrics {
                 getPhyMemTotalBytes() + TAB + getPhyMemUsedBytes();
     }
 
-    public double getSystemLoadAverage() {
-        return systemLoadAverage;
+    @Override
+    public void setStatsType(StatsTYPE statsType) {
+        // NOTHING
     }
 
-    public void setSystemLoadAverage(double systemLoadAverage) {
-        this.systemLoadAverage = systemLoadAverage;
+    @Override
+    public void setSubType(StatsTYPE subtype) {
+        // NOTHING
     }
 
-    public long getPhyMemTotalBytes() {
-        return phyMemTotalBytes;
-    }
-
-    public void setPhyMemTotalBytes(long phyMemTotalBytes) {
-        this.phyMemTotalBytes = phyMemTotalBytes;
-    }
-
-    public long getPhyMemUsedBytes() {
-        return phyMemUsedBytes;
-    }
-
-    public void setPhyMemUsedBytes(long phyMemUsedBytes) {
-        this.phyMemUsedBytes = phyMemUsedBytes;
-    }
-
-    public String getType() {
-        return type.toString();
-    }
 }
