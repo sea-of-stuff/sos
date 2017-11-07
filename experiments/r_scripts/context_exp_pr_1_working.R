@@ -14,8 +14,10 @@ getwd()
 source("r_scripts/utils_stats.r")
 source("r_scripts/kruskal.r")
 
+# random_1  pr_1__2017_11_07T14_24_20_285Z.tsv
+# text      pr_1__2017_11_07T14_46_17_213Z
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_11_07T14_09_39_316Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_11_07T14_46_17_213Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
@@ -46,6 +48,52 @@ d_processed$names <- d_processed$Config
 # https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
 colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), rep("gray90", 1))
 
+
+# PLOT TIME TO RUN PREDICATE, PRE-PHASE, POST-PRED-PHASE ETC OVER DATASET
+dd <- d[d$Subtype != 'predicate',]
+dd$Message <- droplevels(dd$Message)
+
+# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE", "Subtype"))
+
+
+ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, fill=dd$Subtype)) + 
+  geom_bar(stat="identity", position=position_dodge()) +
+  geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2,
+                position=position_dodge(.9)) +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1), 
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=16,face="bold")) +
+  labs(title="Time to run different predicates over a single dataset", x="Predicate", y="Time (s)", fill="Run section")
+
+
+# TIME TO RUN PREDICATE OVER DATASET
+dd <- d[d$Subtype == 'predicate_dataset',]
+dd$Message <- droplevels(dd$Message)
+
+# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
+
+ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=90,hjust=1), 
+        axis.text=element_text(size=14),
+        axis.title=element_text(size=16,face="bold")) +
+  labs(title="Time to run all predicates on entire dataset", x="Predicate", y="Time (s)")
+
+
+## STAT ANALYSIS
+kruskal(d, d$User.Measure, d$ContextName)
+
+kruskal_dunn(d, d$User.Measure, d$ContextName)
+kruskal_nemenyi(d, d$User.Measure, d$ContextName)
+
+
+
+# OLD STUFF
 ##################
 # BOXPLOT
 #par(mar=c(20,4,4,2)+3) # Add space to show all labels
@@ -60,7 +108,6 @@ colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), r
 #       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
 
-
 # This plot is weird because we cannot exclude very large outliers
 # PLOT PRED TIMES PER ASSET
 #dd <- d[d$Subtype == 'predicate',]
@@ -71,43 +118,6 @@ colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), r
 #  theme_bw() +
 #  theme(axis.text.x=element_text(angle=90,hjust=1)) +
 #  labs(title="Predicates per asset....", x="Predicate", y="Time (s)")
-
-
-# PLOT TIME TO RUN PREDICATE, PRE-PHASE, POST-PRED-PHASE ETC OVER DATASET
-dd <- d[d$Subtype != 'predicate',]
-dd$Message <- droplevels(dd$Message)
-
-# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE", "Subtype"))
-
-ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, fill=dd$Subtype)) + 
-  geom_bar(stat="identity", width=.5) +
-  # geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se), width=.2) +
-  theme_bw() +
-  theme(axis.text.x=element_text(angle=90,hjust=1), 
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=16,face="bold")) +
-  labs(title="Predicates per asset....", x="Predicate", y="Time (s)", fill="Run section")
-
-
-
-
-# TIME TO RUN PREDICATE OVER DATASET
-dd <- d[d$Subtype == 'predicate_dataset',]
-dd$Message <- droplevels(dd$Message)
-
-# http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
-
-ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
-  geom_bar(stat="identity", width=.5) +
-  geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se),
-                width=.2) +
-  theme_bw() +
-  theme(axis.text.x=element_text(angle=90,hjust=1), 
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=16,face="bold")) +
-  labs(title="Time to run all predicates on entire dataset", x="Predicate", y="Time (s)")
 
 
 ##################
@@ -141,12 +151,3 @@ segments(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
 arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
        d_processed$mean + d_processed$se * 2, lwd = 1.5, angle = 90,
        code = 3, length = 0.05)
-
-
-
-
-## STAT ANALYSIS
-kruskal(d, d$User.Measure, d$ContextName)
-
-kruskal_dunn(d, d$User.Measure, d$ContextName)
-kruskal_nemenyi(d, d$User.Measure, d$ContextName)

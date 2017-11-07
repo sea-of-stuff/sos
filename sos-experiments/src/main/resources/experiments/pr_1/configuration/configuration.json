@@ -13,7 +13,7 @@
       "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json",
-      "dataset" : "random_1"
+      "dataset" : "masc_500k_texts"
     },
     "stats": {
       "experiment": false,

@@ -45,7 +45,7 @@ colors = c(rep("red",1),rep("deepskyblue",2),rep("green",1))
 # Playing with ggplot
 
 ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
-  geom_boxplot(outlier.alpha = 1) +
+  geom_boxplot(outlier.alpha=0.5) +
   #geom_point(color="tomato", position="jitter", alpha=.5) +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
