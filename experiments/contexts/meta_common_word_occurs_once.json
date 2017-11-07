@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "meta_and_search_common_word",
+    "name": "meta_common_word_occurs_once",
     "domain": {
       "type": "LOCAL",
       "nodes": []

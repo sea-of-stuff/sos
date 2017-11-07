@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "search_common_word",
+    "name": "meta_common_word_occurs_at_least_10_times",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"the\");",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") > 10;",
     "dependencies": []
   },
   "max_age": 0,

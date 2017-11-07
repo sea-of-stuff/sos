@@ -15,15 +15,15 @@ source("r_scripts/utils_stats.r")
 source("r_scripts/kruskal.r")
 
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_10_26T16_24_38_828Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_11_07T14_09_39_316Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
 d$ContextName<-factor(d$ContextName, levels=c("base", 
-                                              "search_common_word", "search_uncommon_word", "common_word_occurs_at_least_10_times",
-                                              "meta_and_search_common_word", "meta_and_search_uncommon_word", "meta_and_common_word_occurs_at_least_10_times",
+                                              "common_word_occurs_once", "uncommon_word_occurs_once", "common_word_occurs_at_least_10_times",
+                                              "meta_common_word_occurs_once", "meta_uncommon_word_occurs_once", "meta_common_word_occurs_at_least_10_times",
                                               "metadata", "multi_metadata",
                                               "manifest"
                                               ))
@@ -48,16 +48,16 @@ colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), r
 
 ##################
 # BOXPLOT
-par(mar=c(20,4,4,2)+3) # Add space to show all labels
-x <- boxplot(d$Measures~d$ContextName, data=d,
-             outline=FALSE,
-             las=2, # Draw x labels vertically
-             main="Predicate performance against different settings",
-             ylab="Time (s) - linear scale",
-             col=colors)
-
-legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
-       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
+#par(mar=c(20,4,4,2)+3) # Add space to show all labels
+#x <- boxplot(d$Measures~d$ContextName, data=d,
+#             outline=FALSE,
+#             las=2, # Draw x labels vertically
+#             main="Predicate performance against different settings",
+#             ylab="Time (s) - linear scale",
+#             col=colors)
+#
+#legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
+#       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
 
 
 
@@ -82,8 +82,7 @@ dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYP
 
 ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, fill=dd$Subtype)) + 
   geom_bar(stat="identity", width=.5) +
-  geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se),
-                width=.2) +
+  # geom_errorbar(aes(ymin=dd$Measures-dd$se, ymax=dd$Measures+dd$se), width=.2) +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),

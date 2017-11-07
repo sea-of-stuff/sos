@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "search_uncommon_word",
+    "name": "common_word_occurs_once",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"poison\");",
+    "predicate": "CommonPredicates.SearchText(guid, \"the\");",
     "dependencies": []
   },
   "max_age": 0,

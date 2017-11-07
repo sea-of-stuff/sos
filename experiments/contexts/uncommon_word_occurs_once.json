@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "meta_and_common_word_occurs_at_least_10_times",
+    "name": "uncommon_word_occurs_once",
     "domain": {
       "type": "LOCAL",
       "nodes": []
@@ -12,7 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") > 10;",
+    "predicate": "CommonPredicates.SearchText(guid, \"poison\");",
     "dependencies": []
   },
   "max_age": 0,

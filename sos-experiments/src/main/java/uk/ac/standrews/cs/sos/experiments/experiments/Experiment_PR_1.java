@@ -81,14 +81,14 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
             // Data only
             // Source: http://norvig.com/ngrams/count_1w.txt
-            addContext(cms, experiment, "search_common_word"); // the
-            addContext(cms, experiment, "search_uncommon_word"); // poison (10,000th)
+            addContext(cms, experiment, "common_word_occurs_once"); // the
+            addContext(cms, experiment, "uncommon_word_occurs_once"); // poison (10,000th)
             addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
 
             // Metadata and Data
-            addContext(cms, experiment, "meta_and_search_common_word"); // the
-            addContext(cms, experiment, "meta_and_search_uncommon_word"); // poison (10,000th)
-            addContext(cms, experiment, "meta_and_common_word_occurs_at_least_10_times"); // the
+            addContext(cms, experiment, "meta_common_word_occurs_once"); // the
+            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // poison (10,000th)
+            addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
 
             // Check one metadata property
             addContext(cms, experiment, "metadata");
