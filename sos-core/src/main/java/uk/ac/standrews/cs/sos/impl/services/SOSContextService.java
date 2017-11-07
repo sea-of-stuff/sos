@@ -78,6 +78,8 @@ public class SOSContextService implements ContextService {
     private long pred_time_to_check_if_predicate_has_to_be_run;
     private long pred_time_to_run_predicate_on_current_dataset;
     private long pred_time_to_update_context;
+    private long policy_time_to_run_apply_on_current_dataset;
+    private long policy_time_to_run_check_on_current_dataset;
 
     /**
      * Build a CMS instance.
@@ -670,7 +672,12 @@ public class SOSContextService implements ContextService {
 
         Set<Context> contexts = getContexts();
         for (Context context : contexts) {
+
+            policy_time_to_run_apply_on_current_dataset = 0;
+
             runPolicies(context);
+
+            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policy_time_to_run_apply_on_current_dataset);
         }
 
     }
@@ -712,6 +719,7 @@ public class SOSContextService implements ContextService {
                 policy.apply(context.codomain(), commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
+            policy_time_to_run_apply_on_current_dataset += duration;
             InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.none, context.getName(), duration);
 
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
@@ -780,7 +788,12 @@ public class SOSContextService implements ContextService {
     private void checkPolicies() {
 
         for (Context context : getContexts()) {
+
+            policy_time_to_run_check_on_current_dataset = 0;
+
             checkPolicies(context);
+
+            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policy_time_to_run_check_on_current_dataset);
         }
     }
 
@@ -811,11 +824,15 @@ public class SOSContextService implements ContextService {
 
             Set<Policy> policies = getPolicies(context);
             boolean allPoliciesAreSatisfied = true;
-            for (Policy policy:policies) {
+            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
 
-                Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
+            long start = System.nanoTime();
+            for (Policy policy:policies) {
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);;
             }
+            long duration = System.nanoTime() - start;
+            policy_time_to_run_check_on_current_dataset += duration;
+            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.none, context.getName(), duration);
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);

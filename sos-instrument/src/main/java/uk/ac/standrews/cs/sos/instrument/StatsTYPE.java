@@ -14,6 +14,11 @@ public enum StatsTYPE {
     predicate_check, // time spent to check if predicate has to be run (for all assets - cumulative)
     predicate_update_context, // time to update context with all the predicate results
 
-    policies, checkPolicies,
+    policies,
+    policy_apply_dataset,
+
+    checkPolicies,
+    policy_check_dataset,
+
     experiment
 }
