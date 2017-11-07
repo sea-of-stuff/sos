@@ -249,6 +249,11 @@ public class BackgroundInstrument implements Metrics {
             scheduler = Executors.newScheduledThreadPool(1);
             future = scheduler.scheduleAtFixedRate(() -> {
 
+//                OperatingSystemMXBean os = ManagementFactory.getPlatformMXBean(com.sun.management.OperatingSystemMXBean.class);
+//                if(os instanceof UnixOperatingSystemMXBean){
+//                    System.out.println("Number of open fd: " + ((UnixOperatingSystemMXBean) os).getOpenFileDescriptorCount());
+//                }
+
                 synchronized (LOCK_MEASUREMENTS_QUEUE) {
                     Metrics metrics = measure();
                     measurementsQueue.add(metrics);

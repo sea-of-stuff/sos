@@ -144,19 +144,25 @@ public class SOSAgent implements Agent {
     @Override
     public Version addData(VersionBuilder versionBuilder) throws ServiceException {
 
-        Metadata metadata = addMetadata(versionBuilder.getAtomBuilder().getData());
+        try (Data data = versionBuilder.getAtomBuilder().getData()) {
 
-        Atom atom;
-        if(versionBuilder.getAtomBuilder().getRole() != null) {
-            atom = addSecureAtom(versionBuilder.getAtomBuilder());
-        } else {
-            atom = addAtom(versionBuilder.getAtomBuilder());
+            Metadata metadata = addMetadata(data);
+
+            Atom atom;
+            if(versionBuilder.getAtomBuilder().getRole() != null) {
+                atom = addSecureAtom(versionBuilder.getAtomBuilder());
+            } else {
+                atom = addAtom(versionBuilder.getAtomBuilder());
+            }
+
+            versionBuilder.setContent(atom.guid());
+            versionBuilder.setMetadata(metadata);
+
+            return addVersion(versionBuilder);
+
+        } catch (Exception e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
-
-        versionBuilder.setContent(atom.guid());
-        versionBuilder.setMetadata(metadata);
-
-        return addVersion(versionBuilder);
     }
 
     @Override

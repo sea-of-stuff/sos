@@ -3,9 +3,7 @@ package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
-import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
-import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -202,11 +200,17 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             IFile manifestFileToBackup = getManifestFile(manifestGUID);
 
             IDirectory manifestsDirectory = localStorage.getManifestsDirectory();
-            IFile backupManifest = localStorage.createFile(manifestsDirectory, manifestFileToBackup.getName() + BACKUP_EXTENSION, manifestFileToBackup.getData());
-            backupManifest.persist();
 
-            return backupManifest;
-        } catch (ManifestNotFoundException | DataStorageException | DataException | PersistenceException e) {
+            try (Data manifestFileData = manifestFileToBackup.getData()) {
+                IFile backupManifest = localStorage.createFile(manifestsDirectory, manifestFileToBackup.getName() + BACKUP_EXTENSION, manifestFileData);
+                backupManifest.persist();
+                return backupManifest;
+
+            } catch (Exception e) {
+                throw new PersistenceException("Unable to persist manifest", e);
+            }
+
+        } catch (ManifestNotFoundException | DataStorageException | PersistenceException e) {
             throw new ManifestsDirectoryException("Manifest could not be backed up ", e);
         }
 
@@ -218,13 +222,16 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             String manifestGUID = manifest.guid().toMultiHash();
             IFile manifestTempFile = getManifestTempFile(manifestGUID);
 
-            Data manifestData = new StringData(manifest.toString());
-            manifestTempFile.setData(manifestData);
-            manifestTempFile.persist();
+            try (Data manifestData = new StringData(manifest.toString())) {
+                manifestTempFile.setData(manifestData);
+                manifestTempFile.persist();
 
-            manifestTempFile.rename(manifestGUID + FileUtils.JSON_EXTENSION);
+                manifestTempFile.rename(manifestGUID + FileUtils.JSON_EXTENSION);
+            } catch (Exception e) {
+                throw new PersistenceException("Unabel to persist renamed manifest", e);
+            }
 
-        } catch (PersistenceException | DataException | DataStorageException | RenameException e) {
+        } catch (PersistenceException | DataStorageException e) {
             throw new ManifestsDirectoryException(e);
         }
     }

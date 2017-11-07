@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -70,7 +71,11 @@ public class AtomBuilder extends ManifestBuilder {
             if (isData) {
                 return data;
             } else if (isLocation) {
-                return new InputStreamData(location.getSource());
+
+                try (InputStream inputStream = location.getSource()) {
+                    return new InputStreamData(inputStream);
+                }
+
             } else {
                 return new EmptyData();
             }

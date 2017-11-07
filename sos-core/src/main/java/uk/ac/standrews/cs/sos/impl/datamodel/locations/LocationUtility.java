@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.sos.model.Location;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -21,8 +22,8 @@ public class LocationUtility {
      */
     public static Data getDataFromLocation(Location location) {
 
-        try {
-            return new InputStreamData(location.getSource());
+        try (InputStream inputStream = location.getSource()){
+            return new InputStreamData(inputStream);
         } catch (IOException e) {
             return new EmptyData();
         }

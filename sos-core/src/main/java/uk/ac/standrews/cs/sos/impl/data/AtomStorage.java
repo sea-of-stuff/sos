@@ -121,12 +121,21 @@ public class AtomStorage {
 
     private StoredAtomInfo persistData(IGUID tmpGUID, AtomBuilder atomBuilder) throws DataStorageException {
 
-        if (atomBuilder.isData())
-            return persistData(tmpGUID, atomBuilder, atomBuilder.getData());
-        else if (atomBuilder.isLocation())
+        if (atomBuilder.isData()) {
+
+            try (Data data = atomBuilder.getData()) {
+
+                StoredAtomInfo info = persistData(tmpGUID, atomBuilder, data);
+                return info;
+            } catch (Exception e) {
+                throw new DataStorageException("Data source could not be closed");
+            }
+
+        } else if (atomBuilder.isLocation()) {
             return persistDataByLocation(tmpGUID, atomBuilder);
-        else
+        } else {
             throw new DataStorageException("AtomBuilder not set correctly");
+        }
     }
 
     private StoredAtomInfo persistDataByLocation(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {

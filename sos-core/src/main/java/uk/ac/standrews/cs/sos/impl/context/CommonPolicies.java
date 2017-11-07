@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -55,10 +54,14 @@ public class CommonPolicies {
 
             switch(contentManifest.getType()) {
                 case ATOM:
-                    Data data = ((Atom) contentManifest).getData();
 
-                    NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
-                    commonUtilities.replicateData(data, nodes, factor);
+                    try (Data data = ((Atom) contentManifest).getData()) {
+
+                        NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
+                        commonUtilities.replicateData(data, nodes, factor);
+                    } catch (Exception e) {
+                        throw new PolicyException("Policy was unable to replicate atom with GUID " + manifest.guid());
+                    }
 
                     break;
                 case ATOM_PROTECTED:
@@ -70,7 +73,7 @@ public class CommonPolicies {
                     break;
             }
 
-        } catch (IOException | ManifestNotFoundException e) {
+        } catch (ManifestNotFoundException e) {
             throw new PolicyException("Policy was unable to replicate data referenced by manifest with guid " + manifest.guid());
         }
     }

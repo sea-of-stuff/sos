@@ -104,12 +104,14 @@ public class SOSStorageService implements StorageService {
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
-            try {
-                DataReplication dataReplication = new DataReplication(manifest.guid(), atomBuilder.getData(), atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
+            try (Data data = atomBuilder.getData()){
+                DataReplication dataReplication = new DataReplication(manifest.guid(), data, atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
+            } catch (Exception e) {
+                SOS_LOG.log(LEVEL.ERROR, "General exception occurred while attempting to replicate atom " + guid + " to other storage nodes");
             }
         }
 

@@ -173,12 +173,14 @@ public class CommonPredicates {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
-            return data.toString().contains(textToSearch);
+        try (Data data = agent.getData(guid)){
+
+            boolean result = data.toString().contains(textToSearch);
+            return result;
 
         } catch (ServiceException e) {
-
+            return false;
+        } catch (Exception e) {
             return false;
         }
     }
@@ -187,54 +189,65 @@ public class CommonPredicates {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
-            return data.toString().toLowerCase().contains(textToSearch);
+        try (Data data = agent.getData(guid)){
+
+            boolean result = data.toString().toLowerCase().contains(textToSearch);
+            return result;
 
         } catch (ServiceException e) {
-
+            return false;
+        } catch (Exception e) {
             return false;
         }
+
     }
 
     public static int TextOccurrences(IGUID guid, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
-            return StringUtils.countMatches(data.toString(), textToSearch);
-        } catch (ServiceException e) {
+        try (Data data = agent.getData(guid)){
 
+            int result = StringUtils.countMatches(data.toString(), textToSearch);
+            return result;
+
+        } catch (ServiceException e) {
+            return 0;
+        } catch (Exception e) {
             return 0;
         }
+
     }
 
     public static int TextOccurrencesIgnoreCase(IGUID guid, String textToSearch) {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
-            return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
-        } catch (ServiceException e) {
+        try (Data data = agent.getData(guid)){
 
+            int result = StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
+            return result;
+
+        } catch (ServiceException e) {
+            return 0;
+        } catch (Exception e) {
             return 0;
         }
+
     }
 
     public static boolean JavaFileHasMethod(IGUID guid, String method) {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
+        try (Data data = agent.getData(guid)){
 
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaFileForMethod(compilationUnit.getChildNodes(), method);
 
         } catch (ServiceException e) {
-
+            return false;
+        } catch (Exception e) {
             return false;
         }
 
@@ -244,14 +257,14 @@ public class CommonPredicates {
 
         SOSAgent agent = SOSAgent.instance();
 
-        try {
-            Data data = agent.getData(guid);
+        try (Data data = agent.getData(guid)){
 
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaForClass(compilationUnit.getChildNodes(), clazz);
 
         } catch (ServiceException e) {
-
+            return false;
+        } catch (Exception e) {
             return false;
         }
 
