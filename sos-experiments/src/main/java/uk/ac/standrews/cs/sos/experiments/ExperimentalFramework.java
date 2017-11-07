@@ -43,6 +43,7 @@ public class ExperimentalFramework {
         System.out.println("Examples: pr_1/configuration/configuration.json");
         System.out.println("\t pr_1/configuration/configuration-hogun.json");
         System.out.println("\t po_1/configuration/configuration-hogun.json");
+        System.out.println("\t po_3/configuration/configuration-hogun.json");
         switch(option.toLowerCase()) {
 
             case RUN_EXPERIMENT:
