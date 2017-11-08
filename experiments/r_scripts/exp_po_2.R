@@ -14,7 +14,7 @@ setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
 # Read the CVS file
-d <- read.csv("output/po_2__2017_11_06T15_13_04_348Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/po_2__2017_11_08T16_49_11_156Z.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
@@ -46,9 +46,13 @@ colors = c(rep("red",1),rep("deepskyblue",2),rep("green",1))
 ################
 # Playing with ggplot
 
-ggplot(data=d, aes(x=d$ContextName, y=d$Measures)) + 
-  geom_boxplot(outlier.alpha = 1) +
-  #geom_point(color="tomato", position="jitter", alpha=.5) +
+dd <- d[d$Subtype == 'policy_apply_dataset',]
+dd$Message <- droplevels(dd$Message)
+dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
+
+ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
+  geom_point() +
+  #geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),

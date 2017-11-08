@@ -66,6 +66,8 @@ public class SOSContextService implements ContextService {
 
     // DATA STRUCTURES
     private ContextsContentsDirectory contextsContentsDirectory;
+    // TODO - predicate and policy caching. This can improve performance a lot!
+    private HashMap<IGUID, ComputationalUnit> cachedComputationalUnits;
 
     // This executor service will be used to schedule any background tasks
     private static final int CMS_SCHEDULER_PS = 4;
@@ -97,6 +99,7 @@ public class SOSContextService implements ContextService {
             this.commonUtilities = commonUtilities;
 
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
+            cachedComputationalUnits = new LinkedHashMap<>();
 
             predicateThreadSessionStatistics = new LinkedList<>();
             applyPolicyThreadSessionStatistics = new LinkedList<>();
@@ -442,6 +445,7 @@ public class SOSContextService implements ContextService {
      * This method is public so that it is accessible to the experiments too
      * @return number of assets processed by all contexts
      */
+    @Override
     public int runPredicates() {
 
         int counter = 0;
@@ -465,6 +469,7 @@ public class SOSContextService implements ContextService {
             } catch (ContextException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
             }
+            SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getUniqueName());
         }
 
         return counter;
@@ -615,8 +620,15 @@ public class SOSContextService implements ContextService {
 
         IGUID predicateRef = context.predicate();
 
+        if (cachedComputationalUnits.containsKey(predicateRef)) {
+            return (Predicate) cachedComputationalUnits.get(predicateRef);
+        }
+
         try {
-            return (Predicate) manifestsDataService.getManifest(predicateRef, NodeType.CMS);
+
+            Predicate predicate = (Predicate) manifestsDataService.getManifest(predicateRef, NodeType.CMS);
+            cachedComputationalUnits.put(predicateRef, predicate);
+            return predicate;
 
         } catch (ManifestNotFoundException e) {
 
@@ -672,12 +684,13 @@ public class SOSContextService implements ContextService {
 
         Set<Context> contexts = getContexts();
         for (Context context : contexts) {
+            SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
 
             policy_time_to_run_apply_on_current_dataset = 0;
-
             runPolicies(context);
-
             InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policy_time_to_run_apply_on_current_dataset);
+
+            SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
         }
 
     }
@@ -735,8 +748,16 @@ public class SOSContextService implements ContextService {
 
         for(IGUID policyRef:context.policies()) {
 
+            if (cachedComputationalUnits.containsKey(policyRef)) {
+                Policy policy = (Policy) cachedComputationalUnits.get(policyRef);
+                retval.add(policy);
+
+                continue;
+            }
+
             try {
                 Policy policy = (Policy) manifestsDataService.getManifest(policyRef, NodeType.CMS);
+                cachedComputationalUnits.put(policyRef, policy);
                 retval.add(policy);
 
             } catch (ManifestNotFoundException e) {

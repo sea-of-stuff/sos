@@ -23,9 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * TODO - Load any maven dependencies using Maven Artifact Resolver?
@@ -33,6 +31,8 @@ import java.util.Collections;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSReflection {
+
+    private static Set<String> loadedClasses = new LinkedHashSet<>();
 
     /**
      * Load multiple classes at path
@@ -110,6 +110,7 @@ public class SOSReflection {
 
         try {
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
+            SOS_LOG.log(LEVEL.INFO, "Preparing to load class for computation unit of type: " + type.toString());
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder(type.toString());
             String clazzString = classBuilder.constructClass(node);
             // System.out.println(clazzString); // THIS LINE IS HERE FOR DEBUG PURPOSES
@@ -163,9 +164,12 @@ public class SOSReflection {
      */
     private static void LoadClassName(String className) throws ClassLoaderException {
 
+        if (loadedClasses.contains(ClassBuilderFactory.PACKAGE + "." + className)) return;
+
         try {
             java.lang.ClassLoader cl = SOSClassLoader();
             Class<?> cls = cl.loadClass(ClassBuilderFactory.PACKAGE + "." + className);
+            loadedClasses.add(ClassBuilderFactory.PACKAGE + "." + className);
             SOS_LOG.log(LEVEL.INFO, "Loaded class: " + cls.getName());
 
         } catch (ClassNotFoundException e) {

@@ -63,9 +63,15 @@ public interface ExperimentUnit {
 
         SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
 
+            int counter = 0;
+
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // System.out.println("File " + file.toUri().toString());
+                counter++;
+                if (counter % 50 == 0) {
+                    System.out.println("Files added: " + counter);
+                }
 
                 try {
                     AtomBuilder atomBuilder = new AtomBuilder()
@@ -92,9 +98,16 @@ public interface ExperimentUnit {
 
         SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
 
+            int counter = 0;
+
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // System.out.println("File " + file.toUri().toString());
+
+                counter++;
+                if (counter % 50 == 0) {
+                    System.out.println("Files added: " + counter);
+                }
 
                 try {
                     AtomBuilder atomBuilder = new AtomBuilder()
