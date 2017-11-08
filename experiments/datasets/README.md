@@ -43,3 +43,30 @@ http://disi.unitn.it/moschitti/corpora.htm
 ### Reuters-21578
 
 http://disi.unitn.it/moschitti/corpora.htm
+
+
+### Gutenberg
+
+http://www.gutenberg.org/wiki/Gutenberg:Information_About_Robot_Access_to_our_Pages
+
+To unzip run the following command:
+`find . -depth -name '*.zip' -exec /usr/bin/unzip -n {} \; -delete`
+
+### text_1kb
+
+Used the 20 newsgroup corpus and truncated the files
+
+### text_100kb
+
+Used the gutenber files and truncated
+
+
+### Usenet corpus (~36gb compressed)
+
+
+http://www.psych.ualberta.ca/~westburylab/downloads/usenetcorpus.download.html
+
+
+### Wikipedia
+
+https://dumps.wikimedia.org/
