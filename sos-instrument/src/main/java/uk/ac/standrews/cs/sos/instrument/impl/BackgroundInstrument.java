@@ -64,6 +64,7 @@ public class BackgroundInstrument implements Metrics {
 
     public BackgroundInstrument(String filename) {
         this.filename = filename;
+        System.out.println("Background instrumentation output will be collected at the file: " + filename + "_os.tsv");
 
         this.measurementsQueue = new LinkedList<>();
     }

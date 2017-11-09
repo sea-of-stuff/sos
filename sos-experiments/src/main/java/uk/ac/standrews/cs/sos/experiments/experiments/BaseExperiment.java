@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.experiments.*;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 import uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument;
 
 import java.io.File;
@@ -47,7 +46,7 @@ public abstract class BaseExperiment implements Experiment {
         System.out.println("Total number of iterations for this experiment: " + numberOfTotalIterations());
 
         try {
-            InstrumentFactory.instance(experiment.getStats(), OutputTYPE.TSV, OUTPUT_FOLDER + getExperimentResultsFilename());
+            InstrumentFactory.instance(experiment.getStats(), OUTPUT_FOLDER + getExperimentResultsFilename());
             InstrumentFactory.start();
 
             if (experiment.getExperimentNode().hasDataset()) {

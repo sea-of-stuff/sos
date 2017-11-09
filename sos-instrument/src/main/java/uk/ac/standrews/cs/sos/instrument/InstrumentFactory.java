@@ -24,11 +24,13 @@ public class InstrumentFactory {
         return basicInstrument;
     }
 
-    public static Instrument instance(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
+    public static Instrument instance(Statistics statistics, String filename) throws IOException {
 
         if (basicInstrument == null) {
-            basicInstrument = new BasicInstrument(statistics, outputTYPE, filename);
+            System.out.println("---------------------------------------------");
+            basicInstrument = new BasicInstrument(statistics, filename);
             backgroundInstrument = new BackgroundInstrument(filename);
+            System.out.println("---------------------------------------------");
         }
 
         return basicInstrument;

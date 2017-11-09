@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.instrument.impl;
 
 import uk.ac.standrews.cs.sos.instrument.Instrument;
 import uk.ac.standrews.cs.sos.instrument.Metrics;
-import uk.ac.standrews.cs.sos.instrument.OutputTYPE;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.*;
@@ -16,23 +15,24 @@ import static uk.ac.standrews.cs.sos.instrument.Metrics.TAB;
  */
 public class BasicInstrument implements Instrument {
 
+    private static final String DATASET_SUMMARY = "_dataset.txt";
+    private static final String DATASET_FILES = "_dataset_files.tsv";
+
     private Statistics statistics;
-    private OutputTYPE outputTYPE;
     private String filename;
 
     private static final Object LOCK_MEASUREMENTS_QUEUE = new Object();
     private Queue<Metrics> measurementsQueue;
 
-    public BasicInstrument(Statistics statistics, OutputTYPE outputTYPE, String filename) throws IOException {
+    public BasicInstrument(Statistics statistics, String filename) throws IOException {
         this.statistics = statistics;
-        this.outputTYPE = outputTYPE;
         this.filename = filename;
 
         this.measurementsQueue = new LinkedList<>();
 
         boolean fileIsEmpty = fileIsEmpty(filename);
         if (fileIsEmpty) {
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + ".tsv"), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 bufferedWriter.write("StatsTYPE" + TAB + "Subtype" + TAB);
@@ -40,21 +40,22 @@ public class BasicInstrument implements Instrument {
             }
         }
 
-        System.out.println("Instrumentation output will be collected at the file: " + filename + "." + outputTYPE.name().toLowerCase() +
-                " - The output will be of type: " + outputTYPE);
+        System.out.println("Instrumentation output will be collected at the file: " + filename + ".tsv");
+        System.out.println("Statistics about the dataset used will be available at the file: " + (filename + DATASET_SUMMARY));
+        System.out.println("Statistics about the dataset (per file) will be available at the file: " + (filename + DATASET_FILES));
     }
 
     @Override
     public void measureDataset(File directory) throws IOException {
 
-        try (FileWriter fileWriter = new FileWriter(new File(filename + "_node"), true);
+        try (FileWriter fileWriter = new FileWriter(new File(filename + DATASET_SUMMARY), true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
             DatasetMetrics datasetMetrics = DatasetMetrics.measure(directory);
             bufferedWriter.write(datasetMetrics.toString());
         }
 
-        try (FileWriter fileWriter = new FileWriter(new File(filename + "_dataset.tsv"), true);
+        try (FileWriter fileWriter = new FileWriter(new File(filename + DATASET_FILES), true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
             DatasetMetrics datasetMetrics = DatasetMetrics.measure(directory);
@@ -96,7 +97,7 @@ public class BasicInstrument implements Instrument {
 
         synchronized (LOCK_MEASUREMENTS_QUEUE) {
 
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "." + outputTYPE.name().toLowerCase()), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + ".tsv"), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 for (Metrics metrics : measurementsQueue) {
@@ -114,30 +115,16 @@ public class BasicInstrument implements Instrument {
 
     private void write(BufferedWriter bufferedWriter, Metrics metrics, boolean last) throws IOException {
 
-        switch (outputTYPE) {
-            case STRING:
-                bufferedWriter.write(metrics.toString());
-                if (last) bufferedWriter.newLine();
-                break;
-            case TSV:
-                bufferedWriter.write(metrics.tsv());
-                if (!last) bufferedWriter.write(TAB);
-                break;
-        }
+        bufferedWriter.write(metrics.tsv());
+        if (!last) bufferedWriter.write(TAB);
 
         if (last) bufferedWriter.newLine();
     }
 
     private void writeHeader(BufferedWriter bufferedWriter, Metrics metrics, boolean last) throws IOException {
 
-        switch (outputTYPE) {
-            case STRING:
-                break;
-            case TSV:
-                bufferedWriter.write(metrics.tsvHeader());
-                if (!last) bufferedWriter.write(TAB);
-                break;
-        }
+        bufferedWriter.write(metrics.tsvHeader());
+        if (!last) bufferedWriter.write(TAB);
 
         if (last) bufferedWriter.newLine();
     }
@@ -157,7 +144,7 @@ public class BasicInstrument implements Instrument {
 
     public static void main(String[] args) throws IOException {
 
-        Instrument instrument = new BasicInstrument(new Statistics(), OutputTYPE.TSV, "TEST");
+        Instrument instrument = new BasicInstrument(new Statistics(), "TEST");
         instrument.measure("test one");
         instrument.flush();
         instrument.measure("test two");
