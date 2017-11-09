@@ -25,7 +25,7 @@ public class NetworkOperationsTest {
         networkOperations.setSsh(ssh);
         networkOperations.connect();
 
-        networkOperations.sendDirectory("/Users/sic2/Downloads/Test", "/cs/scratch/sic2/data");
+        networkOperations.sendDirectory("/Users/sic2/Downloads/Test", "/cs/scratch/sic2/data", true);
         networkOperations.disconnect();
     }
 

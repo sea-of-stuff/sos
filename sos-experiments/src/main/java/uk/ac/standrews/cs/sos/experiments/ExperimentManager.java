@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import java.io.File;
 import java.lang.reflect.Constructor;
 
+import static uk.ac.standrews.cs.sos.experiments.distribution.SOSDistribution.REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -52,7 +54,7 @@ public class ExperimentManager {
      */
     public static void main(String[] args) throws Exception {
 
-        File experimentConfigurationFile = new File("experiment.json");
+        File experimentConfigurationFile = new File(REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         if (args.length == 0) {

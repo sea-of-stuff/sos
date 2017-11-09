@@ -76,7 +76,7 @@ public class NetworkOperations {
      * @param rfile
      * @throws NetworkException
      */
-    public void sendFile(String lfile, String rfile) throws NetworkException {
+    public void sendFile(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {
         System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
 
         if (!new File(lfile).exists()) {
@@ -84,20 +84,21 @@ public class NetworkOperations {
             throw new NetworkException();
         }
 
-        try {
-            InputStream inputStream = new FileInputStream(new File(lfile));
-            String lCheckum = GUIDFactory.generateGUID(ALGORITHM.SHA1, inputStream).toString();
-            String rChecksum = checkSum(rfile);
+        if (checkRemoteFile) {
+            try {
+                InputStream inputStream = new FileInputStream(new File(lfile));
+                String lCheckum = GUIDFactory.generateGUID(ALGORITHM.SHA1, inputStream).toString();
+                String rChecksum = checkSum(rfile);
 
-            if (lCheckum.equals(rChecksum)) {
-                System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same SHA1 checksum " + lCheckum);
-                System.out.println("File will not be sent to the remote node");
-                return;
+                if (lCheckum.equals(rChecksum)) {
+                    System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same SHA1 checksum " + lCheckum);
+                    System.out.println("File will not be sent to the remote node");
+                    return;
+                }
+            } catch (FileNotFoundException | GUIDGenerationException e) {
+                throw new NetworkException();
             }
-        } catch (FileNotFoundException | GUIDGenerationException e) {
-            throw new NetworkException();
         }
-
 
         try {
             // exec 'scp -t rfile' remotely
@@ -110,7 +111,7 @@ public class NetworkOperations {
         }
     }
 
-    public void sendDirectory(String lDirectory, String rDirectory) throws NetworkException {
+    public void sendDirectory(String lDirectory, String rDirectory, boolean checkRemoteFiles) throws NetworkException {
 
         makePath(rDirectory);
 
@@ -120,9 +121,9 @@ public class NetworkOperations {
         for (File file : files) {
             if (file.isDirectory()) {
                 System.out.println("Send sub-directory: " + file.getName());
-                sendDirectory(file.getAbsolutePath(), rDirectory + "/" + file.getName());
+                sendDirectory(file.getAbsolutePath(), rDirectory + "/" + file.getName(), checkRemoteFiles);
             } else {
-                sendFile(file.getAbsolutePath(), rDirectory + "/" + file.getName());
+                sendFile(file.getAbsolutePath(), rDirectory + "/" + file.getName(), checkRemoteFiles);
             }
         }
     }
@@ -248,7 +249,7 @@ public class NetworkOperations {
         channel.connect();
 
         try (OutputStream out=channel.getOutputStream();
-            InputStream in=channel.getInputStream()) {
+             InputStream in=channel.getInputStream()) {
 
             if (checkAck(in) != 0) {
                 System.exit(0);
@@ -287,30 +288,31 @@ public class NetworkOperations {
             }
 
             // send a content of lfile
-            FileInputStream fis = new FileInputStream(lfile);
-            byte[] buf = new byte[BUFFER_SIZE];
-            long dataSent = 0;
-            int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
+            try (FileInputStream fis = new FileInputStream(lfile)) {
+                byte[] buf = new byte[BUFFER_SIZE];
+                long dataSent = 0;
+                int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
 
-            while (true) {
-                int len = fis.read(buf, 0, buf.length);
-                if (len <= 0) break;
+                while (true) {
+                    int len = fis.read(buf, 0, buf.length);
+                    if (len <= 0) break;
 
-                dataSent += len;
-                if (printingIndex % printingFrequency == 0) {
-                    String outputToConsole = "Sent " + dataSent / 1000000.0 + " / " + filesize / 1000000.0 + " MB";
-                    System.out.println(outputToConsole);
+                    dataSent += len;
+                    if (printingIndex % printingFrequency == 0) {
+                        String outputToConsole = "Sent " + dataSent / 1000000.0 + " / " + filesize / 1000000.0 + " MB";
+                        System.out.println(outputToConsole);
+                    }
+                    printingIndex++;
+
+                    out.write(buf, 0, len); //out.flush();
                 }
-                printingIndex++;
 
-                out.write(buf, 0, len); //out.flush();
+                // send '\0'
+                buf[0] = 0;
+                out.write(buf, 0, 1);
+                out.flush();
             }
 
-            fis.close();
-            // send '\0'
-            buf[0] = 0;
-            out.write(buf, 0, 1);
-            out.flush();
             if (checkAck(in) != 0) {
                 System.exit(0);
             } else {
@@ -379,21 +381,21 @@ public class NetworkOperations {
                 out.flush();
 
                 // read a content of lfile
-                FileOutputStream fos = new FileOutputStream(prefix == null ? lfile : prefix + file);
-                int foo;
-                while (true) {
-                    if (buf.length < filesize) foo = buf.length;
-                    else foo = (int) filesize;
-                    foo = in.read(buf, 0, foo);
-                    if (foo < 0) {
-                        // error
-                        break;
+                try (FileOutputStream fos = new FileOutputStream(prefix == null ? lfile : prefix + file)) {
+                    int foo;
+                    while (true) {
+                        if (buf.length < filesize) foo = buf.length;
+                        else foo = (int) filesize;
+                        foo = in.read(buf, 0, foo);
+                        if (foo < 0) {
+                            // error
+                            break;
+                        }
+                        fos.write(buf, 0, foo);
+                        filesize -= foo;
+                        if (filesize == 0L) break;
                     }
-                    fos.write(buf, 0, foo);
-                    filesize -= foo;
-                    if (filesize == 0L) break;
                 }
-                fos.close();
 
                 if (checkAck(in) != 0) {
                     System.exit(0);

@@ -22,7 +22,7 @@ public class SOSDistribution {
     private static final String REMOTE_SOS_PID_FILE =  "sos.pid";
     private static final String REMOTE_SOS_OUT_FILE = "out";
     private static final String REMOTE_SOS_EXPERIMENTS_JAR_PATH =  "sos-experiments.jar";
-    private static final String REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH = "experiment.json";
+    public static final String REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH = "experiment.json";
 
     public static void distribute(ExperimentConfiguration configuration) throws NetworkException, InterruptedException {
 
@@ -40,26 +40,18 @@ public class SOSDistribution {
             scp.connect();
 
             scp.makePath(path);
-            scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH);
-            scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH);
+            scp.sendFile(appPath, path + REMOTE_SOS_JAR_PATH, true);
+            scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH, true);
 
             if (node.getCertificateFile() != null && node.getKeyFile() != null) {
-                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH);
-                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH);
+                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH, true);
+                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH, true);
             }
 
             if (node.hasDataset()) {
                 String lDirectoryDataset = REPO_DATASETS_PATH + node.getDataset();
-                scp.sendDirectory(lDirectoryDataset, path + node.getDatasetPath());
+                scp.sendDirectory(lDirectoryDataset, path + node.getDatasetPath(), false);
             }
-
-            // Copy contexts over
-//            scp.makePath(path + REMOTE_CONTEXTS_PATH);
-//            scp.sendDirectory(REPO_CONTEXTS_PATH, path + node.getContextsPath());
-
-            // Copy users/roles over
-//            scp.makePath(path + REMOTE_USRO_PATH);
-//            scp.sendDirectory(REPO_USRO_PATH, path + node.getUsroPath());
 
             scp.disconnect();
         }
@@ -165,30 +157,31 @@ public class SOSDistribution {
 
         scp.makePath(path);
         scp.makePath(path + "experiments/output");
-        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_EXPERIMENTS_JAR_PATH);
-        scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH);
-        scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile());
+        scp.sendFile(LOCAL_EXPERIMENT_JAR_PATH, path + REMOTE_SOS_EXPERIMENTS_JAR_PATH, true);
+        scp.sendFile(temp.getAbsolutePath(), path + REMOTE_SOS_EXPERIMENT_CONFIGURATION_PATH, true);
+        scp.sendFile(experimentNode.getConfigurationFile(experimentName), path + experimentNode.getConfigurationFile(), true);
 
         if (experimentNode.getCertificateFile() != null && experimentNode.getKeyFile() != null) {
-            scp.sendFile(experimentNode.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH);
-            scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH);
+            scp.sendFile(experimentNode.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH, true);
+            scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH, true);
         }
 
         if (experimentNode.hasDataset()) {
-            scp.makePath(path + REMOTE_DATASETS_PATH);
+            scp.makePath(path + experimentNode.getDatasetPath());
             String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
-            scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath());
+            scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
         }
 
         // Copy contexts over
         if (new File(REPO_CONTEXTS_PATH + experimentName + "/").exists()) {
-            scp.makePath(path + REMOTE_CONTEXTS_PATH);
-            scp.sendDirectory(REPO_CONTEXTS_PATH + experimentName + "/", path + experimentNode.getContextsPath());
+            scp.makePath(path + experimentNode.getContextsPath());
+            scp.makePath(path + experimentNode.getContextsPath() + experimentName);
+            scp.sendDirectory(REPO_CONTEXTS_PATH + experimentName + "/", path + experimentNode.getContextsPath() + experimentName, true);
         }
 
         if (experimentNode.isSendUSRO()) {
-            scp.makePath(path + REMOTE_USRO_PATH);
-            scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getUsroPath());
+            scp.makePath(path + experimentNode.getUsroPath());
+            scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getUsroPath(), true);
         }
 
         scp.disconnect();
