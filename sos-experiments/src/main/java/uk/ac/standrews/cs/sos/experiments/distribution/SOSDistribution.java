@@ -166,11 +166,12 @@ public class SOSDistribution {
             scp.sendFile(experimentNode.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH, true);
         }
 
-        if (experimentNode.hasDataset()) {
-            scp.makePath(path + experimentNode.getDatasetPath());
-            String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
-            scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
-        }
+        // FIXME - uncomment
+//        if (experimentNode.hasDataset()) {
+//            scp.makePath(path + experimentNode.getDatasetPath());
+//            String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
+//            scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
+//        }
 
         // Copy contexts over
         if (new File(REPO_CONTEXTS_PATH + experimentName + "/").exists()) {

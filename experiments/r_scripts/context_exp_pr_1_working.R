@@ -17,7 +17,7 @@ source("r_scripts/kruskal.r")
 # random_1  pr_1__2017_11_07T14_24_20_285Z.tsv
 # text      pr_1__2017_11_07T14_46_17_213Z
 # Read the CVS file
-d <- read.csv("remote/test_100kb_2.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/test_1kb_500its.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts

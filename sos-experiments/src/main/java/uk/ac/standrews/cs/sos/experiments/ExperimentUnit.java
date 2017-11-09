@@ -69,7 +69,6 @@ public interface ExperimentUnit {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // System.out.println("File " + file.toUri().toString());
                 counter++;
-                System.out.println("Files added: ");
                 if (counter % 100 == 0) {
                     System.out.print(counter + "  ");
                 }
@@ -91,6 +90,7 @@ public interface ExperimentUnit {
         };
 
         long start = System.nanoTime();
+        System.out.println("Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }
@@ -104,9 +104,7 @@ public interface ExperimentUnit {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // System.out.println("File " + file.toUri().toString());
-
                 counter++;
-                System.out.println("Files added: ");
                 if (counter % 100 == 0) {
                     System.out.print(counter + "  ");
                 }
@@ -129,6 +127,7 @@ public interface ExperimentUnit {
         };
 
         long start = System.nanoTime();
+        System.out.println("Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
         System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
     }

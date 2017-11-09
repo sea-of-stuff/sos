@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 
 import java.io.*;
+import java.util.concurrent.*;
 
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
@@ -101,7 +102,6 @@ public class NetworkOperations {
      * @throws NetworkException
      */
     private void sendFileToRemote(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {
-        System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
 
         if (!new File(lfile).exists()) {
             System.out.println("The local file " + lfile + " does not exist.");
@@ -109,8 +109,8 @@ public class NetworkOperations {
         }
 
         if (checkRemoteFile) {
-            try {
-                InputStream inputStream = new FileInputStream(new File(lfile));
+            try (InputStream inputStream = new FileInputStream(new File(lfile))){
+
                 String lCheckum = GUIDFactory.generateGUID(ALGORITHM.SHA1, inputStream).toString();
                 String rChecksum = checkSum(rfile);
 
@@ -119,7 +119,7 @@ public class NetworkOperations {
                     System.out.println("File will not be sent to the remote node");
                     return;
                 }
-            } catch (FileNotFoundException | GUIDGenerationException e) {
+            } catch (IOException | GUIDGenerationException e) {
                 throw new NetworkException();
             }
         }
@@ -271,14 +271,45 @@ public class NetworkOperations {
         ((ChannelExec) channel).setCommand(command);
 
         channel.connect();
+        System.out.println("  connected");
 
         try (OutputStream out=channel.getOutputStream();
              InputStream in=channel.getInputStream()) {
 
-            if (checkAck(in) != 0) {
-                System.exit(0);
+            System.out.println("  checking");
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Runnable task = () -> {
+                try {
+                    if (checkAck(in) != 0) {
+                        System.out.println("I am out..");
+                        System.exit(0);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            Future future = executor.submit(task);
+            try {
+                future.get(5, TimeUnit.SECONDS);
+            } catch (TimeoutException ex) {
+                // handle the timeout
+                ex.printStackTrace();
+                System.out.println("timeout!");
+            } catch (InterruptedException | ExecutionException e) {
+                // handle the interrupts
+                e.printStackTrace();
+            } finally {
+                System.out.println("cancelling?");
+                future.cancel(true); // may or may not desire this
             }
 
+
+
+
+
+            System.out.println("  checked");
 
             File _lfile = new File(lfile);
             String internalCommand;
@@ -293,6 +324,8 @@ public class NetworkOperations {
                     System.exit(0);
                 }
             }
+
+            System.out.println("  writing command");
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = _lfile.length();
@@ -311,6 +344,8 @@ public class NetworkOperations {
                 System.exit(0);
             }
 
+            System.out.println("  writing command (2)");
+
             // send a content of lfile
             try (FileInputStream fis = new FileInputStream(lfile)) {
                 byte[] buf = new byte[BUFFER_SIZE];
@@ -318,6 +353,7 @@ public class NetworkOperations {
                 int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
 
                 while (true) {
+                    System.out.print(" - ");
                     int len = fis.read(buf, 0, buf.length);
                     if (len <= 0) break;
 
@@ -471,7 +507,9 @@ public class NetworkOperations {
         return retval;
     }
 
-    private int checkAck(InputStream in) throws IOException{
+    private int checkAck(InputStream in) throws IOException {
+
+        System.out.println("a");
         int b=in.read();
         // b may be 0 for success,
         //          1 for error,
@@ -479,11 +517,12 @@ public class NetworkOperations {
         //          -1
         if(b==0) return b;
         if(b==-1) return b;
-
+        System.out.println("b");
         if(b==1 || b==2){
             StringBuilder sb=new StringBuilder();
             int c;
             do {
+                System.out.println("   ack");
                 c=in.read();
                 sb.append((char)c);
             }
