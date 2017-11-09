@@ -181,11 +181,15 @@ public class SOSDistribution {
         }
 
         // Copy contexts over
-        scp.makePath(path + REMOTE_CONTEXTS_PATH);
-        scp.sendDirectory(REPO_CONTEXTS_PATH, path + experimentNode.getContextsPath());
+        if (new File(REPO_CONTEXTS_PATH + experimentName + "/").exists()) {
+            scp.makePath(path + REMOTE_CONTEXTS_PATH);
+            scp.sendDirectory(REPO_CONTEXTS_PATH + experimentName + "/", path + experimentNode.getContextsPath());
+        }
 
-        scp.makePath(path + REMOTE_USRO_PATH);
-        scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getUsroPath());
+        if (experimentNode.isSendUSRO()) {
+            scp.makePath(path + REMOTE_USRO_PATH);
+            scp.sendDirectory(REPO_USRO_PATH, path + experimentNode.getUsroPath());
+        }
 
         scp.disconnect();
     }

@@ -190,6 +190,7 @@ public class ExperimentConfiguration {
             private SSH ssh;
             private Behaviour behaviour;
             private String dataset;
+            private boolean sendUSRO = false;
 
             public Node() {}
 
@@ -327,6 +328,14 @@ public class ExperimentConfiguration {
                 } else {
                     return REPO_USRO_PATH;
                 }
+            }
+
+            public boolean isSendUSRO() {
+                return sendUSRO;
+            }
+
+            public void setSendUSRO(boolean sendUSRO) {
+                this.sendUSRO = sendUSRO;
             }
 
             @JsonInclude(JsonInclude.Include.NON_DEFAULT)
