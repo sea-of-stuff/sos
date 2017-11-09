@@ -138,9 +138,9 @@ public class ExperimentalFramework {
         String statsBaseName = in.nextLine();
 
         SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + ".tsv", "experiments/remote/" + statsBaseName + ".tsv");
-        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + ".tsv", "experiments/remote/" + statsBaseName + OS_FILE);
-        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + ".tsv", "experiments/remote/" + statsBaseName + DATASET_SUMMARY);
-        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + ".tsv", "experiments/remote/" + statsBaseName + DATASET_FILES);
+        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + OS_FILE, "experiments/remote/" + statsBaseName + OS_FILE);
+        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + DATASET_SUMMARY, "experiments/remote/" + statsBaseName + DATASET_SUMMARY);
+        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + DATASET_FILES, "experiments/remote/" + statsBaseName + DATASET_FILES);
 
         System.out.println("Stat files collected at experiments/remote/" + statsBaseName + "*");
     }
