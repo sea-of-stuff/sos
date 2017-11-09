@@ -181,6 +181,7 @@ velocity.log*
 experiments/plots
 experiments/processed
 experiments/output
+experiments/remote
 experiments/.*
 !experiments/datasets/README.md
 experiments/datasets/

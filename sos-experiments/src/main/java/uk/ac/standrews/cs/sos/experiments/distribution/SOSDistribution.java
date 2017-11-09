@@ -190,7 +190,7 @@ public class SOSDistribution {
         scp.disconnect();
     }
 
-    public static void runExperiment(ExperimentConfiguration configuration) throws NetworkException {
+    public static void runExperiment(ExperimentConfiguration configuration, String args) throws NetworkException {
         System.out.println("Running the SOS-Experiment from a remote node");
 
         Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
@@ -201,7 +201,7 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
-        scp.executeJar(path, experimentNode.getJava(), REMOTE_SOS_EXPERIMENTS_JAR_PATH, "", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
+        scp.executeJar(path, experimentNode.getJava(), REMOTE_SOS_EXPERIMENTS_JAR_PATH, args, REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
 
         scp.disconnect();
     }
@@ -236,5 +236,22 @@ public class SOSDistribution {
         //scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
         scp.disconnect();
+    }
+
+    public static void getFileFromExperimentNode(ExperimentConfiguration configuration, String remote_filepath, String local_filepath) throws NetworkException {
+        System.out.println("Getting file from the SOS-Experiment node. File is at remote relative path: " + remote_filepath);
+
+        Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
+
+        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
+
+        NetworkOperations scp = new NetworkOperations();
+        scp.setSsh(experimentNode.getSsh());
+        scp.connect();
+
+        scp.getFile(path + remote_filepath, local_filepath);
+
+        scp.disconnect();
+
     }
 }

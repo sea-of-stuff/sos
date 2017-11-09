@@ -43,10 +43,22 @@ public abstract class BaseExperiment implements Experiment {
         this.experiment = experimentConfiguration.getExperimentObj();
         this.iteration = 0;
 
+        prepareExperiment(getExperimentResultsFilename());
+    }
+
+    public BaseExperiment(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        this.experiment = experimentConfiguration.getExperimentObj();
+        this.iteration = 0;
+
+        prepareExperiment(outputFilename);
+    }
+
+    private void prepareExperiment(String outputFilename) throws ExperimentException {
+
         System.out.println("Total number of iterations for this experiment: " + numberOfTotalIterations());
 
         try {
-            InstrumentFactory.instance(experiment.getStats(), OUTPUT_FOLDER + getExperimentResultsFilename());
+            InstrumentFactory.instance(experiment.getStats(), OUTPUT_FOLDER + outputFilename);
             InstrumentFactory.start();
 
             if (experiment.getExperimentNode().hasDataset()) {

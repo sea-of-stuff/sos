@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class BackgroundInstrument implements Metrics {
 
+    public static final String OS_FILE = "_os.tsv";
+
     private static final Object LOCK_MEASUREMENTS_QUEUE = new Object();
     private Queue<Metrics> measurementsQueue;
 
@@ -64,7 +66,7 @@ public class BackgroundInstrument implements Metrics {
 
     public BackgroundInstrument(String filename) {
         this.filename = filename;
-        System.out.println("Background instrumentation output will be collected at the file: " + filename + "_os.tsv");
+        System.out.println("Background instrumentation output will be collected at the file: " + filename + OS_FILE);
 
         this.measurementsQueue = new LinkedList<>();
     }
@@ -237,7 +239,7 @@ public class BackgroundInstrument implements Metrics {
 
         if (future == null) {
 
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "_os.tsv"), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + OS_FILE), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 bufferedWriter.write(new BackgroundInstrument().tsvHeader());
@@ -268,7 +270,7 @@ public class BackgroundInstrument implements Metrics {
 
         synchronized (LOCK_MEASUREMENTS_QUEUE) {
 
-            try (FileWriter fileWriter = new FileWriter(new File(filename + "_os.tsv"), true);
+            try (FileWriter fileWriter = new FileWriter(new File(filename + OS_FILE), true);
                  BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 
                 for (Metrics metrics : measurementsQueue) {

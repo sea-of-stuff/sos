@@ -29,12 +29,37 @@ public class ExperimentManager {
         }
     }
 
+    public static void runExperiment(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+
+        try {
+            Class<?> myClass = Class.forName("uk.ac.standrews.cs.sos.experiments.experiments." + experimentConfiguration.getExperimentObj().getExperimentClass());
+            Class<?>[] params = new Class[] {ExperimentConfiguration.class, String.class};
+            Constructor<?> constructor = myClass.getConstructor(params);
+            Experiment instanceOfMyClass = (Experiment) constructor.newInstance(experimentConfiguration, outputFilename);
+
+            instanceOfMyClass.process();
+
+        } catch (Exception e) {
+            throw new ExperimentException("Unable to instantiate experiment", e);
+        }
+    }
+
+    /**
+     *
+     * @param args
+     *  args[0] - optional - name of output files for experiment
+     * @throws Exception if the experiment node could not be started
+     */
     public static void main(String[] args) throws Exception {
 
         File experimentConfigurationFile = new File("experiment.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        // Run the experiment only. We assume that the distribution for this experiment has already been done.
-        ExperimentManager.runExperiment(experimentConfiguration);
+        if (args.length == 0) {
+            // Run the experiment only. We assume that the distribution for this experiment has already been done.
+            ExperimentManager.runExperiment(experimentConfiguration);
+        } else {
+            ExperimentManager.runExperiment(experimentConfiguration, args[0]);
+        }
     }
 }

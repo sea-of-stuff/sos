@@ -15,8 +15,8 @@ import static uk.ac.standrews.cs.sos.instrument.Metrics.TAB;
  */
 public class BasicInstrument implements Instrument {
 
-    private static final String DATASET_SUMMARY = "_dataset.txt";
-    private static final String DATASET_FILES = "_dataset_files.tsv";
+    public static final String DATASET_SUMMARY = "_dataset.txt";
+    public static final String DATASET_FILES = "_dataset_files.tsv";
 
     private Statistics statistics;
     private String filename;

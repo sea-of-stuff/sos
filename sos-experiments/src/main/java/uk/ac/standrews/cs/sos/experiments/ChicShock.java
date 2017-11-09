@@ -32,7 +32,7 @@ public class ChicShock {
 
         // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment(); // TODO <-- this method should return when experiment is finished, USE ARGS
+        chicShock.shockExperiment(null); // TODO <-- this method should return when experiment is finished, USE ARGS
 
         // STOP PHASE
         chicShock.unShock();
@@ -84,18 +84,33 @@ public class ChicShock {
      * Run the experiment from the experiment node.
      * This method should return only when the experiment is finished.
      */
-    public void shockExperiment() throws ChicShockException {
+    public void shockExperiment(String outputfile) throws ChicShockException {
         System.out.println("Starting the experiment remotely");
 
-        try {
-            boolean isRemote = experimentConfiguration.getExperimentObj().getExperimentNode().isRemote();
-            if (isRemote) {
-                SOSDistribution.runExperiment(experimentConfiguration);
-            } else {
-                ExperimentManager.runExperiment(experimentConfiguration);
+        if (outputfile == null || outputfile.isEmpty()) {
+
+            try {
+                boolean isRemote = experimentConfiguration.getExperimentObj().getExperimentNode().isRemote();
+                if (isRemote) {
+                    SOSDistribution.runExperiment(experimentConfiguration, "");
+                } else {
+                    ExperimentManager.runExperiment(experimentConfiguration);
+                }
+            } catch (ExperimentException | NetworkException e) {
+                throw new ChicShockException();
             }
-        } catch (ExperimentException | NetworkException e) {
-            throw new ChicShockException();
+        } else {
+
+            try {
+                boolean isRemote = experimentConfiguration.getExperimentObj().getExperimentNode().isRemote();
+                if (isRemote) {
+                    SOSDistribution.runExperiment(experimentConfiguration, outputfile);
+                } else {
+                    ExperimentManager.runExperiment(experimentConfiguration, outputfile);
+                }
+            } catch (ExperimentException | NetworkException e) {
+                throw new ChicShockException();
+            }
         }
 
         // TODO
