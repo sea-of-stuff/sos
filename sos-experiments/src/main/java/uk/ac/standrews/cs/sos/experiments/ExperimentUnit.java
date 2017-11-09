@@ -69,8 +69,9 @@ public interface ExperimentUnit {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 // System.out.println("File " + file.toUri().toString());
                 counter++;
-                if (counter % 50 == 0) {
-                    System.out.println("Files added: " + counter);
+                System.out.println("Files added: ");
+                if (counter % 100 == 0) {
+                    System.out.print(counter + "  ");
                 }
 
                 try {
@@ -105,8 +106,9 @@ public interface ExperimentUnit {
                 // System.out.println("File " + file.toUri().toString());
 
                 counter++;
-                if (counter % 50 == 0) {
-                    System.out.println("Files added: " + counter);
+                System.out.println("Files added: ");
+                if (counter % 100 == 0) {
+                    System.out.print(counter + "  ");
                 }
 
                 try {

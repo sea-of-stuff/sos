@@ -69,6 +69,30 @@ public class NetworkOperations {
         session.disconnect();
     }
 
+    public void sendFile(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {
+        System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
+
+        boolean sent = false;
+        int trial = 0;
+        while(trial < 3) {
+
+            try {
+                sendFileToRemote(lfile, rfile, checkRemoteFile);
+                sent = true;
+                break;
+            } catch (NetworkException e) {
+
+                System.err.println("Unable to send file. Try again...?");
+            }
+            trial++;
+        }
+
+        if (!sent) {
+            throw new NetworkException("Unable to send file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile + " after 3 trials");
+        }
+
+    }
+
     /**
      * Send a local file to a remote location
      *
@@ -76,7 +100,7 @@ public class NetworkOperations {
      * @param rfile
      * @throws NetworkException
      */
-    public void sendFile(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {
+    private void sendFileToRemote(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {
         System.out.println("NETWORK - Sending file " + lfile + " to the host " + ssh.getHost() + " in path " + rfile);
 
         if (!new File(lfile).exists()) {

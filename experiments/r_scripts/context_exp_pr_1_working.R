@@ -17,7 +17,7 @@ source("r_scripts/kruskal.r")
 # random_1  pr_1__2017_11_07T14_24_20_285Z.tsv
 # text      pr_1__2017_11_07T14_46_17_213Z
 # Read the CVS file
-d <- read.csv("output/pr_1__2017_11_08T17_46_06_194Z.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/test_100kb_2.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
@@ -76,7 +76,7 @@ dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYP
 
 ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
   geom_point() +
-  #geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
+  geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),

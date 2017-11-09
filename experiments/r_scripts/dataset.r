@@ -1,7 +1,7 @@
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-d <- read.csv("output/pr_1__2017_11_07T14_09_39_316Z_dataset.tsv", header=TRUE, sep="\t")
+d <- read.csv("output/pr_1__2017_11_07T14_09_39_316Z_dataset_files.tsv", header=TRUE, sep="\t")
 d$Size <- d$Size / 1000 # byte to kb
 hist(d$Size, 
      breaks=50,
