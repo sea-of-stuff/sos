@@ -8,6 +8,8 @@ public enum StatsTYPE {
     none,
     any,
 
+    io, // Time to write/read data, manifests, metadata, etc...
+
     predicate, // time to run the predicate function per asset
     predicate_dataset, // time to run the predicate on all the assets
     predicate_prep, // time to prepare before running the predicate for all assets

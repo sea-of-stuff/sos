@@ -584,7 +584,6 @@ public class SOSContextService implements ContextService {
             predicateResult = predicate.test(versionGUID); // TODO - measure mb of data processed?
             duration = System.nanoTime() - start;
             pred_time_to_run_predicate_on_current_dataset += duration;
-            // InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate, context.getName(), duration); // recording the time to run the predicate against ALL assets in this node
 
             // FIXME - adapt eviction model to new model
 //            ContextVersionInfo content = new ContextVersionInfo();
@@ -739,7 +738,6 @@ public class SOSContextService implements ContextService {
             }
             long duration = System.nanoTime() - start;
             policy_time_to_run_apply_on_current_dataset += duration;
-            //InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.none, context.getName(), duration);
 
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
 
@@ -859,7 +857,6 @@ public class SOSContextService implements ContextService {
             }
             long duration = System.nanoTime() - start;
             policy_time_to_run_check_on_current_dataset += duration;
-            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.none, context.getName(), duration);
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
