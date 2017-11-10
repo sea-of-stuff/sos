@@ -271,45 +271,31 @@ public class NetworkOperations {
         ((ChannelExec) channel).setCommand(command);
 
         channel.connect();
-        System.out.println("  connected");
 
         try (OutputStream out=channel.getOutputStream();
              InputStream in=channel.getInputStream()) {
-
-            System.out.println("  checking");
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Runnable task = () -> {
                 try {
                     if (checkAck(in) != 0) {
-                        System.out.println("I am out..");
                         System.exit(0);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.exit(0);
                 }
             };
 
             Future future = executor.submit(task);
             try {
                 future.get(5, TimeUnit.SECONDS);
-            } catch (TimeoutException ex) {
+            } catch (TimeoutException | InterruptedException | ExecutionException e) {
                 // handle the timeout
-                ex.printStackTrace();
-                System.out.println("timeout!");
-            } catch (InterruptedException | ExecutionException e) {
-                // handle the interrupts
                 e.printStackTrace();
+                throw new IOException();
             } finally {
-                System.out.println("cancelling?");
                 future.cancel(true); // may or may not desire this
             }
-
-
-
-
-
-            System.out.println("  checked");
 
             File _lfile = new File(lfile);
             String internalCommand;
@@ -324,8 +310,6 @@ public class NetworkOperations {
                     System.exit(0);
                 }
             }
-
-            System.out.println("  writing command");
 
             // send "C0644 filesize filename", where filename should not include '/'
             long filesize = _lfile.length();
@@ -344,8 +328,6 @@ public class NetworkOperations {
                 System.exit(0);
             }
 
-            System.out.println("  writing command (2)");
-
             // send a content of lfile
             try (FileInputStream fis = new FileInputStream(lfile)) {
                 byte[] buf = new byte[BUFFER_SIZE];
@@ -353,7 +335,6 @@ public class NetworkOperations {
                 int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
 
                 while (true) {
-                    System.out.print(" - ");
                     int len = fis.read(buf, 0, buf.length);
                     if (len <= 0) break;
 
@@ -509,7 +490,6 @@ public class NetworkOperations {
 
     private int checkAck(InputStream in) throws IOException {
 
-        System.out.println("a");
         int b=in.read();
         // b may be 0 for success,
         //          1 for error,
@@ -517,12 +497,10 @@ public class NetworkOperations {
         //          -1
         if(b==0) return b;
         if(b==-1) return b;
-        System.out.println("b");
         if(b==1 || b==2){
             StringBuilder sb=new StringBuilder();
             int c;
             do {
-                System.out.println("   ack");
                 c=in.read();
                 sb.append((char)c);
             }
