@@ -32,7 +32,7 @@ public class ChicShock {
 
         // RUNNING PHASE
         chicShock.shock();
-        chicShock.shockExperiment(null); // TODO <-- this method should return when experiment is finished, USE ARGS
+        chicShock.shockExperiment(null);
 
         // STOP PHASE
         chicShock.unShock();
@@ -112,9 +112,6 @@ public class ChicShock {
                 throw new ChicShockException();
             }
         }
-
-        // TODO
-        // Make sure to wait for a response back from that node and then return
     }
 
     public void unShock() throws ChicShockException {

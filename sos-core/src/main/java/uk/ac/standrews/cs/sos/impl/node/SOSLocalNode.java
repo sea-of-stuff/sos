@@ -179,11 +179,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // THIS METHOD CLEANS UP EVERTHING...SO USE IT WITH PRECAUTION
     public void cleanup() throws DataStorageException {
 
+        SOS_LOG.log(LEVEL.WARN, "Cleaning up SOS NODE");
         localStorage.destroy();
+        SOS_LOG.log(LEVEL.WARN, "SOS NODE cleaned up");
     }
 
     @Override
     public void kill() {
+        SOS_LOG.log(LEVEL.WARN, "Killing SOS NODE");
 
         if (nodeMaintainer != null) {
             nodeMaintainer.flush();
@@ -196,6 +199,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         DatabaseFactory.kill();
         SOSAgent.destroy();
+        SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
     }
 
     public String sign(String message) throws CryptoException {

@@ -130,6 +130,7 @@ public abstract class BaseExperiment implements Experiment {
     public void cleanup() throws ExperimentException {
 
         try {
+            node.kill();
             node.cleanup();
         } catch (DataStorageException e) {
             throw new ExperimentException();
