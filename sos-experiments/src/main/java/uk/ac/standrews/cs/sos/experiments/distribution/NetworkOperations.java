@@ -276,25 +276,32 @@ public class NetworkOperations {
              InputStream in=channel.getInputStream()) {
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
-            Runnable task = () -> {
+            Callable<Boolean> task = () -> {
                 try {
                     if (checkAck(in) != 0) {
-                        System.exit(0);
+                        return false;
                     }
                 } catch (IOException e) {
-                    System.exit(0);
+                    return false;
                 }
+
+                return true;
             };
 
-            Future future = executor.submit(task);
+            Future<Boolean> future = executor.submit(task);
+            boolean valid;
             try {
-                future.get(5, TimeUnit.SECONDS);
+                valid = future.get(10, TimeUnit.SECONDS);
             } catch (TimeoutException | InterruptedException | ExecutionException e) {
                 // handle the timeout
                 e.printStackTrace();
-                throw new IOException();
+                throw new JSchException();
             } finally {
                 future.cancel(true); // may or may not desire this
+            }
+
+            if (!valid) {
+                throw new JSchException();
             }
 
             File _lfile = new File(lfile);
@@ -307,7 +314,7 @@ public class NetworkOperations {
                 out.write(internalCommand.getBytes());
                 out.flush();
                 if (checkAck(in) != 0) {
-                    System.exit(0);
+                    throw new JSchException();
                 }
             }
 
@@ -325,7 +332,7 @@ public class NetworkOperations {
             out.write(internalCommand.getBytes());
             out.flush();
             if (checkAck(in) != 0) {
-                System.exit(0);
+                throw new JSchException();
             }
 
             // send a content of lfile
@@ -355,7 +362,7 @@ public class NetworkOperations {
             }
 
             if (checkAck(in) != 0) {
-                System.exit(0);
+                throw new JSchException();
             } else {
                 System.out.println("Content sent successfully");
             }
