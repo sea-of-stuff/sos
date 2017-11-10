@@ -227,6 +227,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         DatabaseFactory.kill();
         SOSAgent.destroy();
+
+        System.gc();
         SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
     }
 
