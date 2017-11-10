@@ -9,6 +9,8 @@ public enum StatsTYPE {
     any,
 
     io, // Time to write/read data, manifests, metadata, etc...
+    add_atom, read_atom,
+    add_manifest, read_manifest,
 
     predicate, // time to run the predicate function per asset
     predicate_dataset, // time to run the predicate on all the assets

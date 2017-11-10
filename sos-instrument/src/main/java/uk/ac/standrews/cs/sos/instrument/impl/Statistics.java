@@ -11,6 +11,7 @@ public class Statistics {
     private boolean predicate;
     private boolean policies;
     private boolean checkPolicies;
+    private boolean io;
 
     public Statistics() {}
 
@@ -27,6 +28,7 @@ public class Statistics {
             case predicate: return isPredicate();
             case policies: return isPolicies();
             case checkPolicies: return isCheckPolicies();
+            case io: return isIo();
         }
 
         return false;
@@ -64,4 +66,11 @@ public class Statistics {
         this.experiment = experiment;
     }
 
+    public boolean isIo() {
+        return io;
+    }
+
+    public void setIo(boolean io) {
+        this.io = io;
+    }
 }

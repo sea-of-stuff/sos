@@ -36,6 +36,8 @@ import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
@@ -330,6 +332,8 @@ public class SOSStorageService implements StorageService {
 
     private Data getAtomContent(NodesCollection nodesCollection, Atom atom) throws AtomNotFoundException {
 
+        long start = System.nanoTime();
+
         Set<IGUID> nodeRefs = nodesCollection.nodesRefs();
 
         for (LocationBundle locationBundle : findLocations(atom)) {
@@ -363,6 +367,10 @@ public class SOSStorageService implements StorageService {
             Data data = LocationUtility.getDataFromLocation(location);
 
             if (!(data instanceof EmptyData)) {
+
+                long duration = System.nanoTime() - start;
+                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_atom, "N/A", duration);
+
                 return data;
             }
         }
@@ -381,6 +389,8 @@ public class SOSStorageService implements StorageService {
      */
     private StoredAtomInfo addAtom(AtomBuilder atomBuilder, Set<LocationBundle> bundles) throws DataStorageException {
 
+        long start = System.nanoTime();
+
         StoredAtomInfo retval;
         if (storageSettings.isCanPersist() && atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
             retval = atomStorage.persist(atomBuilder);
@@ -397,6 +407,9 @@ public class SOSStorageService implements StorageService {
             bundles.add(retval.getLocationBundle());
             addLocation(retval.getGuid(), retval.getLocationBundle());
         }
+
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_atom, retval.getGuid().toMultiHash(), duration);
 
         return retval;
     }

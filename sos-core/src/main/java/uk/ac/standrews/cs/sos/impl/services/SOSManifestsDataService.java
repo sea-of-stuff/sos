@@ -19,6 +19,8 @@ import uk.ac.standrews.cs.sos.impl.datamodel.directory.*;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
@@ -78,6 +80,9 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
     @Override
     public void addManifest(Manifest manifest) throws ManifestPersistException {
+
+        long start = System.nanoTime();
+
         inMemoryCache.addManifest(manifest);
         local.addManifest(manifest);
 
@@ -109,6 +114,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         index.track(manifest);
 
+        long duration = System.nanoTime() - start;
+        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_manifest, manifest.guid().toMultiHash(), duration);
     }
 
     @Override
@@ -128,25 +135,23 @@ public class SOSManifestsDataService implements ManifestsDataService {
         manifestsLocationsIndex.addEntry(manifest, node);
     }
 
-    // REMOVEME - in favour of method with params (guid, nodeTypeFilter)
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
-        try {
-            return getManifest(new NodesCollectionImpl(ANY), NodeType.DDS, guid);
-        } catch (NodesCollectionException e) {
-            throw new ManifestNotFoundException("Manifest not found");
-        }
+        return getManifest(guid, NodeType.DDS);
     }
 
     @Override
     public Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException {
 
+        Manifest manifest;
         try {
-            return getManifest(new NodesCollectionImpl(ANY), nodeTypeFilter, guid);
+            manifest = getManifest(new NodesCollectionImpl(ANY), nodeTypeFilter, guid);
         } catch (NodesCollectionException e) {
             throw new ManifestNotFoundException("Manifest not found");
         }
+
+        return manifest;
     }
 
     @Override
@@ -169,6 +174,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
     @Override
     public Manifest getManifest(NodesCollection nodes, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException {
+
+        long start = System.nanoTime();
 
         if (guid == null || guid.isInvalid()) {
             throw new ManifestNotFoundException("GUID was invalid");
@@ -208,6 +215,10 @@ public class SOSManifestsDataService implements ManifestsDataService {
             if (manifest == null) {
                 throw new ManifestNotFoundException("Unable to find manifest in inMemoryCache, local, remote. GUID: " + guid.toShortString());
             }
+
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_manifest, "N/A", duration);
+
 
             return manifest;
         } catch (ManifestPersistException e) {

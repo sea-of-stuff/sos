@@ -1,0 +1,26 @@
+{
+  "experiment": {
+    "name": "io_1",
+    "experimentClass": "Experiment_IO_1",
+    "description": "The experiment IO 1 investigates the performance of ...",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 10
+    },
+    "nodes": [],
+    "experimentnode": {
+      "id": 0,
+      "name" : "local",
+      "remote": false,
+      "configurationfile": "node_0.json",
+      "dataset" : "text_100kb"
+    },
+    "stats": {
+      "io": true,
+      "experiment": false,
+      "predicate": false,
+      "policies": false,
+      "checkPolicies": false
+    }
+  }
+}
