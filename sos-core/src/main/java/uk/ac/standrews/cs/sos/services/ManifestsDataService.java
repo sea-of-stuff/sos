@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ManifestsDataService {
+public interface ManifestsDataService extends Service {
 
     /**
      * Add a manifest to the local sea of stuff.
@@ -155,10 +155,5 @@ public interface ManifestsDataService {
      * @return set of refs to manifest that match the search criteria
      */
     Set<IGUID> searchVersionableManifests(ManifestType type, List<ManifestParam> params);
-
-    /**
-     * Flushes the in-memory caches and indices into disk
-     */
-    void flush();
 
 }

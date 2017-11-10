@@ -296,6 +296,13 @@ public class SOSManifestsDataService implements ManifestsDataService {
         }
     }
 
+    @Override
+    public void shutdown() {
+        inMemoryCache.clear();
+        manifestsLocationsIndex.clear();
+        index.clear();
+    }
+
     private void loadOrCreateCache() {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();

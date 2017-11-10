@@ -78,4 +78,6 @@ public interface ManifestsIndex {
      * Rebuild index from disk
      */
     void rebuild();
+
+    void clear();
 }

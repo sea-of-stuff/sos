@@ -21,7 +21,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface ContextService {
+public interface ContextService extends Service {
 
     /**
      * Get all the contexts run by this node
@@ -112,16 +112,6 @@ public interface ContextService {
      *
      */
     Set<IGUID> getContents(IGUID context);
-
-    /**
-     * Flushes any in-memory information into disk
-     */
-    void flush();
-
-    /**
-     * Stops the threads
-     */
-    void shutdown();
 
     /**
      * Forces to run the predicate of the context with the matching GUID

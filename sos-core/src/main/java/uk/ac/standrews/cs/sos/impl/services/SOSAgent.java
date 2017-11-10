@@ -325,4 +325,13 @@ public class SOSAgent implements Agent {
         }
     }
 
+    @Override
+    public void flush() {
+        // DO NOTHING
+    }
+
+    @Override
+    public void shutdown() {
+        // DO NOTHING
+    }
 }

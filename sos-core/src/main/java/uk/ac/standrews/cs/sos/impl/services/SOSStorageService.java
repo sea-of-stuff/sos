@@ -319,6 +319,11 @@ public class SOSStorageService implements StorageService {
     }
 
     @Override
+    public void shutdown() {
+        locationIndex.clear();
+    }
+
+    @Override
     public SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings getStorageSettings() {
         return storageSettings;
     }

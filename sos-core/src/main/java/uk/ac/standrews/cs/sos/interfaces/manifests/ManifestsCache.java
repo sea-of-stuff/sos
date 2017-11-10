@@ -10,4 +10,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public interface ManifestsCache extends ManifestsDirectory {
 
     ConcurrentLinkedQueue<IGUID> getLRU();
+
+    void clear();
 }

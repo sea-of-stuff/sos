@@ -144,6 +144,15 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
         // TODO - FORCE THE INDEX TO BE REBUILT FROM THE LOCAL DIRECTORY
     }
 
+    @Override
+    public void clear() {
+
+        tips = new HashMap<>();
+        heads = new HashMap<>();
+        assetsToVersions = new HashMap<>();
+        typeToManifest = new HashMap<>();
+    }
+
     private void advanceTip(IGUID invariant, IGUID version) {
 
         if (!tips.containsKey(invariant)) {

@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface NodeDiscoveryService {
+public interface NodeDiscoveryService extends Service {
 
     /**
      * The manifestsDataService should be set to allow the NodeDiscoveryService to handle nodes as first class entities

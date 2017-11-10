@@ -215,6 +215,11 @@ public class SOSUsersRolesService implements UsersRolesService {
         }
     }
 
+    @Override
+    public void shutdown() {
+        index.clear();
+    }
+
     private void loadOrCreateCache() {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();

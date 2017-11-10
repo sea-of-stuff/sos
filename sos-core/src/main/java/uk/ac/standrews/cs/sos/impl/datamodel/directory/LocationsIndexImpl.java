@@ -148,6 +148,11 @@ public class LocationsIndexImpl implements LocationsIndex {
         ostream.close();
     }
 
+    @Override
+    public void clear() {
+        index = new HashMap<>();
+    }
+
     // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();

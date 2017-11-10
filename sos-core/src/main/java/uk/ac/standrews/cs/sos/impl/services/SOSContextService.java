@@ -346,6 +346,12 @@ public class SOSContextService implements ContextService {
         if (service != null) {
             service.shutdown();
         }
+
+        // RESET IN-MEMORY DATA STRUCTURES
+        cachedComputationalUnits = new LinkedHashMap<>();
+        predicateThreadSessionStatistics = new LinkedList<>();
+        applyPolicyThreadSessionStatistics = new LinkedList<>();
+        checkPolicyThreadSessionStatistics = new LinkedList<>();
     }
 
     ////////////////////////////////////////////////////////////

@@ -63,4 +63,13 @@ public class SOSMetadataService implements MetadataService {
         }
     }
 
+    @Override
+    public void flush() {
+        // DO NOTHING
+    }
+
+    @Override
+    public void shutdown() {
+        // DO NOTHING
+    }
 }

@@ -306,4 +306,20 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
         }, 10, 10, TimeUnit.SECONDS); // TODO - use settings from node config
     }
+
+    @Override
+    public void flush() {
+
+    }
+
+    @Override
+    public void shutdown() {
+
+        if (service != null) {
+            service.shutdown();
+        }
+
+        localNodesDirectory.clear();
+        nodesStats = new LinkedHashMap<>();
+    }
 }

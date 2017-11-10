@@ -84,6 +84,12 @@ public class UsersRolesIndex implements Serializable {
         return persistedCache;
     }
 
+    public void clear() {
+        usersToRoles = new HashMap<>();
+        activeRole = null;
+        activeUser = null;
+    }
+
     // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();

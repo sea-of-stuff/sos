@@ -197,6 +197,34 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             nodeMaintainerService.shutdown();
         }
 
+        if (agent != null) {
+            agent.shutdown();
+        }
+
+        if (contextService != null) {
+            contextService.shutdown();
+        }
+
+        if (usersRolesService != null) {
+            usersRolesService.shutdown();
+        }
+
+        if (metadataService != null) {
+            metadataService.shutdown();
+        }
+
+        if (storageService != null) {
+            storageService.shutdown();
+        }
+
+        if (manifestsDataService != null) {
+            manifestsDataService.shutdown();
+        }
+
+        if (nodeDiscoveryService != null) {
+            nodeDiscoveryService.shutdown();
+        }
+
         DatabaseFactory.kill();
         SOSAgent.destroy();
         SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");

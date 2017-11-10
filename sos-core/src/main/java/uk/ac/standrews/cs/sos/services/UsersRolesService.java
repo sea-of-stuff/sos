@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public interface UsersRolesService {
+public interface UsersRolesService extends Service {
 
     /**
      * Get the users stored at this node

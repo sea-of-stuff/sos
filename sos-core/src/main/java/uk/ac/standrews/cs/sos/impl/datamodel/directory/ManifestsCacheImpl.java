@@ -108,6 +108,13 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         return lru;
     }
 
+    @Override
+    public void clear() {
+
+        cache = new HashMap<>();
+        lru = new ConcurrentLinkedQueue<>();
+    }
+
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
 
         ManifestsCache persistedCache = (ManifestsCache) Persistence.Load(file);
