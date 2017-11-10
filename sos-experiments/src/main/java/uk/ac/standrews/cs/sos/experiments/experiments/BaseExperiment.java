@@ -157,6 +157,7 @@ public abstract class BaseExperiment implements Experiment {
 
             try {
                 System.out.println("Going to sleep for 5 seconds before the next iteration");
+                System.out.println("*******************************************************");
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 throw new ExperimentException();

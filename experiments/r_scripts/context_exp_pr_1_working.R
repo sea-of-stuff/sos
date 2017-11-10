@@ -1,10 +1,5 @@
 install.packages("PMCMR")
-# install.packages("FSA")
 library("PMCMR", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-# library("FSA", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-# library("fitdistrplus", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
-# install.packages("stargazer")
-# library(stargazer)
 library(ggplot2)
 
 
@@ -17,10 +12,10 @@ source("r_scripts/kruskal.r")
 # random_1  pr_1__2017_11_07T14_24_20_285Z.tsv
 # text      pr_1__2017_11_07T14_46_17_213Z
 # Read the CVS file
-d <- read.csv("remote/test_1kb_500its_2.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/test_1kb_500its_3.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate',]
 d$Message <- droplevels(d$Message)
-d$ContextName <- d$Message # sapply(strsplit(as.character(d$Message), '_'), '[', 1) # Split by 'SHA' if we want to look at the individual contexts
+d$ContextName <- d$Message
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
 d$ContextName<-factor(d$ContextName, levels=c("base", 
@@ -32,22 +27,6 @@ d$ContextName<-factor(d$ContextName, levels=c("base",
 
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
-aggr <- aggregate(d$Measures ~ d$ContextName,
-                  FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))
-
-d_processed <- do.call(data.frame, aggr)
-
-# Compute standard error per group
-d_processed$se <- d_processed[,3] / sqrt(d_processed[,4])
-
-# Rename columns
-colnames(d_processed) <- c("Configuration", "mean", "sd", "n", "se")
-d_processed$names <- d_processed$Config
-
-# http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
-# https://stackoverflow.com/questions/15212884/colouring-different-group-data-in-boxplot-using-r
-colors = c(rep("red",1),rep("deepskyblue",3),rep("green",3), rep("tomato", 2), rep("gray90", 1))
-
 
 # PLOT TIME TO RUN PREDICATE, PRE-PHASE, POST-PRED-PHASE ETC OVER DATASET
 dd <- d[d$Subtype != 'predicate',]
@@ -55,7 +34,6 @@ dd$Message <- droplevels(dd$Message)
 
 # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE", "Subtype"))
-
 
 ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, fill=dd$Subtype)) + 
   geom_bar(stat="identity", position=position_dodge()) +
@@ -89,64 +67,3 @@ kruskal(d, d$User.Measure, d$ContextName)
 
 kruskal_dunn(d, d$User.Measure, d$ContextName)
 kruskal_nemenyi(d, d$User.Measure, d$ContextName)
-
-
-
-# OLD STUFF
-##################
-# BOXPLOT
-#par(mar=c(20,4,4,2)+3) # Add space to show all labels
-#x <- boxplot(d$Measures~d$ContextName, data=d,
-#             outline=FALSE,
-#             las=2, # Draw x labels vertically
-#             main="Predicate performance against different settings",
-#             ylab="Time (s) - linear scale",
-#             col=colors)
-#
-#legend("topright", legend=c("Base", "Data", "Meta and Data", "Metadata", "Manifest"),
-#       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
-
-
-# This plot is weird because we cannot exclude very large outliers
-# PLOT PRED TIMES PER ASSET
-#dd <- d[d$Subtype == 'predicate',]
-#dd$Message <- droplevels(dd$Message)
-#ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
-#  geom_boxplot(outlier.alpha = 0.5, outlier.color = "red") +
-#  geom_point(color="grey50", position="jitter", alpha=.1) +
-#  theme_bw() +
-#  theme(axis.text.x=element_text(angle=90,hjust=1)) +
-#  labs(title="Predicates per asset....", x="Predicate", y="Time (s)")
-
-
-##################
-# BARPLOT
-
-# Estimate top limit on the y-axis
-plotTop <- max(d_processed$mean) + max(d_processed$se) +
-  d_processed[d_processed$mean == max(d_processed$mean), 5] * 4
-
-par(ask=F) # Do not ask to print plot on the console
-# mar=c(bottom, left, top, right)
-# mgp=c(axis.title.position, axis.label.position, axis.line.position))
-par(mar=c(12,4,4,2)+3, mgp=c(5,1,0)) # Add space to show all labels
-barCenters <- barplot(height = d_processed$mean,
-                      names.arg = d_processed$names,
-                      beside = true, las =2,
-                      ylim = c(0, plotTop),
-                      main = "TODO (this is the time for all assets!)",
-                      ylab = "Time (s)",
-                      border = "black",
-                      col=colors,
-                      axes = T)
-
-legend("topright", legend=c("ALL", "Meta", "Data", "Manifest", "Meta and Data"),
-       fill=c("red", "deepskyblue", "green", "tomato", "gray90"), cex=0.8, inset=.05)
-
-# Add error bars
-segments(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
-         d_processed$mean + d_processed$se * 2, lwd = 1.5)
-
-arrows(barCenters, d_processed$mean - d_processed$se * 2, barCenters,
-       d_processed$mean + d_processed$se * 2, lwd = 1.5, angle = 90,
-       code = 3, length = 0.05)

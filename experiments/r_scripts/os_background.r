@@ -3,7 +3,7 @@ library(ggplot2)
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
-d <- read.csv("remote/test_1kb_500its_2_os.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/test_1kb_500its_3_os.tsv", header=TRUE, sep="\t")
 
 # Convert to MB
 d$Mem.Used.Bytes <- d$Mem.Used.Bytes / 1000000
