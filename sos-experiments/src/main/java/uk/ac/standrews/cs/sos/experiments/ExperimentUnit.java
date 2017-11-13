@@ -94,7 +94,7 @@ public interface ExperimentUnit {
             // System.out.println("File " + file.toUri().toString());
             counter++;
             if (counter % 100 == 0) {
-                System.out.print(counter + "  ");
+                System.out.print("  " + counter);
             }
 
             try {
@@ -141,7 +141,7 @@ public interface ExperimentUnit {
             // System.out.println("File " + file.toUri().toString());
             counter++;
             if (counter % 100 == 0) {
-                System.out.print(counter + "  ");
+                System.out.print("  " + counter);
             }
 
             try {

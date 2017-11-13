@@ -45,13 +45,9 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_IO_1 implements ExperimentUnit {
 
-        Agent agent;
-
         @Override
         public void setup() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
-
-            agent = node.getAgent();
         }
 
         @Override
@@ -68,6 +64,9 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
                 e.printStackTrace();
                 throw new ExperimentException();
             }
+
+            // node.getMDS().shutdown(); // TODO - comment this line out to invalidate caches
+            Agent agent = node.getAgent();
 
             for(IGUID version:versions) {
                 try {

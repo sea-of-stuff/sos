@@ -1,14 +1,19 @@
 library(ggplot2)
-source("r_scripts/utils_stats.r")
+library(scales)
 
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
+source("r_scripts/utils_stats.r")
+
 # Read the CVS file
-d <- read.csv("output/io_1__2017_11_10T11_38_36_202Z.tsv", header=TRUE, sep="\t")
+# Dataset: text_100kb
+# Iterations: 10
+d <- read.csv("output/io_1__2017_11_13T17_09_13_062Z.tsv", header=TRUE, sep="\t") # With cache invalidation
+d <- read.csv("output/io_1__2017_11_13T17_19_29_095Z.tsv", header=TRUE, sep="\t") # Without cache invalidation
 d <- d[d$StatsTYPE == 'io',] # Filter policies measurements
 
-d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
+d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
 
 # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
 dd <- summarySE(d, measurevar="Measures", groupvars =c("Subtype", "StatsTYPE"))
@@ -20,5 +25,6 @@ ggplot(data=dd, aes(x=dd$Subtype, y=dd$Measures)) +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
-  labs(title="Write IO on data and manifests", x="Type of entity", y="Time (s)")
+  scale_y_continuous(labels = comma) + 
+  labs(title="IO on data and manifests", x="Operation", y="MB/s")
 

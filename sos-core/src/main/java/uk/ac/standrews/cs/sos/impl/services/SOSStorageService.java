@@ -369,7 +369,7 @@ public class SOSStorageService implements StorageService {
             if (!(data instanceof EmptyData)) {
 
                 long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_atom, atom.guid().toMultiHash(), duration);
+                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_atom, Long.toString(data.getSize()), duration);
 
                 return data;
             }
@@ -409,7 +409,7 @@ public class SOSStorageService implements StorageService {
         }
 
         long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_atom, retval.getGuid().toMultiHash(), duration);
+        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_atom, Long.toString(atomBuilder.getData().getSize()), duration);
 
         return retval;
     }
