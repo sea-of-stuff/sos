@@ -23,7 +23,7 @@ public class ExperimentalFramework {
     private static final String STOP_NODE = "stop";
     private static final String STOP_ALL_NODES = "stopall";
     private static final String STATS_NODE = "stats";
-    private static final String CLEAN_NODE = "clean"; // TODO - remove files from remote node
+    private static final String CLEAN_NODE = "clean";
 
     private static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/";
 
@@ -48,9 +48,9 @@ public class ExperimentalFramework {
         System.out.println("Enter experiment configuration path relative to " + CONFIGURATION_FOLDER);
         System.out.println("Examples: pr_1/configuration/configuration.json");
         System.out.println("\t pr_1/configuration/configuration-hogun.json");
-        System.out.println("\t po_1/configuration/configuration-hogun.json");
-        System.out.println("\t po_2/configuration/configuration-hogun.json");
-        System.out.println("\t po_3/configuration/configuration-hogun.json");
+        System.out.println("\t po_a_1/configuration/configuration-hogun.json");
+        System.out.println("\t po_a_2/configuration/configuration-hogun.json");
+        System.out.println("\t po_a_3/configuration/configuration-hogun.json");
         switch(option.toLowerCase()) {
 
             case RUN_EXPERIMENT:

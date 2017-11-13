@@ -1,8 +1,8 @@
 {
   "experiment": {
-    "name": "po_1",
-    "experimentClass": "Experiment_PO_1",
-    "description": "The experiment PO 1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc..",
+    "name": "po_a_1",
+    "experimentClass": "Experiment_PO_A_1",
+    "description": "The experiment PO_A_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc..",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 1
