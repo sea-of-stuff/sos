@@ -217,7 +217,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             }
 
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_manifest, "N/A", duration);
+            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_manifest, guid.toMultiHash(), duration);
 
 
             return manifest;

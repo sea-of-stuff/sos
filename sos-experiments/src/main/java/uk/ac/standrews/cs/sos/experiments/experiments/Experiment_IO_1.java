@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -8,6 +10,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.services.Agent;
 
 import java.io.File;
 import java.util.Collections;
@@ -42,22 +45,36 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_IO_1 implements ExperimentUnit {
 
+        Agent agent;
+
         @Override
         public void setup() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
+
+            agent = node.getAgent();
         }
 
         @Override
         public void run() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
+            List<IGUID> versions;
+
             try {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+                versions = addFolderContentToNode(node, new File(datasetPath));
 
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ExperimentException();
+            }
+
+            for(IGUID version:versions) {
+                try {
+                    agent.getData(version);
+                } catch (ServiceException e) {
+                    throw new ExperimentException("Unable to get data for version with GUID " + version.toMultiHash());
+                }
             }
 
         }

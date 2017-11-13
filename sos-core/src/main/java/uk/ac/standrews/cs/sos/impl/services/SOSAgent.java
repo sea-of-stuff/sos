@@ -195,17 +195,19 @@ public class SOSAgent implements Agent {
     public Data getData(IGUID guid) throws ServiceException {
 
         try {
-            IGUID atomGUID = guid;
+            IGUID contentGUID = guid;
 
             Manifest manifest = manifestsDataService.getManifest(guid);
             if (manifest.getType().equals(ManifestType.VERSION)) {
-                atomGUID = ((Version) manifest).content();
-                if (!manifestsDataService.getManifest(atomGUID).getType().equals(ManifestType.ATOM)) {
+                contentGUID = ((Version) manifest).content();
+
+                Manifest contentManifest = manifestsDataService.getManifest(contentGUID);
+                if (!contentManifest.getType().equals(ManifestType.ATOM)) {
                     throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find atom data");
                 }
             }
 
-            return storageService.getAtomContent(atomGUID);
+            return storageService.getAtomContent(contentGUID);
 
         } catch (AtomNotFoundException | ManifestNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to find manifest for data", e);

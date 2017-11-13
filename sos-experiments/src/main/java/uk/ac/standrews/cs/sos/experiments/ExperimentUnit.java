@@ -30,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -59,77 +61,106 @@ public interface ExperimentUnit {
      * @throws MetadataException
      * @throws IOException
      */
-    default void addFolderContentToNode(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
+    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
 
-        SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
-
-            int counter = 0;
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                // System.out.println("File " + file.toUri().toString());
-                counter++;
-                if (counter % 100 == 0) {
-                    System.out.print(counter + "  ");
-                }
-
-                try {
-                    AtomBuilder atomBuilder = new AtomBuilder()
-                            .setLocation(new URILocation(file.toUri().toString()));
-                    VersionBuilder versionBuilder = new VersionBuilder()
-                            .setAtomBuilder(atomBuilder);
-
-                    Version version = node.getAgent().addData(versionBuilder);
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
-                } catch (URISyntaxException  | ServiceException e) {
-                    e.printStackTrace();
-                }
-
-                return FileVisitResult.CONTINUE;
-            }
-        };
+        PlainFileVisitor<Path> fv = new PlainFileVisitor<>(node);
 
         long start = System.nanoTime();
         System.out.println("Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
-        System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+
+        return fv.getVersions();
     }
 
-    default void addFolderContentToNode(SOSLocalNode node, File folder, Role role) throws URISyntaxException, MetadataException, IOException {
+    class PlainFileVisitor<T extends Path> extends SimpleFileVisitor<T> {
 
-        SimpleFileVisitor<Path> fv = new SimpleFileVisitor<Path>() {
+        SOSLocalNode node;
+        int counter;
+        List<IGUID> versions = new LinkedList<>();
 
-            int counter = 0;
+        public PlainFileVisitor(SOSLocalNode node) {
+            this.node = node;
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                // System.out.println("File " + file.toUri().toString());
-                counter++;
-                if (counter % 100 == 0) {
-                    System.out.print(counter + "  ");
-                }
+            counter = 0;
+        }
 
-                try {
-                    AtomBuilder atomBuilder = new AtomBuilder()
-                            .setLocation(new URILocation(file.toUri().toString()))
-                            .setRole(role);
-                    VersionBuilder versionBuilder = new VersionBuilder()
-                            .setAtomBuilder(atomBuilder);
+        public List<IGUID> getVersions() {
+            return versions;
+        }
 
-                    Version version = node.getAgent().addData(versionBuilder);
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
-                } catch (URISyntaxException  | ServiceException e) {
-                    e.printStackTrace();
-                }
-
-                return FileVisitResult.CONTINUE;
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            // System.out.println("File " + file.toUri().toString());
+            counter++;
+            if (counter % 100 == 0) {
+                System.out.print(counter + "  ");
             }
-        };
+
+            try {
+                AtomBuilder atomBuilder = new AtomBuilder()
+                        .setLocation(new URILocation(file.toUri().toString()));
+                VersionBuilder versionBuilder = new VersionBuilder()
+                        .setAtomBuilder(atomBuilder);
+
+                Version version = node.getAgent().addData(versionBuilder);
+                versions.add(version.guid());
+                InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
+            } catch (URISyntaxException  | ServiceException e) {
+                e.printStackTrace();
+            }
+
+            return FileVisitResult.CONTINUE;
+        }
+
+    }
+
+    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder, Role role) throws URISyntaxException, MetadataException, IOException {
+
+        ProtectedFileVisitor<Path> fv = new ProtectedFileVisitor<>(node, role);
 
         long start = System.nanoTime();
         System.out.println("Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
-        System.out.println("Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+
+        return fv.getVersions();
+    }
+
+    class ProtectedFileVisitor<T extends Path> extends PlainFileVisitor<T> {
+
+        Role role;
+
+        public ProtectedFileVisitor(SOSLocalNode node, Role role) {
+            super(node);
+            this.role = role;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            // System.out.println("File " + file.toUri().toString());
+            counter++;
+            if (counter % 100 == 0) {
+                System.out.print(counter + "  ");
+            }
+
+            try {
+                AtomBuilder atomBuilder = new AtomBuilder()
+                        .setLocation(new URILocation(file.toUri().toString()))
+                        .setRole(role);
+                VersionBuilder versionBuilder = new VersionBuilder()
+                        .setAtomBuilder(atomBuilder);
+
+                Version version = node.getAgent().addData(versionBuilder);
+                versions.add(version.guid());
+                InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
+            } catch (URISyntaxException  | ServiceException e) {
+                e.printStackTrace();
+            }
+
+            return FileVisitResult.CONTINUE;
+        }
+
     }
 
     // TODO - add content as protected
