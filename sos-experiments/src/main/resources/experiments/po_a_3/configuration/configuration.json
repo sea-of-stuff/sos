@@ -1,8 +1,8 @@
 {
   "experiment": {
-    "name": "po_3",
-    "experimentClass": "Experiment_PO_3",
-    "description": "The experiment PO 3 investigates....",
+    "name": "po_a_3",
+    "experimentClass": "Experiment_PO_A_3",
+    "description": "The experiment PO_A_3 investigates....",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 1

@@ -46,7 +46,8 @@ public class ExperimentalFramework {
         String option = in.nextLine();
 
         System.out.println("Enter experiment configuration path relative to " + CONFIGURATION_FOLDER);
-        System.out.println("Examples: pr_1/configuration/configuration.json");
+        System.out.println("Examples:");
+        System.out.println("\t pr_1/configuration/configuration.json");
         System.out.println("\t pr_1/configuration/configuration-hogun.json");
         System.out.println("\t po_a_1/configuration/configuration-hogun.json");
         System.out.println("\t po_a_2/configuration/configuration-hogun.json");

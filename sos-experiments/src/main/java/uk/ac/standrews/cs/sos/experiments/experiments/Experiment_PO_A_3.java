@@ -19,15 +19,15 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PO_3 extends BaseExperiment implements Experiment {
+public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
 
-    public Experiment_PO_3(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+    public Experiment_PO_A_3(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
         // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_PO_3());
+            units.add(new ExperimentUnit_PO_A_3());
         }
         Collections.shuffle(units);
 
@@ -38,10 +38,10 @@ public class Experiment_PO_3 extends BaseExperiment implements Experiment {
     public void finishIteration() {
         super.finishIteration();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PO_3.");
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PO_A_3.");
     }
 
-    private class ExperimentUnit_PO_3 implements ExperimentUnit {
+    private class ExperimentUnit_PO_A_3 implements ExperimentUnit {
 
         private ContextService cms;
 
@@ -94,11 +94,11 @@ public class Experiment_PO_3 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_3") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_a_3") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PO_3 experiment_po_3 = new Experiment_PO_3(experimentConfiguration);
-        experiment_po_3.process();
+        Experiment_PO_A_3 experiment_po_A_3 = new Experiment_PO_A_3(experimentConfiguration);
+        experiment_po_A_3.process();
     }
 
 }
