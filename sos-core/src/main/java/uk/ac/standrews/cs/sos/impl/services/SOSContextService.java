@@ -789,7 +789,7 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
 
             long start = System.currentTimeMillis();
-            checkPolicies(context);
+            runCheckPolicies(context);
             long end = System.currentTimeMillis();
             checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
 
@@ -803,33 +803,34 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
 
             long start = System.currentTimeMillis();
-            checkPolicies();
+            runCheckPolicies();
             long end = System.currentTimeMillis();
             checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
 
         }, checkPoliciesThreadSettings.getInitialDelay(), checkPoliciesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
 
-    private void checkPolicies() {
+    @Override
+    public void runCheckPolicies() {
 
         for (Context context : getContexts()) {
 
             policy_time_to_run_check_on_current_dataset = 0;
 
-            checkPolicies(context);
+            runCheckPolicies(context);
 
             InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policy_time_to_run_check_on_current_dataset);
         }
     }
 
-    private void checkPolicies(Context context) {
+    private void runCheckPolicies(Context context) {
 
         long start = System.nanoTime();
 
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
-                checkPolicies(context, guid);
+                runCheckPolicies(context, guid);
             }
         });
 
@@ -837,7 +838,7 @@ public class SOSContextService implements ContextService {
         InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.checkPolicies, context.getName(), duration);
     }
 
-    private void checkPolicies(Context context, IGUID guid) {
+    private void runCheckPolicies(Context context, IGUID guid) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();

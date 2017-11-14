@@ -144,9 +144,14 @@ public interface ContextService extends Service {
     int runPredicates() throws ContextException;
 
     /**
-     * Run the policies for all contexts
+     * Run the apply policies functions for all contexts
      */
     void runPolicies();
+
+    /**
+     * Run the check policies functions for all contexts
+     */
+    void runCheckPolicies();
 
     /**
      * Get the statistics for the predicate thread
