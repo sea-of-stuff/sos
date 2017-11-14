@@ -1,0 +1,71 @@
+{
+  "experiment" : {
+    "name" : "po_c_2",
+    "experimentClass": "Experiment_PO_C_2",
+    "description" : "PO_C_2 experiment - on hogun.",
+    "setup" : {
+      "app" : "sos-app/target/sos-app.jar",
+      "iterations" : 5
+    },
+    "nodes" : [
+      {
+        "id" : 2,
+        "name" : "hogun2",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-2.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_2.json",
+        "certificatefile" : "hogun_2.crt",
+        "keyfile" : "hogun_2.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 0,
+      "name" : "hogun1",
+      "path" : "/cs/scratch/",
+      "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
+      "ssh" : {
+        "type" : 1,
+        "host" : "hogun-1.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+      },
+      "configurationfile" : "hogun_1.json",
+      "certificatefile" : "hogun_1.crt",
+      "keyfile" : "hogun_1.key",
+      "dataset" : "masc_500k_texts",
+      "sendUSRO" : true,
+      "behaviour": {
+        "start": 0,
+        "stop": -1,
+        "pause": [],
+        "operations": [ "WIP" ]
+      }
+    },
+    "stats": {
+      "experiment": true,
+      "predicate": false,
+      "policies": false,
+      "checkPolicies": true
+    }
+  }
+}

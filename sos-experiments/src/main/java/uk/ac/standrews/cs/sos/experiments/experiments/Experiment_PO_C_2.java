@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -7,6 +8,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -15,19 +17,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The experiment PO_A_3 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
+ * The experiment PO_C_2 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
+public class Experiment_PO_C_2 extends BaseExperiment implements Experiment {
 
-    public Experiment_PO_A_3(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+    public Experiment_PO_C_2(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
 
         // Prepare the experiments to be runIteration
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_PO_A_3());
+            units.add(new ExperimentUnit_PO_C_2());
         }
         Collections.shuffle(units);
 
@@ -38,10 +40,10 @@ public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
     public void finishIteration() {
         super.finishIteration();
 
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PO_A_3.");
+        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PO_C_2.");
     }
 
-    private class ExperimentUnit_PO_A_3 implements ExperimentUnit {
+    private class ExperimentUnit_PO_C_2 implements ExperimentUnit {
 
         private ContextService cms;
 
@@ -51,17 +53,27 @@ public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
+                System.out.println("Adding users/roles to node");
+                addFolderUSROToNode(node, experiment);
+
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+                Role role = node.getUSRO().getRole(GUIDFactory.recreateGUID("SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317"));
+                addFolderContentToNode(node, new File(datasetPath), role);
 
                 System.out.println("Adding contexts to node");
                 addContexts();
 
                 System.out.println("Running predicates");
                 cms.runPredicates();
+
+                System.out.println("Running policies");
+                cms.runPolicies();
+
+                System.out.println("WIP - Invalidate policies with .5 probability");
+                // TODO -  Invalidate policies with .5 probability?
             } catch (Exception e) {
                 throw new ExperimentException();
             }
@@ -71,34 +83,34 @@ public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
         public void run() {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
-            cms.runPolicies();
+            cms.runCheckPolicies();
         }
 
         private void addContexts() throws Exception {
 
-            // All policies to replicate data
+            // Will apply the role granting policies in cascade (e.g. the grantee becomes granters on the next subpolicy)
             addContext(cms, experiment, "no_policies");
-            addContext(cms, experiment, "one_policy_remote");
-            addContext(cms, experiment, "two_policies_remote");
-            addContext(cms, experiment, "three_policies_remote");
-//            addContext(cms, experiment, "four_policies_local");
-//            addContext(cms, experiment, "five_policies_local");
-//            addContext(cms, experiment, "six_policies_local");
-//            addContext(cms, experiment, "seven_policies_local");
-//            addContext(cms, experiment, "eight_policies_local");
-//            addContext(cms, experiment, "nine_policies_local");
-//            addContext(cms, experiment, "ten_policies_local");
+            addContext(cms, experiment, "one_policy_local");
+            addContext(cms, experiment, "two_policies_local");
+            addContext(cms, experiment, "three_policies_local");
+            addContext(cms, experiment, "four_policies_local");
+            addContext(cms, experiment, "five_policies_local");
+            addContext(cms, experiment, "six_policies_local");
+            addContext(cms, experiment, "seven_policies_local");
+            addContext(cms, experiment, "eight_policies_local");
+            addContext(cms, experiment, "nine_policies_local");
+            addContext(cms, experiment, "ten_policies_local");
         }
 
     }
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_a_3") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_c_2") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PO_A_3 experiment_po_A_3 = new Experiment_PO_A_3(experimentConfiguration);
-        experiment_po_A_3.process();
+        Experiment_PO_C_2 experiment_po_C_2 = new Experiment_PO_C_2(experimentConfiguration);
+        experiment_po_C_2.process();
     }
 
 }

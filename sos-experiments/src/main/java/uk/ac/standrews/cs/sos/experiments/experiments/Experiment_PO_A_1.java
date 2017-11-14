@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The experiment PO 1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
+ * The experiment PO_A_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

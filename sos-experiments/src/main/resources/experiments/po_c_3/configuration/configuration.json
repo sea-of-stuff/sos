@@ -1,0 +1,25 @@
+{
+  "experiment": {
+    "name": "po_c_3",
+    "experimentClass": "Experiment_PO_C_3",
+    "description": "The experiment PO_C_3 investigates....",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 1
+    },
+    "nodes": [],
+    "experimentnode": {
+      "id": 0,
+      "name" : "local",
+      "remote": false,
+      "configurationfile": "node_0.json",
+      "dataset" : "alice"
+    },
+    "stats": {
+      "experiment": true,
+      "predicate": false,
+      "policies": false,
+      "checkPolicies": true
+    }
+  }
+}
