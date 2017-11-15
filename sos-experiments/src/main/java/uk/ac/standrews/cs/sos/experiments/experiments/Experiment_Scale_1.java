@@ -68,6 +68,7 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     private void addContexts() throws Exception {
 
+        // FIXME - this fat context is not in the correct format. see ContextBuilderTest
         String FATContext = "{\n" +
                 "\t\"context\": {\n" +
                 "\t\t\"name\": \"All\",\n" +

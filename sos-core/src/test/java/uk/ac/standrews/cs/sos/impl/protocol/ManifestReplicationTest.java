@@ -111,6 +111,7 @@ public class ManifestReplicationTest {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
+        when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
@@ -143,6 +144,7 @@ public class ManifestReplicationTest {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
+        when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
@@ -173,6 +175,7 @@ public class ManifestReplicationTest {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_MANIFEST);
+        when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);
@@ -194,6 +197,7 @@ public class ManifestReplicationTest {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
+        when(mockManifest.getType()).thenReturn(ManifestType.ATOM); // It can actually be whatever (except context)
 
         IGUID nodeGUID = GUIDFactory.generateRandomGUID();
         Node node = mock(Node.class);

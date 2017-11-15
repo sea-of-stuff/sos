@@ -53,7 +53,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            IGUID guid = contextService.addContext(context); // FIXME - this must be in fat format
+            IGUID guid = contextService.addContext(context); // FIXME - this will be in fat format
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, guid.toString());
         } catch (Exception e) {

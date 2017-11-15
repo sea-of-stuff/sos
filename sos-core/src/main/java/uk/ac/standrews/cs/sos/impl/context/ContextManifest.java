@@ -1,15 +1,13 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.InputStream;
@@ -178,6 +176,14 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         } else {
             return signer.sign(toSign);
         }
+    }
+
+    @Override
+    public String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
+
+        String jsonFATString = ContextBuilder.toFATString(this, predicate, policies);
+        return jsonFATString;
+
     }
 
     private IGUID makeInvariantGUID() {

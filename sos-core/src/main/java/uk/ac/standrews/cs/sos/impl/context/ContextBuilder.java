@@ -1,24 +1,24 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
-import uk.ac.standrews.cs.sos.model.Compound;
-import uk.ac.standrews.cs.sos.model.CompoundType;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.impl.context.ContextBuilder.ContextBuilderType.*;
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.*;
+import static uk.ac.standrews.cs.sos.impl.context.ContextBuilder.ContextBuilderType.FAT;
+import static uk.ac.standrews.cs.sos.impl.context.ContextBuilder.ContextBuilderType.TEMP;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -26,7 +26,7 @@ import static uk.ac.standrews.cs.sos.impl.context.ContextBuilder.ContextBuilderT
 public class ContextBuilder {
 
     public enum ContextBuilderType {
-        FAT, THIN, TEMP
+        FAT, TEMP
     }
 
     public ContextBuilderType getContextBuilderType() {
@@ -35,7 +35,7 @@ public class ContextBuilder {
 
     private ContextBuilderType contextBuilderType;
 
-    // FAT && THIN
+    // FAT Context JSON
     private JsonNode contextDefinitions;
 
     private CompoundManifest compoundManifest;
@@ -113,39 +113,6 @@ public class ContextBuilder {
         return compoundManifest;
     }
 
-    public IGUID predicateRef() throws ContextBuilderException {
-
-        if (contextBuilderType == THIN) {
-            try {
-                return GUIDFactory.recreateGUID(contextDefinitions.get("context").get(JSONConstants.KEY_CONTEXT_PREDICATE).asText());
-            } catch (GUIDGenerationException ignored) { }
-        }
-
-        throw new ContextBuilderException();
-    }
-
-    public Set<IGUID> policyRefs() throws ContextBuilderException {
-
-        if (contextBuilderType == THIN) {
-            try {
-                Set<IGUID> guids = new LinkedHashSet<>();
-
-                JsonNode context = contextDefinitions.get("context");
-                JsonNode policies_n = context.get(JSONConstants.KEY_CONTEXT_POLICIES);
-                for(JsonNode policy_n:policies_n) {
-
-                    IGUID guid = GUIDFactory.recreateGUID(policy_n.asText());
-                    guids.add(guid);
-                }
-
-                return guids;
-
-            } catch (GUIDGenerationException ignored) { }
-        }
-
-        throw new ContextBuilderException();
-    }
-
     public IGUID getPrevious() {
         return previous;
     }
@@ -165,4 +132,31 @@ public class ContextBuilder {
     public long getMaxage() {
         return maxage;
     }
+
+    /**
+     * Convert a context and its predicate and policies to a FAT JSON string.
+     *
+     * This method works similarly to the ContextSerializer, but this one produces a FAT JSON.
+     *
+     * @param context
+     * @param predicate
+     * @param policies
+     * @return
+     */
+    public static String toFATString(Context context, Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
+
+        ObjectNode objectNode = JSONHelper.JsonObjMapper().createObjectNode();
+
+        ObjectNode contextNode = objectNode.putObject("context");
+        contextNode.put(KEY_CONTEXT_NAME, context.getName());
+        contextNode.putPOJO(KEY_CONTEXT_DOMAIN, context.domain());
+        contextNode.putPOJO(KEY_CONTEXT_CODOMAIN, context.codomain());
+
+        objectNode.put(KEY_CONTEXT_MAX_AGE, context.maxAge());
+        objectNode.putPOJO(KEY_CONTEXT_PREDICATE, predicate);
+        objectNode.putPOJO(KEY_CONTEXT_POLICIES, policies);
+
+        return JSONHelper.JsonObjMapper().writeValueAsString(objectNode);
+    }
+
 }

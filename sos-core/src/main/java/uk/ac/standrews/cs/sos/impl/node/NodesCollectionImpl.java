@@ -24,6 +24,7 @@ public class NodesCollectionImpl implements NodesCollection {
         if (type.equals(NodesCollectionType.SPECIFIED)) throw new NodesCollectionException("Cannot use this constructor for Nodes Collection of type SPECIFIED");
 
         this.type = type;
+        this.nodesRefs = new LinkedHashSet<>();
     }
 
     public NodesCollectionImpl(IGUID local) {

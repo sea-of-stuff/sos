@@ -742,7 +742,9 @@ public class SOSContextService implements ContextService {
             contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
-            e.printStackTrace();
+
+            SOS_LOG.log(LEVEL.ERROR, "Unable to run policies for context " + context.guid().toMultiHash() +
+                    " and entry " + guid.toMultiHash());
         }
     }
 
@@ -893,7 +895,11 @@ public class SOSContextService implements ContextService {
                 NodesCollection nodesCollection = context.domain();
                 if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
 
-                    spawnContext(context);
+                    try {
+                        spawnContext(context);
+                    } catch (ManifestPersistException e) {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to spawn context " + context.guid().toMultiHash());
+                    }
                 }
             }
 
@@ -903,12 +909,13 @@ public class SOSContextService implements ContextService {
     /**
      * Replicate the context to the nodes within the domain.
      *
-     * @param context
+     * @param context to be spawned
      */
-    private void spawnContext(Context context) {
+    private void spawnContext(Context context) throws ManifestPersistException {
 
-        // Create task and submit
-        // TODO - how to deal with conflicting contexts?
+        NodesCollection domain = context.domain();
+        int replication = domain.nodesRefs().size();
+        manifestsDataService.addManifest(context, domain, replication);
     }
 
 }

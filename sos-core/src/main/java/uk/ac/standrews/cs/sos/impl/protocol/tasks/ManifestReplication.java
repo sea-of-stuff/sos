@@ -1,17 +1,16 @@
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
-import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -21,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * The ManifestReplication task, as the name suggests, replicates a manifest to other nodes.
@@ -104,7 +105,8 @@ public class ManifestReplication extends Task {
         try {
             URL url = getManifestURL(node, manifest.getType());
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
-            request.setJSONBody(manifest.toString());
+            String manifestToSend = manifestToSend(manifest);
+            request.setJSONBody(manifestToSend);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
@@ -112,7 +114,8 @@ public class ManifestReplication extends Task {
             try(InputStream ignored = response.getBody()) {} // Ensure that the connection is closed properly.
 
             return transferWasSuccessful;
-        } catch (IOException | SOSURLException e) {
+
+        } catch (IOException | SOSURLException | ManifestNotFoundException e) {
             SOS_LOG.log(LEVEL.ERROR, "transferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.guid().toMultiHash());
         }
 
@@ -133,9 +136,6 @@ public class ManifestReplication extends Task {
             }
 
         } else if (node.isCMS()) {
-
-            // TODO: one for context, predicate, policy
-
             return SOSURL.CMS_POST_MANIFEST(node);
 
         } else if (node.isMMS()) {
@@ -146,6 +146,31 @@ public class ManifestReplication extends Task {
         }
 
         throw new SOSURLException("Unable to return manifest URL for node " + node.toString());
+
+    }
+
+    private String manifestToSend(Manifest manifest) throws ManifestNotFoundException {
+
+        ManifestType manifestType = manifest.getType();
+        switch(manifestType) {
+            case CONTEXT:
+                Context context = (Context) manifest;
+                Predicate predicate = (Predicate) manifestsDataService.getManifest(context.predicate());
+                Set<Policy> policies = new LinkedHashSet<>();
+                for(IGUID policyRef:context.policies()) {
+                    Policy policy = (Policy) manifestsDataService.getManifest(policyRef);
+                    policies.add(policy);
+                }
+
+                try {
+                    return ((Context) manifest).toFATString(predicate, policies);
+                } catch (JsonProcessingException e) {
+                    throw new ManifestNotFoundException("Unable to make FAT Context JSON");
+                }
+
+            default:
+                return manifest.toString();
+        }
 
     }
 }

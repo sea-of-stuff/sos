@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -97,5 +98,7 @@ public interface Context extends Versionable, SignedManifest {
      * @return a set of policy refs
      */
     Set<IGUID> policies();
+
+    String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException;
 
 }
