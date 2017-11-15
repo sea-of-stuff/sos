@@ -105,7 +105,8 @@ public class DataReplication extends Task {
     @Override
     public void performAction() {
 
-        try (final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(data.getInputStream())) {
+        try (final InputStream inputStream = data.getInputStream();
+             final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
 
             int successfulReplicas = 0;
             Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();

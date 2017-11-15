@@ -29,12 +29,25 @@ public class IO {
         return new String(Base64.encodeBase64(IOUtils.toByteArray(inputStream)));
     }
 
-    public static InputStream Base64StringToInputStream(String input) {
+    public static InputStream Base64StringToInputStream(String input64) {
 
-        return new ByteArrayInputStream(Base64.decodeBase64(input));
+        return new ByteArrayInputStream(Base64.decodeBase64(input64));
+    }
+
+    public static String toBase64(String input) {
+
+        byte[] bytesEncoded = Base64.encodeBase64(input.getBytes());
+        return new String(bytesEncoded);
+    }
+
+    public static String fromBase64(String input64) {
+
+        byte[] valueDecoded = Base64.decodeBase64(input64);
+        return new String(valueDecoded);
     }
 
     public static ByteArrayOutputStream InputStreamToByteArrayOutputStream(InputStream input) throws IOException {
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         IOUtils.copy(input, baos);
         return baos;

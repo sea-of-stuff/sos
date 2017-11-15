@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import javax.ws.rs.client.Entity;
@@ -61,7 +62,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "    }\n" +
             "  },\n" +
             "  \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
-            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "  \"data\" : \"{DATA}\"\n" +
             "}";
 
     private final static String REQUEST_WITH_NEGATIVE_REPLICA_INFO = "" +
@@ -74,7 +75,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "    }\n" +
             "  },\n" +
             "  \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
-            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "  \"data\" : \"{DATA}\"\n" +
             "}";
 
     private final static String REQUEST_WITH_EXCESSIVE_REPLICA_INFO = "" +
@@ -87,7 +88,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "    }\n" +
             "  },\n" +
             "  \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
-            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "  \"data\" : \"{DATA}\"\n" +
             "}";
 
     private final static String REQUEST_WITH_ZERO_REPLICA_INFO = "" +
@@ -100,7 +101,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "    }\n" +
             "  },\n" +
             "  \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
-            "  \"data\" : \"HELLO TEST DATA\"\n" +
+            "  \"data\" : \"{DATA}\"\n" +
             "}";
 
     @Test
@@ -109,7 +110,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         Response response = target("/sos/storage/stream")
                 .request()
                 .post(Entity.json(
-                        BASIC_REQUEST.replace("{DATA}", "data")
+                        BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
                                 .replace("{GUID}", "SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7")
                 ));
 
@@ -158,7 +159,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
 
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.json(REQUEST_WITH_REPLICA_INFO));
+                .post(Entity.json(REQUEST_WITH_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
     }
@@ -168,7 +169,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
 
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.json(REQUEST_WITH_NEGATIVE_REPLICA_INFO));
+                .post(Entity.json(REQUEST_WITH_NEGATIVE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -178,7 +179,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
 
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.json(REQUEST_WITH_ZERO_REPLICA_INFO));
+                .post(Entity.json(REQUEST_WITH_ZERO_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -188,7 +189,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
 
         Response response = target("/sos/storage/stream")
                 .request()
-                .post(Entity.json(REQUEST_WITH_EXCESSIVE_REPLICA_INFO));
+                .post(Entity.json(REQUEST_WITH_EXCESSIVE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
         assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
     }
@@ -210,7 +211,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         Response response = target("/sos/storage/stream")
                 .request()
                 .post(Entity.json(
-                        BASIC_REQUEST.replace("{DATA}", "data")
+                        BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
                                 .replace("{GUID}", "SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7")
                 ));
 
@@ -230,7 +231,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         Response response = target("/sos/storage/stream")
                 .request()
                 .post(Entity.json(
-                        BASIC_REQUEST.replace("{DATA}", "data")
+                        BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
                                 .replace("{GUID}", "SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7")
                 ));
 
@@ -249,7 +250,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         Response response = target("/sos/storage/stream")
                 .request()
                 .post(Entity.json(
-                        BASIC_REQUEST.replace("{DATA}", "data")
+                        BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
                                 .replace("{GUID}", "SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7")
                 ));
 
