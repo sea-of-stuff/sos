@@ -1,16 +1,19 @@
 package uk.ac.standrews.cs.sos.rest.api;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.impl.json.CommonJson;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.CMSNode;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.ws.rs.*;
@@ -35,8 +38,10 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            Set<Context> contexts = contextService.getContexts();
-            String output = StringUtils.join(contexts, ",\n");
+            Set<IGUID> contexts = contextService.getContextsRefs();
+
+            ArrayNode jsonArray = CommonJson.GUIDSetToJsonArray(contexts);
+            String output = JSONHelper.JsonObjMapper().writeValueAsString(jsonArray);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
         }  catch (Exception e) {

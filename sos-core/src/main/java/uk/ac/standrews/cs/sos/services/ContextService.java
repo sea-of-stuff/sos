@@ -26,9 +26,15 @@ public interface ContextService extends Service {
     /**
      * Get all the contexts run by this node
      *
-     * @return
+     * @return set of context objects
      */
     Set<Context> getContexts();
+
+    /**
+     * Get all the contexts run by this node.
+     * @return set of references to the contexts
+     */
+    Set<IGUID> getContextsRefs();
 
     /**
      * Adds a context to this service.

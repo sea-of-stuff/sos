@@ -2,11 +2,13 @@ package uk.ac.standrews.cs.sos.impl.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.util.*;
@@ -14,7 +16,7 @@ import java.util.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-class CommonJson {
+public class CommonJson {
 
     static IGUID GetGUID(JsonNode node, String key) throws GUIDGenerationException {
 
@@ -35,6 +37,16 @@ class CommonJson {
         }
 
         return retval;
+    }
+
+    public static ArrayNode GUIDSetToJsonArray(Set<IGUID> guids) {
+
+        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        for(IGUID guid:guids) {
+            arrayNode.add(guid.toMultiHash());
+        }
+
+        return arrayNode;
     }
 
     static HashMap<IGUID, String> getRolesToKeys(JsonNode node) throws GUIDGenerationException {

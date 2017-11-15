@@ -126,6 +126,24 @@ public class SOSContextService implements ContextService {
     public Set<Context> getContexts() {
 
         Set<Context> contexts = new LinkedHashSet<>();
+        for(IGUID contextRef:getContextsRefs()) {
+
+            try {
+                Context context = getContext(contextRef);
+                contexts.add(context);
+            } catch (ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.WARN, "Unable to get context with ref: " + contextRef.toMultiHash());
+                /* SKIP */
+            }
+        }
+
+        return contexts;
+    }
+
+    @Override
+    public Set<IGUID> getContextsRefs() {
+
+        Set<IGUID> contexts = new LinkedHashSet<>();
 
         Set<IGUID> contextInvariants = manifestsDataService.getManifests(ManifestType.CONTEXT);
         for(IGUID contextInvariant:contextInvariants) {
@@ -134,18 +152,17 @@ public class SOSContextService implements ContextService {
                 if (tips.hasNext()) {
 
                     IGUID contextTip = tips.next();
-                    Context context = getContext(contextTip);
-                    contexts.add(context);
+                    contexts.add(contextTip);
                 }
 
-            } catch (TIPNotFoundException | ContextNotFoundException e) {
+            } catch (TIPNotFoundException e) {
                 SOS_LOG.log(LEVEL.WARN, "Unable to get context tip from invariant ref: " + contextInvariant.toMultiHash());
                 /* SKIP */
             }
         }
 
         // Shuffling contexts to avoid executing them always in the same order
-        List<Context> temp = new ArrayList<>(contexts);
+        List<IGUID> temp = new ArrayList<>(contexts);
         Collections.shuffle(temp);
         return new LinkedHashSet<>(temp);
     }
