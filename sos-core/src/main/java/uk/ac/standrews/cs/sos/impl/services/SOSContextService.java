@@ -930,6 +930,7 @@ public class SOSContextService implements ContextService {
      */
     private void spawnContext(Context context) throws ManifestPersistException {
 
+        // The context is spawned to all the nodes in the domain. So the replication factor == node-cardinality(domain)
         NodesCollection domain = context.domain();
         int replication = domain.nodesRefs().size();
         manifestsDataService.addManifest(context, domain, replication);
