@@ -44,7 +44,8 @@ public class DataPackage {
 
     @JsonIgnore
     public Data getDataObj() {
-        return new InputStreamData(IO.Base64StringToInputStream(data));
+        //return new InputStreamData(IO.Base64StringToInputStream(data));
+        return new InputStreamData(IO.StringToInputStream(data));
     }
 
     public void setData(String data) {

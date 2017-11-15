@@ -14,31 +14,33 @@ import static org.testng.Assert.assertEquals;
 public class RESTGeneralTest extends CommonRESTTest {
 
     private static final String TEST_NODE_INFO = "" +
-            "{\n" +
-            "  \"guid\" : \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
-            /* "  \"hostname\" : \"Simones-MacBook-Pro.local\",\n" + */ // Ignoring the hostname, as this depends on the running machine
-            "  \"port\" : 8080,\n" +
-            "  \"services\" : {\n" +
-            "    \"storage\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    },\n" +
-            "    \"cms\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    },\n" +
-            "    \"dds\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    },\n" +
-            "    \"nds\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    },\n" +
-            "    \"rms\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    },\n" +
-            "    \"mms\" : {\n" +
-            "      \"exposed\" : true\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+            "{\n"+
+                    /* "  \"GUID\" : \"SHA256_16_c96706034e6edca2c7dd5e5f625b33ed40b9f70978499be892db22ccac4bccd6\",\n"+ */
+                    "  \"type\" : \"Node\",\n"+
+                    /*"  \"signCert\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ+g1RiPTeaFIiw1LZwogFCwa3Cd4ECVMNKzG9lVxI0yonvj8mRyH4Z1/3WaoQTjuZ/lUGU43L24zpsmlxOcUkUCAwEAAQ==\",\n"+*/
+                    /*"  \"hostname\" : \"138.251.195.151\",\n"+ */
+                    "  \"port\" : 8080,\n"+
+                    "  \"services\" : {\n"+
+                    "    \"storage\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    },\n"+
+                    "    \"cms\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    },\n"+
+                    "    \"dds\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    },\n"+
+                    "    \"nds\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    },\n"+
+                    "    \"rms\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    },\n"+
+                    "    \"mms\" : {\n"+
+                    "      \"exposed\" : true\n"+
+                    "    }\n"+
+                    "  }\n"+
+                    "}\n";
 
     @Test
     public void testGetInfo() throws Exception {

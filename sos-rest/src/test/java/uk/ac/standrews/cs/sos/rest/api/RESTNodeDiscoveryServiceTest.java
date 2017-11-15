@@ -19,7 +19,9 @@ public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
 
         String data = "" +
                 "{" +
-                "    \"guid\": \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
+                "    \"GUID\": \"SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"," +
+                "    \"type\" : \"Node\",\n"+
+                "    \"signCert\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ+g1RiPTeaFIiw1LZwogFCwa3Cd4ECVMNKzG9lVxI0yonvj8mRyH4Z1/3WaoQTjuZ/lUGU43L24zpsmlxOcUkUCAwEAAQ==\",\n"+
                 "    \"hostname\": \"Simones-MacBook-Pro.local\"," +
                 "    \"port\": 8080," +
                 "    \"services\": {" +
@@ -44,7 +46,7 @@ public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
                 "    }" +
                 "}";
 
-        Response response = target("/sos/nds/register")
+        Response response = target("/sos/nds/node")
                 .request()
                 .post(Entity.json(data));
 

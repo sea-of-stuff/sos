@@ -73,6 +73,8 @@ public class ContextBuilderTest extends SetUpTest {
         Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
         assertNotNull(context);
         assertNotNull(context.guid());
+        assertNotNull(context.previous());
+        assertTrue(context.previous().isEmpty());
         assertEquals(context.maxAge(), 0);
 
         NodesCollection domain = context.domain();
@@ -87,7 +89,7 @@ public class ContextBuilderTest extends SetUpTest {
 
 
     @Test
-    public void contextTOFATString() throws IOException, ContextBuilderException {
+    public void contextToFATString() throws IOException, ContextBuilderException {
 
         String FATContext = "{\n" +
                 "\t\"context\": {\n" +

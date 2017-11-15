@@ -110,7 +110,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
         String contentToHash = getType() + getName() + "I" + invariant().toMultiHash();
 
-        if (previous != null) {
+        if (previous != null && !previous.isInvalid()) {
             contentToHash += "P" + previous.toMultiHash();
         }
 
@@ -124,7 +124,10 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     @Override
     public Set<IGUID> previous() {
         Set<IGUID> prev = new LinkedHashSet<>();
-        prev.add(previous);
+        if (!previous.isInvalid()) {
+            prev.add(previous);
+        }
+
         return prev;
     }
 

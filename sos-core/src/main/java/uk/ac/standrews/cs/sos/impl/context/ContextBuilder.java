@@ -94,7 +94,7 @@ public class ContextBuilder {
     public JsonNode predicate() throws ContextBuilderException {
 
         if (contextBuilderType == FAT) {
-            return contextDefinitions.get("predicate");
+            return contextDefinitions.get(KEY_CONTEXT_PREDICATE);
         }
 
         throw new ContextBuilderException();
@@ -103,7 +103,7 @@ public class ContextBuilder {
     public JsonNode policies() throws ContextBuilderException {
 
         if (contextBuilderType == FAT) {
-            return contextDefinitions.get("policies");
+            return contextDefinitions.get(KEY_CONTEXT_POLICIES);
         }
 
         throw new ContextBuilderException();

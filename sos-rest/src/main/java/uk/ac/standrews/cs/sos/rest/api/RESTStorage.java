@@ -95,7 +95,6 @@ public class RESTStorage {
 
     }
 
-    // TODO - ignore if data is already stored in node?
     /**
      * Add an atom to the SOS node
      *
@@ -109,9 +108,10 @@ public class RESTStorage {
     public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
-        try {
-            IGUID guidOfReceivedData = GUIDFactory.generateGUID(dataPackage.getDataObj().getInputStream());
-            if (!guidOfReceivedData.equals(dataPackage.getGUIDObj())) {
+        try (InputStream data = dataPackage.getDataObj().getInputStream()){
+            IGUID guidOfReceivedData = GUIDFactory.generateGUID(data);
+            IGUID dataPackageGUID = dataPackage.getGUIDObj();
+            if (!guidOfReceivedData.equals(dataPackageGUID)) {
                 return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Data received does not match the GUID");
             }
 
