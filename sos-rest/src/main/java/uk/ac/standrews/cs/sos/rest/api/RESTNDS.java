@@ -77,7 +77,7 @@ public class RESTNDS {
             Node node = nodeDiscoveryService.getNode(nodeGUID);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, node.toString());
         } catch (NodeNotFoundException e) {
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Node with GUID: " + nodeGUID.toString() + " could not be found");
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Node with GUID: " + nodeGUID.toMultiHash() + " could not be found");
         }
 
     }

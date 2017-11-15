@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -78,8 +77,7 @@ public abstract class BasicManifest implements Manifest {
         if (guid == null || guid.isInvalid())
             return false;
 
-        Matcher matcher = HEX_PATTERN.matcher(guid.toString());
-        return matcher.matches();
+        return true;
     }
 
     private boolean hasManifestType() {

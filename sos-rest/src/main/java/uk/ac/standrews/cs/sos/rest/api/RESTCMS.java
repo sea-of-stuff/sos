@@ -53,9 +53,9 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            IGUID guid = contextService.addContext(context); // FIXME - this will be in fat format
+            IGUID guid = contextService.addContext(context);
 
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge, guid.toString());
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, guid.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
@@ -86,7 +86,7 @@ public class RESTCMS {
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());
         } catch (ContextNotFoundException e) {
 
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toString());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
