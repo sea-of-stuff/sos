@@ -66,8 +66,6 @@ public class ManifestReplication extends Task {
             IGUID ref = nodeRefs.next();
             try {
                 Node node = nodeDiscoveryService.getNode(ref);
-                if (!node.isDDS()) continue;
-
                 boolean transferWasSuccessful = transferManifestRequest(manifest, node);
 
                 if (transferWasSuccessful) {
@@ -124,29 +122,47 @@ public class ManifestReplication extends Task {
 
     private URL getManifestURL(Node node, ManifestType type) throws SOSURLException {
 
-        if (node.isDDS()) {
-            return SOSURL.DDS_POST_MANIFEST(node);
+        switch(type) {
 
-        } else if (node.isRMS()) {
+            case ATOM: case COMPOUND: case VERSION: case ATOM_PROTECTED: case COMPOUND_PROTECTED:
 
-            if (type == ManifestType.ROLE) {
-                return SOSURL.USRO_POST_ROLE_MANIFEST(node);
-            } else if (type == ManifestType.USER) {
-                return SOSURL.USRO_POST_USER_MANIFEST(node);
-            }
+                if (node.isDDS()) {
+                    return SOSURL.DDS_POST_MANIFEST(node);
+                }
 
-        } else if (node.isCMS()) {
-            return SOSURL.CMS_POST_MANIFEST(node);
+            case ROLE:
 
-        } else if (node.isMMS()) {
-            return SOSURL.MMS_POST_MANIFEST(node);
+                if (node.isRMS()) {
+                    return SOSURL.USRO_POST_ROLE_MANIFEST(node);
+                }
 
-        } else if (node.isNDS()) {
-            return SOSURL.NDS_POST_MANIFEST(node);
+            case USER:
+
+                if (node.isRMS()) {
+                    return SOSURL.USRO_POST_USER_MANIFEST(node);
+                }
+
+            case CONTEXT:
+
+                if (node.isCMS()) {
+                    return SOSURL.CMS_POST_MANIFEST(node);
+                }
+
+            case METADATA: case METADATA_PROTECTED:
+
+                if (node.isMMS()) {
+                    return SOSURL.MMS_POST_MANIFEST(node);
+                }
+
+            case NODE:
+
+                if (node.isNDS()) {
+                    return SOSURL.NDS_POST_MANIFEST(node);
+                }
+
+            default:
+                throw new SOSURLException("Unable to return manifest URL for node " + node.toString());
         }
-
-        throw new SOSURLException("Unable to return manifest URL for node " + node.toString());
-
     }
 
     private String manifestToSend(Manifest manifest) throws ManifestNotFoundException {

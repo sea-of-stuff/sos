@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +59,10 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
 
     @Override
     public JsonNode fields() {
-        return policyManifest.get(JSONConstants.KEY_POLICY_FIELDS);
+        if (policyManifest.has(JSONConstants.KEY_POLICY_FIELDS)) {
+            return policyManifest.get(JSONConstants.KEY_POLICY_FIELDS);
+        } else {
+            return JSONHelper.JsonObjMapper().createArrayNode();
+        }
     }
 }
