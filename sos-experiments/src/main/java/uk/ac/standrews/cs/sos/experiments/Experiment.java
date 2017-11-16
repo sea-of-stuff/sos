@@ -9,6 +9,8 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
  */
 public interface Experiment {
 
+    ExperimentUnit getExperimentUnit();
+
     /**
      * This method should be called to setupIteration the SOS environment before the experiment is process
      * @throws ExperimentException if the experiment could not be setupIteration

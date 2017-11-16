@@ -19,9 +19,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -34,15 +31,11 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
 
     public Experiment_Scale_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
+    }
 
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new Experiment_Scale_1.ExperimentUnit_Scale_1());
-        }
-
-        Collections.shuffle(units);
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_Scale_1();
     }
 
     @Override

@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -34,8 +33,6 @@ public abstract class BaseExperiment implements Experiment {
     protected SOSLocalNode node;
     protected ExperimentConfiguration.Experiment experiment;
 
-    // Experiment units
-    protected Iterator<ExperimentUnit> experimentUnitIterator;
     protected ExperimentUnit currentExperimentUnit;
     private int iteration;
 
@@ -43,7 +40,8 @@ public abstract class BaseExperiment implements Experiment {
         this.experiment = experimentConfiguration.getExperimentObj();
         this.iteration = 0;
 
-        prepareExperiment(getExperimentResultsFilename());
+        String outputFilename = getExperimentResultsFilename();
+        prepareExperiment(outputFilename);
     }
 
     public BaseExperiment(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
@@ -100,9 +98,7 @@ public abstract class BaseExperiment implements Experiment {
             throw new ExperimentException("Unable to copy configuration files", e);
         }
 
-        if (!experimentUnitIterator.hasNext()) throw new ExperimentException();
-
-        currentExperimentUnit = experimentUnitIterator.next();
+        currentExperimentUnit = getExperimentUnit();
         currentExperimentUnit.setup();
     }
 

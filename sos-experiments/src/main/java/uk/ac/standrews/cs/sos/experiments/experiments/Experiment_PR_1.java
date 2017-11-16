@@ -14,9 +14,6 @@ import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,26 +24,15 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
-
-        prepareExperiment();
     }
 
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
-
-        prepareExperiment();
     }
 
-    private void prepareExperiment() {
-
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_PR_1());
-        }
-        Collections.shuffle(units);
-
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_PR_1();
     }
 
     @Override

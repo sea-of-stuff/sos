@@ -7,9 +7,6 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Investigate the context performance as the cardinality of its domain changes
@@ -21,15 +18,11 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
+    }
 
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-                units.add(new ExperimentUnit_DO_1());
-        }
-        Collections.shuffle(units);
-
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_DO_1();
     }
 
     @Override

@@ -10,9 +10,6 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * The experiment PO_C_3 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
@@ -23,15 +20,11 @@ public class Experiment_PO_C_3 extends BaseExperiment implements Experiment {
 
     public Experiment_PO_C_3(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
+    }
 
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_PO_C_3());
-        }
-        Collections.shuffle(units);
-
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_PO_C_3();
     }
 
     @Override

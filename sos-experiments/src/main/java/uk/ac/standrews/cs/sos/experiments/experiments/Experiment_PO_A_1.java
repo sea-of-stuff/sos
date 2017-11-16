@@ -12,9 +12,6 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * The experiment PO_A_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
@@ -25,15 +22,11 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
 
     public Experiment_PO_A_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
+    }
 
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_PO_A_1());
-        }
-        Collections.shuffle(units);
-
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_PO_A_1();
     }
 
     @Override

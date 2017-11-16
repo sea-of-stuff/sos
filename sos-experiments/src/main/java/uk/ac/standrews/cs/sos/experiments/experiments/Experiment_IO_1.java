@@ -13,8 +13,6 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.Agent;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,20 +25,11 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
 
     public Experiment_IO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
-
-        prepareExperiment();
     }
 
-    private void prepareExperiment() {
-
-        // Prepare the experiments to be runIteration
-        List<ExperimentUnit> units = new LinkedList<>();
-        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new Experiment_IO_1.ExperimentUnit_IO_1());
-        }
-        Collections.shuffle(units);
-
-        experimentUnitIterator = units.iterator();
+    @Override
+    public ExperimentUnit getExperimentUnit() {
+        return new ExperimentUnit_IO_1();
     }
 
     private class ExperimentUnit_IO_1 implements ExperimentUnit {
