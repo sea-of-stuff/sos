@@ -74,6 +74,8 @@ f("remote/test_1kb_500its_3.tsv", predicateOnly=FALSE, titlePlot="Time to run a 
 f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
 f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
 
+f("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
+
 
 ###########################################################################
 # STAT ANALYSIS - TODO - better scripting

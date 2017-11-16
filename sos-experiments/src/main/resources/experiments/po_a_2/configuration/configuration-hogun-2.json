@@ -2,7 +2,7 @@
   "experiment" : {
     "name" : "po_a_2",
     "experimentClass": "Experiment_PO_A_2",
-    "description" : "PO_A_2 experiment - on hogun.",
+    "description" : "PO_A_2 experiment - on hogun 4.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
       "iterations" : 5
@@ -17,17 +17,17 @@
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "hogun-1.cluster",
+        "host" : "hogun-4.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "hogun_1.json",
-      "certificatefile" : "hogun_1.crt",
+      "configurationfile" : "hogun_4.json",
+      "certificatefile" : "hogun_4.crt",
       "keyfile" : "hogun_1.key",
-      "dataset" : "masc_500k_texts",
+      "dataset" : "text_100kb",
       "sendUSRO" : true,
       "behaviour": {
         "start": 0,
@@ -37,7 +37,7 @@
       }
     },
     "stats": {
-      "experiment": true,
+      "experiment": false,
       "predicate": false,
       "policies": true,
       "checkPolicies": false

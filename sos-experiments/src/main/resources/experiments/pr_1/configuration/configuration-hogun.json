@@ -5,7 +5,7 @@
     "description" : "PR_1 experiment - on hogun.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
-      "iterations" : 500
+      "iterations" : 100
     },
     "nodes" : [ ],
     "experimentnode" : {
@@ -24,7 +24,7 @@
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
       "configurationfile" : "hogun_1.json",
-      "dataset" : "text_1kb",
+      "dataset" : "text_100kb",
       "behaviour": {
         "start": 0,
         "stop": -1,

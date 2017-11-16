@@ -66,6 +66,7 @@ public class Experiment_PO_A_2 extends BaseExperiment implements Experiment {
                 System.out.println("Running predicates");
                 cms.runPredicates();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new ExperimentException();
             }
         }

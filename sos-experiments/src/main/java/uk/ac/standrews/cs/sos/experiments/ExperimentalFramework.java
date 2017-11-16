@@ -51,6 +51,7 @@ public class ExperimentalFramework {
         System.out.println("\t pr_1/configuration/configuration-hogun.json");
         System.out.println("\t po_a_1/configuration/configuration-hogun.json");
         System.out.println("\t po_a_2/configuration/configuration-hogun.json");
+        System.out.println("\t po_a_2/configuration/configuration-hogun-2.json");
         System.out.println("\t po_a_3/configuration/configuration-hogun.json");
         switch(option.toLowerCase()) {
 
