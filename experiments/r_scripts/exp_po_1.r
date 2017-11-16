@@ -21,36 +21,6 @@ d$ContextName <- d$Message
 
 d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
 
-aggr <- aggregate(d$Measures ~ d$ContextName,
-                  FUN = function(x) c(mean = mean(x), sd = sd(x), n = length(x)))
-
-d_processed <- do.call(data.frame, aggr)
-
-# Compute standard error per group
-d_processed$se <- d_processed[,3] / sqrt(d_processed[,4])
-
-# Rename columns
-colnames(d_processed) <- c("Configuration", "mean", "sd", "n", "se")
-d_processed$names <- d_processed$Config
-
-colors = c(rep("red",1),rep("deepskyblue",2),rep("green",1))
-
-##################
-# BOXPLOT
-par(mar=c(10,4,4,2)+3) # Add space to show all labels
-x <- boxplot(d$Measures~d$ContextName, data=d,
-             outline=FALSE,
-             las=2, # Draw x labels vertically
-             ylab="Time (s) - log scale", 
-             xlab="Policies",
-             log = "y",
-             col=colors)
-
-
-legend("topright", legend=c("Remote", "Local", "Base"),
-       fill=c("red", "deepskyblue", "green"), cex=0.8, inset=.05)
-
-
 ################
 # Playing with ggplot
 
