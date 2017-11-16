@@ -27,6 +27,10 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         super(experimentConfiguration);
     }
 
+    public Experiment_IO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        super(experimentConfiguration, outputFilename);
+    }
+
     @Override
     public ExperimentUnit getExperimentUnit() {
         return new ExperimentUnit_IO_1();
@@ -54,7 +58,8 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
                 throw new ExperimentException();
             }
 
-            // node.getMDS().shutdown(); // TODO - comment this line out to invalidate caches
+            // TODO - comment this line out to invalidate caches
+            // node.getMDS().shutdown();
             Agent agent = node.getAgent();
 
             for(IGUID version:versions) {
@@ -74,7 +79,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration);
+        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "test_io_1.tsv");
         experiment_io_1.process();
     }
 }

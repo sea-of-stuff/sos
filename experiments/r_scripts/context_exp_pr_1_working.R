@@ -62,8 +62,7 @@ f <- function(datafile, predicateOnly=TRUE, titlePlot) {
   
 }
 
-###########################################################################
-###########################################################################
+
 ###########################################################################
 # GENERATING PLOTS FOR RESULTS
 ###########################################################################
@@ -76,8 +75,9 @@ f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to
 f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
 
 
-## STAT ANALYSIS - TODO - better scripting
+###########################################################################
+# STAT ANALYSIS - TODO - better scripting
+###########################################################################
 kruskal(d, d$User.Measure, d$ContextName)
-
 kruskal_dunn(d, d$User.Measure, d$ContextName)
 kruskal_nemenyi(d, d$User.Measure, d$ContextName)
