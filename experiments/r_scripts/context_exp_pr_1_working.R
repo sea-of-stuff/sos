@@ -8,7 +8,7 @@ getwd()
 source("r_scripts/utils_stats.r")
 source("r_scripts/kruskal.r")
 
-f <- function(datafile, predicateOnly=TRUE, titlePlot) {
+pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
 
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d <- d[d$StatsTYPE == 'predicate',]
@@ -71,10 +71,10 @@ f("remote/test_1kb_500its_3.tsv", predicateOnly=TRUE, titlePlot="Time to run a p
 f("remote/test_1kb_500its_3.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
 
 # Removing measurements that were not performed correctly.
-f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
+f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the ~9000 x 1kB dataset")
 f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
 
-f("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
+f("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
 
 
 ###########################################################################
