@@ -239,6 +239,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         TasksQueue.instance().performSyncTask(infoNode);
 
         String retval = infoNode.getInfo();
+        // TODO - are info about node updated??
         if (retval == null) {
             throw new NodeNotFoundException("Unable to find info about node");
         } else {

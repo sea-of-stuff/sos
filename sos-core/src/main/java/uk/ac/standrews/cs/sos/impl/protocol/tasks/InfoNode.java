@@ -33,12 +33,18 @@ public class InfoNode extends Task {
         try {
             URL url = SOSURL.NODE_INFO(node);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
-            request.setJSONBody(node.toString());
+            // System.out.println("INFO NODE Body: " + node.toString());
+            // request.setJSONBody(node.toString());
             Response response = RequestsManager.getInstance().playSyncRequest(request);
+
+            // REMOVEME
+            System.out.println("INFO NODE resp code: " + response.getCode());
 
             if (!(response instanceof ErrorResponseImpl)) {
                 info = response.getJSON().toString();
 
+                // REMOVEME
+                System.out.println("INFO NODE: " + info);
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
             }
 

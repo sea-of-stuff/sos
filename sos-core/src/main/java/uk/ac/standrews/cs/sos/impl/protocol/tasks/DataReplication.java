@@ -177,11 +177,12 @@ public class DataReplication extends Task {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
+            System.out.println("Replicating to " + url.toString());
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
 
             DataPackage dataPackage = new DataPackage();
             dataPackage.setGuid(guid.toMultiHash());
-            dataPackage.setData(IO.InputStreamToBase64String(data));
+            dataPackage.setData(IO.InputStreamToBase64String(data)); // Data is transformed to base64 as expected by the REST API
 
             if (delegateReplication) {
                 DataPackage.Metadata metadata = new DataPackage.Metadata();
@@ -199,6 +200,7 @@ public class DataReplication extends Task {
             }
 
             String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);
+            SOS_LOG.log(LEVEL.DEBUG, jsonBody);
             request.setJSONBody(jsonBody);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

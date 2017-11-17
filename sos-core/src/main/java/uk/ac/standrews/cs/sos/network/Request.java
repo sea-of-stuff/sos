@@ -8,7 +8,6 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 
 /**
- * This is a wrapper class around okhttp.Request
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

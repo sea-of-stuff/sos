@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.node;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
@@ -313,13 +314,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         for(Node node:settings.getBootstrapNodes()) {
 
+            IGUID boostrapNodeGUID = node.guid();
             try {
                 String nodeInfo = "";
                 try {
                     // Get info by GUID
-                    nodeInfo = nodeDiscoveryService.infoNode(node.guid());
+                    nodeInfo = nodeDiscoveryService.infoNode(boostrapNodeGUID);
                 } catch (NodeNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with GUID: " + node.guid().toMultiHash());
+                    SOS_LOG.log(LEVEL.WARN, "Unable to bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash() + " -- Will try to contact it with known IP:port into");
 
                     try {
                         nodeInfo = nodeDiscoveryService.infoNode(node);
@@ -328,11 +330,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                     }
                 }
 
-                Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
-                nodeDiscoveryService.registerNode(retrievedNode, true);
+                if (nodeInfo != null && !nodeInfo.isEmpty()) {
+                    Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
+                    nodeDiscoveryService.registerNode(retrievedNode, true);
+                }
 
             } catch (IOException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + node.guid().toMultiHash() + " and address " + node.getHostAddress().toString());
+                e.printStackTrace();
+                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + boostrapNodeGUID.toMultiHash() + " and address " + node.getHostAddress().toString());
             }
         }
     }

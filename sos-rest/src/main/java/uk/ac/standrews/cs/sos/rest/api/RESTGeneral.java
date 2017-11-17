@@ -40,6 +40,7 @@ public class RESTGeneral {
     public Response getInfo(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
+        System.out.println("challenge is : " + node_challenge);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, RESTConfig.sos.toString());
     }
 
