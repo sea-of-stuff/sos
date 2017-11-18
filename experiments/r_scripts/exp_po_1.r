@@ -13,8 +13,10 @@ library(ggplot2)
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 
+source("r_scripts/utils_stats.r")
+
 # Read the CVS file
-d <- read.csv("remote/po_a_1_100kb_its5_2.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/testsat14.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
