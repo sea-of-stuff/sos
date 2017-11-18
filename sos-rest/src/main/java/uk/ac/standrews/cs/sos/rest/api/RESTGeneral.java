@@ -24,7 +24,7 @@ public class RESTGeneral {
     public Response getMsg(@PathParam("msg") final String msg, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/ping/{msg}");
 
-        String output = "Pong : ";
+        String output = "Pong: ";
         if (msg == null || msg.isEmpty()) {
             output += "What? Please give me a message to Pong -- GET /sos/ping/{msg}";
         } else {
@@ -40,7 +40,6 @@ public class RESTGeneral {
     public Response getInfo(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
-        System.out.println("challenge is : " + node_challenge);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, RESTConfig.sos.toString());
     }
 

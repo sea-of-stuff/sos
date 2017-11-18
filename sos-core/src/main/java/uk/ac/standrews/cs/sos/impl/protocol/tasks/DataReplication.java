@@ -200,7 +200,6 @@ public class DataReplication extends Task {
             }
 
             String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);
-            SOS_LOG.log(LEVEL.DEBUG, jsonBody);
             request.setJSONBody(jsonBody);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);

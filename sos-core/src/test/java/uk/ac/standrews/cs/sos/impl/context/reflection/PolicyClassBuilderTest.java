@@ -81,4 +81,27 @@ public class PolicyClassBuilderTest {
         assertEquals(clazzString, MATCHING_CLAZZ);
     }
 
+    @Test
+    public void dataReplicationClass() throws IOException {
+
+        String JSON_POLICY =
+                "{\n" +
+                        "  \"type\" : \"Policy\",\n" +
+                        "  \"dependencies\" : [ ],\n" +
+                        "  \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
+                        "  \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
+                        "  \"fields\" : [ {\n" +
+                        "    \"type\" : \"int\",\n" +
+                        "    \"name\" : \"factor\",\n" +
+                        "    \"value\" : \"1\"\n" +
+                        "  } ]\n" +
+                        "}";
+
+        System.out.println(JSON_POLICY);
+        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        String clazzString = new PolicyClassBuilder().constructClass(jsonNode);
+
+        System.out.println(clazzString);
+
+    }
 }

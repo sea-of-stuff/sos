@@ -19,7 +19,6 @@ import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
-import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePolicy;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
@@ -785,12 +784,7 @@ public class SOSContextService implements ContextService {
 
             } catch (ManifestNotFoundException e) {
 
-                retval.clear();
-
-                JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
-                Policy referencePolicy = new ReferencePolicy(emptyJsonNode);
-                retval.add(referencePolicy);
-                break;
+                return new LinkedHashSet<>();
             }
         }
 

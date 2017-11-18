@@ -136,7 +136,6 @@ public class SyncRequest extends Request {
             HttpResponse<?> resp = null;
             switch(responseType) {
                 case JSON:
-                    System.out.println("REQUEST " + request.toString()); // REMOVEME
                     resp = request.asJson();
                     break;
                 case TEXT:
@@ -147,13 +146,10 @@ public class SyncRequest extends Request {
                     break;
             }
 
-            System.out.println("sign1");
             if (signatureCertificate != null) {
-                System.out.println("sign2   " + nodeChallenge);
                 String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
                 boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
 
-                System.out.println("sign3 " + verified);
                 if (!verified) return new ErrorResponseImpl();
             }
 

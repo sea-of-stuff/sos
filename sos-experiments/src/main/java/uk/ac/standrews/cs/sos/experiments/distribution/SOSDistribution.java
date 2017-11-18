@@ -44,8 +44,9 @@ public class SOSDistribution {
             scp.sendFile(node.getConfigurationFile(experimentName), path + REMOTE_SOS_CONFIGURATION_PATH, true);
 
             if (node.getCertificateFile() != null && node.getKeyFile() != null) {
-                scp.sendFile(node.getCertificateFile(experimentName), path + REMOTE_SOS_CERTIFICATE_PATH, true);
-                scp.sendFile(node.getKeyFile(experimentName), path + REMOTE_SOS_KEY_PATH, true);
+                scp.makePath(path + "sos/node/");
+                scp.sendFile(node.getCertificateFile(experimentName), path + "sos/node/" + REMOTE_SOS_CERTIFICATE_PATH, true);
+                scp.sendFile(node.getKeyFile(experimentName), path + "sos/node/" + REMOTE_SOS_KEY_PATH, true);
             }
 
             if (node.hasDataset()) {
