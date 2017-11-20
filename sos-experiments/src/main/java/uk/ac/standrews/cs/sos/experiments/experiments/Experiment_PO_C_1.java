@@ -22,6 +22,10 @@ public class Experiment_PO_C_1 extends BaseExperiment implements Experiment {
         super(experimentConfiguration);
     }
 
+    public Experiment_PO_C_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        super(experimentConfiguration, outputFilename);
+    }
+
     @Override
     public ExperimentUnit getExperimentUnit() {
         return new ExperimentUnit_PO_C_1();
