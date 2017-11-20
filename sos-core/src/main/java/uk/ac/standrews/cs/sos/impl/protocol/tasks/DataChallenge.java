@@ -120,7 +120,7 @@ public class DataChallenge extends Task {
 
     @Override
     public String toString() {
-        return "Data Challenge - Guid" + entity + " - Challenge " + challenge;
+        return "DataChallenge. GUID " + entity.toMultiHash() + " - Challenge " + challenge;
     }
 
     public boolean isChallengePassed() {

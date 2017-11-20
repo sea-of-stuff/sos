@@ -61,7 +61,7 @@
       }
     },
     "stats": {
-      "experiment": true,
+      "experiment": false,
       "predicate": false,
       "policies": true,
       "checkPolicies": false

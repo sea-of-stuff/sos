@@ -1,6 +1,6 @@
 {
   "context": {
-    "name": "three_policies_remote",
+    "name": "seven_policies_remote",
     "domain": {
       "type": "LOCAL",
       "nodes": []
