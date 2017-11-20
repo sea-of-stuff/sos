@@ -111,6 +111,7 @@ public class SOSDistribution {
             scp.setSsh(node.getSsh());
             scp.connect();
 
+            System.out.println("\t\tKilling process at node: " + node.getName());
             scp.killProcess(path + REMOTE_SOS_PID_FILE);
             scp.disconnect();
         }
@@ -130,6 +131,7 @@ public class SOSDistribution {
                 scp.setSsh(node.getSsh());
                 scp.connect();
 
+                System.out.println("\t\tKilling process at node: " + node.getName());
                 scp.killProcess(path + REMOTE_SOS_PID_FILE);
                 scp.disconnect();
 
@@ -214,6 +216,7 @@ public class SOSDistribution {
         scp.setSsh(experimentNode.getSsh());
         scp.connect();
 
+        System.out.println("\t\tKilling process at node: " + experimentNode.getName());
         scp.killProcess(path + REMOTE_SOS_PID_FILE);
         scp.disconnect();
     }
