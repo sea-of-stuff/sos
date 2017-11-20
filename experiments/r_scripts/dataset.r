@@ -1,3 +1,5 @@
+# TODO - improve this r script to use ggplot and make it usable from sos.r
+#
 setwd("/Users/sic2/git/sos/experiments")
 getwd()
 

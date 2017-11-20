@@ -24,4 +24,6 @@ po_3 <- function(datafile, titlePlot="NO TITLE") {
           axis.text=element_text(size=14),
           axis.title=element_text(size=16,face="bold")) +
     labs(title=titlePlot, x="Policy", y="Time (s)")
+  
+  dd
 }

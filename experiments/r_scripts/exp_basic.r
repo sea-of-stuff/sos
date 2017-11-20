@@ -4,8 +4,8 @@ library(scales)
 source("r_scripts/utils_stats.r")
 
 io_1 <- function(datafile, titlePlot) {
-  d <- read.csv(datafile, header=TRUE, sep="\t") # Without cache invalidation
-  d <- d[d$StatsTYPE == 'io',] # Filter policies measurements
+  d <- read.csv(datafile, header=TRUE, sep="\t") 
+  d <- d[d$StatsTYPE == 'io',]
   
   d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
   
@@ -22,4 +22,17 @@ io_1 <- function(datafile, titlePlot) {
     scale_y_continuous(labels = comma) + 
     labs(title=titlePlot, x="Operation", y="MB/s")
   
+  dd
 }
+
+guid_1 <- function(datafile, titlePlot) {
+  d <- read.csv(datafile, header=TRUE, sep="\t") 
+  d <- d[d$StatsTYPE == 'guid',]
+  
+  d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+  
+  # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+  dd <- summarySE(d, measurevar="Measures", groupvars=c("Subtype"))
+  dd
+}
+

@@ -201,7 +201,7 @@ public class AtomStorage {
             long start = System.nanoTime();
             IGUID guid = generateGUID(data);
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.guid, Long.toString(data.getSize()), duration);
+            InstrumentFactory.instance().measure(StatsTYPE.guid, StatsTYPE.none, Long.toString(data.getSize()), duration);
 
             return guid;
 

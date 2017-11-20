@@ -59,20 +59,6 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
 
 
 ###########################################################################
-# GENERATING PLOTS FOR RESULTS
-###########################################################################
-
-f("remote/test_1kb_500its_3.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
-f("remote/test_1kb_500its_3.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
-
-# Removing measurements that were not performed correctly.
-f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the ~9000 x 1kB dataset")
-f("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
-
-f("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
-
-
-###########################################################################
 # STAT ANALYSIS - TODO - better scripting
 ###########################################################################
 kruskal(d, d$User.Measure, d$ContextName)

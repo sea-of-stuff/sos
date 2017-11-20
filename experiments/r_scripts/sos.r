@@ -4,7 +4,7 @@
 
 setwd("/Users/sic2/git/sos/experiments")
 source("r_scripts/os_background.r")
-source("r_scripts/io.r")
+source("r_scripts/exp_basic.r")
 source("r_scripts/exp_pr_1.r")
 source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
@@ -27,7 +27,11 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "test") # With cache invalidation
 io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "test") # Without cache invalidation
 
-io_1("output/test_io_1_on_1000x1mb.tsv", "test")
+############
+# GUID_1
+############
+
+guid_1("output/test_guid_1.tsv", "Performance test on the GUID function. GUID - SHA-2(-256)")
 
 ############
 # PR_1

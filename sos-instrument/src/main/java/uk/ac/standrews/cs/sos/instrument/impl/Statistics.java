@@ -12,6 +12,7 @@ public class Statistics {
     private boolean policies;
     private boolean checkPolicies;
     private boolean io;
+    private boolean guid;
 
     public Statistics() {
     }
@@ -37,6 +38,8 @@ public class Statistics {
                 return isCheckPolicies();
             case io:
                 return isIo();
+            case guid:
+                return isGuid();
         }
 
         return false;
@@ -80,5 +83,13 @@ public class Statistics {
 
     public void setIo(boolean io) {
         this.io = io;
+    }
+
+    public boolean isGuid() {
+        return guid;
+    }
+
+    public void setGuid(boolean guid) {
+        this.guid = guid;
     }
 }
