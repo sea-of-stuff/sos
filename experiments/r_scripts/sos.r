@@ -57,5 +57,5 @@ po_1("remote/testmon3.tsv", titlePlot = "Time to run the policy apply function o
 # PO_3
 ##############
 
-po_3("output/po_3__2017_11_07T13_47_00_600Z.tsv", titlePlot = "Time to run multiple policy apply functions over ???")
-
+po_3("remote/po_a_3_100kb_its10_3.tsv", titlePlot = "Time to run multiple policy apply functions over ???")
+po_3("remote/po_a_3_100kb_its10_3.tsv", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)

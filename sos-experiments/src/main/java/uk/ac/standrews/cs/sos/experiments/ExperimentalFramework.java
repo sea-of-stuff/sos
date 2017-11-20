@@ -101,6 +101,8 @@ public class ExperimentalFramework {
         chicShock.shock();
         Thread.sleep(2000); // Wait a bit before starting the experiment
         chicShock.shockExperiment(statsBaseName);
+
+        System.out.println("\n\nRemember that your base name for the stats is: " + statsBaseName);
     }
 
     private static void stopNode() throws ConfigurationException, ChicShockException {
