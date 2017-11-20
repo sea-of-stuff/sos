@@ -2,16 +2,16 @@ library(ggplot2)
 
 source("r_scripts/utils_stats.r")
 
-po_1 <- function(datafile, titlePlot="NO TITLE", showSummary=FALSE) {
+po_1 <- function(datafile, type, subtype, titlePlot="NO TITLE", showSummary=FALSE) {
   # Read the CVS file
   d <- read.csv(datafile, header=TRUE, sep="\t")
-  d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
+  d <- d[d$StatsTYPE == type,] # Filter policies measurements
   d$Message <- droplevels(d$Message)
   d$ContextName <- d$Message
   
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
   
-  dd <- d[d$Subtype == 'policy_apply_dataset',]
+  dd <- d[d$Subtype == subtype,]
   dd$Message <- droplevels(dd$Message)
   dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
   

@@ -77,6 +77,7 @@ public class ExperimentalFramework {
                 break;
         }
 
+        System.exit(0);
     }
 
     private static void runExperiment() throws ConfigurationException, ChicShockException, InterruptedException {

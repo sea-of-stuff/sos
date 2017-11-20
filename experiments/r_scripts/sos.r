@@ -47,15 +47,28 @@ pr_1("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Tim
 pr_1("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
 
 ##############
-# PO_1
+# PO_A_1
 ##############
 
-po_1("remote/testmon3.tsv", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+po_1("remote/testmon3.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
 
 
 ##############
-# PO_3
+# PO_A_3
 ##############
 
-po_3("remote/po_a_3_100kb_its10_3.tsv", titlePlot = "Time to run multiple policy apply functions over ???")
-po_3("remote/po_a_3_100kb_its10_3.tsv", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)
+po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???")
+po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)
+
+
+##############
+# PO_C_1
+##############
+
+po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+
+##############
+# PO_C_3
+##############
+
+po_3("remote/po_a_3_100kb_its10_3.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???")
