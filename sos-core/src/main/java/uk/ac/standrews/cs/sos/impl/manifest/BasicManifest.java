@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.manifest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.IKey;
@@ -111,7 +112,7 @@ public abstract class BasicManifest implements Manifest {
     protected IGUID makeGUID() {
 
         try (InputStream content = contentToHash()){
-            return GUIDFactory.generateGUID(content);
+            return GUIDFactory.generateGUID(ALGORITHM.SHA256, content);
         } catch (GUIDGenerationException | IOException e) {
             return new InvalidID();
         }

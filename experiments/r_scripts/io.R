@@ -21,4 +21,6 @@ io_1 <- function(datafile, titlePlot) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     labs(title=titlePlot, x="Operation", y="MB/s")
+  
+  return(dd)
 }

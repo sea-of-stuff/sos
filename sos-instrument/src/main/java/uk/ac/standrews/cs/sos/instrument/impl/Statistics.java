@@ -13,22 +13,30 @@ public class Statistics {
     private boolean checkPolicies;
     private boolean io;
 
-    public Statistics() {}
+    public Statistics() {
+    }
 
     /**
      * Returns true if we should collects stats about this statsTYPE
+     *
      * @param statsTYPE
      * @return
      */
     public boolean isEnabled(StatsTYPE statsTYPE) {
 
         switch (statsTYPE) {
-            case any: return true;
-            case experiment: return isExperiment();
-            case predicate: return isPredicate();
-            case policies: return isPolicies();
-            case checkPolicies: return isCheckPolicies();
-            case io: return isIo();
+            case any:
+                return true;
+            case experiment:
+                return isExperiment();
+            case predicate:
+                return isPredicate();
+            case policies:
+                return isPolicies();
+            case checkPolicies:
+                return isCheckPolicies();
+            case io:
+                return isIo();
         }
 
         return false;

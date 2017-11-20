@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -202,7 +203,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
         IGUID guid;
         try {
-            guid = GUIDFactory.generateGUID(contentToHash);
+            guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash);
         } catch (GUIDGenerationException e) {
             guid = new InvalidID();
         }

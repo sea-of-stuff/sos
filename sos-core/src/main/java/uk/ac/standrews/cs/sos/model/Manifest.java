@@ -51,9 +51,15 @@ public interface Manifest {
     default boolean verifyIntegrity() {
 
         try (InputStream contentToHash = contentToHash()) {
-            if (!(contentToHash != null && guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash)))) {
+            if (contentToHash == null) {
                 return false;
             }
+
+            IGUID guidOfContent = GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash);
+            if (guidOfContent.isInvalid() || !guid().equals(guidOfContent)) {
+                return false;
+            }
+
         } catch (IOException | GUIDGenerationException e) {
             return false;
         }

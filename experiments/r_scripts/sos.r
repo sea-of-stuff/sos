@@ -27,6 +27,8 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "test") # With cache invalidation
 io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "test") # Without cache invalidation
 
+io_1("output/test_io_1_on_1000x1mb.tsv", "test")
+
 ############
 # PR_1
 ############

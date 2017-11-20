@@ -8,8 +8,10 @@ public enum StatsTYPE {
     none,
     any,
 
+
     io, // Time to write/read data, manifests, metadata, etc...
     add_atom, read_atom,
+    guid, // Time to generate GUIDs for data
     add_manifest, read_manifest,
 
     predicate, // time to run the predicate function per asset

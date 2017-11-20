@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -281,7 +282,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try (InputStream content = contentToHash()){
 
-            this.nodeGUID = GUIDFactory.generateGUID(content);
+            this.nodeGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, content);
             this.DB_nodeid = nodeGUID.toMultiHash();
 
             settings.setGuid(nodeGUID.toMultiHash());

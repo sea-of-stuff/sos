@@ -21,6 +21,8 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
@@ -192,20 +194,25 @@ public class AtomStorage {
 
     }
 
-    private IGUID generateGUID(Data data) throws GUIDGenerationException, IOException {
-
-        return GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream());
-    }
-
     private IGUID generateGUID(Location location) {
 
         try (Data data = LocationUtility.getDataFromLocation(location)) {
 
-            return generateGUID(data);
+            long start = System.nanoTime();
+            IGUID guid = generateGUID(data);
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.guid, Long.toString(data.getSize()), duration);
+
+            return guid;
 
         } catch (Exception e) {
             return new InvalidID();
         }
+    }
+
+    private IGUID generateGUID(Data data) throws GUIDGenerationException, IOException {
+
+        return GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream());
     }
 
     private IFile atomFileInLocalStorage(IGUID guid) throws DataStorageException {

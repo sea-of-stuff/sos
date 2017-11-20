@@ -47,11 +47,11 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
-            List<IGUID> versions;
+            List<IGUID> atoms;
 
             try {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                versions = addFolderContentToNode(node, new File(datasetPath));
+                atoms = addFolderContentToNodeAsAtoms(node, new File(datasetPath));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,11 +62,11 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             // node.getMDS().shutdown();
             Agent agent = node.getAgent();
 
-            for(IGUID version:versions) {
+            for(IGUID atom:atoms) {
                 try {
-                    agent.getData(version);
+                    agent.getData(atom);
                 } catch (ServiceException e) {
-                    throw new ExperimentException("Unable to get data for version with GUID " + version.toMultiHash());
+                    throw new ExperimentException("Unable to get data for atom with GUID " + atom.toMultiHash());
                 }
             }
 
@@ -79,7 +79,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "test_io_1.tsv");
+        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "test_io_1_on_1000x1mb");
         experiment_io_1.process();
     }
 }

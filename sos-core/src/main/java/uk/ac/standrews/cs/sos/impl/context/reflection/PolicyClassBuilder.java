@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.text.WordUtils;
+import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -52,7 +53,7 @@ public class PolicyClassBuilder implements ClassBuilder {
 
         IGUID predicateRef;
         try {
-            predicateRef = GUIDFactory.generateGUID(jsonNode.toString());
+            predicateRef = GUIDFactory.generateGUID(ALGORITHM.SHA256, jsonNode.toString());
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate policy ref from json node " + jsonNode.toString());
         }
