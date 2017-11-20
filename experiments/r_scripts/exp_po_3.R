@@ -1,8 +1,5 @@
 library(ggplot2)
 
-setwd("/Users/sic2/git/sos/experiments")
-getwd()
-
 source("r_scripts/utils_stats.r")
 
 po_3 <- function(datafile, titlePlot="NO TITLE") {

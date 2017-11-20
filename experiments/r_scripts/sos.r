@@ -3,10 +3,19 @@
 ########
 
 setwd("/Users/sic2/git/sos/experiments")
+source("r_scripts/os_background.r")
 source("r_scripts/io.r")
 source("r_scripts/exp_pr_1.r")
 source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
+
+
+############
+# CPU/MEM
+############
+mem("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
+cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
+cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 
 ############
 # IO_1

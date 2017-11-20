@@ -1,9 +1,6 @@
 library(ggplot2)
 library(scales)
 
-setwd("/Users/sic2/git/sos/experiments")
-getwd()
-
 source("r_scripts/utils_stats.r")
 
 io_1 <- function(datafile, titlePlot) {
