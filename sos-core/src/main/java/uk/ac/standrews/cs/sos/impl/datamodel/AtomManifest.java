@@ -99,15 +99,9 @@ public class AtomManifest extends BasicManifest implements Atom {
     public boolean verifyIntegrity() {
 
         for(LocationBundle location:locations) {
-            try (Data data = LocationUtility.getDataFromLocation(location.getLocation())) {
 
-                if (!guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream()))) {
-                    return false;
-                }
-
-            } catch (Exception e) {
-                return false;
-            }
+            boolean verified = verifyIntegrity(location);
+            if (!verified) return false;
         }
 
         return true;
@@ -123,7 +117,8 @@ public class AtomManifest extends BasicManifest implements Atom {
 
         try (Data data = LocationUtility.getDataFromLocation(locationBundle.getLocation())) {
 
-            if (!guid().equals(GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream()))) {
+            IGUID generatedGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream());
+            if (generatedGUID.isInvalid() || !guid().equals(generatedGUID)) {
                 return false;
             }
 

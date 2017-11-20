@@ -22,5 +22,4 @@ io_1 <- function(datafile, titlePlot) {
     scale_y_continuous(labels = comma) + 
     labs(title=titlePlot, x="Operation", y="MB/s")
   
-  return(dd)
 }

@@ -184,4 +184,5 @@ experiments/output
 experiments/remote
 experiments/.*
 !experiments/datasets/README.md
+!experiments/datasets/*.py
 experiments/datasets/
