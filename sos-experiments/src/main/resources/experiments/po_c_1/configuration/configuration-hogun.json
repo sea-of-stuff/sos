@@ -53,7 +53,7 @@
       "certificatefile" : "hogun_1.crt",
       "keyfile" : "hogun_1.key",
       "dataset" : "masc_500k_texts",
-      "sendUSRO" : true,
+      "sendUSRO" : false,
       "behaviour": {
         "start": 0,
         "stop": -1,
@@ -62,7 +62,7 @@
       }
     },
     "stats": {
-      "experiment": true,
+      "experiment": false,
       "predicate": false,
       "policies": false,
       "checkPolicies": true

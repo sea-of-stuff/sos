@@ -1,0 +1,86 @@
+{
+  "context": {
+    "name": "three_policies_remote",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "SPECIFIED",
+      "nodes": ["SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2"]
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor",
+          "value" : "1"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_two);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_two);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor_two",
+          "value" : "1"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_three);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_three);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor_three",
+          "value" : "1"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_four);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_four);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor_four",
+          "value" : "1"
+        }
+      ]
+    },
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_five);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_five);",
+      "dependencies" : [],
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor_five",
+          "value" : "1"
+        }
+      ]
+    }
+  ]
+}

@@ -78,13 +78,13 @@ public class Experiment_PO_A_3 extends BaseExperiment implements Experiment {
             addContext(cms, experiment, "one_policy_remote");
             addContext(cms, experiment, "two_policies_remote");
             addContext(cms, experiment, "three_policies_remote");
-//            addContext(cms, experiment, "four_policies_local");
-//            addContext(cms, experiment, "five_policies_local");
-//            addContext(cms, experiment, "six_policies_local");
-//            addContext(cms, experiment, "seven_policies_local");
-//            addContext(cms, experiment, "eight_policies_local");
-//            addContext(cms, experiment, "nine_policies_local");
-//            addContext(cms, experiment, "ten_policies_local");
+            addContext(cms, experiment, "four_policies_remote");
+            addContext(cms, experiment, "five_policies_remote");
+            addContext(cms, experiment, "six_policies_remote");
+            addContext(cms, experiment, "seven_policies_remote");
+            addContext(cms, experiment, "eight_policies_remote");
+            addContext(cms, experiment, "nine_policies_remote");
+            addContext(cms, experiment, "ten_policies_remote");
         }
 
     }

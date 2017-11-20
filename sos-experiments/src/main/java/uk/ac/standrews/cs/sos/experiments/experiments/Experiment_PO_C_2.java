@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.sos.services.ContextService;
 import java.io.File;
 
 /**
+ * REMOVEME
  * The experiment PO_C_2 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

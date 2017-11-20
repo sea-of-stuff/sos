@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -8,7 +7,6 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -53,8 +51,7 @@ public class Experiment_PO_C_1 extends BaseExperiment implements Experiment {
 
                 System.out.println("Adding content to node");
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                Role role = node.getUSRO().getRole(GUIDFactory.recreateGUID("SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317"));
-                addFolderContentToNode(node, new File(datasetPath), role);
+                addFolderContentToNode(node, new File(datasetPath));
 
                 System.out.println("Adding contexts to node");
                 addContexts();
@@ -83,9 +80,6 @@ public class Experiment_PO_C_1 extends BaseExperiment implements Experiment {
 
             addContext(cms, experiment, "no_policies");
             addContext(cms, experiment, "do_nothing_policy");
-
-            // Roles loaded from experiment resources
-            addContext(cms, experiment, "grant_access");
 
             // Must have multiple nodes up and running
             addContext(cms, experiment, "data_replication_1");

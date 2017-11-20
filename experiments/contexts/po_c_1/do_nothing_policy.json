@@ -1,0 +1,28 @@
+{
+  "context": {
+    "name": "do_nothing_policy",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    }
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();",
+    "dependencies": []
+  },
+  "max_age": 0,
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.apply_DoNothing();",
+      "satisfied" : "return CommonPolicies.satisfied_DoNothing();",
+      "dependencies" : [],
+      "fields" : []
+    }
+  ]
+}
