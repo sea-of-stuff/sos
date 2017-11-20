@@ -177,7 +177,7 @@ public class DataReplication extends Task {
 
         try {
             URL url = SOSURL.STORAGE_POST_DATA(node);
-            System.out.println("Replicating to " + url.toString());
+            SOS_LOG.log(LEVEL.INFO, "Replicating data to " + url.toString());
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
 
             DataPackage dataPackage = new DataPackage();
