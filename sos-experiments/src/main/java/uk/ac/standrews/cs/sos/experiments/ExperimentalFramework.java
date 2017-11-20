@@ -95,10 +95,10 @@ public class ExperimentalFramework {
 
         // Make sure that no processes are running and then run the nodes and the experiment
         chicShock.unShock();
-        Thread.sleep(2000); // Wait a bit before starting the nodes for the experiment
-        chicShock.shock();
         Thread.sleep(2000); // Wait a bit before stopping the experiment node (if any process is running)
         chicShock.unShockExperiment();
+        Thread.sleep(2000); // Wait a bit before starting the nodes for the experiment
+        chicShock.shock();
         Thread.sleep(2000); // Wait a bit before starting the experiment
         chicShock.shockExperiment(statsBaseName);
     }
