@@ -53,7 +53,7 @@
       "certificatefile" : "hogun_1.crt",
       "keyfile" : "hogun_1.key",
       "dataset" : "text_100kb",
-      "sendUSRO" : true,
+      "sendUSRO" : false,
       "behaviour": {
         "start": 0,
         "stop": -1,
