@@ -1,5 +1,6 @@
 #######
 # SOS EXPERIMENTS
+# Plots display means with confidence intervals (.95 confidence level)
 ########
 
 setwd("/Users/sic2/git/sos/experiments")
@@ -24,8 +25,12 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 # Read the CVS file
 # Dataset: text_100kb
 # Iterations: 10
-io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "test") # With cache invalidation
-io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "test") # Without cache invalidation
+io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
+io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
+
+io_1("output/test_io_1_on_1000x1mb_2.tsv", "plot title")
+io_1("output/test_io_1_on_20x50mb_1.tsv", "plot title")
+
 
 ############
 # GUID_1
@@ -71,4 +76,4 @@ po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_ch
 # PO_C_3
 ##############
 
-po_3("remote/po_a_3_100kb_its10_3.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???")
+po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???")

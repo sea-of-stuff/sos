@@ -1,6 +1,7 @@
-library(ggplot2)
 
 mem <- function(datafile) {
+  library(ggplot2)
+  
   d <- read.csv(datafile, header=TRUE, sep="\t")
   
   # Convert to MB
@@ -39,6 +40,8 @@ mem <- function(datafile) {
 #####################################################
 
 cpu <- function(datafile, barplot=TRUE) {
+  library(ggplot2)
+  
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d$CPU.Process.Load <- d$CPU.Process.Load * 100
   d$User.Uptime <- d$User.Uptime / 1000

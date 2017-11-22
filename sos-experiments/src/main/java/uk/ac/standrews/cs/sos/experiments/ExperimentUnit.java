@@ -215,48 +215,48 @@ public interface ExperimentUnit {
 
     }
 
-    default  List<IGUID> addFolderContentToNodeAsAtoms(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
+    default List<IGUID> addFolderContentToNodeAsAtoms(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
 
         FileVisitor<Path> fv = new FileVisitor<>(node);
 
-            long start = System.nanoTime();
-            System.out.println("Files added: ");
-            Files.walkFileTree(folder.toPath(), fv);
-            System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        long start = System.nanoTime();
+        System.out.println("Files added: ");
+        Files.walkFileTree(folder.toPath(), fv);
+        System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
 
-            return fv.getVersions();
+        return fv.getVersions();
+    }
+
+    class FileVisitor<T extends Path> extends PlainFileVisitor<T> {
+
+        public FileVisitor(SOSLocalNode node) {
+            super(node);
         }
 
-        class FileVisitor<T extends Path> extends PlainFileVisitor<T> {
-
-            public FileVisitor(SOSLocalNode node) {
-                super(node);
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            // System.out.println("File " + file.toUri().toString());
+            counter++;
+            if (counter % 100 == 0) {
+                System.out.print("  " + counter);
             }
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                // System.out.println("File " + file.toUri().toString());
-                counter++;
-                if (counter % 100 == 0) {
-                    System.out.print("  " + counter);
-                }
+            try {
+                AtomBuilder atomBuilder = new AtomBuilder()
+                        .setLocation(new URILocation(file.toUri().toString()));
 
-                try {
-                    AtomBuilder atomBuilder = new AtomBuilder()
-                            .setLocation(new URILocation(file.toUri().toString()));
+                Atom atom = node.getAgent().addAtom(atomBuilder);
+                versions.add(atom.guid());
 
-                    Atom atom = node.getAgent().addAtom(atomBuilder);
-                    versions.add(atom.guid());
-
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added atom " + atom.guid().toShortString() + " from URI " + file.toString());
-                } catch (URISyntaxException  | ServiceException e) {
-                    e.printStackTrace();
-                }
-
-                return FileVisitResult.CONTINUE;
+                InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added atom " + atom.guid().toShortString() + " from URI " + file.toString());
+            } catch (URISyntaxException  | ServiceException e) {
+                e.printStackTrace();
             }
 
+            return FileVisitResult.CONTINUE;
         }
+
+    }
 
     default void addContext(ContextService cms, ExperimentConfiguration.Experiment experiment, String context_name) throws ContextException {
         String contextPath = experiment.getExperimentNode().getContextsPath() + experiment.getName() + "/" + context_name + ".json";

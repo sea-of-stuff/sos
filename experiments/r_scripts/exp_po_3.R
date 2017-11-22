@@ -1,8 +1,9 @@
-library(ggplot2)
-
-source("r_scripts/utils_stats.r")
-
 po_3 <- function(datafile, type, titlePlot="NO TITLE", showSummary=FALSE) {
+  
+  library(ggplot2)
+  source("r_scripts/utils_stats.r")
+  
+  
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d <- d[d$StatsTYPE == type,] # Filter policies measurements
   d$Message <- droplevels(d$Message)

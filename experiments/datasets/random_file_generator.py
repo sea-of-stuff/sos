@@ -9,6 +9,6 @@ if not os.path.exists(foldername):
     os.makedirs(foldername)
 
 for i in range(0, no_files):
-	print 'Creating file ' + str(i)
+    print 'Creating file ' + str(i)
     with open(foldername + '/' + str(i), 'wb') as fout:
         fout.write(os.urandom(size))

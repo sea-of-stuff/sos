@@ -1,10 +1,9 @@
-library(ggplot2)
-
-source("r_scripts/utils_stats.r")
-source("r_scripts/kruskal.r")
-
 pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
-
+  library(ggplot2)
+  source("r_scripts/utils_stats.r")
+  source("r_scripts/kruskal.r")
+  
+  
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d <- d[d$StatsTYPE == 'predicate',]
   d$Message <- droplevels(d$Message)
@@ -61,6 +60,6 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
 ###########################################################################
 # STAT ANALYSIS - TODO - better scripting
 ###########################################################################
-kruskal(d, d$User.Measure, d$ContextName)
-kruskal_dunn(d, d$User.Measure, d$ContextName)
-kruskal_nemenyi(d, d$User.Measure, d$ContextName)
+# kruskal(d, d$User.Measure, d$ContextName)
+# kruskal_dunn(d, d$User.Measure, d$ContextName)
+# kruskal_nemenyi(d, d$User.Measure, d$ContextName)
