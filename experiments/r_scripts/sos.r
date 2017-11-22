@@ -36,7 +36,7 @@ io_1("output/test_io_1_on_20x50mb_1.tsv", "plot title")
 # GUID_1
 ############
 
-guid_1("output/test_guid_1.tsv", "Performance test on the GUID function. GUID - SHA-2(-256)")
+guid_1("output/test_guid_2.tsv", "Performance test on the GUID functions")
 
 ############
 # PR_1

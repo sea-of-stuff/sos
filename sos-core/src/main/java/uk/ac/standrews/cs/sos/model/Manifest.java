@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.sos.model;
 
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * A manifest is an entity that describes assets, compounds and atoms by
@@ -55,7 +56,7 @@ public interface Manifest {
                 return false;
             }
 
-            IGUID guidOfContent = GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash);
+            IGUID guidOfContent = GUIDFactory.generateGUID(GUID_ALGORITHM, contentToHash);
             if (guidOfContent.isInvalid() || !guid().equals(guidOfContent)) {
                 return false;
             }

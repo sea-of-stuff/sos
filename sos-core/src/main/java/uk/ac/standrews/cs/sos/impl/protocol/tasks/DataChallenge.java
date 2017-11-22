@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.impl.protocol.json.TaskJSONFields.*;
 
 /**
@@ -61,7 +61,7 @@ public class DataChallenge extends Task {
         this.challenge = new BigInteger(130, random).toString(32);
         List<InputStream> streams = Arrays.asList(challengedData.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-        this.challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
+        this.challengedEntity = GUIDFactory.generateGUID(GUID_ALGORITHM, stream);
     }
 
     @Override

@@ -34,6 +34,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Internals.LOCATIONS_INDEX_FILE;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
@@ -46,7 +47,7 @@ public class LocationsIndexImplTest {
     public void addGetLocationsTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
 
         locationsIndex.addLocation(guid, locationBundle);
@@ -61,7 +62,7 @@ public class LocationsIndexImplTest {
     public void noLocationsTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         Iterator<LocationBundle> it = locationsIndex.findLocations(guid).iterator();
         assertFalse(it.hasNext());
@@ -80,7 +81,7 @@ public class LocationsIndexImplTest {
 
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
 
         locationsIndex.addLocation(guid, locationBundle);
@@ -102,7 +103,7 @@ public class LocationsIndexImplTest {
     public void iteratorOrderingTest() throws URISyntaxException {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         LocationBundle locationBundle = new CacheLocationBundle(new URILocation("http://example.org/resource"));
         LocationBundle locationBundlePersist = new PersistLocationBundle(new URILocation("http://example.org/persist"));
 
@@ -123,7 +124,7 @@ public class LocationsIndexImplTest {
     public void comparatorTest() throws URISyntaxException, MalformedURLException, SOSProtocolException, ConfigurationException {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/config_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
-        SOSLocalNode.settings.setGuid(GUIDFactory.generateRandomGUID().toMultiHash());
+        SOSLocalNode.settings.setGuid(GUIDFactory.generateRandomGUID(GUID_ALGORITHM).toMultiHash());
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
 
         Comparator<LocationBundle> comparator = LocationsIndexImpl.comparator(); // The comparator returns 0 if and only if the locations are the same.
@@ -142,33 +143,33 @@ public class LocationsIndexImplTest {
         assertEquals(comparator.compare(new ExternalLocationBundle(new URILocation("http://example.org/resource")), new PersistLocationBundle(new URILocation("http://example.org/resource"))), 0); // PREFER LOCATION OVER TYPE
         assertEquals(comparator.compare(new CacheLocationBundle(new URILocation("http://example.org/other")), new PersistLocationBundle(new URILocation("http://example.org/resource"))), -1);
 
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
-        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), 1);
-        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
+        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), 1);
+        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
 
-        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
-        assertEquals(comparator.compare(new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), 1);
-        assertEquals(comparator.compare(new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
-                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), 1);
+        assertEquals(comparator.compare(new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
+        assertEquals(comparator.compare(new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new PersistLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), 1);
+        assertEquals(comparator.compare(new ExternalLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
+                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), 1);
 
         // Ignore URILocation vs SOSLocation as the SOSLocation is not this node
         assertEquals(comparator.compare(new CacheLocationBundle(new URILocation("http://example.org/other")),
-                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID()))), -1);
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID())),
+                new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), -1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
                 new CacheLocationBundle(new URILocation("http://example.org/other"))), -1);
 
         assertEquals(comparator.compare(new CacheLocationBundle(new URILocation("http://example.org/other")),
-                new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID()))), 1);
-        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID())),
+                new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID(GUID_ALGORITHM)))), 1);
+        assertEquals(comparator.compare(new CacheLocationBundle(new SOSLocation(settings.guid(), GUIDFactory.generateRandomGUID(GUID_ALGORITHM))),
                 new CacheLocationBundle(new URILocation("http://example.org/other"))), -1);
     }
 

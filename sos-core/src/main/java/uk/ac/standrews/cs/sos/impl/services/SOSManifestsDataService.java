@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -163,7 +162,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             List<InputStream> streams = Arrays.asList(manifest.contentToHash(), new ByteArrayInputStream(challenge.getBytes()));
             InputStream combinedStream = new SequenceInputStream(Collections.enumeration(streams));
 
-            return GUIDFactory.generateGUID(ALGORITHM.SHA256, combinedStream);
+            return GUIDFactory.generateGUID(GUID_ALGORITHM, combinedStream);
 
         } catch (ManifestNotFoundException | IOException | GUIDGenerationException e) {
 

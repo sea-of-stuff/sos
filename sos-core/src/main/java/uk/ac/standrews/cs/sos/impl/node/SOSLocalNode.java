@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.node;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -42,6 +41,7 @@ import java.security.PrivateKey;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Internals.NODE_MAINTAINER_TIME_UNIT;
 
 /**
@@ -282,7 +282,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try (InputStream content = contentToHash()){
 
-            this.nodeGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, content);
+            this.nodeGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, content);
             this.DB_nodeid = nodeGUID.toMultiHash();
 
             settings.setGuid(nodeGUID.toMultiHash());

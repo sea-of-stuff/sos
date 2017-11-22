@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -42,7 +43,7 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
         index.advanceTip(versionManifest);
 
         // Create new version for same asset and advance the tip
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), Collections.singleton(versionManifest.guid()), versionManifest.invariant());
+        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), Collections.singleton(versionManifest.guid()), versionManifest.invariant());
 
         index.advanceTip(newVersionManifest);
 
@@ -58,7 +59,7 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.invariant());
+        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), versionManifest.invariant());
 
         index.advanceTip(versionManifest);
         index.advanceTip(siblingVersionManifest);
@@ -76,13 +77,13 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(), versionManifest.invariant());
+        Version siblingVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), versionManifest.invariant());
 
         index.advanceTip(versionManifest);
         index.advanceTip(siblingVersionManifest);
 
         // Create new version for same asset and advance the tip
-        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(),
+        Version newVersionManifest = ManifestUtils.createDummyVersion(GUIDFactory.generateRandomGUID(GUID_ALGORITHM),
                 new HashSet<>(Arrays.asList(versionManifest.guid(), siblingVersionManifest.guid())),
                 versionManifest.invariant());
 

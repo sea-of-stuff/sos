@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
+import uk.ac.standrews.cs.sos.constants.Internals;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -52,6 +54,16 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
                 throw new ExperimentException();
             }
 
+            Internals.GUID_ALGORITHM = ALGORITHM.SHA1;
+            try {
+                String datasetPath = experiment.getExperimentNode().getDatasetPath();
+                addFolderContentToNodeAsAtoms(node, new File(datasetPath));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ExperimentException();
+            }
+
         }
     }
 
@@ -60,7 +72,7 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "guid_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_GUID_1 experiment_io_1 = new Experiment_GUID_1(experimentConfiguration, "test_guid_1");
+        Experiment_GUID_1 experiment_io_1 = new Experiment_GUID_1(experimentConfiguration, "test_guid_2");
         experiment_io_1.process();
     }
 }

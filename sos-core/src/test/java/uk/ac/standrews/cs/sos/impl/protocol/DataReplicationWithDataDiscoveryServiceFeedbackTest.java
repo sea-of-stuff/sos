@@ -60,9 +60,9 @@
 //    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
 //
 //        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
-//        new SOS_LOG(GUIDFactory.generateRandomGUID());
+//        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 //
-//        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+//        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 //
 //        mockServer = startClientAndServer(MOCK_SERVER_PORT);
 //        mockServer.dumpToLog();
@@ -125,10 +125,10 @@
 //    // TODO - re-enable test
 //    @Test (enabled = false)
 //    public void registeringNDSFeedbackTest() throws GUIDGenerationException, InterruptedException, SOSProtocolException, NodeRegistrationException {
-//        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+//        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 //
 //        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM),
 //                "localhost", MOCK_SERVER_PORT,
 //                false, true, false, false, false, false, false);
 //
@@ -155,7 +155,7 @@
 //    public void failWithNoIndexNDSNotCalledTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 //
 //        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM),
 //                "localhost", MOCK_SERVER_PORT,
 //                false, true, false, false, false, false, false);
 //
@@ -170,7 +170,7 @@
 //    public void failWithNullNDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 //
 //        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM),
 //                "localhost", MOCK_SERVER_PORT,
 //                false, true, false, false, false, false, false);
 //
@@ -187,7 +187,7 @@
 //    public void failWithNullDDSTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException {
 //
 //        InputStream inputStream = HelperTest.StringToInputStream(TEST_DATA);
-//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(),
+//        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM),
 //                "localhost", MOCK_SERVER_PORT,
 //                false, true, false, false, false, false, false);
 //

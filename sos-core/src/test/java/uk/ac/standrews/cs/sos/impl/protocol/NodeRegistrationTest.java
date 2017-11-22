@@ -42,6 +42,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -50,7 +51,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 public class NodeRegistrationTest extends ProtocolTest {
 
     private SOSNodeDiscoveryService nds;
-    private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
+    private static IGUID localNodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10007;
@@ -219,6 +220,6 @@ public class NodeRegistrationTest extends ProtocolTest {
     }
 
     private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate, "localhost", 8090, true, true, true, true, true, true, true);
+        return new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate, "localhost", 8090, true, true, true, true, true, true, true);
     }
 }

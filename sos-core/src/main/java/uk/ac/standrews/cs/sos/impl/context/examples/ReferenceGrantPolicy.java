@@ -10,13 +10,15 @@ import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ReferenceGrantPolicy extends BasePolicy {
 
-    private IGUID granter = GUIDFactory.generateRandomGUID();
-    private IGUID grantee = GUIDFactory.generateRandomGUID();
+    private IGUID granter = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+    private IGUID grantee = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
     public ReferenceGrantPolicy(JsonNode policyManifest) {
         super(policyManifest);

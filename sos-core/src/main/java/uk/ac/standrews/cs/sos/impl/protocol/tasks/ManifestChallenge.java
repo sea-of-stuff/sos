@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -28,6 +27,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -52,7 +53,7 @@ public class ManifestChallenge extends Task {
         this.challenge = new BigInteger(130, random).toString(32);
         List<InputStream> streams = Arrays.asList(challengedManifest.contentToHash(), new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-        this.challengedEntity = GUIDFactory.generateGUID(ALGORITHM.SHA256, stream);
+        this.challengedEntity = GUIDFactory.generateGUID(GUID_ALGORITHM, stream);
     }
 
     @Override

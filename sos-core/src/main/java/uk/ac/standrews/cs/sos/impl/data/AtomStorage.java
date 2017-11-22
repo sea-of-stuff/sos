@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
+import uk.ac.standrews.cs.sos.constants.Internals;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.location.SourceLocationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -36,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /*
  * This is the class that will take care of storing atom's data
@@ -106,7 +109,7 @@ public class AtomStorage {
 
         // Store data first and then assign valid GUID
         try {
-            IGUID tmpGUID = GUIDFactory.generateRandomGUID();
+            IGUID tmpGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
             StoredAtomInfo storedAtomInfo = persistData(tmpGUID, atomBuilder);
 
             IFile tmpCachedLocation = atomFileInLocalStorage(tmpGUID);
@@ -201,7 +204,10 @@ public class AtomStorage {
             long start = System.nanoTime();
             IGUID guid = generateGUID(data);
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.guid, StatsTYPE.none, Long.toString(data.getSize()), duration);
+
+            // Support only for SHA1 and SHA256
+            StatsTYPE subtype = Internals.GUID_ALGORITHM == ALGORITHM.SHA1 ? StatsTYPE.sha1 : StatsTYPE.sha256;
+            InstrumentFactory.instance().measure(StatsTYPE.guid, subtype, Long.toString(data.getSize()), duration);
 
             return guid;
 
@@ -212,7 +218,7 @@ public class AtomStorage {
 
     private IGUID generateGUID(Data data) throws GUIDGenerationException, IOException {
 
-        return GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream());
+        return GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
     }
 
     private IFile atomFileInLocalStorage(IGUID guid) throws DataStorageException {

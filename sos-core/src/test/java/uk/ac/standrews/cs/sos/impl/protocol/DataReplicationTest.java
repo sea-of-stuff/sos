@@ -7,7 +7,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -44,6 +43,7 @@ import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertFalse;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -78,9 +78,9 @@ public class DataReplicationTest extends ProtocolTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -154,7 +154,7 @@ public class DataReplicationTest extends ProtocolTest {
     public void basicMockServerTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
 
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
@@ -165,7 +165,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
@@ -181,7 +181,7 @@ public class DataReplicationTest extends ProtocolTest {
     @Test
     public void replicateToNoStorageNodeTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
@@ -192,7 +192,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
@@ -204,12 +204,12 @@ public class DataReplicationTest extends ProtocolTest {
     @Test
     public void replicateOnlyOnceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
@@ -221,7 +221,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
@@ -239,17 +239,17 @@ public class DataReplicationTest extends ProtocolTest {
     @Test
     public void replicateOnlyOnceSecondTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(anotherNode.guid())).thenReturn(anotherNode);
@@ -262,7 +262,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);
@@ -280,13 +280,13 @@ public class DataReplicationTest extends ProtocolTest {
     @Test
     public void replicateToSameNodeTwiceTest() throws IOException, InterruptedException, GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.guid())).thenReturn(twinStorageNode);
@@ -298,7 +298,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false); // TODO - rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
@@ -333,7 +333,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         StorageService storageService = localSOSNode.getStorageService();
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService, mockNodeDiscoveryService, false);
         TasksQueue.instance().performSyncTask(replicationTask);

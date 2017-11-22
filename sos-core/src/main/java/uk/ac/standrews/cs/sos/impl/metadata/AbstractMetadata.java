@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.metadata;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -15,6 +14,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -72,7 +73,7 @@ public abstract class AbstractMetadata implements Metadata {
 
     public IGUID generateGUID() throws GUIDGenerationException {
         String metadata = metadata();
-        return GUIDFactory.generateGUID(ALGORITHM.SHA256, metadata);
+        return GUIDFactory.generateGUID(GUID_ALGORITHM, metadata);
     }
 
     @Override

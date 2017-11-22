@@ -11,14 +11,15 @@ import java.net.MalformedURLException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSLocationTest extends SetUpTest {
 
-    private static IGUID NODE_GUID = GUIDFactory.generateRandomGUID();
-    private static IGUID DATA_GUID = GUIDFactory.generateRandomGUID();
+    private static IGUID NODE_GUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+    private static IGUID DATA_GUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
     @Test
     public void testGetURI() throws Exception {

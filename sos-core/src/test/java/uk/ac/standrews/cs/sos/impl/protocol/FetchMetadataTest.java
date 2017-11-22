@@ -28,6 +28,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -106,7 +107,7 @@ public class FetchMetadataTest extends ProtocolTest {
     @Test(timeOut = 10000)
     public void basicMetadataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, true, true, false, false);
 

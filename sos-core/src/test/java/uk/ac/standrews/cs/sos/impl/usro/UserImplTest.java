@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 import java.security.PublicKey;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -41,7 +42,7 @@ public class UserImplTest {
     @Test
     public void constructorWithGUIDTest() throws SignatureException {
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         User user = new UserImpl(guid,"TEST");
 
         assertEquals(user.getName(), "TEST");
@@ -52,7 +53,7 @@ public class UserImplTest {
     @Test
     public void constructorWithGUIDAndSignatureTest() throws SignatureException, CryptoException {
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         PublicKey certificate = DigitalSignature.generateKeys().getPublic();
         User user = new UserImpl(guid,"TEST", certificate);
 

@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -23,7 +25,7 @@ public class ManifestUtils {
 
     public static Version createDummyVersion() throws Exception {
         Role roleMocked = UserRoleUtils.BareRoleMock();
-        Version version = ManifestFactory.createVersionManifest(GUIDFactory.generateRandomGUID(), null, null, null, roleMocked);
+        Version version = ManifestFactory.createVersionManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), null, null, null, roleMocked);
 
         return version;
     }
@@ -51,12 +53,12 @@ public class ManifestUtils {
 
     public static Manifest createMockManifestTypeAtom() {
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         return new AtomManifest(guid, new LinkedHashSet<>());
     }
 
     public static Manifest createMockAtom() {
-        return createMockAtom(GUIDFactory.generateRandomGUID());
+        return createMockAtom(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
     }
 
     public static Manifest createMockAtom(IGUID atomGUID) {
@@ -64,7 +66,7 @@ public class ManifestUtils {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         Location location;
         try {
-            location = new SOSLocation(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID());
+            location = new SOSLocation(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
             bundles.add(new CacheLocationBundle(location));
         } catch (MalformedURLException e) {
             e.printStackTrace();

@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -40,7 +41,7 @@ public class SOSAddCompoundTest extends AgentTest {
 
     @Test
     public void testAddCompound() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -66,7 +67,7 @@ public class SOSAddCompoundTest extends AgentTest {
      */
     @Test
     public void testAddCompoundAndVerifyFails() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

@@ -26,13 +26,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSFileSystemFactoryTest {
 
-    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID());
+    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
     @BeforeMethod
     public void setUp() {
@@ -41,7 +42,7 @@ public class SOSFileSystemFactoryTest {
 
     @Test (expectedExceptions = FileSystemCreationException.class)
     public void makeFileSystemWithGUIDTest() throws FileSystemCreationException {
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         SOSFileSystemFactory fileSystemFactory = new SOSFileSystemFactory(guid);
 
         fileSystemFactory.makeFileSystem();
@@ -49,8 +50,8 @@ public class SOSFileSystemFactoryTest {
 
     @Test
     public void makeFileSystemTest() throws FileSystemCreationException, TIPNotFoundException, ManifestNotMadeException, ManifestNotFoundException, ManifestPersistException, FileNotFoundException, RoleNotFoundException, ServiceException {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-        IGUID versionGUID = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID versionGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         SOSFileSystemFactory.WriteCurrentVersion(invariant, versionGUID);
 
@@ -68,7 +69,7 @@ public class SOSFileSystemFactoryTest {
         Compound mockRootFolder = mock(Compound.class);
         Version mockRootVersion = mock(Version.class);
 
-        IGUID contentsGUID = GUIDFactory.generateRandomGUID();
+        IGUID contentsGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         when(mockAgent.addCompound(any(CompoundBuilder.class))).thenReturn(mockRootFolder);
         when(mockAgent.addVersion(any())).thenReturn(mockRootVersion);

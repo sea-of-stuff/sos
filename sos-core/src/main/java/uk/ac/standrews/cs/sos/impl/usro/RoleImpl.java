@@ -17,6 +17,8 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -38,7 +40,7 @@ public class RoleImpl extends UserImpl implements Role {
      * @throws ProtectionException if the protection keys could not be generated
      */
     public RoleImpl(User user, String name) throws ProtectionException, SignatureException {
-        super(ManifestType.ROLE, GUIDFactory.generateRandomGUID(), name);
+        super(ManifestType.ROLE, GUIDFactory.generateRandomGUID(GUID_ALGORITHM), name);
         this.userGUID = user.guid();
 
         manageProtectionKey(false);

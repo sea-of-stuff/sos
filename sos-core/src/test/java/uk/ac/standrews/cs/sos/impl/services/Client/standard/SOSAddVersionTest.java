@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertFalse;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -30,7 +31,7 @@ public class SOSAddVersionTest extends AgentTest {
 
     @Test
     public void testAddVersion() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -51,9 +52,9 @@ public class SOSAddVersionTest extends AgentTest {
 
     @Test
     public void testRetrieveVersionFromFileWithPrevsAndMeta() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 
@@ -63,11 +64,11 @@ public class SOSAddVersionTest extends AgentTest {
         Compound compound = agent.addCompound(compoundBuilder);
 
         Set<IGUID> prevs = new LinkedHashSet<>();
-        prevs.add(GUIDFactory.generateRandomGUID());
-        prevs.add(GUIDFactory.generateRandomGUID());
+        prevs.add(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
+        prevs.add(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         Metadata metaMock = mock(Metadata.class);
-        when(metaMock.guid()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(metaMock.guid()).thenReturn(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         VersionBuilder builder = new VersionBuilder(compound.guid())
                 .setInvariant(invariant)
@@ -97,7 +98,7 @@ public class SOSAddVersionTest extends AgentTest {
      */
     @Test
     public void testAddVersionAndVerifyFails() throws Exception {
-        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID());
+        Content cat = new ContentImpl("cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(cat);
 

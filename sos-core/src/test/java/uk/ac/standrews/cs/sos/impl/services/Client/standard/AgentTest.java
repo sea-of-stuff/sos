@@ -12,6 +12,8 @@ import uk.ac.standrews.cs.sos.services.Agent;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -35,7 +37,7 @@ public class AgentTest extends SetUpTest {
 
     @Test(expectedExceptions = ServiceException.class)
     public void testFailGetManifest() throws Exception {
-        agent.getManifest(GUIDFactory.generateRandomGUID());
+        agent.getManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
     }
 
     @Test (expectedExceptions = ServiceException.class)

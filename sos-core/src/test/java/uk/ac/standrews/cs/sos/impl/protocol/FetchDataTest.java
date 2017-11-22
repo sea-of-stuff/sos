@@ -5,7 +5,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -32,6 +31,7 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -52,9 +52,9 @@ public class FetchDataTest extends ProtocolTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_data_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -81,11 +81,11 @@ public class FetchDataTest extends ProtocolTest {
     @Test
     public void basicDataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
         FetchData fetchData = new FetchData(node, testGUID);
         TasksQueue.instance().performSyncTask(fetchData);
@@ -100,11 +100,11 @@ public class FetchDataTest extends ProtocolTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false);
 
-        IGUID testGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, TEST_DATA);
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
         FetchData fetchData = new FetchData(node, testGUID);
     }
@@ -112,7 +112,7 @@ public class FetchDataTest extends ProtocolTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchANullGUIDTest() throws IOException, GUIDGenerationException, SOSURLException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false);
 

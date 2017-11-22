@@ -4,7 +4,6 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -55,6 +54,7 @@ import java.io.SequenceInputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Internals.LOCATIONS_INDEX_FILE;
 import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl.comparator;
 
@@ -301,7 +301,7 @@ public class SOSStorageService implements StorageService {
             List<InputStream> streams = Arrays.asList(data.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
             InputStream combinedStream = new SequenceInputStream(Collections.enumeration(streams));
 
-            return GUIDFactory.generateGUID(ALGORITHM.SHA256, combinedStream);
+            return GUIDFactory.generateGUID(GUID_ALGORITHM, combinedStream);
 
         } catch (AtomNotFoundException | IOException | GUIDGenerationException e) {
             return new InvalidID();

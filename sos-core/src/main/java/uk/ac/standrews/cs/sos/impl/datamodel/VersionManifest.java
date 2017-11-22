@@ -13,6 +13,8 @@ import uk.ac.standrews.cs.sos.utils.IO;
 import java.io.InputStream;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * An Version is identified by an asset GUID (invariant).
  * Unlike other GUIDs, the asset's GUID is not derived from contents.
@@ -191,7 +193,7 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
     }
 
     private IGUID makeInvariant() {
-        return GUIDFactory.generateRandomGUID();
+        return GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
     }
 
     private String getPreviousToHashOrSign() {

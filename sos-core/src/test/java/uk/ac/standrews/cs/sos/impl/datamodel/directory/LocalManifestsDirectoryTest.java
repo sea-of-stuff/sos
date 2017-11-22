@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
 import uk.ac.standrews.cs.castore.CastoreType;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -42,6 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -96,7 +96,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
         Role roleMocked = UserRoleUtils.BareRoleMock();
-        Content content = new ContentImpl("Cat", GUIDFactory.generateRandomGUID());
+        Content content = new ContentImpl("Cat", GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         Set<Content> contents = new LinkedHashSet<>();
         contents.add(content);
 
@@ -118,7 +118,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     @Test (expectedExceptions = ManifestNotMadeException.class)
     public void noCompoundTypeYieldsNotValidManifestTest() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -132,7 +132,7 @@ public class LocalManifestsDirectoryTest extends CommonTest {
     public void addVersionManifestTest() throws Exception {
         LocalManifestsDirectory manifestsDirectory = new LocalManifestsDirectory(storage);
 
-        IGUID contentGUID = GUIDFactory.generateRandomGUID();
+        IGUID contentGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Version versionManifest = ManifestUtils.createDummyVersion(contentGUID);
 
         IGUID guid = versionManifest.version();

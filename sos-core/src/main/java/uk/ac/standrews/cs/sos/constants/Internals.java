@@ -1,11 +1,17 @@
 package uk.ac.standrews.cs.sos.constants;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
+
 import java.util.concurrent.TimeUnit;
+
+import static uk.ac.standrews.cs.guid.ALGORITHM.SHA256;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Internals {
+
+    public static ALGORITHM GUID_ALGORITHM = SHA256;
 
     public static final String MANIFESTS_CACHE_FILE = "manifests.cache";
     public static final String MANIFESTS_INDEX_FILE = "manifests.index";

@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.datamodel;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.EmptyData;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.LocationUtility;
@@ -16,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * Manifest describing an Atom.
@@ -117,7 +118,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
         try (Data data = LocationUtility.getDataFromLocation(locationBundle.getLocation())) {
 
-            IGUID generatedGUID = GUIDFactory.generateGUID(ALGORITHM.SHA256, data.getInputStream());
+            IGUID generatedGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
             if (generatedGUID.isInvalid() || !guid().equals(generatedGUID)) {
                 return false;
             }

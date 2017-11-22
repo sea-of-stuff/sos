@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.manifest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.IKey;
@@ -19,6 +18,8 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * The BasicManifest defines the base implementation for all other manifests.
@@ -112,7 +113,7 @@ public abstract class BasicManifest implements Manifest {
     protected IGUID makeGUID() {
 
         try (InputStream content = contentToHash()){
-            return GUIDFactory.generateGUID(ALGORITHM.SHA256, content);
+            return GUIDFactory.generateGUID(GUID_ALGORITHM, content);
         } catch (GUIDGenerationException | IOException e) {
             return new InvalidID();
         }

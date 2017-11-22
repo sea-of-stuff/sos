@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
@@ -31,7 +32,7 @@ public class SyncRequestTest extends CommonTest {
     public void setUp(java.lang.reflect.Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         // Read the settings configuration. This will set the SSL Store path.
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_CONFIGURATIONS_PATH + "config_network.json")).getSettingsObj();

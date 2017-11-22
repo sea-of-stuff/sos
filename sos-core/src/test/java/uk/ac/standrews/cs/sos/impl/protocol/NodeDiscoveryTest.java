@@ -45,6 +45,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -54,7 +55,7 @@ public class NodeDiscoveryTest {
 
     private SOSNodeDiscoveryService nds;
     private Node localNode;
-    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID();
+    private IGUID localNodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
     private ClientAndServer mockServer;
 
@@ -97,8 +98,8 @@ public class NodeDiscoveryTest {
         nds.setMDS(manifestsDataService);
 
         // MOCK SERVER SETUP
-        nodeFound = GUIDFactory.generateRandomGUID();
-        nodeNotFound = GUIDFactory.generateRandomGUID();
+        nodeFound = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        nodeNotFound = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         mockServer = startClientAndServer(NODE_PORT);
         mockServer.dumpToLog();
@@ -175,7 +176,7 @@ public class NodeDiscoveryTest {
     @Test (expectedExceptions = NodeNotFoundException.class)
     public void findUnknownNodeTest() throws NodeNotFoundException {
 
-        nds.getNode(GUIDFactory.generateRandomGUID());
+        nds.getNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
     }
 
     @Test
@@ -202,7 +203,7 @@ public class NodeDiscoveryTest {
         Node ndsMock = mock(Node.class);
         when(ndsMock.getType()).thenReturn(ManifestType.NODE);
         when(ndsMock.isValid()).thenReturn(true);
-        when(ndsMock.guid()).thenReturn(GUIDFactory.generateRandomGUID());
+        when(ndsMock.guid()).thenReturn(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
         when(ndsMock.getHostname()).thenReturn(NODE_HOSTNAME);

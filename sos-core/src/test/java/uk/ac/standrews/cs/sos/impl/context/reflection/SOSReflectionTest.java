@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 
 import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertTrue;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * NOTE: when writing tests for contexts, make sure that you use different context name.
@@ -61,7 +62,7 @@ public class SOSReflectionTest extends SetUpTest {
         Predicate predicate = SOSReflection.PredicateInstance(node);
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
-        assertTrue(predicate.test(GUIDFactory.generateRandomGUID()));
+        assertTrue(predicate.test(GUIDFactory.generateRandomGUID(GUID_ALGORITHM)));
     }
 
     @Test
@@ -83,12 +84,12 @@ public class SOSReflectionTest extends SetUpTest {
 
         BasicMetadata meta = new BasicMetadata();
         meta.addProperty("Content-Type", "image/jpeg");
-        meta.setGUID(GUIDFactory.generateRandomGUID());
+        meta.setGUID(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         this.localSOSNode.getMMS().addMetadata(meta);
 
         Version version = this.localSOSNode.getAgent()
                 .addVersion(new VersionBuilder()
-                        .setContent(GUIDFactory.generateRandomGUID())
+                        .setContent(GUIDFactory.generateRandomGUID(GUID_ALGORITHM))
                         .setMetadata(meta));
 
 
@@ -97,12 +98,12 @@ public class SOSReflectionTest extends SetUpTest {
         // Predicate.test fails for non jpeg content
         BasicMetadata metaNonImage = new BasicMetadata();
         metaNonImage.addProperty("Content-Type", "WHATEVER");
-        metaNonImage.setGUID(GUIDFactory.generateRandomGUID());
+        metaNonImage.setGUID(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         this.localSOSNode.getMMS().addMetadata(metaNonImage);
 
         Version anotherVersion = this.localSOSNode.getAgent()
                 .addVersion(new VersionBuilder()
-                        .setContent(GUIDFactory.generateRandomGUID())
+                        .setContent(GUIDFactory.generateRandomGUID(GUID_ALGORITHM))
                         .setMetadata(metaNonImage));
 
 

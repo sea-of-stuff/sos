@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.utils;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.impl.keys.KeyImpl;
@@ -15,6 +14,7 @@ import java.io.InputStream;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -49,7 +49,7 @@ public class ContentImplTest extends CommonTest {
     @Test
     public void testToStringGUID() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         ContentImpl content = new ContentImpl(guid);
 
@@ -59,7 +59,7 @@ public class ContentImplTest extends CommonTest {
     @Test
     public void testToStringWithLabel() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         ContentImpl content = new ContentImpl("cat", guid);
 
@@ -69,7 +69,7 @@ public class ContentImplTest extends CommonTest {
     @Test
     public void testToStringWithEmptyLabel() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         ContentImpl content = new ContentImpl("", guid);
 
@@ -79,7 +79,7 @@ public class ContentImplTest extends CommonTest {
     @Test
     public void testToStringWithNullLabel() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         ContentImpl content = new ContentImpl(null, guid);
 

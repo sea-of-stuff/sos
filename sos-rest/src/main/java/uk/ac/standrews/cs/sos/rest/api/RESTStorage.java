@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.rest.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -32,6 +31,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 
 /**
@@ -110,7 +110,7 @@ public class RESTStorage {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
 
         try (InputStream data = dataPackage.getDataObj().getInputStream()){
-            IGUID guidOfReceivedData = GUIDFactory.generateGUID(ALGORITHM.SHA256, data);
+            IGUID guidOfReceivedData = GUIDFactory.generateGUID(GUID_ALGORITHM, data);
             IGUID dataPackageGUID = dataPackage.getGUIDObj();
             if (!guidOfReceivedData.equals(dataPackageGUID)) {
                 return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Data received does not match the GUID");

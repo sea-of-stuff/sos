@@ -23,6 +23,8 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -36,7 +38,7 @@ public class UserImpl extends BasicManifest implements User {
     private PrivateKey signaturePrivateKey;
 
     public UserImpl(String name) throws SignatureException {
-        this(GUIDFactory.generateRandomGUID(), name);
+        this(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), name);
     }
 
     UserImpl(IGUID guid, String name) throws SignatureException {

@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.datamodel;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.CommonTest;
@@ -20,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -50,7 +50,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testToStringContents() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -65,7 +65,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testGetContents() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();
@@ -105,7 +105,7 @@ public class CompoundManifestTest extends CommonTest {
     @Test
     public void testIsValidManifest() throws Exception {
         InputStream inputStreamFake = HelperTest.StringToInputStream(Hashes.TEST_STRING);
-        IGUID guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, inputStreamFake);
+        IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, inputStreamFake);
 
         Content cat = new ContentImpl("cat", guid);
         Set<Content> contents = new LinkedHashSet<>();

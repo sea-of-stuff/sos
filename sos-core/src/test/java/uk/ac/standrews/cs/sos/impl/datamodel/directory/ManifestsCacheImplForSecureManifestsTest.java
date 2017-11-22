@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -62,7 +63,7 @@ public class ManifestsCacheImplForSecureManifestsTest extends CommonTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/config_setup.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         try {
             String root = System.getProperty("user.home") + "/sos/";

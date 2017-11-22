@@ -24,18 +24,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSFileSystemTest {
 
-    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID());
+    private SOS_LOG SOS_LOG = new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
     @Test
     public void constructorTest() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-        IGUID versionGUID = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID versionGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Agent mockAgent = mockAgent(invariant, versionGUID);
 
         SOSFileSystem sosFS = new SOSFileSystem(mockAgent, (Version) mockAgent.getManifest(versionGUID));
@@ -44,8 +45,8 @@ public class SOSFileSystemTest {
 
     @Test
     public void newFileTest() throws Exception {
-        IGUID invariant = GUIDFactory.generateRandomGUID();
-        IGUID versionGUID = GUIDFactory.generateRandomGUID();
+        IGUID invariant = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID versionGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Agent mockAgent = mockAgent(invariant, versionGUID);
 
         SOSFileSystem sosFS = new SOSFileSystem(mockAgent, (Version) mockAgent.getManifest(versionGUID));

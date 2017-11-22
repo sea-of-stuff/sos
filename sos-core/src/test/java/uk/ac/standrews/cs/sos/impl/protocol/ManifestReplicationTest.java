@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
 /**
@@ -161,7 +162,7 @@ public class ManifestReplicationTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);
         mockServer.dumpToLog();
@@ -253,7 +254,7 @@ public class ManifestReplicationTest {
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
         when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
@@ -285,7 +286,7 @@ public class ManifestReplicationTest {
         when(mockManifest.toString()).thenReturn(TEST_COMPOUND_MANIFEST);
         when(mockManifest.getType()).thenReturn(ManifestType.COMPOUND);
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
@@ -355,7 +356,7 @@ public class ManifestReplicationTest {
         when(mockManifest.policies()).thenReturn(policieRefs);
         when(mockManifest.toFATString(any(), any())).thenReturn(TEST_FAT_CONTEXT_MANIFEST);
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
@@ -395,7 +396,7 @@ public class ManifestReplicationTest {
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
         when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
@@ -425,7 +426,7 @@ public class ManifestReplicationTest {
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
         when(mockManifest.getType()).thenReturn(ManifestType.VERSION);
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.guid()).thenReturn(nodeGUID);
@@ -447,7 +448,7 @@ public class ManifestReplicationTest {
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
         when(mockManifest.getType()).thenReturn(ManifestType.ATOM); // It can actually be whatever (except context)
 
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -26,8 +27,8 @@ public class ManifestsDataServiceIndexTest {
 
     @Test
     public void basicTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         ManifestsLocationsIndex index = new ManifestsLocationsIndex();
         index.addEntry(manifestGUID, nodeGUID);
@@ -40,7 +41,7 @@ public class ManifestsDataServiceIndexTest {
 
     @Test
     public void nullTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         ManifestsLocationsIndex index = new ManifestsLocationsIndex();
         Set<IGUID> nodesGUIDs = index.getNodeRefs(manifestGUID);
@@ -49,8 +50,8 @@ public class ManifestsDataServiceIndexTest {
 
     @Test
     public void evictTest() {
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         ManifestsLocationsIndex index = new ManifestsLocationsIndex();
         index.addEntry(manifestGUID, nodeGUID);
@@ -75,8 +76,8 @@ public class ManifestsDataServiceIndexTest {
         LocalStorage localStorage = new LocalStorage(stor);
         IDirectory cachesDir = localStorage.getNodeDirectory();
 
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
-        IGUID nodeGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
         ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
         manifestsLocationsIndex.addEntry(manifestGUID, nodeGUID);
@@ -112,7 +113,7 @@ public class ManifestsDataServiceIndexTest {
         Persistence.Persist(manifestsLocationsIndex, file);
 
         ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.Load(file);
-        IGUID manifestGUID = GUIDFactory.generateRandomGUID();
+        IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Set<IGUID> nodesGUIDs = persistedIndex.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDs.size(), 0);
     }

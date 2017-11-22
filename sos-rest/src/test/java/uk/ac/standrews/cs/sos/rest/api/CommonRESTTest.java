@@ -11,6 +11,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.core.Application;
 import java.io.File;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -22,7 +24,7 @@ public abstract class CommonRESTTest extends JerseyTestNg.ContainerPerMethodTest
     protected RESTConfig config;
 
     static {
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
     }
 
     @BeforeMethod

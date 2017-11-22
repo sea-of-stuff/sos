@@ -9,6 +9,7 @@ public enum StatsTYPE {
     any,
 
     guid, // Time to generate GUIDs for data
+    sha1, sha256,
 
     io, // Time to write/read data, manifests, metadata, etc...
     add_atom, read_atom,

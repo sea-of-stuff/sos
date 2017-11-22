@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -14,6 +13,8 @@ import uk.ac.standrews.cs.sos.utils.IO;
 import java.io.InputStream;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -203,7 +204,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
         IGUID guid;
         try {
-            guid = GUIDFactory.generateGUID(ALGORITHM.SHA256, contentToHash);
+            guid = GUIDFactory.generateGUID(GUID_ALGORITHM, contentToHash);
         } catch (GUIDGenerationException e) {
             guid = new InvalidID();
         }

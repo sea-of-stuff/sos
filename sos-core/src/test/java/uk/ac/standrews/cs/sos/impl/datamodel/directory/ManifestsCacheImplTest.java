@@ -40,6 +40,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.testng.Assert.*;
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -50,10 +51,10 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        new SOS_LOG(GUIDFactory.generateRandomGUID());
+        new SOS_LOG(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
 
         SOSLocalNode.settings = new SettingsConfiguration.Settings();
-        SOSLocalNode.settings.setGuid(GUIDFactory.generateRandomGUID().toMultiHash());
+        SOSLocalNode.settings.setGuid(GUIDFactory.generateRandomGUID(GUID_ALGORITHM).toMultiHash());
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
     }
 
@@ -73,7 +74,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     public void cacheMissTest() throws ManifestPersistException, ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
-        IGUID guid = GUIDFactory.generateRandomGUID();
+        IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         cache.findManifest(guid);
     }
 

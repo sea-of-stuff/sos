@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -207,7 +209,7 @@ public class MAISOS {
             String rootGUID = line.getOptionValue(ROOT_OPT);
             root = GUIDFactory.recreateGUID(rootGUID);
         } else {
-            root = GUIDFactory.generateRandomGUID();
+            root = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         }
 
         return root;
