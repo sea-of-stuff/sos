@@ -2,13 +2,11 @@ package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -17,7 +15,6 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.json.DataPackage;
 import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
@@ -124,18 +121,24 @@ public class RESTStorage {
 
             if (dataPackage.getMetadata() != null) {
 
-                int replicationFactor = dataPackage.getMetadata().getReplicationFactor();
+                DataPackage.Metadata metadata = dataPackage.getMetadata();
+                int replicationFactor = metadata.getReplicationFactor();
 
                 if (replicationFactor < 1 || replicationFactor > storageService.getStorageSettings().getMaxReplication()) {
                     return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "The replicas parameter is invalid");
                 }
 
-                builder = builder.setReplicationNodes(dataPackage.getMetadata().getReplicationNodes().getNodesCollection())
+                builder = builder.setReplicationNodes(metadata.getReplicationNodes().getNodesCollection())
                         .setReplicationFactor(replicationFactor)
                         .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
+
+
+                if (metadata.isProtectedData()) {
+                    builder.setRole(null); // FIXME
+                }
             }
 
-            Atom atom = storageService.addAtom(builder);
+            Atom atom = storageService.addAtom(builder); // TODO - does this work for secure atoms too?
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
@@ -143,50 +146,6 @@ public class RESTStorage {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
-    }
-
-    @POST
-    @Path("/stream/protected")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addSecureAtomStream(final InputStream inputStream /* final String role  rolemodel*/, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) { // TODO - see add data with metadata method above
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
-
-        try {
-            AtomBuilder builder = new AtomBuilder()
-                    .setData(new InputStreamData(inputStream))
-                    .setBundleType(BundleTypes.PERSISTENT)
-                    .setRole(null); // FIXME
-
-            StorageService storageService = RESTConfig.sos.getStorageService();
-            SecureAtom atom = storageService.addSecureAtom(builder);
-            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
-
-        } catch (DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
-            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
-        }
-
-
-    }
-
-    // TODO
-    // GET /protect/guid - maybe in dds? not sure
-
-    @GET
-    @Path("/replicas/guid/{guid}")
-    public Response getReplicasInfo(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-
-        /*
-        {
-        "guid" : guid,
-        "processed" : [
-         loc1, loc2, etc
-        ],
-        "toprocess": 2 // Location does not matter
-        }
-         */
-
-        return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
     }
 
     @GET

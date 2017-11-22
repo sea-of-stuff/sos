@@ -73,6 +73,7 @@ public class DataPackage {
 
         private int replicationFactor;
         private ReplicationNodes replicationNodes;
+        private boolean protectedData;
 
         public Metadata() {}
 
@@ -90,6 +91,14 @@ public class DataPackage {
 
         public void setReplicationNodes(ReplicationNodes replicationNodes) {
             this.replicationNodes = replicationNodes;
+        }
+
+        public boolean isProtectedData() {
+            return protectedData;
+        }
+
+        public void setProtectedData(boolean protectedData) {
+            this.protectedData = protectedData;
         }
 
         public static class ReplicationNodes {
