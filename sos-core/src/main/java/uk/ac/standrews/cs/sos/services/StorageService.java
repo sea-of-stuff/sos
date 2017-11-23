@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -36,18 +35,6 @@ public interface StorageService extends Service {
      * @throws ManifestPersistException if the atom manifest could not be created
      */
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
-
-    /**
-     * Adds an atom to the SOS as a secure encrypted entity.
-     * The Role used for encryption will be the one specified within the builder OR the current active role.
-     *
-     * @param atomBuilder used to build the secure atom
-     * @return the secure atom manifest
-     * @throws ManifestPersistException if the manifest could not be stored
-     * @throws ManifestNotMadeException if the manifest could not be made
-     * @throws DataStorageException if the data could not be stored
-     */
-    SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException;
 
     /**
      * Let granterRole grant access to granteeRole to the secure entity

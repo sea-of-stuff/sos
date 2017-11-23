@@ -31,7 +31,7 @@ public class SOSAddSecureAtomTest extends StorageServiceTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setRole(role);
-        SecureAtom secureAtomManifest = storageService.addSecureAtom(builder);
+        SecureAtom secureAtomManifest = (SecureAtom) storageService.addAtom(builder);
 
         assertNotNull(secureAtomManifest.getData());
         assertFalse(IOUtils.contentEquals(secureAtomManifest.getData().getInputStream(), location.getSource()));
@@ -51,7 +51,7 @@ public class SOSAddSecureAtomTest extends StorageServiceTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setRole(role);
-        SecureAtom secureAtomManifest = storageService.addSecureAtom(builder);
+        SecureAtom secureAtomManifest = (SecureAtom) storageService.addAtom(builder);
 
         // TODO - storage.getData(role)
     }

@@ -72,16 +72,6 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ServiceException {
-
-        try {
-            return storageService.addSecureAtom(atomBuilder);
-        } catch (ManifestPersistException | ManifestNotMadeException | DataStorageException e) {
-            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
-        }
-    }
-
-    @Override
     public Compound addCompound(CompoundBuilder compoundBuilder) throws ServiceException {
 
         try {
@@ -147,13 +137,7 @@ public class SOSAgent implements Agent {
         try (Data data = versionBuilder.getAtomBuilder().getData()) {
 
             Metadata metadata = addMetadata(data);
-
-            Atom atom;
-            if(versionBuilder.getAtomBuilder().getRole() != null) {
-                atom = addSecureAtom(versionBuilder.getAtomBuilder());
-            } else {
-                atom = addAtom(versionBuilder.getAtomBuilder());
-            }
+            Atom atom = addAtom(versionBuilder.getAtomBuilder());
 
             versionBuilder.setContent(atom.guid());
             versionBuilder.setMetadata(metadata);

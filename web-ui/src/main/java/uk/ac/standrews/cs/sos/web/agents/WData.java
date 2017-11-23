@@ -178,12 +178,8 @@ public class WData {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
                 Role roleToProtect = sos.getUSRO().getRole(roleGUID);
                 atomBuilder.setRole(roleToProtect);
-
-                atom = sos.getAgent().addSecureAtom(atomBuilder);
-            } else {
-
-                atom = sos.getAgent().addAtom(atomBuilder);
             }
+            atom = sos.getAgent().addAtom(atomBuilder);
 
             pendingContents.add(new ContentImpl(contentName, atom.guid()));
 

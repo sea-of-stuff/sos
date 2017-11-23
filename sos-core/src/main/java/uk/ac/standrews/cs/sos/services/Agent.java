@@ -34,15 +34,6 @@ public interface Agent extends Service {
     Atom addAtom(AtomBuilder atomBuilder) throws ServiceException;
 
     /**
-     * Add a secure atom to the SOS
-     *
-     * @param atomBuilder
-     * @return
-     * @throws ServiceException
-     */
-    SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ServiceException;
-
-    /**
      * Adds a Compound to the Sea of Stuff.
      *
      * @param compoundBuilder for this compound.

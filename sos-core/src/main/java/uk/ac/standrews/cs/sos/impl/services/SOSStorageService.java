@@ -20,7 +20,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -94,20 +93,35 @@ public class SOSStorageService implements StorageService {
 
         Set<LocationBundle> bundles = new TreeSet<>(comparator());
 
-        IGUID guid = addAtom(atomBuilder, bundles).getGuid();
+        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles); // The atom will be encrypted using the Role of the atom builder
+
+        IGUID guid = storedAtomInfo.getGuid();
         if (guid == null || guid.isInvalid()) {
             throw new DataStorageException();
         }
 
-        Atom manifest = ManifestFactory.createAtomManifest(guid, bundles);
-        manifestsDataService.addManifest(manifest);
+        Atom atom;
+        if (storedAtomInfo.getRole() != null && !storedAtomInfo.getRole().isInvalid()) {
+            HashMap<IGUID, String> rolesToKeys = new HashMap<>();
+            rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
+
+            try {
+                atom = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
+            } catch (ManifestNotMadeException e) {
+                throw new ManifestPersistException("Unable to make SecureAtomManifest");
+            }
+        } else {
+            atom = ManifestFactory.createAtomManifest(guid, bundles);
+        }
+
+        manifestsDataService.addManifest(atom);
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
             try (Data data = atomBuilder.getData()){
-                DataReplication dataReplication = new DataReplication(manifest.guid(), data, atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
+                DataReplication dataReplication = new DataReplication(atom.guid(), data, atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (SOSProtocolException e) {
@@ -117,41 +131,7 @@ public class SOSStorageService implements StorageService {
             }
         }
 
-        return manifest;
-    }
-
-    @Override
-    public SecureAtom addSecureAtom(AtomBuilder atomBuilder) throws ManifestPersistException, ManifestNotMadeException, DataStorageException {
-
-        if (atomBuilder.getRole() == null)
-            throw new DataStorageException();
-
-        Set<LocationBundle> bundles = new TreeSet<>(comparator());
-
-        // Make sure that a role is being used
-        try {
-            Role role = atomBuilder.getRole();
-            if (role == null) throw new RoleNotFoundException();
-
-            atomBuilder.setRole(role);
-        } catch (RoleNotFoundException e) {
-            throw new ManifestNotMadeException("Unable to set Role when creating Secure Atom");
-        }
-
-        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles); // The atom will be encrypted using the Role of the atom builder
-
-        IGUID guid = storedAtomInfo.getGuid();
-        if (guid == null || guid.isInvalid()) {
-            throw new DataStorageException();
-        }
-
-        HashMap<IGUID, String> rolesToKeys = new HashMap<>();
-        rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
-
-        SecureAtom manifest = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
-        manifestsDataService.addManifest(manifest);
-
-        return manifest;
+        return atom;
     }
 
     @Override
