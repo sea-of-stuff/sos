@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.SecureAtomManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
@@ -46,7 +45,7 @@ public class SecureAtomManifestDeserializer extends JsonDeserializer<SecureAtom>
 
             return new SecureAtomManifest(contentGUID, bundles, rolesToKeys);
 
-        } catch (GUIDGenerationException | ManifestNotMadeException e) {
+        } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
         }
     }
