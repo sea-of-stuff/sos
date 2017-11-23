@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestsDirectoryException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -187,7 +186,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
             }
 
             FileUtils.DeleteFile(backupFile);
-        } catch (ManifestNotFoundException | ManifestNotMadeException e) {
+        } catch (ManifestNotFoundException e) {
             throw new ManifestsDirectoryException("Manifests " + existingManifest.guid().toMultiHash() + " and " + manifest.guid().toMultiHash() + "could not be merged", e);
         }
 

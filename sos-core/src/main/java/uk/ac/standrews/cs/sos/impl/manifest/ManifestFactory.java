@@ -31,7 +31,7 @@ public class ManifestFactory {
         return new AtomManifest(guid, locations);
     }
 
-    public static SecureAtom createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
+    public static SecureAtom createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) {
 
         return new SecureAtomManifest(guid, locations, rolesToKeys);
     }

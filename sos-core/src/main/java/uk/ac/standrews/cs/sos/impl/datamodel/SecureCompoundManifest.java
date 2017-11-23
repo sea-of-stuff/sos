@@ -44,7 +44,7 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
 
     }
 
-    public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
+    public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) {
         super(type, contentGUID, contents, signer, signature);
 
         this.manifestType = ManifestType.COMPOUND_PROTECTED;

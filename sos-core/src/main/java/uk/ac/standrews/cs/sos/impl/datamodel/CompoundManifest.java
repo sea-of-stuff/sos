@@ -61,9 +61,8 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
      * @throws ManifestNotMadeException
      */
     public CompoundManifest(CompoundType type, Set<Content> contents, Role signer) throws ManifestNotMadeException {
-        super(signer, ManifestType.COMPOUND);
+        this(type, signer, ManifestType.COMPOUND);
 
-        this.type = type;
         this.contents = contents;
         this.guid = makeGUID();
 
@@ -80,7 +79,7 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
         }
     }
 
-    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature) throws ManifestNotMadeException {
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature) {
         super(signer, ManifestType.COMPOUND);
 
         assert(type != null);

@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.model.Compound;
@@ -58,8 +57,6 @@ public class CompoundManifestDeserializer extends JsonDeserializer<Compound> {
 
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to recreate GUID");
-        } catch (ManifestNotMadeException e) {
-            throw new IOException("Unable to recreate Secure Compound Manifest");
         }
 
     }

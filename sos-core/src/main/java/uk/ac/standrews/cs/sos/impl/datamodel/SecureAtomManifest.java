@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
@@ -22,7 +21,7 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
      * @param guid
      * @param locations
      */
-    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) throws ManifestNotMadeException {
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) {
         super(guid, locations);
         this.manifestType = ManifestType.ATOM_PROTECTED;
         this.rolesToKeys = rolesToKeys;

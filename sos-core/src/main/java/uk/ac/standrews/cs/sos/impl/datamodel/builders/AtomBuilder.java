@@ -84,7 +84,7 @@ public class AtomBuilder extends ManifestBuilder {
             return new EmptyData();
         }
 
-    };
+    }
 
     public boolean isData() {
         return isData;

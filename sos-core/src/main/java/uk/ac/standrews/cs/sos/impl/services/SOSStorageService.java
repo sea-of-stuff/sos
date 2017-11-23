@@ -15,7 +15,6 @@ import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -105,11 +104,7 @@ public class SOSStorageService implements StorageService {
             HashMap<IGUID, String> rolesToKeys = new HashMap<>();
             rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
 
-            try {
-                atom = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
-            } catch (ManifestNotMadeException e) {
-                throw new ManifestPersistException("Unable to make SecureAtomManifest");
-            }
+            atom = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
         } else {
             atom = ManifestFactory.createAtomManifest(guid, bundles);
         }

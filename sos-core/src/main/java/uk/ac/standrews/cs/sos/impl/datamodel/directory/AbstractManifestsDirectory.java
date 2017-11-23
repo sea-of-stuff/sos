@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
@@ -25,7 +24,7 @@ abstract class AbstractManifestsDirectory implements ManifestsDirectory {
         return ManifestFactory.createAtomManifest(guid, locations);
     }
 
-    Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) throws ManifestNotMadeException {
+    Manifest mergeManifests(IGUID guid, SecureAtom first, SecureAtom second) {
         Set<LocationBundle> locations = new TreeSet<>(LocationsIndexImpl.comparator());
 
         locations.addAll(first.getLocations());

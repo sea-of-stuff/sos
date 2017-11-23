@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -74,7 +73,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
                 SecureAtom retrievedManifest = (SecureAtom) findManifest(guid);
                 manifest = mergeManifests(guid, (SecureAtom) manifest, retrievedManifest);
 
-            } catch (ManifestNotFoundException | ManifestNotMadeException e) {
+            } catch (ManifestNotFoundException e) {
                 // DO NOTHING
             }
         }
