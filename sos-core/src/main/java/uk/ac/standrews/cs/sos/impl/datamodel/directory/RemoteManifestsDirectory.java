@@ -40,7 +40,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     /**
      * Max number of trials to external nodes before throwing a not found exception
      */
-    private final static int NUMBER_OF_REMOTE_TRIALS = 3;
+    private static final int NUMBER_OF_REMOTE_TRIALS = 3;
 
     private ManifestsLocationsIndex manifestsLocationsIndex;
     private NodeDiscoveryService nodeDiscoveryService;

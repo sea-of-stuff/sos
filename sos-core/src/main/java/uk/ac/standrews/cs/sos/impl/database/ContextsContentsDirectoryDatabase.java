@@ -19,8 +19,8 @@ import java.util.*;
  */
 public class ContextsContentsDirectoryDatabase extends AbstractDatabase implements ContextsContentsDirectory {
 
-    private final static String SQL_CHECK_CONTEXTS_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'contexts\'";
-    private final static String SQL_CREATE_CONTEXTS_TABLE = "CREATE TABLE `contexts` " +
+    private static final String SQL_CHECK_CONTEXTS_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'contexts\'";
+    private static final String SQL_CREATE_CONTEXTS_TABLE = "CREATE TABLE `contexts` " +
             "(`context_id`        VARCHAR , " +
             "`version_id`         VARCHAR , " +
             "`pred_result`        BOOLEAN NOT NULL , " +
@@ -30,20 +30,20 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
             "PRIMARY KEY (`context_id`, `version_id`) )";
 
 
-    private final static String SQL_ADD_ENTRY = "INSERT OR REPLACE INTO contexts " +
+    private static final String SQL_ADD_ENTRY = "INSERT OR REPLACE INTO contexts " +
             "(context_id, version_id, pred_result, timestamp, policy_satisfied) " +
             "VALUES (?, ?, ?, ?, ?)";
 
-    private final static String SQL_GET_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
+    private static final String SQL_GET_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
             "FROM contexts";
 
-    private final static String SQL_GET_NOT_EVICTED_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
+    private static final String SQL_GET_NOT_EVICTED_ENTRIES = "SELECT version_id, pred_result, timestamp, policy_satisfied " +
             "FROM contexts WHERE evict == 0";
 
-    private final static String SQL_GET_ENTRY = "SELECT pred_result, timestamp, policy_satisfied " +
+    private static final String SQL_GET_ENTRY = "SELECT pred_result, timestamp, policy_satisfied " +
             "FROM contexts WHERE context_id=? and version_id=?";
 
-    private final static String SQL_EVICT_ENTRY = "UPDATE contexts SET evict=1 WHERE context_id=? version_id=?";
+    private static final String SQL_EVICT_ENTRY = "UPDATE contexts SET evict=1 WHERE context_id=? version_id=?";
 
     public ContextsContentsDirectoryDatabase(String path) throws DatabaseException {
         super(path);

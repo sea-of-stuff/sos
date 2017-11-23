@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class TasksDatabase extends AbstractDatabase {
 
-    private final static String SQL_CHECK_TASKS_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'tasks\'";
-    private final static String SQL_CREATE_TASKS_TABLE = "CREATE TABLE `tasks` " +
+    private static final String SQL_CHECK_TASKS_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'tasks\'";
+    private static final String SQL_CREATE_TASKS_TABLE = "CREATE TABLE `tasks` " +
             "(`DB_taskid`       INTEGER , " +
             "PRIMARY KEY (`DB_taskid`) )";
 

@@ -59,8 +59,8 @@ public class NodeDiscoveryTest {
 
     private ClientAndServer mockServer;
 
-    private final static String NODE_HOSTNAME = "localhost";
-    private final static int NODE_PORT = 12345;
+    private static final String NODE_HOSTNAME = "localhost";
+    private static final int NODE_PORT = 12345;
 
     private IGUID nodeFound;
     private IGUID nodeNotFound;

@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
-    private final static String BACKUP_EXTENSION = ".bak";
+    private static final String BACKUP_EXTENSION = ".bak";
 
     final private LocalStorage localStorage;
 

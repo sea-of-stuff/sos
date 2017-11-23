@@ -25,8 +25,8 @@ import java.util.Set;
 public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase {
 
     // TODO - rename DB_fields!!
-    private final static String SQL_CHECK_NODES_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'nodes\'";
-    private final static String SQL_CREATE_NODES_TABLE = "CREATE TABLE `nodes` " +
+    private static final String SQL_CHECK_NODES_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'nodes\'";
+    private static final String SQL_CREATE_NODES_TABLE = "CREATE TABLE `nodes` " +
             "(`DB_nodeid`       VARCHAR , " +
             "`cert`             VARCHAR NOT NULL , " +
             "`DB_hostname`      VARCHAR NOT NULL , " +
@@ -41,10 +41,10 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             "PRIMARY KEY (`DB_nodeid`) )";
 
     // http://stackoverflow.com/questions/418898/sqlite-upsert-not-insert-or-replace/4330694#4330694
-    private final static String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
+    private static final String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
             "(DB_nodeid, cert, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final static String SQL_GET_NODES = "SELECT DB_nodeid, cert, DB_hostname, DB_port, " +
+    private static final String SQL_GET_NODES = "SELECT DB_nodeid, cert, DB_hostname, DB_port, " +
             "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms FROM nodes";
 
 

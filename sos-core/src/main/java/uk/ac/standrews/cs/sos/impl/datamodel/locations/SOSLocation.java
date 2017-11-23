@@ -21,10 +21,10 @@ import java.util.Objects;
  */
 public class SOSLocation implements Location {
 
-    private final static String SOS_SCHEME = "sos";
-    private final static String SCHEME_DIVIDER = "://";
-    private final static int MACHINE_ID_SEGMENT = 0;
-    private final static int ENTIY_ID_SEGMENT = 1;
+    private static final String SOS_SCHEME = "sos";
+    private static final String SCHEME_DIVIDER = "://";
+    private static final int MACHINE_ID_SEGMENT = 0;
+    private static final int ENTIY_ID_SEGMENT = 1;
 
     private final IGUID machineID;
     private final IGUID entity;

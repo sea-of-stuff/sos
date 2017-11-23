@@ -22,7 +22,7 @@ import static org.testng.Assert.*;
  */
 public class RESTStorageServiceTest extends CommonRESTTest {
 
-    private final static String TEST_NODE_INFO =
+    private static final String TEST_NODE_INFO =
             "{\n" +
                     "  \"type\": \"Atom\",\n" +
                     "  \"GUID\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
@@ -34,7 +34,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
                     "  ]\n" +
                     "}";
 
-    private final static String TEST_EMPTY_ATOM_MANIFEST =
+    private static final String TEST_EMPTY_ATOM_MANIFEST =
             "{\n" +
                     "  \"type\": \"Atom\",\n" +
                     "  \"GUID\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
@@ -46,13 +46,13 @@ public class RESTStorageServiceTest extends CommonRESTTest {
                     "  ]\n" +
                     "}";
 
-    private final static String BASIC_REQUEST = "" +
+    private static final String BASIC_REQUEST = "" +
             "{\n" +
             "  \"guid\" : \"{GUID}\",\n" +
             "  \"data\" : \"{DATA}\"\n" +
             "}";
 
-    private final static String REQUEST_WITH_REPLICA_INFO = "" +
+    private static final String REQUEST_WITH_REPLICA_INFO = "" +
             "{\n" +
             "  \"metadata\" : {\n" +
             "    \"replicationFactor\" : \"2\",\n" +
@@ -65,7 +65,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "  \"data\" : \"{DATA}\"\n" +
             "}";
 
-    private final static String REQUEST_WITH_NEGATIVE_REPLICA_INFO = "" +
+    private static final String REQUEST_WITH_NEGATIVE_REPLICA_INFO = "" +
             "{\n" +
             "  \"metadata\" : {\n" +
             "    \"replicationFactor\" : -1,\n" +
@@ -78,7 +78,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "  \"data\" : \"{DATA}\"\n" +
             "}";
 
-    private final static String REQUEST_WITH_EXCESSIVE_REPLICA_INFO = "" +
+    private static final String REQUEST_WITH_EXCESSIVE_REPLICA_INFO = "" +
             "{\n" +
             "  \"metadata\" : {\n" +
             "    \"replicationFactor\" : 100,\n" +
@@ -91,7 +91,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "  \"data\" : \"{DATA}\"\n" +
             "}";
 
-    private final static String REQUEST_WITH_ZERO_REPLICA_INFO = "" +
+    private static final String REQUEST_WITH_ZERO_REPLICA_INFO = "" +
             "{\n" +
             "  \"metadata\" : {\n" +
             "    \"replicationFactor\" : 0,\n" +

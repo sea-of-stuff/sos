@@ -60,7 +60,7 @@ public class DataReplicationTest extends ProtocolTest {
     private static final String TEST_DATA_HASH = "SHA256_16_a186000422feab857329c684e9fe91412b1a5db084100b37a98cfc95b62aa867";
 
     // This is the exact body request. Would be good if we have a JSON matcher method, so this string does not have to be exact, but simply an equivalent JSON obj of what we expect
-    private final static String BASIC_REQUEST = "" +
+    private static final String BASIC_REQUEST = "" +
             "{\n" +
             "  \"data\" : \"{DATA}\",\n" +
             "  \"guid\" : \"" + TEST_DATA_HASH + "\"\n" +

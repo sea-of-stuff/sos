@@ -20,7 +20,7 @@ import javax.ws.rs.ext.Provider;
  */
 public class RESTConfig extends ResourceConfig {
 
-    private final static String REST_PACKAGE = "uk.ac.standrews.cs.sos.rest.api";
+    private static final String REST_PACKAGE = "uk.ac.standrews.cs.sos.rest.api";
 
     public static SOSLocalNode sos;
 

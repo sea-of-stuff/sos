@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class FileUtils {
 
-    public final static String JSON_EXTENSION = ".json";
+    public static final String JSON_EXTENSION = ".json";
 
     public static Manifest ManifestFromFile(IFile file) throws ManifestNotFoundException {
 
