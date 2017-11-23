@@ -39,7 +39,7 @@ import static uk.ac.standrews.cs.sos.impl.protocol.json.TaskJSONFields.*;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataChallenge extends Task {
+public class EntityChallenge extends Task {
 
 
     private String challenge;
@@ -47,12 +47,14 @@ public class DataChallenge extends Task {
 
     private IGUID entity;
     private Node challengedNode;
+    private boolean isData;
 
     private boolean challengePassed;
 
-    public DataChallenge(IGUID entity, Data challengedData, Node challengedNode) throws GUIDGenerationException, IOException {
+    public EntityChallenge(IGUID entity, Data challengedData, Node challengedNode, boolean isData) throws GUIDGenerationException, IOException {
         this.entity = entity;
         this.challengedNode = challengedNode;
+        this.isData = isData;
 
         // Calculate the result of the challenge in advance
         // How to generate a random alpha-numeric string?
@@ -72,12 +74,12 @@ public class DataChallenge extends Task {
 
             // TODO - data structures of local node should be updated
             if (challengePassed) {
-                SOS_LOG.log(LEVEL.INFO, "Data with GUID " + entity + " was verified against node " + challengedNode);
+                SOS_LOG.log(LEVEL.INFO, "Entity with GUID " + entity + " was verified against node " + challengedNode);
             } else {
-                SOS_LOG.log(LEVEL.WARN, "Data with GUID " + entity + " failed to be verified against node " + challengedNode);
+                SOS_LOG.log(LEVEL.WARN, "Entity with GUID " + entity + " failed to be verified against node " + challengedNode);
             }
         } catch (SOSURLException |IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to verify data with GUID " + entity + " against node " + challengedNode);
+            SOS_LOG.log(LEVEL.ERROR, "Unable to verify entity with GUID " + entity + " against node " + challengedNode);
         }
     }
 
@@ -85,7 +87,7 @@ public class DataChallenge extends Task {
     public String serialize() {
 
         ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
-        node.put(TASK_TYPE, "DataChallenge");
+        node.put(TASK_TYPE, "EntityChallenge");
         node.put(TASK_ENTITY, entity.toMultiHash());
         // TODO - the challenged data will be retrieved again from the node
         node.put(TASK_CHALLENGED_NODE, challengedNode.toString());
@@ -103,7 +105,7 @@ public class DataChallenge extends Task {
 
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
-        URL url = SOSURL.STORAGE_DATA_CHALLENGE(node, entity, challenge);
+        URL url = isData ? SOSURL.STORAGE_DATA_CHALLENGE(node, entity, challenge) : SOSURL.DDS_MANIFEST_CHALLENGE(node, entity, challenge);
         SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -120,7 +122,7 @@ public class DataChallenge extends Task {
 
     @Override
     public String toString() {
-        return "DataChallenge. GUID " + entity.toMultiHash() + " - Challenge " + challenge;
+        return "EntityChallenge. GUID " + entity.toMultiHash() + " - Challenge " + challenge;
     }
 
     public boolean isChallengePassed() {

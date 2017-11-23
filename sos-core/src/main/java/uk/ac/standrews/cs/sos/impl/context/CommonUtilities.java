@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -20,8 +21,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBund
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataChallenge;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestChallenge;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.EntityChallenge;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
@@ -31,6 +31,7 @@ import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Set;
 
@@ -133,16 +134,20 @@ public class CommonUtilities {
      * @param guid of the manifest
      * @return true if the node has the manifest
      */
-    public  boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
+    public boolean nodeHasManifest(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
 
             Manifest manifest = getManifest(guid);
-            ManifestChallenge manifestChallenge = new ManifestChallenge(guid, manifest, nodeToBeChallenged);
 
-            TasksQueue.instance().performSyncTask(manifestChallenge);
-            return manifestChallenge.isChallengePassed();
+            try (InputStream inputStream = manifest.contentToHash()) {
+                Data data = new InputStreamData(inputStream);
+                EntityChallenge entityChallenge = new EntityChallenge(guid, data, nodeToBeChallenged, false);
+
+                TasksQueue.instance().performSyncTask(entityChallenge);
+                return entityChallenge.isChallengePassed();
+            }
 
         } catch (ManifestNotFoundException | NodesCollectionException | NodeNotFoundException | GUIDGenerationException | IOException e) {
 
@@ -189,14 +194,14 @@ public class CommonUtilities {
      * @param guid of the data
      * @return true if the node has the data
      */
-    public  boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
+    public boolean nodeHasData(IGUID nodeGUID, IGUID guid) {
 
         try {
             Node nodeToBeChallenged = nodeDiscoveryService.getNode(nodeGUID);
-            DataChallenge dataChallenge = new DataChallenge(guid, storageService.getAtomContent(guid), nodeToBeChallenged);
+            EntityChallenge entityChallenge = new EntityChallenge(guid, storageService.getAtomContent(guid), nodeToBeChallenged, true);
 
-            TasksQueue.instance().performSyncTask(dataChallenge);
-            return dataChallenge.isChallengePassed();
+            TasksQueue.instance().performSyncTask(entityChallenge);
+            return entityChallenge.isChallengePassed();
 
         } catch (NodeNotFoundException | GUIDGenerationException | AtomNotFoundException | IOException e) {
 
