@@ -80,25 +80,13 @@ public class SOSAgent implements Agent {
 
             Role role = usersRolesService.getRole(compoundBuilder);
 
-            Compound compound = ManifestFactory.createCompoundManifest(type, contents, role);
-            addManifest(compound);
+            Compound compound;
+            if (compoundBuilder.isMakeSecureCompound()) {
+                compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
+            } else {
+                compound = ManifestFactory.createCompoundManifest(type, contents, role);
+            }
 
-            return compound;
-        } catch (RoleNotFoundException | ManifestPersistException | ManifestNotMadeException e) {
-            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
-        }
-    }
-
-    @Override
-    public SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ServiceException {
-
-        try {
-            CompoundType type = compoundBuilder.getType();
-            Set<Content> contents = compoundBuilder.getContents();
-
-            Role role = usersRolesService.getRole(compoundBuilder);
-
-            SecureCompound compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
             addManifest(compound);
 
             return compound;
@@ -153,11 +141,11 @@ public class SOSAgent implements Agent {
     public Version addCollection(VersionBuilder versionBuilder) throws ServiceException {
 
         Compound compound;
-        if(versionBuilder.getCompoundBuilder().getRole() != null) {
-            compound = addSecureCompound(versionBuilder.getCompoundBuilder());
-        } else {
-            compound = addCompound(versionBuilder.getCompoundBuilder());
+        CompoundBuilder compoundBuilder = versionBuilder.getCompoundBuilder();
+        if(compoundBuilder.getRole() != null) {
+            compoundBuilder.setMakeSecureCompound(true);
         }
+        compound = addCompound(compoundBuilder);
 
         versionBuilder.setContent(compound.guid());
 

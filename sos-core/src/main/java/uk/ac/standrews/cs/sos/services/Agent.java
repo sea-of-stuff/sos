@@ -47,15 +47,6 @@ public interface Agent extends Service {
     Compound addCompound(CompoundBuilder compoundBuilder) throws ServiceException;
 
     /**
-     * Add a secure compound to the SOS
-     *
-     * @param compoundBuilder
-     * @return
-     * @throws ServiceException
-     */
-    SecureCompound addSecureCompound(CompoundBuilder compoundBuilder) throws ServiceException;
-
-    /**
      * Adds a version of an asset to the Sea of Stuff.
      *
      * @param versionBuilder for this version

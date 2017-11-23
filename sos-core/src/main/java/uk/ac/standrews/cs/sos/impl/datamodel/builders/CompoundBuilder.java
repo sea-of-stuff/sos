@@ -11,15 +11,16 @@ import java.util.Set;
  */
 public class CompoundBuilder extends ManifestBuilder {
 
+    private boolean makeSecureCompound;
     private CompoundType type;
     private Set<Content> contents;
 
-    public Set<Content> getContents() {
-        return contents;
+    public boolean isMakeSecureCompound() {
+        return makeSecureCompound;
     }
 
-    public CompoundBuilder setContents(Set<Content> contents) {
-        this.contents = contents;
+    public CompoundBuilder setMakeSecureCompound(boolean makeSecureCompound) {
+        this.makeSecureCompound = makeSecureCompound;
 
         return this;
     }
@@ -30,6 +31,16 @@ public class CompoundBuilder extends ManifestBuilder {
 
     public CompoundBuilder setType(CompoundType type) {
         this.type = type;
+
+        return this;
+    }
+
+    public Set<Content> getContents() {
+        return contents;
+    }
+
+    public CompoundBuilder setContents(Set<Content> contents) {
+        this.contents = contents;
 
         return this;
     }
