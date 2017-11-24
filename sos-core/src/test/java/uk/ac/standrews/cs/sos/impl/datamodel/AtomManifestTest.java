@@ -32,8 +32,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
@@ -74,6 +73,9 @@ public class AtomManifestTest extends CommonTest {
 
         Set<LocationBundle> others = atomManifest.getLocations();
         assertEquals(others, bundles);
+
+        assertNotEquals(atomManifest.size(), -1);
+        assertEquals(atomManifest.size(), 131);
     }
 
     @Test

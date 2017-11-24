@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
@@ -73,6 +74,9 @@ public class VersionManifestTest extends CommonTest {
         Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
         JSONAssert.assertEquals(EXPECTED_JSON_BASIC_VERSION, versionManifest.toString(), false);
+
+        assertNotEquals(versionManifest.size(), -1);
+        assertEquals(versionManifest.size(), 418);
     }
 
     @Test

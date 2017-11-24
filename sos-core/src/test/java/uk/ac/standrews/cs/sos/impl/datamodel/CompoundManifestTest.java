@@ -60,6 +60,9 @@ public class CompoundManifestTest extends CommonTest {
         CompoundManifest compoundManifest = new CompoundManifest(CompoundType.DATA, contents, roleMocked);
 
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
+
+        assertNotEquals(compoundManifest.size(), -1);
+        assertEquals(compoundManifest.size(), 393);
     }
 
     @Test
