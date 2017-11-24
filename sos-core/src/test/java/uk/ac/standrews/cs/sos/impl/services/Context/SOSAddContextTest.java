@@ -18,8 +18,7 @@ import uk.ac.standrews.cs.sos.model.Version;
 import java.net.URISyntaxException;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertFalse;
 
 /**
@@ -86,6 +85,7 @@ public class SOSAddContextTest extends ContextServiceTest {
         assertNotNull(context);
         assertEquals(context.guid(), guid);
         assertEquals(context.getName(), "All");
+        assertNotEquals(context.size(), -1);
     }
 
     @Test
