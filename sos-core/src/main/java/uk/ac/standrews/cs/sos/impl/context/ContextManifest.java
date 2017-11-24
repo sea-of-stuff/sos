@@ -22,17 +22,17 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  */
 public class ContextManifest extends AbstractSignedManifest implements Context {
 
-    protected Instant timestamp;
-    protected String name;
-    protected IGUID guid;
-    protected IGUID invariant;
-    protected IGUID previous;
-    protected IGUID predicate;
+    private Instant timestamp;
+    private String name;
+    private IGUID guid;
+    private IGUID invariant;
+    private IGUID previous;
+    private IGUID predicate;
     private long maxAge;
-    protected Set<IGUID> policies;
-    protected NodesCollection domain;
-    protected NodesCollection codomain;
-    protected IGUID content;
+    private Set<IGUID> policies;
+    private NodesCollection domain;
+    private NodesCollection codomain;
+    private IGUID content;
 
     /**
      * The predicate is true only at the time when it is computed.

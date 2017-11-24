@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
@@ -30,8 +29,6 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class BasicManifest implements Manifest {
-
-    private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
     private int size = -1;
 

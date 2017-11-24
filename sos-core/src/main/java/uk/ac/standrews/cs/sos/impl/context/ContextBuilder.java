@@ -151,8 +151,8 @@ public class ContextBuilder {
         contextNode.put(KEY_CONTEXT_NAME, context.getName());
         contextNode.putPOJO(KEY_CONTEXT_DOMAIN, context.domain());
         contextNode.putPOJO(KEY_CONTEXT_CODOMAIN, context.codomain());
+        contextNode.put(KEY_CONTEXT_MAX_AGE, context.maxAge());
 
-        objectNode.put(KEY_CONTEXT_MAX_AGE, context.maxAge());
         objectNode.putPOJO(KEY_CONTEXT_PREDICATE, predicate);
         objectNode.putPOJO(KEY_CONTEXT_POLICIES, policies);
 

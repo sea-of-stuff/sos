@@ -51,5 +51,4 @@ public class SecureTikaMetadata extends AbstractMetadata implements Metadata {
     public String[] getAllPropertyNames() {
         return tikaMetadata.names();
     }
-
 }

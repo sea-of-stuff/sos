@@ -22,6 +22,8 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  */
 public abstract class AbstractMetadata implements Metadata {
 
+    private int size = -1;
+
     protected String[] ignoreMetadata;
     protected IGUID guid;
 
@@ -115,6 +117,16 @@ public abstract class AbstractMetadata implements Metadata {
     @Override
     public boolean isValid() {
         return true;
+    }
+
+    @Override
+    public int size() {
+
+        if (size == -1) {
+            size = this.toString().length();
+        }
+
+        return size;
     }
 
     // http://stackoverflow.com/a/5439547/2467938
