@@ -68,6 +68,7 @@ public class JSONConstants {
     public static final String KEY_NODES_COLLECTION_REFS = "nodes";
 
     // Context
+    public static final String KEY_CONTEXT_TIMESTAMP = "timestamp";
     public static final String KEY_CONTEXT_NAME = "name";
     public static final String KEY_CONTEXT_INVARIANT = "invariant";
     public static final String KEY_CONTEXT_PREVIOUS = "previous";

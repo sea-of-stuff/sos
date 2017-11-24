@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -151,7 +152,7 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
             for(Map.Entry<IGUID, ContextVersionInfo> content:mapping.getValue().entrySet()) {
                 out.writeUTF(content.getKey().toMultiHash());
                 out.writeBoolean(content.getValue().predicateResult);
-                out.writeLong(content.getValue().timestamp);
+                out.writeLong(content.getValue().timestamp.getEpochSecond());
                 out.writeBoolean(content.getValue().policySatisfied);
                 out.writeBoolean(content.getValue().evicted);
             }
@@ -183,7 +184,7 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
 
                     ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
                     contextVersionInfo.predicateResult = predicateResult;
-                    contextVersionInfo.timestamp = timestamp;
+                    contextVersionInfo.timestamp = Instant.ofEpochSecond(timestamp);
                     contextVersionInfo.policySatisfied = policySatisfied;
                     contextVersionInfo.evicted = evicted;
 

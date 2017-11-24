@@ -14,9 +14,11 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_CONTEXT_TIMESTAMP;
 import static uk.ac.standrews.cs.sos.impl.context.ContextManifest.PREDICATE_ALWAYS_TO_COMPUTE;
 
 /**
@@ -48,12 +50,14 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
 
             IGUID content = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_CONTENT).asText());
 
-            if (node.has(JSONConstants.KEY_CONTEXT_INVARIANT) && node.has(JSONConstants.KEY_CONTEXT_PREVIOUS)) {
+            if (node.has(JSONConstants.KEY_CONTEXT_INVARIANT) && node.has(JSONConstants.KEY_CONTEXT_PREVIOUS) &&
+                    node.has(KEY_CONTEXT_TIMESTAMP)) {
 
                 IGUID invariant = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_INVARIANT).asText());
                 IGUID previous = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_CONTEXT_PREVIOUS).asText());
+                Instant timestamp = Instant.ofEpochSecond(node.get(KEY_CONTEXT_TIMESTAMP).asLong());
 
-                return new ContextManifest(name, domain, codomain, predicate, maxage, policies, null, content, invariant, previous);
+                return new ContextManifest(timestamp, name, domain, codomain, predicate, maxage, policies, null, content, invariant, previous);
             } else {
 
                 return new ContextManifest(name, domain, codomain, predicate, maxage, policies, null, content);

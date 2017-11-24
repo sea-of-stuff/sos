@@ -39,6 +39,8 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -259,14 +261,17 @@ public class SOSContextService implements ContextService {
                 Compound contents = contextBuilder.getContents();
 
                 if (!previous.content().equals(contents.guid()) ||
-                    !previous.domain().equals(contextBuilder.getDomain()) ||
-                    !previous.codomain().equals(contextBuilder.getCodomain()) ||
-                    previous.maxAge() != contextBuilder.getMaxage()) {
+                        !previous.domain().equals(contextBuilder.getDomain()) ||
+                        !previous.codomain().equals(contextBuilder.getCodomain()) ||
+                        previous.maxAge() != contextBuilder.getMaxage()) {
 
                     manifestsDataService.addManifest(contents);
 
-                    Context context = new ContextManifest(previous.getName(), contextBuilder.getDomain(), contextBuilder.getCodomain(),
-                            previous.predicate(), previous.maxAge(), previous.policies(), null, contents.guid(), previous.invariant(), previous.guid());
+                    Instant contextTimestamp = Instant.now();
+                    Context context = new ContextManifest(contextTimestamp, previous.getName(),
+                            contextBuilder.getDomain(), contextBuilder.getCodomain(),
+                            previous.predicate(), previous.maxAge(), previous.policies(), null,
+                            contents.guid(), previous.invariant(), previous.guid());
                     manifestsDataService.addManifest(context);
 
                     return context.guid();
@@ -322,25 +327,47 @@ public class SOSContextService implements ContextService {
     @Override
     public Set<IGUID> getContents(IGUID contextGUID) {
 
-        // FIXME - iterate through previous versions of context
+        Set<IGUID> retval = new LinkedHashSet<>();
+
         try {
             Context context = getContext(contextGUID);
+            long maxAge = context.maxAge();
+            Instant contextTimestamp = context.timestamp();
+            long diff;
 
-            Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
-            return compound.getContents().stream()
-                    .map(Content::getGUID)
-                    .collect(Collectors.toSet());
+            // Iterate through previous versions of context until max-age constraint is still valid
+            do {
+                Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
+                retval.addAll(
+                        compound.getContents().stream()
+                                .map(Content::getGUID)
+                                .collect(Collectors.toSet())
+                );
+
+                Instant currentContextTimestamp = context.timestamp();
+                diff = ChronoUnit.SECONDS.between(currentContextTimestamp, contextTimestamp); // This order of Instants gives a positive number on the diff
+
+                if (!context.previous().isEmpty()) {
+                    IGUID previous = context.previous().iterator().next();
+                    context = getContext(previous);
+                } else {
+                    context = null;
+                }
+            } while(context != null && diff <= maxAge);
+
 
         } catch (ContextNotFoundException | ManifestNotFoundException e) {
 
             return new LinkedHashSet<>();
         }
+
+        return retval;
     }
 
     @Override
-    public ContextVersionInfo getContextContentInfo(IGUID context, IGUID version) {
+    public ContextVersionInfo getContextContentInfo(IGUID contextInvariant, IGUID version) {
 
-        return contextsContentsDirectory.getEntry(context, version);
+        return contextsContentsDirectory.getEntry(contextInvariant, version);
     }
 
     @Override
@@ -529,7 +556,7 @@ public class SOSContextService implements ContextService {
 
                 ContextVersionInfo content = new ContextVersionInfo();
                 content.predicateResult = predicateResult;
-                content.timestamp = System.currentTimeMillis();
+                content.timestamp = Instant.now();
                 cacheResults.add(new Pair<>(head, content));
 
                 counter++;
@@ -546,10 +573,11 @@ public class SOSContextService implements ContextService {
             // The context will contain only the new processed assets. To get all assets, we need to go back through the previous versions.
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
             ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
-            IGUID newContextRef = updateContext(context, contextBuilder);
+            updateContext(context, contextBuilder);
 
+            IGUID contextInvariant = context.invariant();
             for(Pair<IGUID, ContextVersionInfo> info:cacheResults) {
-                contextsContentsDirectory.addOrUpdateEntry(newContextRef, info.X(), info.Y());
+                contextsContentsDirectory.addOrUpdateEntry(contextInvariant, info.X(), info.Y());
             }
 
         } catch (ManifestNotMadeException e) {
@@ -578,10 +606,10 @@ public class SOSContextService implements ContextService {
         long start = System.nanoTime();
         boolean predicateResult = false;
 
-        IGUID contextGUID = context.guid();
+        IGUID contextInvariant = context.invariant();
         // The `contextsContentsDirectory` data structure is needed to run this process faster and avoid unnecessary re-runs
         // In fact, this data structure keeps track of entries that have negative results too
-        boolean alreadyRun = contextsContentsDirectory.entryExists(contextGUID, versionGUID);
+        boolean alreadyRun = contextsContentsDirectory.entryExists(contextInvariant, versionGUID);
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
@@ -628,13 +656,14 @@ public class SOSContextService implements ContextService {
      */
     private boolean predicateHasExpired(Context context, IGUID versionGUID) {
 
-        ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.guid(), versionGUID);
+        ContextVersionInfo content =  contextsContentsDirectory.getEntry(context.invariant(), versionGUID);
 
         long max_age = context.maxAge();
-        long contentLastRun = content.timestamp;
-        long now = System.currentTimeMillis();
+        Instant contentLastRun = content.timestamp;
+        Instant now = Instant.now();
+        long diff = ChronoUnit.SECONDS.between(contentLastRun, now);
 
-        return (now - contentLastRun) > max_age;
+        return diff > max_age;
     }
 
     private Predicate getPredicate(Context context) {
@@ -718,7 +747,7 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context) {
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
@@ -740,7 +769,7 @@ public class SOSContextService implements ContextService {
             Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
 
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.guid(), guid);
+            ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.invariant(), guid);
 
             // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -755,7 +784,7 @@ public class SOSContextService implements ContextService {
             long duration = System.nanoTime() - start;
             policy_time_to_run_apply_on_current_dataset += duration;
 
-            contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
+            contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
 
@@ -840,7 +869,7 @@ public class SOSContextService implements ContextService {
 
         long start = System.nanoTime();
 
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.guid(), false);
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
                 runCheckPolicies(context, guid);
@@ -855,7 +884,7 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev =  contextsContentsDirectory.getEntry(context.guid(), guid);
+            ContextVersionInfo prev =  contextsContentsDirectory.getEntry(context.invariant(), guid);
 
             // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
@@ -873,7 +902,7 @@ public class SOSContextService implements ContextService {
             policy_time_to_run_check_on_current_dataset += duration;
 
             content.policySatisfied = allPoliciesAreSatisfied;
-            contextsContentsDirectory.addOrUpdateEntry(context.guid(), guid, content);
+            contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
 
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();

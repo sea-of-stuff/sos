@@ -23,6 +23,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, context.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, context.guid().toMultiHash());
 
+        jsonGenerator.writeNumberField(JSONConstants.KEY_CONTEXT_TIMESTAMP, context.timestamp().getEpochSecond());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_NAME, context.getName());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_INVARIANT, context.invariant().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_CONTENT, context.content().toMultiHash());

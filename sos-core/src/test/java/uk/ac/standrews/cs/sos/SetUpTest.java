@@ -67,12 +67,9 @@ public class SetUpTest extends CommonTest {
 
     @AfterMethod
     public void tearDown() throws IOException, InterruptedException, DataStorageException {
-        localStorage.destroy();
-
-        FileUtils.deleteDirectory(new File(System.getProperty("user.home") + "/sos/keys/"));
-        FileUtils.deleteDirectory(new File("sos-core/src/test/resources/contexts/"));
-
         localSOSNode.kill();
+        localStorage.destroy();
+        FileUtils.deleteDirectory(new File("sos-core/src/test/resources/contexts/"));
     }
 
     protected void createConfiguration() throws ConfigurationException, IOException {

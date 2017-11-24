@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  */
 public class ContextManifest extends AbstractSignedManifest implements Context {
 
+    protected Instant timestamp;
     protected String name;
     protected IGUID guid;
     protected IGUID invariant;
@@ -49,6 +51,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
                            IGUID content) {
         super(signer, ManifestType.CONTEXT);
 
+        this.timestamp = Instant.now();
         this.name = name;
         this.domain = domain;
         this.codomain = codomain;
@@ -64,11 +67,12 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         // TODO - throw exceptions if invariant or guid are invalid
     }
 
-    public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
+    public ContextManifest(Instant timestamp, String name, NodesCollection domain, NodesCollection codomain,
                            IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
                            IGUID content, IGUID invariant, IGUID previous) {
         super(signer, ManifestType.CONTEXT);
 
+        this.timestamp = timestamp;
         this.name = name;
         this.domain = domain;
         this.codomain = codomain;
@@ -161,6 +165,11 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     @Override
     public long maxAge() {
         return maxAge;
+    }
+
+    @Override
+    public Instant timestamp() {
+        return timestamp;
     }
 
     @Override

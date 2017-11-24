@@ -33,6 +33,8 @@ public abstract class BasicManifest implements Manifest {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^[0-9a-fA-F]+$");
 
+    private int size = -1;
+
     protected IGUID guid;
     protected ManifestType manifestType;
 
@@ -67,6 +69,16 @@ public abstract class BasicManifest implements Manifest {
     @Override
     public boolean isValid() {
         return hasManifestType();
+    }
+
+    @Override
+    public int size() {
+
+        if (size == -1) {
+            size = this.toString().length();
+        }
+
+        return size;
     }
 
     /**

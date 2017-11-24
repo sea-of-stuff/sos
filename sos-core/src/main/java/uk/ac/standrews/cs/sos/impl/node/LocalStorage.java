@@ -123,9 +123,9 @@ public class LocalStorage {
     public void destroy() throws DataStorageException {
 
         try {
+            remove(NODE_DIRECTORY_NAME);
             remove(DATA_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
-            remove(NODE_DIRECTORY_NAME);
             remove(JAVA_DIRECTORY_NAME);
             remove(KEYS_DIRECTORY_NAME);
         } catch (BindingAbsentException e) {

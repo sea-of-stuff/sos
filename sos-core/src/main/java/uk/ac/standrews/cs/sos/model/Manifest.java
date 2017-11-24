@@ -78,4 +78,6 @@ public interface Manifest {
      */
     boolean isValid();
 
+    int size();
+
 }

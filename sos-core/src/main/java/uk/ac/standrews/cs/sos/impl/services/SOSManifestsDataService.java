@@ -114,7 +114,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         index.track(manifest);
 
         long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_manifest, Integer.toString(manifest.toString().length()), duration);
+        InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_manifest, Integer.toString(manifest.size()), duration);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             }
 
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_manifest, Integer.toString(manifest.toString().length()), duration);
+            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.read_manifest, Integer.toString(manifest.size()), duration);
 
 
             return manifest;

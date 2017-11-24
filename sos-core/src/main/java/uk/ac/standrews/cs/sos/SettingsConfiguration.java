@@ -462,12 +462,13 @@ public class SettingsConfiguration {
 
                 // If true, the CMS will run background processes to classify content and maintain the contexts
                 private boolean automatic = false;
+                // If true the predicates are run just after adding the context
+                private boolean predicateOnNewContext = false;
                 private ThreadSettings predicateThread = new ThreadSettings();
                 private ThreadSettings policiesThread = new ThreadSettings();
                 private ThreadSettings checkPoliciesThread = new ThreadSettings();
                 private ThreadSettings getdataThread = new ThreadSettings();
                 private ThreadSettings spawnThread = new ThreadSettings();
-                private boolean predicateOnNewContext = true;
 
                 public CMSSettings() {}
 

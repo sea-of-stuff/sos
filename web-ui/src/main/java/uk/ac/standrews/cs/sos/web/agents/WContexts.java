@@ -59,7 +59,7 @@ public class WContexts {
 
             Map<String, Object> contents = new HashMap<>();
             for (IGUID guid : contextService.getContents(tipContext.guid())) {
-                ContextVersionInfo info = contextService.getContextContentInfo(contextGUID, guid);
+                ContextVersionInfo info = contextService.getContextContentInfo(context.invariant(), guid);
                 contents.put(guid.toMultiHash(), info);
             }
 

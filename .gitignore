@@ -177,6 +177,7 @@ velocity.log*
 *.mmdb
 
 # Experiments
+test_file
 .key
 experiments/plots
 experiments/processed

@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.json.ContextDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.ContextSerializer;
 
+import java.time.Instant;
 import java.util.Set;
 
 /**
@@ -82,13 +83,20 @@ public interface Context extends Versionable, SignedManifest {
     IGUID predicate();
 
     /**
-     *
      * Get the max age for the validity for the predicate of this context.
-     * The max age is compared against the system time, in nano seconds - System.nanoTime();
+     * The max age is expressed in seconds.
+     * The max age is compared against the UTC time.
      *
      * @return the max age
      */
     long maxAge();
+
+    /**
+     * Timestamp marking when the context was created
+     *
+     * @return timestamp
+     */
+    Instant timestamp();
 
     /**
      * Return the policies of this context

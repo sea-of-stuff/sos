@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -69,7 +70,7 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
             preparedStatement.setString(1, context.toMultiHash());
             preparedStatement.setString(2, version.toMultiHash());
             preparedStatement.setBoolean(3, contextVersionInfo.predicateResult);
-            preparedStatement.setLong(4, contextVersionInfo.timestamp);
+            preparedStatement.setLong(4, contextVersionInfo.timestamp.getEpochSecond());
             preparedStatement.setBoolean(5, contextVersionInfo.policySatisfied);
 
             preparedStatement.execute();
@@ -106,7 +107,7 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
                 ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
                 contextVersionInfo.predicateResult = resultSet.getBoolean(1);
-                contextVersionInfo.timestamp = resultSet.getLong(2);
+                contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(2));
                 contextVersionInfo.policySatisfied = resultSet.getBoolean(3);
 
                 return contextVersionInfo;
@@ -177,7 +178,7 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
                     IGUID version = GUIDFactory.recreateGUID(resultSet.getString(1));
                     ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
                     contextVersionInfo.predicateResult = resultSet.getBoolean(2);
-                    contextVersionInfo.timestamp = resultSet.getLong(3);
+                    contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(3));
                     contextVersionInfo.policySatisfied = resultSet.getBoolean(4);
 
                     contents.put(version, contextVersionInfo);

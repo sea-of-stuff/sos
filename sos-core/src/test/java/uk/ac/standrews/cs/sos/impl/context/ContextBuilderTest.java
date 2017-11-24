@@ -34,14 +34,14 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t\t\"codomain\": {\n" +
                 "\t\t\t\"type\": \"SPECIFIED\",\n" +
                 "\t\t\t\"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
-                "\t\t}\n" +
+                "\t\t},\n" +
+                "\t\t\"max_age\": 0\n" +
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
                 "\t\t\"predicate\": \"true;\",\n" +
                 "\t\t\"dependencies\": []\n" +
                 "\t},\n" +
-                "\t\"max_age\": 0,\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
@@ -73,6 +73,9 @@ public class ContextBuilderTest extends SetUpTest {
         Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
         assertNotNull(context);
         assertNotNull(context.guid());
+        assertNotNull(context.timestamp());
+        assertEquals(context.getName(), "All");
+        assertEquals(context.getUniqueName(), "All-" + context.guid().toMultiHash());
         assertNotNull(context.previous());
         assertTrue(context.previous().isEmpty());
         assertEquals(context.maxAge(), 0);
@@ -101,14 +104,14 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t\t\"codomain\": {\n" +
                 "\t\t\t\"type\": \"SPECIFIED\",\n" +
                 "\t\t\t\"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
-                "\t\t}\n" +
+                "\t\t},\n" +
+                "\t\t\"max_age\": 0\n" +
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
                 "\t\t\"predicate\": \"true;\",\n" +
                 "\t\t\"dependencies\": []\n" +
                 "\t},\n" +
-                "\t\"max_age\": 0,\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
@@ -139,4 +142,61 @@ public class ContextBuilderTest extends SetUpTest {
         String reFATContext = context.toFATString(predicate, policies);
         JSONAssert.assertEquals(FATContext, reFATContext, false);
     }
+
+    @Test
+    public void fatStringToContextMaxAge() throws IOException, ContextBuilderException {
+
+        String FATContext = "{\n" +
+                "\t\"context\": {\n" +
+                "\t\t\"name\": \"All\",\n" +
+                "\t\t\"domain\": {\n" +
+                "\t\t\t\"type\": \"LOCAL\",\n" +
+                "\t\t\t\"nodes\": []\n" +
+                "\t\t},\n" +
+                "\t\t\"codomain\": {\n" +
+                "\t\t\t\"type\": \"SPECIFIED\",\n" +
+                "\t\t\t\"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
+                "\t\t},\n" +
+                "\t\t\"max_age\": 123456789\n" +
+                "\t},\n" +
+                "\t\"predicate\": {\n" +
+                "\t\t\"type\": \"Predicate\",\n" +
+                "\t\t\"predicate\": \"true;\",\n" +
+                "\t\t\"dependencies\": []\n" +
+                "\t},\n" +
+                "\t\"policies\": [{\n" +
+                "\t\t\"type\": \"Policy\",\n" +
+                "\t\t\"apply\": \"\",\n" +
+                "\t\t\"satisfied\": \"return true;\",\n" +
+                "\t\t\"dependencies\": []\n" +
+                "\t}]\n" +
+                "}";
+
+        JsonNode node = JSONHelper.JsonObjMapper().readTree(FATContext);
+        ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
+
+        assertNotNull(contextBuilder.predicate());
+        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
+        assertNotNull(predicate);
+
+        assertNotNull(contextBuilder.policies());
+        Set<Policy> policies = new LinkedHashSet<>();
+        JsonNode policies_n = contextBuilder.policies();
+        for (JsonNode policy_n : policies_n) {
+            Policy policy = JSONHelper.JsonObjMapper().convertValue(policy_n, Policy.class);
+            policies.add(policy);
+        }
+        assertEquals(policies.size(), 1);
+
+        Set<IGUID> policiesRefs = policies.stream()
+                .map(Manifest::guid)
+                .collect(Collectors.toSet());
+        JsonNode context_n = contextBuilder.context(predicate.guid(), policiesRefs);
+        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+        assertNotNull(context);
+        assertNotNull(context.guid());
+        assertEquals(context.maxAge(), 123456789);
+
+    }
+
 }
