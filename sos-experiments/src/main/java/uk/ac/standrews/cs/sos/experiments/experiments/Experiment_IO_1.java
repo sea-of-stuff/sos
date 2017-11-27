@@ -140,7 +140,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "test_io_1_on_20x50mb_1");
+        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "io_1_on_20x50mb_10its");
         experiment_io_1.process();
     }
 }

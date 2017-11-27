@@ -28,34 +28,42 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
 io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
 
-io_1("output/test_io_1_on_1000x1mb_2.tsv", "plot title")
-io_1("output/test_io_1_on_20x50mb_1.tsv", "plot title")
+# Number of iterations: 10
+io_1("output/test_io_1_on_1000x1mb_2.tsv", "IO performance. Dataset: 1000 files of 1mb each.")
+
+# Number of iterations: 10
+io_1("output/io_1_on_20x50mb_10its.tsv", "IO performance. Dataset: 20 files of 50mb each.")
 
 
 ############
 # GUID_1
 ############
 
-guid_1("output/test_guid_2.tsv", "Performance test on the GUID functions")
+# 10 iterations on the text_100kb dataset
+guid_1("output/test_guid_2.tsv", "Performance test on GUID functions. Dataset: 100 files of 100kb each.")
+
+# 10 iterations on the random_50mb dataset
+guid_1("output/test_guid_3.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.")
 
 ############
 # PR_1
 ############
 
-pr_1("remote/test_1kb_500its_3.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1kb dataset")
-pr_1("remote/test_1kb_500its_3.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
-
-# Removing measurements that were not performed correctly.
-pr_1("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the ~9000 x 1kB dataset")
-pr_1("remote/test_1kb_500its_3_cleaned.tsv", predicateOnly=FALSE, titlePlot="Time to run a predicate and the pre-post predicate functions over the 1kb dataset")
-
+# Number of iterations: 100.
 pr_1("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
+
+# Number of iterations: 20.
+pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
+
 
 ##############
 # PO_A_1
 ##############
 
 po_1("remote/testmon3.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+
+# Number of iterations: 10
+po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
 
 
 ##############

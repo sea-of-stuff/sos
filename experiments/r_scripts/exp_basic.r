@@ -1,9 +1,11 @@
-library(ggplot2)
-library(scales)
-
-source("r_scripts/utils_stats.r")
 
 io_1 <- function(datafile, titlePlot, showSummary=FALSE) {
+  library(ggplot2)
+  library(scales)
+  
+  source("r_scripts/utils_stats.r")
+  
+  
   d <- read.csv(datafile, header=TRUE, sep="\t") 
   d <- d[d$StatsTYPE == 'io',]
   
@@ -34,6 +36,11 @@ io_1 <- function(datafile, titlePlot, showSummary=FALSE) {
 }
 
 guid_1 <- function(datafile, titlePlot, showSummary=FALSE) {
+  library(ggplot2)
+  library(scales)
+  
+  source("r_scripts/utils_stats.r")
+  
   d <- read.csv(datafile, header=TRUE, sep="\t") 
   d <- d[d$StatsTYPE == 'guid',]
   
