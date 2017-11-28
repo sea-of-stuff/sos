@@ -40,10 +40,12 @@ io_1("output/io_1_on_20x50mb_10its.tsv", "IO performance. Dataset: 20 files of 5
 ############
 
 # 10 iterations on the text_100kb dataset
-guid_1("output/test_guid_2.tsv", "Performance test on GUID functions. Dataset: 100 files of 100kb each.")
+guid_1("output/test_guid_5.tsv", "Performance test on GUID functions. \nDataset: 100 files of 100kb each.")
+guid_1("output/test_guid_5.tsv", "Performance test on GUID functions. Dataset: 100 files of 100kb each.", showSummary = TRUE)
 
 # 10 iterations on the random_50mb dataset
-guid_1("output/test_guid_3.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.")
+guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. \nDataset: 20 files of 50mb each.", showSummary = FALSE)
+guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = TRUE)
 
 ############
 # PR_1
@@ -60,11 +62,11 @@ pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to r
 # PO_A_1
 ##############
 
-po_1("remote/testmon3.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
-
 # Number of iterations: 10
-po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
-
+po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", 
+     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", 
+     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", showSummary = TRUE)
 
 ##############
 # PO_A_3

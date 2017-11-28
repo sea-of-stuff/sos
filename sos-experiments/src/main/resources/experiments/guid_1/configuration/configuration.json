@@ -13,7 +13,7 @@
       "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json",
-      "dataset" : "random_50mb"
+      "dataset" : "text_100kb"
     },
     "stats": {
       "io": false,
