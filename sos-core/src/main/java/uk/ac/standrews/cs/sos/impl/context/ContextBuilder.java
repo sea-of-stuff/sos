@@ -25,6 +25,8 @@ import static uk.ac.standrews.cs.sos.impl.context.ContextBuilder.ContextBuilderT
  */
 public class ContextBuilder {
 
+    private static final String CONTEXT_KEY = "context";
+
     public enum ContextBuilderType {
         FAT, TEMP
     }
@@ -69,8 +71,9 @@ public class ContextBuilder {
             throw new ContextBuilderException();
         }
 
-        JsonNode context = contextDefinitions.get("context");
+        JsonNode context = contextDefinitions.get(CONTEXT_KEY);
 
+        ((ObjectNode)context).put(JSONConstants.KEY_CONTEXT_MAX_AGE, contextDefinitions.get(KEY_CONTEXT_MAX_AGE));
         ((ObjectNode)context).put(JSONConstants.KEY_CONTEXT_PREDICATE, predicate.toMultiHash());
         ArrayNode arrayNode = ((ObjectNode)context).putArray(JSONConstants.KEY_CONTEXT_POLICIES);
         for(IGUID policy:policies) {
@@ -147,7 +150,7 @@ public class ContextBuilder {
 
         ObjectNode objectNode = JSONHelper.JsonObjMapper().createObjectNode();
 
-        ObjectNode contextNode = objectNode.putObject("context");
+        ObjectNode contextNode = objectNode.putObject(CONTEXT_KEY);
         contextNode.put(KEY_CONTEXT_NAME, context.getName());
         contextNode.putPOJO(KEY_CONTEXT_DOMAIN, context.domain());
         contextNode.putPOJO(KEY_CONTEXT_CODOMAIN, context.codomain());

@@ -114,7 +114,9 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     @Override
     public InputStream contentToHash() {
 
-        String contentToHash = getType() + getName() + "I" + invariant().toMultiHash();
+        String contentToHash = getType() +
+                getName() +
+                "I" + invariant().toMultiHash();
 
         if (previous != null && !previous.isInvalid()) {
             contentToHash += "P" + previous.toMultiHash();
