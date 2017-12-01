@@ -10,34 +10,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * The ContextsDirectory caches information regarding contexts and their contents.
  *
- * The ContextsDirectory holds all the information regarding contexts and their contents.
- * The actual context definitions are stored using the LocalContextsDirectroy and the CacheContextsDirectory
+ * Evicted entries allow us to re-use old results if the HEAD of an asset is changed.
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextsContentsDirectoryInMemory implements Serializable, ContextsContentsDirectory {
 
     // Maps the context to the versions belonging to it
-    // [ context -> [version, ContextVersionInfo] ]
+    // [ context -> [version -> ContextVersionInfo] ]
     private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
     
-    public ContextsContentsDirectoryInMemory() {
+    ContextsContentsDirectoryInMemory() {
         mappings = new HashMap<>();
     }
 
     @Override
-    public void addOrUpdateEntry(IGUID context, IGUID version, ContextVersionInfo content) {
+    public void addOrUpdateEntry(IGUID contextInvariant, IGUID version, ContextVersionInfo content) {
 
-        if (!mappings.containsKey(context)) {
-            mappings.put(context, new HashMap<>());
+        if (!mappings.containsKey(contextInvariant)) {
+            mappings.put(contextInvariant, new HashMap<>());
         }
 
-        mappings.get(context).put(version, content);
+        mappings.get(contextInvariant).put(version, content);
     }
 
     /**
@@ -77,27 +79,6 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     public boolean entryExists(IGUID context, IGUID version) {
 
         return mappings.containsKey(context) && mappings.get(context).containsKey(version);
-    }
-
-    /**
-     * Get a set for all the contents for a given context
-     *
-     * @param context
-     * @return
-     */
-    @Override
-    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted) {
-        HashMap<IGUID, ContextVersionInfo> contents = mappings.get(context);
-        if (contents == null) {
-            return Collections.emptySet();
-        } else {
-            return contents.entrySet()
-                    .stream()
-                    .filter(p -> p.getValue().predicateResult && (includeEvicted || !p.getValue().evicted))
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toSet());
-
-        }
     }
 
     @Override

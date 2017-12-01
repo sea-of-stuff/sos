@@ -45,7 +45,6 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -335,14 +334,30 @@ public class SOSContextService implements ContextService {
             Instant contextTimestamp = context.timestamp();
             long diff;
 
+            Set<IGUID> invariants = new LinkedHashSet<>();
             // Iterate through previous versions of context until max-age constraint is still valid
             do {
                 Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
-                retval.addAll(
-                        compound.getContents().stream()
-                                .map(Content::getGUID)
-                                .collect(Collectors.toSet())
-                );
+
+                for(Content content:compound.getContents()) {
+
+                    IGUID contentGUID = content.getGUID();
+                    Manifest manifest = manifestsDataService.getManifest(contentGUID);
+                    if (manifest.getType() == ManifestType.VERSION) {
+
+                        Version version = (Version) manifest;
+                        IGUID invariant = version.invariant();
+
+                        // Avoid returning two versions of the same asset.
+                        // This method should return only the latest entry in relation to the starting contextGUID.
+                        if (!invariants.contains(invariant)) {
+                            invariants.add(invariant);
+
+                            retval.add(contentGUID);
+                        }
+
+                    }
+                }
 
                 Instant currentContextTimestamp = context.timestamp();
                 diff = ChronoUnit.SECONDS.between(currentContextTimestamp, contextTimestamp); // This order of Instants gives a positive number on the diff
@@ -539,7 +554,7 @@ public class SOSContextService implements ContextService {
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
-                boolean predicateResult = runPredicate(context, head);
+                boolean predicateResult = runPredicate(context, assetInvariant, head);
 
                 if (predicateResult) {
                     Content content = new ContentImpl(head);
@@ -591,17 +606,18 @@ public class SOSContextService implements ContextService {
      *  - Update the contextsContents
      *
      * @param context for which to run the predicate
+     * @param assetInvariant of the asset processed
      * @param versionGUID to evaluate
      * @return true if the predicate was run and it was true. This is not indicative of the result of the predicate.
      */
-    private boolean runPredicate(Context context, IGUID versionGUID) {
+    private boolean runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
 
         long start = System.nanoTime();
         boolean predicateResult = false;
 
         IGUID contextInvariant = context.invariant();
-        // The `contextsContentsDirectory` data structure is needed to run this process faster and avoid unnecessary re-runs
-        // In fact, this data structure keeps track of entries that have negative results too
+        // The `contextsContentsDirectory` data structure is needed to run this process faster and avoid unnecessary re-runs.
+        // This data structure keeps track of entries and their results (negative results too).
         boolean alreadyRun = contextsContentsDirectory.entryExists(contextInvariant, versionGUID);
         boolean maxAgeExpired = false;
 
@@ -617,23 +633,17 @@ public class SOSContextService implements ContextService {
             Predicate predicate = getPredicate(context);
 
             start = System.nanoTime();
-            predicateResult = predicate.test(versionGUID); // TODO - measure mb of data processed?
+            predicateResult = predicate.test(versionGUID);
             duration = System.nanoTime() - start;
             pred_time_to_run_predicate_on_current_dataset += duration;
 
-            // FIXME - adapt eviction model to new model
-//            ContextVersionInfo content = new ContextVersionInfo();
-//            content.predicateResult = predicateResult;
-//            content.timestamp = System.currentTimeMillis();
+            // NOTE: Evicting previous results for this asset.
+            for(IGUID version:manifestsDataService.getVersions(assetInvariant)) {
 
-            // NOTE - evicting previous results for this version. This will free a lot of space.
-            // Will ignore for the moment being
-//            for(IGUID version:manifestsDataService.getVersions(assetInvariant)) {
-//
-//                if (!version.equals(versionGUID)) {
-//                    contextsContentsDirectory.evict(contextGUID, version);
-//                }
-//            }
+                if (!version.equals(versionGUID)) {
+                    contextsContentsDirectory.evict(contextInvariant, version);
+                }
+            }
         }
 
         return predicateResult;
@@ -738,6 +748,8 @@ public class SOSContextService implements ContextService {
     }
 
     private void runPolicies(Context context) {
+
+        // TODO - get contents and then check contextsContentsDirectory
 
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
         contentsToProcess.forEach((guid, row) -> {
@@ -860,6 +872,8 @@ public class SOSContextService implements ContextService {
     private void runCheckPolicies(Context context) {
 
         long start = System.nanoTime();
+
+        // TODO - get contents and then check contextsContentsDirectory
 
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
         contentsToProcess.forEach((guid, row) -> {

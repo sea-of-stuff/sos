@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -46,7 +48,7 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
     private static final String SQL_EVICT_ENTRY = "UPDATE contexts SET evict=1 WHERE context_id=? version_id=?";
 
-    public ContextsContentsDirectoryDatabase(String path) throws DatabaseException {
+    ContextsContentsDirectoryDatabase(String path) throws DatabaseException {
         super(path);
 
         try (Connection connection = getSQLiteConnection()) {
@@ -62,12 +64,12 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
     }
 
     @Override
-    public void addOrUpdateEntry(IGUID context, IGUID version, ContextVersionInfo contextVersionInfo) {
+    public void addOrUpdateEntry(IGUID contextInvariant, IGUID version, ContextVersionInfo contextVersionInfo) {
 
         try (Connection connection = getSQLiteConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_ADD_ENTRY)) {
 
-            preparedStatement.setString(1, context.toMultiHash());
+            preparedStatement.setString(1, contextInvariant.toMultiHash());
             preparedStatement.setString(2, version.toMultiHash());
             preparedStatement.setBoolean(3, contextVersionInfo.predicateResult);
             preparedStatement.setLong(4, contextVersionInfo.timestamp.getEpochSecond());
@@ -135,29 +137,6 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
             return false;
         }
-
-    }
-
-    @Override
-    public Set<IGUID> getVersionsThatPassedPredicateTest(IGUID context, boolean includeEvicted) {
-
-        Set<IGUID> contents = new LinkedHashSet<>();
-
-        try (Connection connection = getSQLiteConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(includeEvicted ? SQL_GET_ENTRIES : SQL_GET_NOT_EVICTED_ENTRIES)) {
-
-            if (!includeEvicted) preparedStatement.setString(1, context.toMultiHash());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                try {
-                    contents.add(GUIDFactory.recreateGUID(resultSet.getString(1)));
-                } catch (GUIDGenerationException ignored) { /* SKIP - DO NOTHING */ }
-            }
-
-        } catch (SQLException | DatabaseConnectionException ignored) { }
-
-        return contents;
 
     }
 
