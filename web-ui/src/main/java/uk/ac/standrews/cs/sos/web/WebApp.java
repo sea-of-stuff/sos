@@ -32,6 +32,8 @@ public class WebApp {
 
         //Set up after-filters (called after each get/post)
         after("*", Filters.addGzipHeader);
+
+        System.out.println("WebApp setup on port: " + port);
     }
 
     private static void registerRoutes(SOSLocalNode sos, IFileSystem fileSystem) {
