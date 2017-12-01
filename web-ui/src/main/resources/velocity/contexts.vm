@@ -44,7 +44,7 @@
                             <strong class="mr-auto p-2">$context.getName()</strong>
                             <div class="p-2 btn-group" role="group">
                                 <button class="btn btn-success btn-sm" id="viewContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye" aria-hidden="true"></i> View</button>
-                                <button class="btn btn-light     btn-sm" id="hideContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i> Hide</button>
+                                <button class="btn btn-light btn-sm" id="hideContext" value="$context.guid().toMultiHash()" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i> Hide</button>
                             </div>
                         </div>
                         <div class="d-flex justify-content-start">
@@ -317,7 +317,7 @@
                         " <button id=\"more" + key + "\" value=" + key + " type=\"button\" class=\"btn btn-outline-dark btn-sm\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i></button>" +
                         "</div>" +
                         "<p class=\"mb-1\"><strong>Policy Satisfied</strong> : " + policySatisfiedHTML + "</p>" +
-                        "<p class=\"mb-1\"><strong>Predicate run </strong> : " + new Date(value.timestamp) + "</p>" +
+                        "<p class=\"mb-1\"><strong>Predicate run </strong> : " + new Date(value.timestamp.epochSecond * 1000) + "</p>" +
                         "</li>" );
             });
 
@@ -329,6 +329,7 @@
     $('button[id^="hideContext"]').click(function() {
 
         $('#contextid').html("");
+        $('#context_json').html("");
 
         list = $('#contents');
         list.empty();
