@@ -73,7 +73,6 @@ public class ContextBuilder {
 
         JsonNode context = contextDefinitions.get(CONTEXT_KEY);
 
-        ((ObjectNode)context).put(JSONConstants.KEY_CONTEXT_MAX_AGE, contextDefinitions.get(KEY_CONTEXT_MAX_AGE));
         ((ObjectNode)context).put(JSONConstants.KEY_CONTEXT_PREDICATE, predicate.toMultiHash());
         ArrayNode arrayNode = ((ObjectNode)context).putArray(JSONConstants.KEY_CONTEXT_POLICIES);
         for(IGUID policy:policies) {
