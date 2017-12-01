@@ -529,16 +529,8 @@ public class SOSContextService implements ContextService {
         long start = System.nanoTime();
         int counter = 0;
 
-        Set<Content> currentContents;
-        try {
-            Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
-            currentContents = compound.getContents();
-        } catch (ManifestNotFoundException e) {
-            throw new ContextException("Unable to get the context's current contents");
-        }
-
         Set<Content> contents = new LinkedHashSet<>();
-        Set<Pair<IGUID, ContextVersionInfo>> cacheResults = new LinkedHashSet<>();
+        Set<Pair<IGUID, ContextVersionInfo>> tempResults = new LinkedHashSet<>();
         Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
 
         pred_time_prep = System.nanoTime() - start; // Time before running the context on each asset
@@ -547,17 +539,17 @@ public class SOSContextService implements ContextService {
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
-                boolean predicateResult = runPredicate(context, currentContents, head);
+                boolean predicateResult = runPredicate(context, head);
 
                 if (predicateResult) {
                     Content content = new ContentImpl(head);
                     contents.add(content);
-                }
 
-                ContextVersionInfo content = new ContextVersionInfo();
-                content.predicateResult = predicateResult;
-                content.timestamp = Instant.now();
-                cacheResults.add(new Pair<>(head, content));
+                    ContextVersionInfo contentInfo = new ContextVersionInfo();
+                    contentInfo.predicateResult = true;
+                    contentInfo.timestamp = Instant.now();
+                    tempResults.add(new Pair<>(head, contentInfo));
+                }
 
                 counter++;
             } catch (HEADNotFoundException e) {
@@ -576,7 +568,7 @@ public class SOSContextService implements ContextService {
             updateContext(context, contextBuilder);
 
             IGUID contextInvariant = context.invariant();
-            for(Pair<IGUID, ContextVersionInfo> info:cacheResults) {
+            for(Pair<IGUID, ContextVersionInfo> info:tempResults) {
                 contextsContentsDirectory.addOrUpdateEntry(contextInvariant, info.X(), info.Y());
             }
 
@@ -600,8 +592,9 @@ public class SOSContextService implements ContextService {
      *
      * @param context for which to run the predicate
      * @param versionGUID to evaluate
+     * @return true if the predicate was run and it was true. This is not indicative of the result of the predicate.
      */
-    private boolean runPredicate(Context context, Set<Content> currentContents, IGUID versionGUID) {
+    private boolean runPredicate(Context context, IGUID versionGUID) {
 
         long start = System.nanoTime();
         boolean predicateResult = false;
@@ -613,7 +606,6 @@ public class SOSContextService implements ContextService {
         boolean maxAgeExpired = false;
 
         if (alreadyRun) {
-            predicateResult = currentContents.stream().anyMatch(c -> c.getGUID().equals(versionGUID));
             maxAgeExpired = predicateHasExpired(context, versionGUID);
         }
 
