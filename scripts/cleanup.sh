@@ -6,7 +6,6 @@ rm -f data/*
 
 echo 'Cleaning up the db and other info'
 find node/ -type f ! -name 'id_rsa.*' -delete
-#rm -f node/*
 
 echo 'Cleaning up the manifests'
 rm -f manifests/*

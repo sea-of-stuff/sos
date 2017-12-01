@@ -72,6 +72,7 @@ po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply
 # PO_A_3
 ##############
 
+# Number of iterations: 10
 po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???")
 po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)
 
@@ -80,10 +81,12 @@ po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to ru
 # PO_C_1
 ##############
 
+# Number of iterations: 10
 po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
 
 ##############
 # PO_C_3
 ##############
 
+# Number of iterations: 10
 po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???")
