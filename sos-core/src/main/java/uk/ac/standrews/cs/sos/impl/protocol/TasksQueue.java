@@ -20,12 +20,19 @@ import java.util.concurrent.TimeUnit;
 public class TasksQueue {
 
     private static final int TIMEOUT_LIMIT_S = 30;
+    private SettingsConfiguration.Settings.GlobalSettings.TasksSettings settings;
+    private int timeout_limit;
+    private boolean fallbackToSyncTasks;
     private ScheduledExecutorService executorService;
 
     private static TasksQueue instance;
     private TasksQueue() {
-        SettingsConfiguration.Settings.ThreadSettings threadSettings = SOSLocalNode.settings.getGlobal().getTasks().getThread();
-        executorService = Executors.newScheduledThreadPool(threadSettings.getPs());
+        settings = SOSLocalNode.settings.getGlobal().getTasks();
+        timeout_limit = settings.getTimeout_limit() >= 0 ? settings.getTimeout_limit() : TIMEOUT_LIMIT_S;
+        fallbackToSyncTasks = settings.isFallbackToSyncTasks();
+
+        int numberOfThreads = settings.getThread().getPs();
+        executorService = Executors.newScheduledThreadPool(numberOfThreads);
 
         // TODO - load tasks from db
         // for each task, submit it to the executorService
@@ -61,7 +68,7 @@ public class TasksQueue {
 
     private void performAsyncTask(Task task, boolean checkSettings) {
 
-        if (checkSettings && SOSLocalNode.settings.getGlobal().getTasks().isFallbackToSyncTasks()) {
+        if (checkSettings && fallbackToSyncTasks) {
             performSyncTask(task);
         } else {
 
@@ -74,7 +81,7 @@ public class TasksQueue {
                 SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
 
                 task.notify();
-            }, TIMEOUT_LIMIT_S, TimeUnit.SECONDS);
+            }, timeout_limit, TimeUnit.SECONDS);
 
             SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
         }

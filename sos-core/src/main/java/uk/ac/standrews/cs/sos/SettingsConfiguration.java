@@ -704,6 +704,7 @@ public class SettingsConfiguration {
             public static class TasksSettings {
 
                 private ThreadSettings thread;
+                private int timeout_limit;
                 private boolean fallbackToSyncTasks = false;
 
                 public TasksSettings() {}
@@ -714,6 +715,14 @@ public class SettingsConfiguration {
 
                 public void setThread(ThreadSettings thread) {
                     this.thread = thread;
+                }
+
+                public int getTimeout_limit() {
+                    return timeout_limit;
+                }
+
+                public void setTimeout_limit(int timeout_limit) {
+                    this.timeout_limit = timeout_limit;
                 }
 
                 public boolean isFallbackToSyncTasks() {
