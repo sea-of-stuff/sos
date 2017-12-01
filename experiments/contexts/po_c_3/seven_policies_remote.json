@@ -8,14 +8,14 @@
     "codomain": {
       "type": "SPECIFIED",
       "nodes": ["SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2"]
-    }
+    },
+    "max_age": 0
   },
   "predicate": {
     "type": "Predicate",
     "predicate": "CommonPredicates.AcceptAll();",
     "dependencies": []
   },
-  "max_age": 0,
   "policies": [
     {
       "type" : "Policy",

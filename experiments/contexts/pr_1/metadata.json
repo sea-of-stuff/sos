@@ -8,13 +8,13 @@
     "codomain": {
       "type": "LOCAL",
       "nodes": []
-    }
+    },
+    "max_age": 0
   },
   "predicate": {
     "type": "Predicate",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/jpeg\", \"image/png\"));",
     "dependencies": []
   },
-  "max_age": 0,
   "policies": []
 }

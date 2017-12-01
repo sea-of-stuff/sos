@@ -8,13 +8,13 @@
     "codomain": {
       "type": "LOCAL",
       "nodes": []
-    }
+    },
+    "max_age": 0
   },
   "predicate": {
     "type": "Predicate",
     "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") > 10;",
     "dependencies": []
   },
-  "max_age": 0,
   "policies": []
 }

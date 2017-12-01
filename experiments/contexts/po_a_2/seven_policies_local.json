@@ -8,14 +8,14 @@
     "codomain": {
       "type": "LOCAL",
       "nodes": []
-    }
+    },
+    "max_age": 0
   },
   "predicate": {
     "type": "Predicate",
     "predicate": "CommonPredicates.AcceptAll();",
     "dependencies": []
   },
-  "max_age": 0,
   "policies": [
     {
       "type" : "Policy",

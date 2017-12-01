@@ -8,13 +8,13 @@
     "codomain": {
       "type": "LOCAL",
       "nodes": []
-    }
+    },
+    "max_age": 0
   },
   "predicate": {
     "type": "Predicate",
     "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"text/plain; charset=UTF-8\")) && CommonPredicates.SearchText(guid, \"the\");",
     "dependencies": []
   },
-  "max_age": 0,
   "policies": []
 }
