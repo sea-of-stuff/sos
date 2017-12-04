@@ -41,6 +41,7 @@ public interface ContextService extends Service {
      * The context is automatically set as active
      *
      * @param context to be added
+     * @return guid of added context
      * @throws ContextException if the context could not be added
      */
     IGUID addContext(Context context) throws ContextException;
@@ -48,33 +49,33 @@ public interface ContextService extends Service {
     /**
      * Add a context to this service.
      *
-     * @param contextBuilder
-     * @return
-     * @throws ContextException
+     * @param contextBuilder containing the info to build the context
+     * @return guid of added context
+     * @throws ContextException if context could not be created/added
      */
     IGUID addContext(ContextBuilder contextBuilder) throws ContextException;
 
     /**
      * Add a context to this service given a JSON representation of the context
      *
-     * @param jsonContext
-     * @return
-     * @throws ContextException
+     * @param jsonContext of the context to be added. Must be of FAT type.
+     * @return guid of added context
+     * @throws ContextException if context could not be created/added
      */
     IGUID addContext(String jsonContext) throws ContextException;
 
     /**
      * Add a context from a file
      *
-     * @param file
-     * @return
-     * @throws ContextException
+     * @param file of context (in JSON)
+     * @return guid of added context
+     * @throws ContextException if context could not be created/added
      */
     IGUID addContext(File file) throws ContextException;
 
     /**
      *
-     * @param prev
+     * @param prev context
      * @param contextBuilder should be of type TEMP (see constructors)
      * @return GUID of new context (or GUID of prev if context is not updated)
      * @throws ContextException if the context could not be updated
@@ -101,9 +102,9 @@ public interface ContextService extends Service {
     /**
      * Get a context given its name
      *
-     * @param contextName
-     * @return
-     * @throws ContextNotFoundException
+     * @param contextName string used for querying contexts
+     * @return set of contexts matching the string name
+     * @throws ContextNotFoundException if not context was found for given GUID
      */
     Set<Context> searchContexts(String contextName) throws ContextNotFoundException;
 
@@ -122,24 +123,24 @@ public interface ContextService extends Service {
     /**
      * Forces to run the predicate of the context with the matching GUID
      *
-     * @param guid
-     * @throws ContextNotFoundException
+     * @param guid of context
+     * @throws ContextNotFoundException if not context was found for given GUID
      */
     void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
 
     /**
      * Forces to run the policies of the context with the matching GUID
      *
-     * @param guid
-     * @throws ContextNotFoundException
+     * @param guid of context
+     * @throws ContextNotFoundException if no context was found for given GUID
      */
     void runContextPolicyNow(IGUID guid) throws ContextNotFoundException;
 
     /**
      * Forces to run the check policies of the context with the matching GUID
      *
-     * @param guid
-     * @throws ContextNotFoundException
+     * @param guid of context
+     * @throws ContextNotFoundException if not context was found for given GUID
      */
     void runContextPolicyCheckNow(IGUID guid) throws ContextNotFoundException;
 
@@ -161,27 +162,27 @@ public interface ContextService extends Service {
 
     /**
      * Get the statistics for the predicate thread
-     * @return
+     * @return queue of <timestamp, duration> pairs
      */
     Queue<Pair<Long, Long>> getPredicateThreadSessionStatistics();
 
     /**
      * Get the statistics for the policy thread
-     * @return
+     * @return queue of <timestamp, duration> pairs
      */
     Queue<Pair<Long, Long>> getApplyPolicyThreadSessionStatistics();
 
     /**
      * Get the statistics for the check-policy thread
-     * @return
+     * @return queue of <timestamp, duration> pairs
      */
     Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
 
     /**
      * Get the info about the pair context-version
-     * @param context
-     * @param version
-     * @return
+     * @param context guid
+     * @param version guid
+     * @return info about version mapped at given context
      */
     ContextVersionInfo getContextContentInfo(IGUID context, IGUID version);
 
