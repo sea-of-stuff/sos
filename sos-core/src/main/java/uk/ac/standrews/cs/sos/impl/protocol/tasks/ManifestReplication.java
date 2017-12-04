@@ -42,10 +42,12 @@ public class ManifestReplication extends Task {
     private ManifestsDataService manifestsDataService;
 
     // TODO - replication by delegation. See DataReplication!
-    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) throws SOSProtocolException {
+    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor,
+                               NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService)
+            throws SOSProtocolException {
 
         if (manifestsDataService == null || nodeDiscoveryService == null) {
-            throw new SOSProtocolException("DDS and/or NDS are null. Manifest replication process is aborted.");
+            throw new SOSProtocolException("At least one of the SOS services is null. Manifest replication process is aborted.");
         }
 
         this.nodeDiscoveryService = nodeDiscoveryService;
@@ -124,7 +126,9 @@ public class ManifestReplication extends Task {
 
         switch(type) {
 
-            case ATOM: case COMPOUND: case VERSION: case ATOM_PROTECTED: case COMPOUND_PROTECTED:
+            case ATOM: case ATOM_PROTECTED:
+            case COMPOUND: case COMPOUND_PROTECTED:
+            case VERSION:
 
                 if (node.isDDS()) {
                     return SOSURL.DDS_POST_MANIFEST(node);
@@ -170,6 +174,8 @@ public class ManifestReplication extends Task {
         ManifestType manifestType = manifest.getType();
         switch(manifestType) {
             case CONTEXT:
+                // Transfer context with its predicate and policies.
+
                 Context context = (Context) manifest;
                 Predicate predicate = (Predicate) manifestsDataService.getManifest(context.predicate());
                 Set<Policy> policies = new LinkedHashSet<>();

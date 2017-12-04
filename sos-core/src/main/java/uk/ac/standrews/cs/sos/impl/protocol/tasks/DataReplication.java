@@ -85,10 +85,12 @@ public class DataReplication extends Task {
      * @param nodeDiscoveryService
      * @throws SOSProtocolException
      */
-    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor, StorageService storageService, NodeDiscoveryService nodeDiscoveryService, boolean delegateReplication) throws SOSProtocolException {
+    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
+                           StorageService storageService, NodeDiscoveryService nodeDiscoveryService,
+                           boolean delegateReplication) throws SOSProtocolException {
 
         if (storageService == null || nodeDiscoveryService == null) {
-            throw new SOSProtocolException("Index, NDS and/or DDS are null. Data replication process is aborted.");
+            throw new SOSProtocolException("At least one of the SOS services is null. Data replication process is aborted.");
         }
 
         this.storageService = storageService;
@@ -149,9 +151,9 @@ public class DataReplication extends Task {
     /**
      * Transfer a stream of data to a given node and update this node state
      *
-     * @param data
-     * @param node
-     * @param storageService
+     * @param data to be transferred
+     * @param node of destination
+     * @param storageService of this node that has to be updated with new location
      * @return true if the data was transferred successfully.
      */
     private boolean transferDataAndUpdateNodeState(InputStream data, Node node, StorageService storageService) {

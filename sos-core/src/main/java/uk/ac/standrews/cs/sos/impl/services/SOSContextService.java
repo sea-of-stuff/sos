@@ -760,9 +760,8 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context) {
 
-        // TODO - get contents and then check contextsContentsDirectory
-
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
+        IGUID contextInvariant = context.invariant();
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
@@ -872,6 +871,7 @@ public class SOSContextService implements ContextService {
 
         for (Context context : getContexts()) {
 
+            // Set the dataset stat to zero. This field is then increased by runCheckPolicies
             policy_time_to_run_check_on_current_dataset = 0;
 
             runCheckPolicies(context);
@@ -884,9 +884,8 @@ public class SOSContextService implements ContextService {
 
         long start = System.nanoTime();
 
-        // TODO - get contents and then check contextsContentsDirectory
-
-        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(context.invariant(), false);
+        IGUID contextInvariant = context.invariant();
+        Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
                 runCheckPolicies(context, guid);
@@ -901,7 +900,7 @@ public class SOSContextService implements ContextService {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
-            ContextVersionInfo prev =  contextsContentsDirectory.getEntry(context.invariant(), guid);
+            ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.invariant(), guid);
 
             // NOTE - this is a naive way to update only the policy result
             content.predicateResult = prev.predicateResult;
