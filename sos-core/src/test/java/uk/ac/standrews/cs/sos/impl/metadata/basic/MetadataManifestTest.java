@@ -13,7 +13,7 @@ import static org.testng.Assert.assertEquals;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class BasicMetadataTest {
+public class MetadataManifestTest {
 
     @Test
     public void metadataDeserializationTest() throws IOException {
@@ -40,7 +40,7 @@ public class BasicMetadataTest {
                         "        },\n" +
                         "        {\n" +
                         "            \"key\": \"Timestamp\",\n" +
-                        "            \"type\": \"int\",\n" +
+                        "            \"type\": \"Long\",\n" +
                         "            \"value\": 1484736105\n" +
                         "        },\n" +
                         "        {\n" +
@@ -54,10 +54,10 @@ public class BasicMetadataTest {
 
         Metadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, Metadata.class);
 
-        assertEquals(metadata.getProperty("X-Parsed-By"), "org.apache.tika.parser.DefaultParser");
-        assertEquals(metadata.getProperty("Size"), 26L);
-        assertEquals(metadata.getProperty("Content-Encoding"), "null");
-        assertEquals(metadata.getProperty("Timestamp"), 1484736105);
-        assertEquals(metadata.getProperty("Content-Type"), "text/plain; charset=ISO-8859-1");
+        assertEquals(metadata.getProperty("X-Parsed-By").getValue_s(), "org.apache.tika.parser.DefaultParser");
+        assertEquals(metadata.getProperty("Size").getValue_l(), 26L);
+        assertEquals(metadata.getProperty("Content-Encoding").getValue_s(), "null");
+        assertEquals(metadata.getProperty("Timestamp").getValue_l(), 1484736105);
+        assertEquals(metadata.getProperty("Content-Type").getValue_s(), "text/plain; charset=ISO-8859-1");
     }
 }

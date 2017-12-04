@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.metadata.basic.SecureBasicMetadata;
+import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,10 +20,10 @@ import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getRolesToKeys;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SecureMetadataDeserializer extends JsonDeserializer<SecureBasicMetadata> {
+public class SecureMetadataDeserializer extends JsonDeserializer<SecureMetadataManifest> {
 
     @Override
-    public SecureBasicMetadata deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public SecureMetadataManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
@@ -34,10 +34,11 @@ public class SecureMetadataDeserializer extends JsonDeserializer<SecureBasicMeta
             throw new IOException();
         }
 
-        SecureBasicMetadata basicMetadata = new SecureBasicMetadata(rolesToKeys);
+        SecureMetadataManifest basicMetadata = new SecureMetadataManifest(rolesToKeys);
         try {
             String guidS = node.get(JSONConstants.KEY_GUID).asText();
-            basicMetadata.setGUID(GUIDFactory.recreateGUID(guidS));
+            GUIDFactory.recreateGUID(guidS);
+            // FIXME basicMetadata.setGUID(GUIDFactory.recreateGUID(guidS));
         } catch (GUIDGenerationException e) {
             throw new IOException(e);
         }
@@ -51,7 +52,8 @@ public class SecureMetadataDeserializer extends JsonDeserializer<SecureBasicMeta
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
             Object value = getObject(n.get(JSONConstants.KEY_META_VALUE), type);
 
-            basicMetadata.addProperty(key, value);
+            // FIXME - basicMetadata.addProperty(key, value);
+            // reuse code from other deserializer if possible
         }
 
         return basicMetadata;

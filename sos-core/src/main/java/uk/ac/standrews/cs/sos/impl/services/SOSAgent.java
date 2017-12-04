@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
@@ -108,7 +109,7 @@ public class SOSAgent implements Agent {
 
             Version manifest = ManifestFactory.createVersionManifest(content, invariant, prevs, metadata, role);
             addManifest(manifest);
-            
+
             // Make the added manifest the HEAD by default
             manifestsDataService.setHead(manifest);
 
@@ -121,10 +122,13 @@ public class SOSAgent implements Agent {
     @Override
     public Version addData(VersionBuilder versionBuilder) throws ServiceException {
 
-        try (Data data = versionBuilder.getAtomBuilder().getData()) {
+        AtomBuilder atomBuilder = versionBuilder.getAtomBuilder();
+        try (Data data = atomBuilder.getData()) {
 
-            Metadata metadata = addMetadata(data);
-            Atom atom = addAtom(versionBuilder.getAtomBuilder());
+            Role role = versionBuilder.getRole();
+
+            Metadata metadata = addMetadata(data, role);
+            Atom atom = addAtom(atomBuilder);
 
             versionBuilder.setContent(atom.guid());
             versionBuilder.setMetadata(metadata);
@@ -139,13 +143,12 @@ public class SOSAgent implements Agent {
     @Override
     public Version addCollection(VersionBuilder versionBuilder) throws ServiceException {
 
-        Compound compound;
         CompoundBuilder compoundBuilder = versionBuilder.getCompoundBuilder();
         if(compoundBuilder.getRole() != null) {
             compoundBuilder.setMakeSecureCompound(true);
         }
-        compound = addCompound(compoundBuilder);
 
+        Compound compound = addCompound(compoundBuilder);
         versionBuilder.setContent(compound.guid());
 
         return addVersion(versionBuilder);
@@ -243,7 +246,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Object getMetaProperty(IGUID guid, String property) throws ServiceException {
+    public MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException {
 
         Version version = (Version) getManifest(guid);
 
@@ -252,10 +255,10 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata addMetadata(Data data) throws ServiceException {
+    public Metadata addMetadata(Data data, Role role) throws ServiceException {
 
         try {
-            Metadata metadata = metadataService.processMetadata(data);
+            Metadata metadata = metadataService.processMetadata(data, role);
             metadataService.addMetadata(metadata);
 
             return metadata;

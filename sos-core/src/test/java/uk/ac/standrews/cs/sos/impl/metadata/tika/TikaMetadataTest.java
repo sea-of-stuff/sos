@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class TikaMetadataTest {
         TikaMetadataEngine test = new TikaMetadataEngine();
 
         Data data = new StringData("just some text in a string");
-        TikaMetadata output = test.processData(data);
+        Metadata output = test.processData(data, null);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(output.toString());
         assertTrue(node.has(JSONConstants.KEY_GUID));

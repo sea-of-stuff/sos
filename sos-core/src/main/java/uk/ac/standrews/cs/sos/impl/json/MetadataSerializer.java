@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.sos.impl.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
@@ -37,43 +37,26 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         for(String property:properties) {
             jsonGenerator.writeStartObject();
 
-            Object value = metadata.getProperty(property);
-            String type = getType(value);
+            MetaProperty metaProperty = metadata.getProperty(property);
 
-            jsonGenerator.writeStringField(JSONConstants.KEY_META_KEY, property);
-            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, type);
-            writeValue(jsonGenerator, type, value);
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_KEY, metaProperty.getKey());
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, metaProperty.getMetaType().name());
+            writeValue(jsonGenerator, metaProperty);
 
             jsonGenerator.writeEndObject();
-
         }
     }
 
-    public String getType(Object value) {
-        if (value instanceof Long) {
-            return "LONG";
-        } else if (value instanceof Integer) {
-            return "INT";
-        } else if (value instanceof IGUID) {
-            return "GUID";
-        } else {
-            return "STRING";
-        }
-    }
-
-    private void writeValue(JsonGenerator jsonGenerator, String type, Object value) throws IOException {
-        switch(type) {
-            case "LONG":
-                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Long) value);
+    private void writeValue(JsonGenerator jsonGenerator, MetaProperty metaProperty) throws IOException {
+        switch(metaProperty.getMetaType()) {
+            case LONG:
+                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_l());
                 break;
-            case "INT":
-                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, (Integer) value);
+            case STRING:
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
                 break;
-            case "STRING":
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, (String) value);
-                break;
-            case "GUID":
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, ((IGUID) value).toMultiHash());
+            case GUID:
+                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_g().toMultiHash());
                 break;
         }
     }

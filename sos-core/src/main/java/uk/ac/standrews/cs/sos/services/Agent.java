@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.model.*;
 
 /**
@@ -94,10 +95,11 @@ public interface Agent extends Service {
      * Generate and add metadata for this atom
      *
      * @param data used to generate the metadata
+     * @param role used to protect the metadata. If null, the metadata will not be protected.
      * @return the metadata generated
      * @throws ServiceException if the metadata could not be generated
      */
-    Metadata addMetadata(Data data) throws ServiceException;
+    Metadata addMetadata(Data data, Role role) throws ServiceException;
 
     // TODO - add secure metadata method
 
@@ -143,12 +145,10 @@ public interface Agent extends Service {
      * Get the propery value for the given manifest matching GUID
      * The manifest MUST be a version manifest
      *
-     * TODO - do not return a simple object, but something custom-made (MetaObject)
-     *
      * @param guid
      * @param property
      * @return
      * @throws ServiceException
      */
-    Object getMetaProperty(IGUID guid, String property) throws ServiceException;
+    MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException;
 }

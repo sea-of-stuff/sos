@@ -7,11 +7,11 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaType;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
 import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -54,8 +54,12 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            String contentType = (String) agent.getMetaProperty(guid, property);
-            return matchingContentTypes.contains(contentType);
+            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getMetaType() == MetaType.STRING) {
+
+                String contentType = metaProperty.getValue_s();
+                return matchingContentTypes.contains(contentType);
+            }
 
         } catch (Exception e) {
             // This could occur because the metadata could not be found or the type property was not available
@@ -76,8 +80,12 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Integer value = (Integer) agent.getMetaProperty(guid, property);
-            return value.equals(matchingValue);
+            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getMetaType() == MetaType.LONG) {
+
+                Long value = metaProperty.getValue_l();
+                return value.intValue() == matchingValue;
+            }
 
         } catch (Exception e) {
             // This could occur because the metadata could not be found or the type property was not available
@@ -93,8 +101,12 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Integer value = (Integer) agent.getMetaProperty(guid, property);
-            return value.compareTo(matchingValue) > 0;
+            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getMetaType() == MetaType.LONG) {
+
+                Long value = metaProperty.getValue_l();
+                return value.intValue() > matchingValue;
+            }
 
         } catch (Exception e) {
             // This could occur because the metadata could not be found or the type property was not available
@@ -110,8 +122,12 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            Integer value = (Integer) agent.getMetaProperty(guid, property);
-            return value.compareTo(matchingValue) < 0;
+            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getMetaType() == MetaType.LONG) {
+
+                Long value = metaProperty.getValue_l();
+                return value.intValue() < matchingValue;
+            }
 
         } catch (Exception e) {
             // This could occur because the metadata could not be found or the type property was not available
@@ -133,14 +149,18 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            IGUID signerFound = GUIDFactory.recreateGUID((String) agent.getMetaProperty(guid, "signer")); // FIXME - use appropriate method from Metadata obj
-            return signerFound.equals(signer);
+            MetaProperty metaProperty = agent.getMetaProperty(guid, "signer");
+            if (metaProperty.getMetaType() == MetaType.GUID) {
 
-        } catch (ServiceException | GUIDGenerationException e) {
+                IGUID signerFound = metaProperty.getValue_g();
+                return signerFound.equals(signer);
+            }
 
-            return false;
+        } catch (ServiceException e) {
+            SOS_LOG.log(LEVEL.WARN, "Unable to find signer");
         }
 
+        return false;
     }
 
     public static boolean ContentIsProtected(IGUID guid) {

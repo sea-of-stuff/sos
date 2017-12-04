@@ -14,7 +14,8 @@ import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.Predicate;
@@ -23,6 +24,7 @@ import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import static org.testng.Assert.*;
 import static org.testng.AssertJUnit.assertTrue;
@@ -82,9 +84,9 @@ public class SOSReflectionTest extends SetUpTest {
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
 
-        BasicMetadata meta = new BasicMetadata();
-        meta.addProperty("Content-Type", "image/jpeg");
-        meta.setGUID(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
+        HashMap<String, MetaProperty> metadata = new HashMap<>();
+        metadata.put("Content-Type", new MetaProperty("Content-Type", "image/jpeg"));
+        MetadataManifest meta = new MetadataManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), metadata);
         this.localSOSNode.getMMS().addMetadata(meta);
 
         Version version = this.localSOSNode.getAgent()
@@ -92,13 +94,13 @@ public class SOSReflectionTest extends SetUpTest {
                         .setContent(GUIDFactory.generateRandomGUID(GUID_ALGORITHM))
                         .setMetadata(meta));
 
-
-        assertTrue(predicate.test(version.guid()));
+        boolean predicateResult = predicate.test(version.guid());
+        assertTrue(predicateResult);
 
         // Predicate.test fails for non jpeg content
-        BasicMetadata metaNonImage = new BasicMetadata();
-        metaNonImage.addProperty("Content-Type", "WHATEVER");
-        metaNonImage.setGUID(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
+        HashMap<String, MetaProperty> metadataNonImage = new HashMap<>();
+        metadataNonImage.put("Content-Type", new MetaProperty("Content-Type", "WHATEVER"));
+        MetadataManifest metaNonImage = new MetadataManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), metadataNonImage);
         this.localSOSNode.getMMS().addMetadata(metaNonImage);
 
         Version anotherVersion = this.localSOSNode.getAgent()

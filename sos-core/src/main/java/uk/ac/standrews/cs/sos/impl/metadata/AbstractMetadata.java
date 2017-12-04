@@ -1,101 +1,48 @@
 package uk.ac.standrews.cs.sos.impl.metadata;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
+import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class AbstractMetadata implements Metadata {
+public abstract class AbstractMetadata extends BasicManifest implements Metadata {
 
     private int size = -1;
 
-    protected String[] ignoreMetadata;
-    protected IGUID guid;
-
-    public AbstractMetadata(String[] ignoreMetadata) {
-        this.ignoreMetadata = ignoreMetadata;
+    public AbstractMetadata(ManifestType manifestType) {
+        super(manifestType);
     }
 
     @Override
-    public abstract Object getProperty(String propertyName);
+    public abstract MetaProperty getProperty(String propertyName);
 
     public String getPropertyAsString(String propertyName) {
-        return (String) getProperty(propertyName);
+        return getProperty(propertyName).getValue_s();
     }
 
     public Long getPropertyAsLong(String propertyName) {
-        return (Long) getProperty(propertyName);
-    }
-
-    public Integer getPropertyAsInteger(String propertyName) {
-        return (Integer) getProperty(propertyName);
+        return getProperty(propertyName).getValue_l();
     }
 
     public IGUID getPropertyAsGUID(String propertyName) {
 
-        try {
-            return GUIDFactory.recreateGUID(getPropertyAsString(propertyName));
-        } catch (GUIDGenerationException e) {
-            return new InvalidID();
-        }
+        return getProperty(propertyName).getValue_g();
     }
 
     @Override
     public abstract String[] getAllPropertyNames();
 
-    public String[] getAllFilteredPropertyNames() {
-
-        List<String> filteredNames = new ArrayList<>();
-        String[] names = getAllPropertyNames();
-        for(String meta:names) {
-            boolean ignore = Arrays.asList(ignoreMetadata).contains(meta);
-            if (!ignore) {
-                filteredNames.add(meta);
-            }
-        }
-        filteredNames.sort(String::compareTo);
-
-        return filteredNames.toArray(new String[filteredNames.size()]);
-    }
-
-    public IGUID generateGUID() throws GUIDGenerationException {
-        String metadata = metadata();
-        return GUIDFactory.generateGUID(GUID_ALGORITHM, metadata);
-    }
-
-    @Override
-    public InputStream contentToHash() {
-        return IO.StringToInputStream(metadata());
-    }
-
     @Override
     public IGUID guid() {
         return guid;
-    }
-
-    @Override
-    public String metadata() {
-        StringBuilder retval = new StringBuilder();
-        for(String meta: getAllFilteredPropertyNames()) {
-            retval.append(meta).append("::").append(getProperty(meta));
-        }
-
-        return retval.toString();
     }
 
     @Override
@@ -111,12 +58,26 @@ public abstract class AbstractMetadata implements Metadata {
 
     @Override
     public ManifestType getType() {
-        return ManifestType.METADATA;
+        return manifestType;
     }
 
     @Override
     public boolean isValid() {
         return true;
+    }
+
+    @Override
+    public InputStream contentToHash() {
+
+        String toHash = getType() + "WIP"; // FIXME
+
+        return IO.StringToInputStream(toHash);
+    }
+
+    public void generateAndSetGUID() {
+        if (guid == null) {
+            this.guid = makeGUID();
+        }
     }
 
     @Override
@@ -129,20 +90,4 @@ public abstract class AbstractMetadata implements Metadata {
         return size;
     }
 
-    // http://stackoverflow.com/a/5439547/2467938
-    protected static boolean isNumber(String s) {
-        return isNumber(s,10);
-    }
-
-    private static boolean isNumber(String s, int radix) {
-        if(s.isEmpty()) return false;
-        for(int i = 0; i < s.length(); i++) {
-            if(i == 0 && s.charAt(i) == '-') {
-                if(s.length() == 1) return false;
-                else continue;
-            }
-            if(Character.digit(s.charAt(i),radix) < 0) return false;
-        }
-        return true;
-    }
 }

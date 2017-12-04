@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.impl.json.MetadataDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 
 /**
  *
@@ -20,17 +21,17 @@ import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
  *      },
  *      {
  *          "Key" : "Size",
- *          "Type" : "INT",
+ *          "Type" : "LONG",
  *          "Value" : 105
  *      },
  *      {
  *          "Key" : "Timestamp",
- *          "Type" : INT,
+ *          "Type" : "LONG",
  *          "Value" : 1487606187
  *      },
  *      {
  *          "Key" : "Content-Type",
- *          "Type" : STRING,
+ *          "Type" : "STRING",
  *          "Value" : "application/octet-stream"
  *      }
  *   ]
@@ -44,7 +45,9 @@ import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
 @JsonSerialize(using = MetadataSerializer.class)
 public interface Metadata extends Manifest {
 
-    Object getProperty(String propertyName);
+    void addProperty(MetaProperty property);
+
+    MetaProperty getProperty(String propertyName);
 
     String getPropertyAsString(String propertyName);
     Long getPropertyAsLong(String propertyName);
@@ -53,7 +56,5 @@ public interface Metadata extends Manifest {
 
     String[] getAllPropertyNames();
 
-    String[] getAllFilteredPropertyNames();
-
-    String metadata();
+    void generateAndSetGUID();
 }

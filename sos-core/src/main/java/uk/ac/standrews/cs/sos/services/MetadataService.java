@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 
 /**
  * Metadata Service
@@ -19,10 +20,11 @@ public interface MetadataService extends Service {
      * Computes the metadata for some given data
      *
      * @param data
+     * @param role
      * @return
      * @throws MetadataException
      */
-    Metadata processMetadata(Data data) throws MetadataException;
+    Metadata processMetadata(Data data, Role role) throws MetadataException;
 
     /**
      * Add the given metadata to the sea of stuff

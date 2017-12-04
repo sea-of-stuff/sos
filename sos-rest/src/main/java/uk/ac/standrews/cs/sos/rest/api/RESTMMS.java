@@ -90,7 +90,7 @@ public class RESTMMS {
 
         try {
             Data data = new InputStreamData(inputStream);
-            Metadata metadata = MetadataService.processMetadata(data);
+            Metadata metadata = MetadataService.processMetadata(data, null); // FIXME - maybe role is passed as param
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, metadata.toString());
         } catch (MetadataException e) {

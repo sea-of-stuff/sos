@@ -5,13 +5,16 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.metadata.basic.BasicMetadata;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -24,13 +27,15 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        BasicMetadata basicMetadata = new BasicMetadata();
+        IGUID guid;
         try {
             String guidS = node.get(JSONConstants.KEY_GUID).asText();
-            basicMetadata.setGUID(GUIDFactory.recreateGUID(guidS));
+            guid = GUIDFactory.recreateGUID(guidS);
         } catch (GUIDGenerationException e) {
             throw new IOException(e);
         }
+
+        HashMap<String, MetaProperty> metadata = new HashMap<>();
 
         JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
         Iterator<JsonNode> it = properties.elements();
@@ -39,28 +44,26 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
             String key = n.get(JSONConstants.KEY_META_KEY).asText();
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
-            Object value = getObject(n.get(JSONConstants.KEY_META_VALUE), type);
 
-            basicMetadata.addProperty(key, value);
+            MetaProperty metaProperty= getObject(n.get(JSONConstants.KEY_META_VALUE), type, key);
+            metadata.put(key, metaProperty);
         }
 
-        return basicMetadata;
+        return new MetadataManifest(guid, metadata);
     }
 
-    private Object getObject(JsonNode element, String type) {
+    private MetaProperty getObject(JsonNode element, String type, String key) {
 
         switch(type.toUpperCase()) {
             case "LONG":
-                return element.asLong();
-            case "INT":
-                return element.asInt();
+                return new MetaProperty(key, element.asLong());
             case "STRING":
-                return element.asText();
+                return new MetaProperty(key, element.asText());
             case "GUID":
                 try {
-                    return GUIDFactory.recreateGUID(element.asText());
+                    return new MetaProperty(key, GUIDFactory.recreateGUID(element.asText()));
                 } catch (GUIDGenerationException e) {
-                    return new InvalidID();
+                    return new MetaProperty(key, new InvalidID());
                 }
         }
 

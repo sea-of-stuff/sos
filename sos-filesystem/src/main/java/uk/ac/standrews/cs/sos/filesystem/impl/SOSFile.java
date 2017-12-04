@@ -74,7 +74,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             AtomBuilder atomBuilder = new AtomBuilder().setData(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForAtom));
 
             this.atom = sos.addAtom(atomBuilder); // Atom is saved and manifest returned by the SOS
-            this.metadata = sos.addMetadata(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForMetadata)); // Metadata is generated, saved and returned by the SOS
+            this.metadata = sos.addMetadata(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForMetadata), null); // Metadata is generated, saved and returned by the SOS
 
             VersionBuilder versionBuilder = new VersionBuilder()
                     .setAtomBuilder(atomBuilder)

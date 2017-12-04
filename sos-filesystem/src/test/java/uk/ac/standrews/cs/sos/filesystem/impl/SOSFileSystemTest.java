@@ -87,7 +87,7 @@ public class SOSFileSystemTest {
         when(mockAtom.getData()).thenReturn(new EmptyData());
 
         Metadata mockMeta = mock(Metadata.class);
-        when(mockAgent.addMetadata(mockAtom.getData())).thenReturn(mockMeta);
+        when(mockAgent.addMetadata(mockAtom.getData(), null)).thenReturn(mockMeta);
 
         return mockAgent;
     }

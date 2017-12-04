@@ -136,7 +136,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData());
+        Metadata metadata = agent.addMetadata(atom.getData(), null);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -155,7 +155,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData());
+        Metadata metadata = agent.addMetadata(atom.getData(), null);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -174,7 +174,7 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData());
+        Metadata metadata = agent.addMetadata(atom.getData(), null);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);

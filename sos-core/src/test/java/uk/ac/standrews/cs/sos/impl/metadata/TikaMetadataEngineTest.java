@@ -7,14 +7,15 @@ import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
-import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadata;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
 import uk.ac.standrews.cs.sos.model.Location;
+import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,25 +28,14 @@ public class TikaMetadataEngineTest extends CommonTest {
         TikaMetadataEngine test = new TikaMetadataEngine();
 
         Data data = new StringData("just some text in a string");
-        TikaMetadata output = test.processData(data);
+        Metadata output = test.processData(data, null);
 
-        assertEquals(4, output.getAllFilteredPropertyNames().length);
-        assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type"));
-        assertEquals("org.apache.tika.parser.DefaultParser", output.getProperty("X-Parsed-By"));
-        assertEquals(26L, output.getProperty("Size"));
+        assertEquals(5, output.getAllPropertyNames().length);
+        assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type").getValue_s());
+        assertEquals("ISO-8859-1", output.getProperty("Content-Encoding").getValue_s());
+        assertEquals("org.apache.tika.parser.DefaultParser", output.getProperty("X-Parsed-By").getValue_s());
+        assertEquals(26L, output.getProperty("Size").getValue_l());
         assertNotNull(output.getProperty("Timestamp"));
-    }
-
-    @Test
-    public void ignorePropertiesTest() throws MetadataException {
-
-        TikaMetadataEngine test = new TikaMetadataEngine();
-
-        Data data = new StringData("just some text in a string");
-        TikaMetadata output = test.processData(data);
-
-        String contentEncoding = output.getPropertyAsString("Content-Encoding");
-        assertNull(contentEncoding);
     }
 
     @Test
@@ -55,7 +45,7 @@ public class TikaMetadataEngineTest extends CommonTest {
 
         Location location = new URILocation("http://www.planwallpaper.com/static/images/cool-background.jpg");
         Data data = new InputStreamData(location.getSource());
-        TikaMetadata output = test.processData(data);
+        Metadata output = test.processData(data, null);
 
         String[] props = output.getAllPropertyNames();
         for(String prop:props) {

@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.MetadataService;
 
@@ -28,9 +29,9 @@ public class SOSMetadataService implements MetadataService {
     }
 
     @Override
-    public Metadata processMetadata(Data data) throws MetadataException {
+    public Metadata processMetadata(Data data, Role role) throws MetadataException {
 
-        return engine.processData(data);
+        return engine.processData(data, role);
     }
 
     @Override
@@ -52,6 +53,8 @@ public class SOSMetadataService implements MetadataService {
             throw new MetadataNotFoundException("Unable to find metadata");
         }
     }
+
+    // TODO - get metadata with role!
 
     @Override
     public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {
