@@ -51,9 +51,6 @@ import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 /**
  * The SOSContextService managed the contexts for this node.
  *
- * NOTE - IDEA should have a lock on content (e.g. this content is being managed by this policy for the moment, thus halt)
- *
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSContextService implements ContextService {
@@ -66,7 +63,6 @@ public class SOSContextService implements ContextService {
 
     // DATA STRUCTURES
     private ContextsContentsDirectory contextsContentsDirectory;
-    // TODO - predicate and policy caching. This can improve performance a lot!
     private HashMap<IGUID, ComputationalUnit> cachedComputationalUnits;
 
     // This executor service will be used to schedule any background tasks
@@ -637,13 +633,7 @@ public class SOSContextService implements ContextService {
             duration = System.nanoTime() - start;
             pred_time_to_run_predicate_on_current_dataset += duration;
 
-            // NOTE: Evicting previous results for this asset.
-            for(IGUID version:manifestsDataService.getVersions(assetInvariant)) {
-
-                if (!version.equals(versionGUID)) {
-                    contextsContentsDirectory.evict(contextInvariant, version);
-                }
-            }
+            evictEntriesForInvariant(contextInvariant, assetInvariant, versionGUID);
         }
 
         return predicateResult;
@@ -668,6 +658,13 @@ public class SOSContextService implements ContextService {
         return diff > max_age;
     }
 
+    /**
+     * Get Predicate object for given context.
+     * If the Predicate object is cached, then get that one instead of loading it from disk.
+     *
+     * @param context for which to get the predicate
+     * @return predicate
+     */
     private Predicate getPredicate(Context context) {
 
         IGUID predicateRef = context.predicate();
@@ -686,6 +683,20 @@ public class SOSContextService implements ContextService {
 
             JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
             return new ReferencePredicate(emptyJsonNode);
+        }
+    }
+
+    /**
+     * Evicting previous results for this asset.
+     *
+     */
+    private void evictEntriesForInvariant(IGUID contextInvariant, IGUID assetInvariant, IGUID versionGUID) {
+        Set<IGUID> versions = manifestsDataService.getVersions(assetInvariant);
+        for(IGUID version:versions) {
+
+            if (!version.equals(versionGUID)) {
+                contextsContentsDirectory.evict(contextInvariant, version);
+            }
         }
     }
 
