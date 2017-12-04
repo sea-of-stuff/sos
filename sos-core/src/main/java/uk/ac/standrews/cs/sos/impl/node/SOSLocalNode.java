@@ -88,6 +88,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private MetadataService metadataService;
     private ContextService contextService;
     private UsersRolesService usersRolesService;
+    private boolean isExperimentNode;
 
     // Each node will have its own log and it will be used to log errors as well
     // as useful information about the node itself.
@@ -138,6 +139,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         loadBootstrapNodes();
         registerNode();
         initServices();
+        isExperimentNode = settings.getServices().getExperiment().isExposed();
         initNodeMaintainer();
 
         SOS_LOG.log(LEVEL.INFO, "Node started");
@@ -178,7 +180,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     public boolean isExperimentNode() {
-        return false; // TODO - set in node settings file
+        return isExperimentNode;
     }
 
     // THIS METHOD IS GOING TO BE USED BY EXPERIMENTS ONLY.

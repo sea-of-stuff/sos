@@ -89,11 +89,17 @@ public interface StorageService extends Service {
     /**
      * Find all locations for a given atom
      *
-     * @param atom
+     * @param atom for which locations should be found
      * @return locations
      */
     Queue<LocationBundle> findLocations(Atom atom);
 
+    /**
+     * Find all locations for a given atom
+     *
+     * @param guid of the atom
+     * @return locations
+     */
     Queue<LocationBundle> findLocations(IGUID guid);
 
     /**

@@ -85,7 +85,7 @@ public class SOSNode extends BasicManifest implements Node {
     // Cloning constructor
     public SOSNode(Node node) {
 
-        this(node.guid(), node.getSignatureCertificate(), node.getHostname(), node.getHostAddress().getPort(),
+        this(node.guid(), node.getSignatureCertificate(), node.getIP(), node.getHostAddress().getPort(),
                 node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
     }
 
@@ -123,7 +123,7 @@ public class SOSNode extends BasicManifest implements Node {
     }
 
     @Override
-    public String getHostname() {
+    public String getIP() {
         return DB_hostname;
     }
 

@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
@@ -42,13 +43,10 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     /**
      * Use this constructor when creating an already existing object with its GUID known already
      *
-     * @param name
-     * @param domain
-     * @param codomain
      */
     public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
                            IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
-                           IGUID content) {
+                           IGUID content) throws ManifestNotMadeException {
         super(signer, ManifestType.CONTEXT);
 
         this.timestamp = Instant.now();
@@ -64,12 +62,15 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
         this.invariant = makeInvariantGUID();
         this.guid = makeGUID();
-        // TODO - throw exceptions if invariant or guid are invalid
+
+        if (invariant.isInvalid() || guid.isInvalid()) {
+            throw new ManifestNotMadeException("Unable to create the context manifest");
+        }
     }
 
     public ContextManifest(Instant timestamp, String name, NodesCollection domain, NodesCollection codomain,
                            IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
-                           IGUID content, IGUID invariant, IGUID previous) {
+                           IGUID content, IGUID invariant, IGUID previous) throws ManifestNotMadeException {
         super(signer, ManifestType.CONTEXT);
 
         this.timestamp = timestamp;
@@ -86,10 +87,13 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         this.invariant = makeInvariantGUID();
         this.guid = makeGUID();
 
-        if (!this.invariant.equals(invariant)) {
-            // TODO - throw exception
+        if (invariant.isInvalid() || guid.isInvalid()) {
+            throw new ManifestNotMadeException("Unable to create the context manifest");
         }
-        // TODO - throw exceptions if invariant or guid are invalid
+
+        if (!this.invariant.equals(invariant)) {
+            throw new ManifestNotMadeException("Invariant provided does not match the rest of the parameters for the context");
+        }
     }
 
 
@@ -197,8 +201,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     @Override
     public String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
 
-        String jsonFATString = ContextBuilder.toFATString(this, predicate, policies);
-        return jsonFATString;
+        return ContextBuilder.toFATString(this, predicate, policies);
 
     }
 

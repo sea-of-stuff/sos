@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
@@ -65,6 +66,8 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
 
         } catch (GUIDGenerationException e) {
             throw new IOException("Unable to generate GUIDs for context");
+        } catch (ManifestNotMadeException e) {
+            throw new IOException("Unable to make context manifest");
         }
 
     }

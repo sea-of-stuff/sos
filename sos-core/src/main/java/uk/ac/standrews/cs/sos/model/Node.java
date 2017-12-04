@@ -34,8 +34,7 @@ public interface Node extends Manifest {
      */
     InetSocketAddress getHostAddress();
 
-    // TODO - getIP
-    String getHostname();
+    String getIP();
 
     /**
      * Returns true if this is a client node

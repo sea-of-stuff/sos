@@ -260,7 +260,7 @@ public class ManifestReplicationTest {
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -292,7 +292,7 @@ public class ManifestReplicationTest {
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -324,7 +324,7 @@ public class ManifestReplicationTest {
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -363,7 +363,7 @@ public class ManifestReplicationTest {
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(false);
         when(node.isCMS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -431,7 +431,7 @@ public class ManifestReplicationTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();
@@ -454,7 +454,7 @@ public class ManifestReplicationTest {
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
         when(node.isDDS()).thenReturn(true);
-        when(node.getHostname()).thenReturn("localhost");
+        when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
         Set<IGUID> nodes = new HashSet<>();

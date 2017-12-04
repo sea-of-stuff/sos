@@ -26,7 +26,7 @@ public class LocalNodesDirectory {
     private Set<Node> knownNodes;
 
     public LocalNodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
-        this.localNode = localNode; // TODO - add to other nodes?
+        this.localNode = localNode;
         this.nodesDatabase = nodesDatabase;
 
         this.knownNodes = new HashSet<>(); // Order not preserved

@@ -20,11 +20,6 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
     private IGUID guid;
     private JsonNode policyManifest;
 
-    // REMOVEME
-    protected BasePolicy() {
-        super(ManifestType.POLICY);
-    }
-
     protected BasePolicy(JsonNode policyManifest) {
         super(ManifestType.POLICY);
 

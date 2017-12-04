@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class ContextSerializerTest {
 
     @Test
-    public void basicContextSerializer() throws NodesCollectionException, GUIDGenerationException {
+    public void basicContextSerializer() throws NodesCollectionException, GUIDGenerationException, ManifestNotMadeException {
 
         String expectedContextJSON = "" +
                 "{\n" +

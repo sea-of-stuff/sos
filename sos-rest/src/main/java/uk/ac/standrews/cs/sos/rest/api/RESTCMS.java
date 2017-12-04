@@ -49,8 +49,6 @@ public class RESTCMS {
         }
     }
 
-
-    // TODO - do not add context if definition has not changed
     @POST
     @Path("/context")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,6 +58,12 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
+            // TODO - do not add context if definition has not changed
+
+            // This is a No-Merge policy
+            // calculate invariant of context without adding it to node
+            // if invariant is already in node, then do not add it.
+
             IGUID guid = contextService.addContext(context);
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, guid.toMultiHash());

@@ -188,7 +188,7 @@ public class NodeDiscoveryTest {
         when(ndsMock.guid()).thenReturn(nodeFound);
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
-        when(ndsMock.getHostname()).thenReturn(NODE_HOSTNAME);
+        when(ndsMock.getIP()).thenReturn(NODE_HOSTNAME);
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);
 
@@ -206,7 +206,7 @@ public class NodeDiscoveryTest {
         when(ndsMock.guid()).thenReturn(GUIDFactory.generateRandomGUID(GUID_ALGORITHM));
         when(ndsMock.getSignatureCertificate()).thenReturn(DigitalSignature.generateKeys().getPublic());
         when(ndsMock.getHostAddress()).thenReturn(new InetSocketAddress(NODE_HOSTNAME, NODE_PORT));
-        when(ndsMock.getHostname()).thenReturn(NODE_HOSTNAME);
+        when(ndsMock.getIP()).thenReturn(NODE_HOSTNAME);
         when(ndsMock.isNDS()).thenReturn(true);
         nds.registerNode(ndsMock, true);
 

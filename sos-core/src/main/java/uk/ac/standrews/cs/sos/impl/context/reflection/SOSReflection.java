@@ -26,8 +26,6 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 /**
- * TODO - Load any maven dependencies using Maven Artifact Resolver?
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSReflection {

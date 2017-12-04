@@ -211,7 +211,7 @@ public class SettingsConfiguration {
                 }
             }
 
-            public String getHostname() {
+            public String getIP() {
                 return hostname;
             }
 
@@ -248,7 +248,7 @@ public class SettingsConfiguration {
             @JsonIgnore
             @Override
             public InetSocketAddress getHostAddress() {
-                return new InetSocketAddress(getHostname(), getPort());
+                return new InetSocketAddress(getIP(), getPort());
             }
 
             // IGNORE METHODS BELOW
@@ -311,6 +311,7 @@ public class SettingsConfiguration {
             private MMSSettings mms = new MMSSettings();
             private CMSSettings cms = new CMSSettings();
             private RMSSettings rms = new RMSSettings();
+            private RoleSettings experiment = new RoleSettings();
 
             public AdvanceServicesSettings() {}
 
@@ -368,6 +369,14 @@ public class SettingsConfiguration {
 
             public void setAgent(RoleSettings agent) {
                 this.agent = agent;
+            }
+
+            public RoleSettings getExperiment() {
+                return experiment;
+            }
+
+            public void setExperiment(RoleSettings experiment) {
+                this.experiment = experiment;
             }
 
             ///////////////////////////////
@@ -541,7 +550,7 @@ public class SettingsConfiguration {
 
         public static class RoleSettings {
 
-            private boolean exposed;
+            private boolean exposed = false;
 
             public RoleSettings() {}
 

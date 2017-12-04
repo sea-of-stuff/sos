@@ -24,7 +24,6 @@ import java.util.Set;
  */
 public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase {
 
-    // TODO - rename DB_fields!!
     private static final String SQL_CHECK_NODES_TABLE_EXISTS = "SELECT name FROM sqlite_master WHERE type=\'table\' and name=\'nodes\'";
     private static final String SQL_CREATE_NODES_TABLE = "CREATE TABLE `nodes` " +
             "(`DB_nodeid`       VARCHAR , " +
@@ -71,7 +70,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
 
             preparedStatement.setString(1, node.guid().toMultiHash());
             preparedStatement.setString(2, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
-            preparedStatement.setString(3, node.getHostname());
+            preparedStatement.setString(3, node.getIP());
             preparedStatement.setInt(4, node.getHostAddress().getPort());
             preparedStatement.setBoolean(5, node.isAgent());
             preparedStatement.setBoolean(6, node.isStorage());

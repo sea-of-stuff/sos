@@ -26,7 +26,7 @@ public class NodeSerializer extends JsonSerializer<Node> {
             jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.NODE.toString());
 
             jsonGenerator.writeStringField(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
-            jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getHostname());
+            jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getIP());
             jsonGenerator.writeNumberField(JSONConstants.KEY_NODE_PORT, node.getHostAddress().getPort());
 
             jsonGenerator.writeFieldName(JSONConstants.KEY_NODE_SERVICES);

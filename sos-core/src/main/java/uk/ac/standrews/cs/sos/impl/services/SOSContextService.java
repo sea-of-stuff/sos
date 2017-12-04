@@ -272,7 +272,7 @@ public class SOSContextService implements ContextService {
                     return context.guid();
                 }
 
-            } catch (ManifestPersistException e) {
+            } catch (ManifestNotMadeException | ManifestPersistException e) {
                 throw new ContextException(e);
             }
         }
