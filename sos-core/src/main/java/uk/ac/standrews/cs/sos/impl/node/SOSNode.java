@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.InternetProtocol;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -24,22 +23,22 @@ import java.util.Objects;
 public class SOSNode extends BasicManifest implements Node {
 
     protected PublicKey signatureCertificate;
-    protected IGUID nodeGUID;
+    protected IGUID nodeGUID; // derived by signature certificate.
     protected InetSocketAddress hostAddress;
 
     /******************
      * DB fields *
      ******************/
-    protected String DB_nodeid;
+    private String DB_nodeid;
     private String DB_hostname;
     private int DB_port;
-    protected boolean DB_is_agent;
-    protected boolean DB_is_storage;
-    protected boolean DB_is_dds;
-    protected boolean DB_is_nds;
-    protected boolean DB_is_mms;
-    protected boolean DB_is_cms;
-    protected boolean DB_is_rms;
+    private boolean DB_is_agent;
+    private boolean DB_is_storage;
+    private boolean DB_is_dds;
+    private boolean DB_is_nds;
+    private boolean DB_is_mms;
+    private boolean DB_is_cms;
+    private boolean DB_is_rms;
 
     public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
                    boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
@@ -104,6 +103,10 @@ public class SOSNode extends BasicManifest implements Node {
         return nodeGUID;
     }
 
+    void setDB_NODEID(String db_nodeid) {
+        this.DB_nodeid = db_nodeid;
+    }
+
     @Override
     public PublicKey getSignatureCertificate() {
         return signatureCertificate;
@@ -160,7 +163,7 @@ public class SOSNode extends BasicManifest implements Node {
     }
 
     @Override
-    public InputStream contentToHash() throws IOException {
+    public InputStream contentToHash() {
 
         return new ByteArrayInputStream(signatureCertificate.getEncoded());
     }

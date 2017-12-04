@@ -195,7 +195,7 @@ public class DataReplication extends Task {
                 replicationNodes.setRefs(nodesCollection.nodesRefs()
                         .stream()
                         .map(IKey::toMultiHash)
-                        .toArray( String[]::new ));
+                        .toArray(String[]::new));
 
                 metadata.setReplicationNodes(replicationNodes);
                 dataPackage.setMetadata(metadata);
@@ -224,6 +224,6 @@ public class DataReplication extends Task {
 
     @Override
     public String toString() {
-        return "DataReplication. Replication " + replicationFactor;
+        return "DataReplication. ReplicationFactor: " + replicationFactor;
     }
 }

@@ -97,7 +97,7 @@ public class ManifestReplication extends Task {
 
     @Override
     public String toString() {
-        return "ManifestReplication for manifest " + manifest.guid();
+        return "ManifestReplication. ReplicationFactor: " + replicationFactor;
     }
 
     private boolean transferManifestRequest(Manifest manifest, Node node) {
@@ -173,8 +173,7 @@ public class ManifestReplication extends Task {
 
         ManifestType manifestType = manifest.getType();
         switch(manifestType) {
-            case CONTEXT:
-                // Transfer context with its predicate and policies.
+            case CONTEXT: // Transfer context with its predicate and policies.
 
                 Context context = (Context) manifest;
                 Predicate predicate = (Predicate) manifestsDataService.getManifest(context.predicate());

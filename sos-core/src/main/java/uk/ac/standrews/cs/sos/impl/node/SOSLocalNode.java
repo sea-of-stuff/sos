@@ -69,7 +69,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public static SettingsConfiguration.Settings settings;
 
     // The local storage allows data to be written locally to this node.
-    // Note, however, that the local storage could the file system of this machine as well as a Dropbox service or an FTP server
+    // Note, however, that the local storage could be the file system of this machine as well as a Dropbox service or an FTP server
     private LocalStorage localStorage;
 
     // This is a generic abstraction to interact with the Database of this node
@@ -96,7 +96,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Construct the Node instance for this machine
      *
-     * @throws SOSException
+     * @throws SOSException if this node could not be created successfully.
      */
     public SOSLocalNode() throws SOSException {
         super(Builder.settings);
@@ -175,6 +175,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     @Override
     public UsersRolesService getUSRO() {
         return usersRolesService;
+    }
+
+    public boolean isExperimentNode() {
+        return false; // TODO - set in node settings file
     }
 
     // THIS METHOD IS GOING TO BE USED BY EXPERIMENTS ONLY.
@@ -283,7 +287,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         try (InputStream content = contentToHash()){
 
             this.nodeGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, content);
-            this.DB_nodeid = nodeGUID.toMultiHash();
+            this.setDB_NODEID(nodeGUID.toMultiHash());
 
             settings.setGuid(nodeGUID.toMultiHash());
         } catch (GUIDGenerationException | IOException e) {
@@ -366,7 +370,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Initialise the local NDS actor
      *
-     * @throws SOSException
+     * @throws SOSException if some of the services could not be instantiated.
      */
     private void initBasicServices() throws SOSException {
 

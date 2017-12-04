@@ -49,6 +49,8 @@ public class RESTCMS {
         }
     }
 
+
+    // TODO - do not add context if definition has not changed
     @POST
     @Path("/context")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,37 +63,6 @@ public class RESTCMS {
             IGUID guid = contextService.addContext(context);
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, guid.toMultiHash());
-        } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
-        }
-    }
-
-    @POST
-    @Path("/guid/{guid}/predicate")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response triggerPredicateOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/predicate");
-
-        if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        IGUID contextGUID;
-        try {
-            contextGUID = GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        try {
-            ContextService contextService = RESTConfig.sos.getCMS();
-            contextService.runContextPredicateNow(contextGUID);
-            // TODO - check if: This method returns only when the predicates are all run?
-
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
-        } catch (ContextNotFoundException e) {
-
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
