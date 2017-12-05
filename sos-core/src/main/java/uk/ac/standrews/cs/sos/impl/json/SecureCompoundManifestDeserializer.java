@@ -6,20 +6,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.SecureCompoundManifest;
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureCompound;
-import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
-import static uk.ac.standrews.cs.sos.impl.json.CommonJson.deserializeSignatureAndRole;
-import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getRolesToKeys;
+import static uk.ac.standrews.cs.sos.impl.json.CommonJson.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -33,18 +30,23 @@ public class SecureCompoundManifestDeserializer extends CompoundManifestDeserial
 
         try {
             IGUID contentGUID = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
-            Pair<String, Role> signatureRole = deserializeSignatureAndRole(node);
             String compoundTypeString = node.get(JSONConstants.KEY_COMPOUND_TYPE).textValue();
             CompoundType compoundType = CompoundType.valueOf(compoundTypeString);
             Set<Content> contents = getContents(node);
             HashMap<IGUID, String> rolesToKeys = getRolesToKeys(node);
 
-            return new SecureCompoundManifest(compoundType, contentGUID, contents, signatureRole.Y(), signatureRole.X(), rolesToKeys);
+            String signature = getSignature(node);
+            IGUID signerRef = getSignerRef(node);
+            Role signer = getSigner(signerRef);
+
+            if (signer == null) {
+                return new SecureCompoundManifest(compoundType, contentGUID, contents, signerRef, signature, rolesToKeys);
+            } else {
+                return new SecureCompoundManifest(compoundType, contentGUID, contents, signer, signature, rolesToKeys);
+            }
 
         } catch (GUIDGenerationException e) {
-            throw new IOException("Unable to recreate GUID");
-        } catch (RoleNotFoundException e) {
-            throw new IOException("Unable to get role signer for secure compound");
+            throw new IOException("Unable to recreate Secure Compound Manifest");
         }
     }
 }

@@ -89,6 +89,17 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
         this.signature = signature;
     }
 
+    public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, IGUID signerRef, String signature) {
+        super(ManifestType.COMPOUND, signerRef);
+
+        assert(type != null);
+
+        this.type = type;
+        this.guid = contentGUID;
+        this.contents = contents;
+        this.signature = signature;
+    }
+
     @Override
     public Set<Content> getContents() {
         return contents;

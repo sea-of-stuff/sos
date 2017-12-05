@@ -48,6 +48,12 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
         this.rolesToKeys = rolesToKeys;
     }
 
+    public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, IGUID signerRef, String signature, HashMap<IGUID, String> rolesToKeys) {
+        super(type, contentGUID, contents, signerRef, signature);
+
+        this.manifestType = ManifestType.COMPOUND_PROTECTED;
+        this.rolesToKeys = rolesToKeys;
+    }
 
     @Override
     public HashMap<IGUID, String> keysRoles() {

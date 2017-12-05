@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
@@ -13,7 +14,6 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
-import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -95,17 +95,34 @@ public class CommonJson {
         return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
     }
 
-    static Pair<String, Role> deserializeSignatureAndRole(JsonNode node) throws GUIDGenerationException, RoleNotFoundException {
+    static String getSignature(JsonNode node) {
 
-        String signature = null;
-        Role signer = null;
-        if (node.has(JSONConstants.KEY_SIGNATURE) && node.has(JSONConstants.KEY_SIGNER)) {
-            signature = node.get(JSONConstants.KEY_SIGNATURE).textValue();
-            IGUID signerGUID = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_SIGNER).textValue());
-            signer = SOSAgent.instance().getRole(signerGUID);
+        if (node.has(JSONConstants.KEY_SIGNATURE)) {
+            return node.get(JSONConstants.KEY_SIGNATURE).textValue();
+        } else {
+            return "";
         }
 
-        return new Pair<>(signature, signer);
+    }
+
+    static IGUID getSignerRef(JsonNode node) throws GUIDGenerationException {
+
+        if (node.has(JSONConstants.KEY_SIGNER)) {
+            return GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_SIGNER).textValue());
+        } else {
+            return new InvalidID();
+        }
+    }
+
+    static Role getSigner(IGUID signerRef) {
+
+        if (signerRef.isInvalid()) return null;
+
+        try {
+            return SOSAgent.instance().getRole(signerRef);
+        } catch (RoleNotFoundException e) {
+            return null;
+        }
     }
 
 }

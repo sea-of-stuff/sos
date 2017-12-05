@@ -109,6 +109,20 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
         this.signature = signature;
     }
 
+    // TODO
+    public VersionManifest(IGUID invariant, IGUID version, IGUID content, Set<IGUID> prevs, IGUID metadata,
+                           IGUID signerRef, String signature) {
+        super(ManifestType.VERSION, signerRef);
+
+        this.invariant = invariant;
+        this.version = version;
+        this.guid = version;
+        this.content = content;
+        this.prevs = prevs;
+        this.metadata = metadata;
+        this.signature = signature;
+    }
+
     /**
      * Gets the GUID associated to this version of the asset.
      *
