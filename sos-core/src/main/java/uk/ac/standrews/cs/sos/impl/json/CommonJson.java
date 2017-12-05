@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -83,6 +84,11 @@ public class CommonJson {
 
         jsonGenerator.writeEndArray();
 
+    }
+
+    public static NodesCollection getNodesCollection(JsonNode node, String field) {
+        JsonNode nodesCollection_n = node.get(field);
+        return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
     }
 
 }

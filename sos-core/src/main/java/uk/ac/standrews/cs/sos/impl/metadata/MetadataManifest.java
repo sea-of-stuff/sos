@@ -2,12 +2,14 @@ package uk.ac.standrews.cs.sos.impl.metadata;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  *
@@ -16,49 +18,36 @@ import java.util.Set;
 @JsonSerialize(using = MetadataSerializer.class)
 public class MetadataManifest extends AbstractMetadata implements Metadata {
 
-    private HashMap<String, MetaProperty> metadata;
-
-    protected MetadataManifest(ManifestType manifestType) {
-        super(manifestType);
+    MetadataManifest(ManifestType manifestType, Role signer) {
+        super(manifestType, signer);
 
         metadata = new HashMap<>();
     }
 
-    public MetadataManifest() {
-        this(ManifestType.METADATA);
+    public MetadataManifest(HashMap<String, MetaProperty> metadata, Role signer) throws ManifestNotMadeException {
+        this(ManifestType.METADATA, signer);
+
+        this.metadata = metadata;
+        this.guid = makeGUID();
+
+        if (guid.isInvalid()) {
+            throw new ManifestNotMadeException("Unable to make proper metadata manifest");
+        }
+
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign the manifest");
+        }
+
     }
 
-    public MetadataManifest(IGUID guid, HashMap<String, MetaProperty> metadata) {
-        this(ManifestType.METADATA);
+    public MetadataManifest(IGUID guid, HashMap<String, MetaProperty> metadata, Role signer, String signature) {
+        this(ManifestType.METADATA, signer);
 
         this.guid = guid;
         this.metadata = metadata;
-    }
-
-    public void addProperty(MetaProperty property) {
-
-        // If guid has been set, then do not add any properties any more
-        if (guid == null) {
-            metadata.put(property.getKey(), property);
-        }
-    }
-
-    @Override
-    public MetaProperty getProperty(String propertyName) {
-
-        return metadata.get(propertyName);
-    }
-
-    @Override
-    public boolean hasProperty(String propertyName) {
-        return metadata.containsKey(propertyName);
-    }
-
-    @Override
-    public String[] getAllPropertyNames() {
-        Set<String> keySet = metadata.keySet();
-
-        return keySet.toArray(new String[keySet.size()]);
+        this.signature = signature;
     }
 
 }

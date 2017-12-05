@@ -86,7 +86,7 @@ public class SOSReflectionTest extends SetUpTest {
 
         HashMap<String, MetaProperty> metadata = new HashMap<>();
         metadata.put("Content-Type", new MetaProperty("Content-Type", "image/jpeg"));
-        MetadataManifest meta = new MetadataManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), metadata);
+        MetadataManifest meta = new MetadataManifest(metadata, null);
         this.localSOSNode.getMMS().addMetadata(meta);
 
         Version version = this.localSOSNode.getAgent()
@@ -100,7 +100,7 @@ public class SOSReflectionTest extends SetUpTest {
         // Predicate.test fails for non jpeg content
         HashMap<String, MetaProperty> metadataNonImage = new HashMap<>();
         metadataNonImage.put("Content-Type", new MetaProperty("Content-Type", "WHATEVER"));
-        MetadataManifest metaNonImage = new MetadataManifest(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), metadataNonImage);
+        MetadataManifest metaNonImage = new MetadataManifest(metadataNonImage, null);
         this.localSOSNode.getMMS().addMetadata(metaNonImage);
 
         Version anotherVersion = this.localSOSNode.getAgent()

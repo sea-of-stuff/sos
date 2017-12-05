@@ -14,9 +14,10 @@ public interface MetadataEngine {
      * Process the given data and generates metadata from it.
      *
      * @param data from which to extract the metadata
-     * @param role to protected the generated metadata. If role is null, then the metadata will be in clear.
+     * @param role to sign and/or protect the generated metadata
+     * @param encrypt if metadata should be encrypted
      * @return the metadata
      * @throws MetadataException if the metadata could not be generated
      */
-    Metadata processData(Data data, Role role) throws MetadataException;
+    Metadata processData(Data data, Role role, boolean encrypt) throws MetadataException;
 }

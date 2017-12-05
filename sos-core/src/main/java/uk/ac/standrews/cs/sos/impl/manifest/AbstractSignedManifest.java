@@ -26,7 +26,7 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      * @param signer for this manifest
      * @param manifestType the type of manifest
      */
-    protected AbstractSignedManifest(Role signer, ManifestType manifestType) {
+    protected AbstractSignedManifest(ManifestType manifestType, Role signer) {
         super(manifestType);
 
         this.signer = signer;
@@ -96,5 +96,13 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      *
      * @return signature of this manifest.
      */
-    protected abstract String generateSignature(String toSign) throws SignatureException;
+     private String generateSignature(String toSign) throws SignatureException {
+
+         if (signer != null) {
+             return signer.sign(toSign);
+         } else {
+             return "";
+         }
+     }
+
 }

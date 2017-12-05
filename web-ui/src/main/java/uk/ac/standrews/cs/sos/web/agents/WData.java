@@ -234,7 +234,7 @@ public class WData {
         try {
             if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
                 Metadata metadata = sos.getAgent().getMetadata(nodesCollection, version.getMetadata());
-                type = metadata.getPropertyAsString("Content-Type");
+                type = metadata.getProperty("Content-Type").getValue_s();
             }
         } catch (ServiceException ignored) { }
 
@@ -257,7 +257,7 @@ public class WData {
                     String extension = "";
                     if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
                         Metadata metadata = sos.getAgent().getMetadata(version);
-                        String contentType = metadata.getPropertyAsString("Content-Type");
+                        String contentType = metadata.getProperty("Content-Type").getValue_s();
                         response.type(contentType);
 
                         extension = GetExtension(contentType);
@@ -330,7 +330,7 @@ public class WData {
                     String extension = "";
                     if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
                         Metadata metadata = sos.getAgent().getMetadata(version);
-                        String contentType = metadata.getPropertyAsString("Content-Type");
+                        String contentType = metadata.getProperty("Content-Type").getValue_s();
                         response.type(contentType);
 
                         extension = GetExtension(contentType);
@@ -453,7 +453,7 @@ public class WData {
         try {
             if (version.getMetadata() != null && !version.getMetadata().isInvalid()) {
                 Metadata metadata = sos.getAgent().getMetadata(version);
-                type = metadata.getPropertyAsString("Content-Type");
+                type = metadata.getProperty("Content-Type").getValue_s();
             }
         } catch (ServiceException ignored) { }
 

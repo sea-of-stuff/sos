@@ -30,7 +30,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -178,14 +177,14 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
      * Get the last modification time from the metadata of this object's version's metadata
      *
      * @return
-     * @throws AccessFailureException
      */
     @Override
-    public long getModificationTime() throws AccessFailureException {
+    public long getModificationTime() {
         long modtime = 0;
 
         if (metadata != null && metadata.hasProperty(META_TIMESTAMP)) {
-            modtime = ZonedDateTime.parse(metadata.getPropertyAsString(META_TIMESTAMP)).toEpochSecond() * 1000;
+            long timestamp = metadata.getProperty(META_TIMESTAMP).getValue_l();
+            modtime = timestamp;
         }
 
         return Helper.UnixTimeToFileTime(modtime);
@@ -243,7 +242,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         long size = DEFAULT_MAX_FILESIZE;
         if (metadata != null && metadata.hasProperty(META_SIZE)) {
-            size = metadata.getPropertyAsLong(META_SIZE);
+            size = metadata.getProperty(META_SIZE).getValue_l();
         }
 
         try (Data data = sos.getAtomContent(atom)){

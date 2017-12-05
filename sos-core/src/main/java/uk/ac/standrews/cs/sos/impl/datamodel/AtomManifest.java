@@ -57,7 +57,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public Data getData() throws IOException {
+    public Data getData() {
 
         for (LocationBundle location : getLocations()) {
 
@@ -79,11 +79,6 @@ public class AtomManifest extends BasicManifest implements Atom {
     @Override
     public boolean isValid() {
         return super.isValid() && !locations.isEmpty() && isGUIDValid(guid);
-    }
-
-    @Override
-    public IGUID guid() {
-        return guid;
     }
 
     @Override

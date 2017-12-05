@@ -22,7 +22,7 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
     private HashMap<IGUID, String> rolesToKeys;
 
     public SecureCompoundManifest(CompoundType type, Set<Content> contents, Role signer) throws ManifestNotMadeException {
-        super(type, signer, ManifestType.COMPOUND_PROTECTED);
+        super(ManifestType.COMPOUND_PROTECTED, type, signer);
 
         this.rolesToKeys = new LinkedHashMap<>();
 
@@ -34,14 +34,11 @@ public class SecureCompoundManifest extends CompoundManifest implements SecureCo
 
         this.guid = makeGUID();
 
-        if (signer != null) {
-            try {
-                this.signature = makeSignature();
-            } catch (SignatureException e) {
-                // We keep the signature NULL
-            }
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign compound manifest properly");
         }
-
     }
 
     public SecureCompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) {

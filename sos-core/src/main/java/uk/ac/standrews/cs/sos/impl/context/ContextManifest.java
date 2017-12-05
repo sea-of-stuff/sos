@@ -47,7 +47,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     public ContextManifest(String name, NodesCollection domain, NodesCollection codomain,
                            IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
                            IGUID content) throws ManifestNotMadeException {
-        super(signer, ManifestType.CONTEXT);
+        super(ManifestType.CONTEXT, signer);
 
         this.timestamp = Instant.now();
         this.name = name;
@@ -66,12 +66,18 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         if (invariant.isInvalid() || guid.isInvalid()) {
             throw new ManifestNotMadeException("Unable to create the context manifest");
         }
+
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign the manifest");
+        }
     }
 
     public ContextManifest(Instant timestamp, String name, NodesCollection domain, NodesCollection codomain,
                            IGUID predicate, long maxAge, Set<IGUID> policies, Role signer,
                            IGUID content, IGUID invariant, IGUID previous) throws ManifestNotMadeException {
-        super(signer, ManifestType.CONTEXT);
+        super(ManifestType.CONTEXT, signer);
 
         this.timestamp = timestamp;
         this.name = name;
@@ -94,8 +100,36 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         if (!this.invariant.equals(invariant)) {
             throw new ManifestNotMadeException("Invariant provided does not match the rest of the parameters for the context");
         }
+
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign the manifest");
+        }
     }
 
+    // TODO - use in ContextDeserializer
+    public ContextManifest(Instant timestamp, IGUID guid,
+                           String name, NodesCollection domain, NodesCollection codomain,
+                           IGUID predicate, long maxAge, Set<IGUID> policies, Role signer, String signature,
+                           IGUID content, IGUID invariant, IGUID previous) {
+        super(ManifestType.CONTEXT, signer);
+
+        this.timestamp = timestamp;
+        this.name = name;
+        this.domain = domain;
+        this.codomain = codomain;
+        this.predicate = predicate;
+        this.maxAge = maxAge;
+        this.policies = policies;
+        this.content = content;
+
+        this.guid = guid;
+        this.invariant = invariant;
+        this.previous = previous;
+
+        this.signature = signature;
+    }
 
     @Override
     public IGUID guid() {
@@ -184,25 +218,9 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     }
 
     @Override
-    public boolean verifySignature(Role role) throws SignatureException {
-        return false;
-    }
-
-    @Override
-    protected String generateSignature(String toSign) throws SignatureException {
-
-        if (signer == null) {
-            return "";
-        } else {
-            return signer.sign(toSign);
-        }
-    }
-
-    @Override
     public String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
 
         return ContextBuilder.toFATString(this, predicate, policies);
-
     }
 
     private IGUID makeInvariantGUID() {

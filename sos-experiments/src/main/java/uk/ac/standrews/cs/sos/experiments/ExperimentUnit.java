@@ -6,7 +6,9 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -245,11 +247,11 @@ public interface ExperimentUnit {
                 AtomBuilder atomBuilder = new AtomBuilder()
                         .setLocation(new URILocation(file.toUri().toString()));
 
-                Atom atom = node.getAgent().addAtom(atomBuilder);
+                Atom atom = node.getStorageService().addAtom(atomBuilder);
                 versions.add(atom.guid());
 
                 InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added atom " + atom.guid().toShortString() + " from URI " + file.toString());
-            } catch (URISyntaxException  | ServiceException e) {
+            } catch (URISyntaxException | DataStorageException | ManifestPersistException e) {
                 e.printStackTrace();
             }
 

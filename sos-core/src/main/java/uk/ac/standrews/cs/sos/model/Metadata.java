@@ -45,16 +45,10 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 @JsonSerialize(using = MetadataSerializer.class)
 public interface Metadata extends Manifest {
 
-    void addProperty(MetaProperty property);
-
     MetaProperty getProperty(String propertyName);
-
-    String getPropertyAsString(String propertyName);
-    Long getPropertyAsLong(String propertyName);
 
     boolean hasProperty(String propertyName);
 
     String[] getAllPropertyNames();
 
-    void generateAndSetGUID();
 }

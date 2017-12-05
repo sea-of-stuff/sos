@@ -31,7 +31,7 @@ public class SOSMetadataService implements MetadataService {
     @Override
     public Metadata processMetadata(Data data, Role role) throws MetadataException {
 
-        return engine.processData(data, role);
+        return engine.processData(data, role, false); // FIXME
     }
 
     @Override

@@ -25,7 +25,7 @@ public class TikaMetadataTest {
         TikaMetadataEngine test = new TikaMetadataEngine();
 
         Data data = new StringData("just some text in a string");
-        Metadata output = test.processData(data, null);
+        Metadata output = test.processData(data, null, false);
 
         JsonNode node = JSONHelper.JsonObjMapper().readTree(output.toString());
         assertTrue(node.has(JSONConstants.KEY_GUID));

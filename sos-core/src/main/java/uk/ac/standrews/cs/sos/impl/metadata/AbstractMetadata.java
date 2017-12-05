@@ -1,93 +1,55 @@
 package uk.ac.standrews.cs.sos.impl.metadata;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
+import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class AbstractMetadata extends BasicManifest implements Metadata {
+public abstract class AbstractMetadata extends AbstractSignedManifest implements Metadata {
 
-    private int size = -1;
+    protected HashMap<String, MetaProperty> metadata;
 
-    public AbstractMetadata(ManifestType manifestType) {
-        super(manifestType);
+    AbstractMetadata(ManifestType manifestType, Role signer) {
+        super(manifestType, signer);
     }
 
     @Override
-    public abstract MetaProperty getProperty(String propertyName);
+    public MetaProperty getProperty(String propertyName) {
 
-    public String getPropertyAsString(String propertyName) {
-        return getProperty(propertyName).getValue_s();
-    }
-
-    public Long getPropertyAsLong(String propertyName) {
-        return getProperty(propertyName).getValue_l();
-    }
-
-    public IGUID getPropertyAsGUID(String propertyName) {
-
-        return getProperty(propertyName).getValue_g();
+        return metadata.get(propertyName);
     }
 
     @Override
-    public abstract String[] getAllPropertyNames();
-
-    @Override
-    public IGUID guid() {
-        return guid;
+    public boolean hasProperty(String propertyName) {
+        return metadata.containsKey(propertyName);
     }
 
     @Override
-    public String toString() {
-        try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+    public String[] getAllPropertyNames() {
+        Set<String> keySet = metadata.keySet();
 
-        return null;
-    }
-
-    @Override
-    public ManifestType getType() {
-        return manifestType;
-    }
-
-    @Override
-    public boolean isValid() {
-        return true;
+        return keySet.toArray(new String[keySet.size()]);
     }
 
     @Override
     public InputStream contentToHash() {
 
-        String toHash = getType() + "WIP"; // FIXME
+        String toHash = getType().toString();
+
+        for(String key:metadata.keySet()) {
+            MetaProperty metaProperty = metadata.get(key);
+            toHash += "MP" + metaProperty.toString();
+        }
 
         return IO.StringToInputStream(toHash);
-    }
-
-    public void generateAndSetGUID() {
-        if (guid == null) {
-            this.guid = makeGUID();
-        }
-    }
-
-    @Override
-    public int size() {
-
-        if (size == -1) {
-            size = this.toString().length();
-        }
-
-        return size;
     }
 
 }

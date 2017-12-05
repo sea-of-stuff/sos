@@ -45,9 +45,9 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
     protected Set<Content> contents;
     protected CompoundType type;
 
-    // Needed for SecureCompoundManifest (a bit of a hack)
-    protected CompoundManifest(CompoundType compoundType, Role signer, ManifestType type) {
-        super(signer, type);
+    // This constructor is needed for SecureCompoundManifest
+    CompoundManifest(ManifestType type, CompoundType compoundType, Role signer) {
+        super(type, signer);
 
         this.type = compoundType;
     }
@@ -56,12 +56,12 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
      * Creates a valid compound manifest given a collection of contents and an
      * identity to sign the manifest.
      *
-     * @param contents
-     * @param signer
-     * @throws ManifestNotMadeException
+     * @param contents of the compound
+     * @param signer to sign the compound
+     * @throws ManifestNotMadeException if the compound could not be made
      */
     public CompoundManifest(CompoundType type, Set<Content> contents, Role signer) throws ManifestNotMadeException {
-        this(type, signer, ManifestType.COMPOUND);
+        this(ManifestType.COMPOUND, type, signer);
 
         this.contents = contents;
         this.guid = makeGUID();
@@ -70,17 +70,16 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
             throw new ManifestNotMadeException("Failed to generate content GUID");
         }
 
-        if (signer != null) {
-            try {
-                this.signature = makeSignature();
-            } catch (SignatureException e) {
-                throw new ManifestNotMadeException("Unable to generate signature for manifest");
-            }
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign the manifest");
         }
+
     }
 
     public CompoundManifest(CompoundType type, IGUID contentGUID, Set<Content> contents, Role signer, String signature) {
-        super(signer, ManifestType.COMPOUND);
+        super(ManifestType.COMPOUND, signer);
 
         assert(type != null);
 
@@ -109,11 +108,6 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
     }
 
     @Override
-    public IGUID guid() {
-        return guid;
-    }
-
-    @Override
     public InputStream contentToHash() {
 
         String toHash = getType() +
@@ -124,16 +118,6 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
                     .collect(Collectors.joining("."));
 
         return IO.StringToInputStream(toHash);
-    }
-
-    @Override
-    protected String generateSignature(String toSign) throws SignatureException {
-
-        if (signer == null) {
-            return "";
-        } else {
-            return signer.sign(toSign);
-        }
     }
 
 }

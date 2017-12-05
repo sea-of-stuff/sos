@@ -12,7 +12,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -21,12 +20,14 @@ import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_CONTEXT_TIMESTAMP;
 import static uk.ac.standrews.cs.sos.impl.context.ContextManifest.PREDICATE_ALWAYS_TO_COMPUTE;
+import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getNodesCollection;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ContextDeserializer extends JsonDeserializer<Context> {
 
+    // TODO - improve and include signature!
     @Override
     public Context deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
 
@@ -72,8 +73,4 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
 
     }
 
-    private NodesCollection getNodesCollection(JsonNode node, String field) {
-        JsonNode nodesCollection_n = node.get(field);
-        return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
-    }
 }

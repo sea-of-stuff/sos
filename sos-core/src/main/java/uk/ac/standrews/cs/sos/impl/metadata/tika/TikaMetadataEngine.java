@@ -8,7 +8,7 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import uk.ac.standrews.cs.castore.data.Data;
-import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
@@ -16,11 +16,11 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.Misc;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.HashMap;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -28,10 +28,10 @@ import java.time.Instant;
 public class TikaMetadataEngine extends AbstractMetadataEngine {
 
     @Override
-    public uk.ac.standrews.cs.sos.model.Metadata processData(Data data, Role role) throws MetadataException {
+    public uk.ac.standrews.cs.sos.model.Metadata processData(Data data, Role role, boolean encrypt) throws MetadataException {
 
         AutoDetectParser parser = new AutoDetectParser();
-        BodyContentHandler handler = new BodyContentHandler(-1); // NO Limit on how much to process
+        BodyContentHandler handler = new BodyContentHandler(-1); // No limits on how much data to process
         Metadata metadata = new Metadata();
         ParseContext context = new ParseContext();
         context.set(Parser.class, new AutoDetectParser());
@@ -39,49 +39,56 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
         try (InputStream stream = data.getInputStream()) {
             parser.parse(stream, handler, metadata, context);
 
-            uk.ac.standrews.cs.sos.model.Metadata meta;
-            if (role == null) {
-                meta = new MetadataManifest();
-            } else {
-                meta = new SecureMetadataManifest(null); // pass the role?
-            }
+            HashMap<String, MetaProperty> metamap = new HashMap<>();
 
-            for(String key:metadata.names()) {
+            processTikaProperties(metamap, metadata);
+            sizeProperty(metamap, data);
+            timestampProperty(metamap);
 
-                String p = metadata.get(key);
-                if (Misc.isNumber(p)) {
-
-                    MetaProperty metaProperty = new MetaProperty(key, Long.parseLong(p));
-                    meta.addProperty(metaProperty);
-                    continue;
-                }
-
-                // attempt to put GUID?
-
-                MetaProperty metaProperty = new MetaProperty(key, p);
-                meta.addProperty(metaProperty);
-            }
-
-            // iterate over processed meta properties
-
-            MetaProperty sizeMetaProperty = new MetaProperty("Size", data.getSize());
-            meta.addProperty(sizeMetaProperty);
-
-            Instant instant = Instant.now();
-            MetaProperty timestampMetaProperty = new MetaProperty("Timestamp", instant.toEpochMilli());
-            meta.addProperty(timestampMetaProperty);
-
-            meta.generateAndSetGUID();
-            return meta;
+            return makeMetadataManifest(metamap, role, encrypt);
 
         } catch (IOException | TikaException | SAXException e) {
-            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - bad error. Metadata could not be generated properly");
             throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);
+        } catch (ManifestNotMadeException e) {
+            throw new MetadataException("TikaMetadataEngine - unable to generate metadata manifest", e);
         } catch (Error e) {
-            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - very bad error. Metadata could not be generated properly");
             throw new MetadataException("TikaMetadataEngine - very bad error. Metadata could not be generated properly", e);
         }
 
+    }
+
+    private void processTikaProperties(HashMap<String, MetaProperty> metamap, Metadata metadata) {
+        for(String key:metadata.names()) {
+            MetaProperty metaProperty;
+
+            String value = metadata.get(key);
+            if (Misc.isNumber(value)) {
+                metaProperty = new MetaProperty(key, Long.parseLong(value));
+            } else {
+                metaProperty = new MetaProperty(key, value);
+            }
+
+            metamap.put(key, metaProperty);
+        }
+    }
+
+    private void sizeProperty(HashMap<String, MetaProperty> metamap, Data data) {
+        MetaProperty sizeMetaProperty = new MetaProperty("Size", data.getSize());
+        metamap.put(sizeMetaProperty.getKey(), sizeMetaProperty);
+    }
+
+    private void timestampProperty(HashMap<String, MetaProperty> metamap) {
+        Instant instant = Instant.now();
+        MetaProperty timestampMetaProperty = new MetaProperty("Timestamp", instant.toEpochMilli());
+        metamap.put(timestampMetaProperty.getKey(), timestampMetaProperty);
+    }
+
+    private uk.ac.standrews.cs.sos.model.Metadata makeMetadataManifest(HashMap<String, MetaProperty> metamap, Role role, boolean encrypt) throws ManifestNotMadeException {
+        if (encrypt && role != null) {
+            return new SecureMetadataManifest(metamap, role);
+        } else {
+            return new MetadataManifest(metamap, role);
+        }
     }
 
 }

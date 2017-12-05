@@ -18,6 +18,9 @@ public class VersionBuilder extends ManifestBuilder {
     private AtomBuilder atomBuilder;
     private CompoundBuilder compoundBuilder;
 
+    private boolean protect; // TODO - use this flag
+    private boolean sign; // TODO - use this flag
+
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
     private boolean prevIsSet = false;

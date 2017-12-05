@@ -28,7 +28,7 @@ public class TikaMetadataEngineTest extends CommonTest {
         TikaMetadataEngine test = new TikaMetadataEngine();
 
         Data data = new StringData("just some text in a string");
-        Metadata output = test.processData(data, null);
+        Metadata output = test.processData(data, null, false);
 
         assertEquals(5, output.getAllPropertyNames().length);
         assertEquals("text/plain; charset=ISO-8859-1", output.getProperty("Content-Type").getValue_s());
@@ -45,7 +45,7 @@ public class TikaMetadataEngineTest extends CommonTest {
 
         Location location = new URILocation("http://www.planwallpaper.com/static/images/cool-background.jpg");
         Data data = new InputStreamData(location.getSource());
-        Metadata output = test.processData(data, null);
+        Metadata output = test.processData(data, null, false);
 
         String[] props = output.getAllPropertyNames();
         for(String prop:props) {

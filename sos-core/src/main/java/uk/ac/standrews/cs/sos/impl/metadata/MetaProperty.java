@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.impl.metadata;
 import uk.ac.standrews.cs.guid.IGUID;
 
 /**
+ * Triplet (type, key, value) for holding metadata information
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class MetaProperty {
@@ -12,6 +14,13 @@ public class MetaProperty {
     private String value_s;
     private long value_l;
     private IGUID value_g;
+
+    // Should be used only for encrypted meta properties!
+    protected MetaProperty(MetaType metaType, String key, String value) {
+        this.metaType = metaType;
+        this.key = key;
+        this.value_s = value;
+    }
 
     public MetaProperty(String key, String value) {
         this.metaType = MetaType.STRING;
@@ -55,9 +64,9 @@ public class MetaProperty {
     public String toString() {
 
         String retval = metaType.name();
-        retval += ":: ";
+        retval += "::";
         retval += key;
-        retval += "= ";
+        retval += "=";
         switch (metaType) {
             case LONG:
                 retval += value_l;

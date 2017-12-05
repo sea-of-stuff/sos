@@ -2,13 +2,12 @@ package uk.ac.standrews.cs.sos.impl.json;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ import static uk.ac.standrews.cs.sos.impl.json.CommonJson.getRolesToKeys;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SecureMetadataDeserializer extends JsonDeserializer<SecureMetadataManifest> {
+public class SecureMetadataDeserializer extends MetadataDeserializer {
 
     @Override
     public SecureMetadataManifest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
@@ -34,14 +33,15 @@ public class SecureMetadataDeserializer extends JsonDeserializer<SecureMetadataM
             throw new IOException();
         }
 
-        SecureMetadataManifest basicMetadata = new SecureMetadataManifest(rolesToKeys);
+        IGUID guid;
         try {
             String guidS = node.get(JSONConstants.KEY_GUID).asText();
-            GUIDFactory.recreateGUID(guidS);
-            // FIXME basicMetadata.setGUID(GUIDFactory.recreateGUID(guidS));
+            guid = GUIDFactory.recreateGUID(guidS);
         } catch (GUIDGenerationException e) {
             throw new IOException(e);
         }
+
+        HashMap<String, MetaProperty> metadata = new HashMap<>();
 
         JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
         Iterator<JsonNode> it = properties.elements();
@@ -50,32 +50,12 @@ public class SecureMetadataDeserializer extends JsonDeserializer<SecureMetadataM
 
             String key = n.get(JSONConstants.KEY_META_KEY).asText();
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
-            Object value = getObject(n.get(JSONConstants.KEY_META_VALUE), type);
 
-            // FIXME - basicMetadata.addProperty(key, value);
-            // reuse code from other deserializer if possible
+            MetaProperty metaProperty = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key);
+            metadata.put(key, metaProperty);
         }
 
-        return basicMetadata;
+        return new SecureMetadataManifest(guid, metadata, null, "", rolesToKeys);
     }
 
-    private Object getObject(JsonNode element, String type) {
-
-        switch(type.toUpperCase()) {
-            case "LONG":
-                return element.asLong();
-            case "INT":
-                return element.asInt();
-            case "STRING":
-                return element.asText();
-            case "GUID":
-                try {
-                    return GUIDFactory.recreateGUID(element.asText());
-                } catch (GUIDGenerationException e) {
-                    return new InvalidID();
-                }
-        }
-
-        return null;
-    }
 }

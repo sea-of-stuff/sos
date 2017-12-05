@@ -39,7 +39,7 @@ public abstract class BasicManifest implements Manifest {
      * Constructor for a BasicManifest.
      * Initialise the type of manifest.
      *
-     * @param manifestType
+     * @param manifestType type of manifest
      */
     protected BasicManifest(ManifestType manifestType) {
         this.manifestType = manifestType;
@@ -78,6 +78,11 @@ public abstract class BasicManifest implements Manifest {
         return size;
     }
 
+    @Override
+    public IGUID guid() {
+        return guid;
+    }
+
     /**
      * Checks if the given GUID contains valid hex characters.
      *
@@ -85,10 +90,7 @@ public abstract class BasicManifest implements Manifest {
      * @return true if the guid is valid.
      */
     protected boolean isGUIDValid(IGUID guid) {
-        if (guid == null || guid.isInvalid())
-            return false;
-
-        return true;
+        return guid != null && !guid.isInvalid();
     }
 
     private boolean hasManifestType() {
@@ -98,7 +100,7 @@ public abstract class BasicManifest implements Manifest {
     /**
      * Transform this object into a JSON string
      *
-     * @return
+     * @return representation of manifest in JSON string
      */
     @Override
     public String toString() {

@@ -49,10 +49,10 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
             metadata.put(key, metaProperty);
         }
 
-        return new MetadataManifest(guid, metadata);
+        return new MetadataManifest(guid, metadata, null, "SIGNATURE!");
     }
 
-    private MetaProperty getObject(JsonNode element, String type, String key) {
+    protected MetaProperty getObject(JsonNode element, String type, String key) {
 
         switch(type.toUpperCase()) {
             case "LONG":

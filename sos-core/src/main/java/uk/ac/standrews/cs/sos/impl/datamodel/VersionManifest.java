@@ -60,7 +60,7 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
      * @throws ManifestNotMadeException
      */
     public VersionManifest(IGUID invariant, IGUID content, Set<IGUID> prevs, IGUID metadata, Role signer) throws ManifestNotMadeException {
-        super(signer, ManifestType.VERSION);
+        super(ManifestType.VERSION, signer);
 
         if (invariant != null) {
             this.invariant = invariant;
@@ -78,13 +78,12 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
             throw new ManifestNotMadeException("Failed to generate version GUID");
         }
 
-        if (signer != null) {
-            try {
-                this.signature = makeSignature();
-            } catch (SignatureException e) {
-                throw new ManifestNotMadeException("Unable to sign the manifest");
-            }
+        try {
+            this.signature = makeSignature();
+        } catch (SignatureException e) {
+            throw new ManifestNotMadeException("Unable to sign the manifest");
         }
+
     }
 
     /**
@@ -99,7 +98,7 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
      */
     public VersionManifest(IGUID invariant, IGUID version, IGUID content, Set<IGUID> prevs, IGUID metadata,
                            Role signer, String signature) {
-        super(signer, ManifestType.VERSION);
+        super(ManifestType.VERSION, signer);
 
         this.invariant = invariant;
         this.version = version;
@@ -180,16 +179,6 @@ public class VersionManifest extends AbstractSignedManifest implements Version {
         toHash += getMetadataToHashOrSign();
 
         return IO.StringToInputStream(toHash);
-    }
-
-    @Override
-    protected String generateSignature(String toSign) throws SignatureException {
-
-        if (signer == null) {
-            return "";
-        } else {
-            return signer.sign(toSign);
-        }
     }
 
     private IGUID makeInvariant() {
