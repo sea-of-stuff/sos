@@ -47,8 +47,8 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  */
 public class AtomStorage {
 
-    private IGUID localNodeGUID;
-    private LocalStorage localStorage;
+    private final IGUID localNodeGUID;
+    private final LocalStorage localStorage;
 
     public AtomStorage(IGUID localNodeGUID, LocalStorage storage) {
         this.localNodeGUID = localNodeGUID;
@@ -130,8 +130,7 @@ public class AtomStorage {
 
             try (Data data = atomBuilder.getData()) {
 
-                StoredAtomInfo info = persistData(tmpGUID, atomBuilder, data);
-                return info;
+                return persistData(tmpGUID, atomBuilder, data);
             } catch (Exception e) {
                 throw new DataStorageException("Data source could not be closed");
             }
@@ -178,7 +177,7 @@ public class AtomStorage {
         }
     }
 
-    public Pair<Data, String> encrypt(Data originalData, Role role) throws ProtectionException {
+    private Pair<Data, String> encrypt(Data originalData, Role role) throws ProtectionException {
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
@@ -205,7 +204,7 @@ public class AtomStorage {
             IGUID guid = generateGUID(data);
             long duration = System.nanoTime() - start;
 
-            // Support only for SHA1 and SHA256
+            // NOTE: Support only for SHA1 and SHA256
             StatsTYPE subtype = Internals.GUID_ALGORITHM == ALGORITHM.SHA1 ? StatsTYPE.sha1 : StatsTYPE.sha256;
             InstrumentFactory.instance().measure(StatsTYPE.guid, subtype, Long.toString(data.getSize()), duration);
 

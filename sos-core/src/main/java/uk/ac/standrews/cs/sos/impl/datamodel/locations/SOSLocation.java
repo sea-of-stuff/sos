@@ -12,7 +12,6 @@ import java.util.Objects;
 
 /**
  * sos://machine-id/object-GUID
- * TODO - sos://machine-id/object-GUID/part
  *
  * How to register custom schemes in Java
  * http://stackoverflow.com/questions/26363573/registering-and-using-a-custom-java-net-url-protocol

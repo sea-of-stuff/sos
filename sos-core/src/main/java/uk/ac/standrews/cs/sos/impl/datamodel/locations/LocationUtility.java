@@ -17,8 +17,8 @@ public class LocationUtility {
      * Return the data at the given location.
      * The method calling this function should ensure that the data object is closed.
      *
-     * @param location
-     * @return
+     * @param location where the data is
+     * @return the data at the given location.
      */
     public static Data getDataFromLocation(Location location) {
 
