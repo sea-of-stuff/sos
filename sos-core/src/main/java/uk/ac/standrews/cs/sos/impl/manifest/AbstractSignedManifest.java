@@ -17,7 +17,8 @@ import java.io.IOException;
  */
 public abstract class AbstractSignedManifest extends BasicManifest implements SignedManifest {
 
-    protected final Role signer;
+    protected Role signer;
+    protected IGUID signerRef; // FIXME - use when signer is not available
     protected String signature;
 
     /**
@@ -30,6 +31,17 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
         super(manifestType);
 
         this.signer = signer;
+        if (signer != null) {
+            this.signerRef = signer.guid();
+        } else {
+            this.signerRef = new InvalidID();
+        }
+    }
+
+    protected AbstractSignedManifest(ManifestType manifestType, IGUID signerRef) {
+        super(manifestType);
+
+        this.signerRef = signerRef;
     }
 
     /**
@@ -39,11 +51,7 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      */
     public IGUID getSigner() {
 
-        if (this.signer != null) {
-            return this.signer.guid();
-
-        } return new InvalidID();
-
+        return signerRef;
     }
 
     /**
@@ -64,6 +72,8 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      */
     @Override
     public boolean verifySignature(Role role) throws SignatureException {
+
+        if (signature == null || signature.isEmpty()) return false;
 
         try {
             String manifestToSign = IO.InputStreamToString(contentToHash());
@@ -98,7 +108,7 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      */
      private String generateSignature(String toSign) throws SignatureException {
 
-         if (signer != null) {
+         if (!signerRef.isInvalid()) {
              return signer.sign(toSign);
          } else {
              return "";

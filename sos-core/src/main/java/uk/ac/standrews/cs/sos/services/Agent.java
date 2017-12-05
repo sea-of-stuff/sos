@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.services;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
@@ -151,4 +152,6 @@ public interface Agent extends Service {
      * @throws ServiceException
      */
     MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException;
+
+    Role getRole(IGUID guid) throws RoleNotFoundException;
 }

@@ -288,6 +288,12 @@ public class SOSAgent implements Agent {
         }
     }
 
+    @Override
+    public Role getRole(IGUID guid) throws RoleNotFoundException {
+
+        return usersRolesService.getRole(guid);
+    }
+
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         manifestsDataService.addManifest(manifest);
     }

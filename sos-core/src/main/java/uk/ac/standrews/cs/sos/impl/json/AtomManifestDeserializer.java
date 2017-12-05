@@ -28,15 +28,7 @@ public class AtomManifestDeserializer extends JsonDeserializer<Atom> {
 
         try {
             IGUID contentGUID = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
-
-            JsonNode bundlesNode = node.get(JSONConstants.KEY_LOCATIONS);
-            Set<LocationBundle> bundles = new LinkedHashSet<>();
-            if (bundlesNode.isArray()) {
-                for(final JsonNode bundleNode:bundlesNode) {
-                    LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
-                    bundles.add(bundle);
-                }
-            }
+            Set<LocationBundle> bundles = getLocations(node);
 
             return new AtomManifest(contentGUID, bundles);
         } catch (GUIDGenerationException e) {
@@ -45,5 +37,18 @@ public class AtomManifestDeserializer extends JsonDeserializer<Atom> {
 
     }
 
+    protected Set<LocationBundle> getLocations(JsonNode node) {
+
+        JsonNode bundlesNode = node.get(JSONConstants.KEY_LOCATIONS);
+        Set<LocationBundle> bundles = new LinkedHashSet<>();
+        if (bundlesNode.isArray()) {
+            for(final JsonNode bundleNode:bundlesNode) {
+                LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
+                bundles.add(bundle);
+            }
+        }
+
+        return bundles;
+    }
 }
 

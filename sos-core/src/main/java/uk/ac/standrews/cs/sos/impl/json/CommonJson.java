@@ -7,9 +7,13 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -86,9 +90,22 @@ public class CommonJson {
 
     }
 
-    public static NodesCollection getNodesCollection(JsonNode node, String field) {
+    static NodesCollection getNodesCollection(JsonNode node, String field) {
         JsonNode nodesCollection_n = node.get(field);
         return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
+    }
+
+    static Pair<String, Role> deserializeSignatureAndRole(JsonNode node) throws GUIDGenerationException, RoleNotFoundException {
+
+        String signature = null;
+        Role signer = null;
+        if (node.has(JSONConstants.KEY_SIGNATURE) && node.has(JSONConstants.KEY_SIGNER)) {
+            signature = node.get(JSONConstants.KEY_SIGNATURE).textValue();
+            IGUID signerGUID = GUIDFactory.recreateGUID(node.get(JSONConstants.KEY_SIGNER).textValue());
+            signer = SOSAgent.instance().getRole(signerGUID);
+        }
+
+        return new Pair<>(signature, signer);
     }
 
 }
