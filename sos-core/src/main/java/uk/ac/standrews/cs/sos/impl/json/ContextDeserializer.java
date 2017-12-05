@@ -28,7 +28,6 @@ import static uk.ac.standrews.cs.sos.impl.json.CommonJson.*;
  */
 public class ContextDeserializer extends JsonDeserializer<Context> {
 
-    // TODO - improve and include signature!
     @Override
     public Context deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
 

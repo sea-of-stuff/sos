@@ -12,10 +12,13 @@ import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.model.Metadata;
+import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import static uk.ac.standrews.cs.sos.impl.json.CommonJson.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,32 +30,44 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        IGUID guid;
         try {
-            String guidS = node.get(JSONConstants.KEY_GUID).asText();
-            guid = GUIDFactory.recreateGUID(guidS);
-        } catch (GUIDGenerationException e) {
-            throw new IOException(e);
-        }
+            IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
+            HashMap<String, MetaProperty> metadata = getMetadata(node);
 
+            String signature = getSignature(node);
+            IGUID signerRef = getSignerRef(node);
+            Role signer = getSigner(signerRef);
+
+            if (signer == null) {
+                return new MetadataManifest(guid, metadata, signerRef, signature);
+            } else {
+                return new MetadataManifest(guid, metadata, signer, signature);
+            }
+
+        } catch (GUIDGenerationException e) {
+            throw new IOException("Unable to recreate Metadata Manifest");
+        }
+    }
+
+    protected HashMap<String, MetaProperty> getMetadata(JsonNode node) {
         HashMap<String, MetaProperty> metadata = new HashMap<>();
 
         JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
         Iterator<JsonNode> it = properties.elements();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             JsonNode n = it.next();
 
             String key = n.get(JSONConstants.KEY_META_KEY).asText();
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
 
-            MetaProperty metaProperty= getObject(n.get(JSONConstants.KEY_META_VALUE), type, key);
+            MetaProperty metaProperty = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key);
             metadata.put(key, metaProperty);
         }
 
-        return new MetadataManifest(guid, metadata, null, "SIGNATURE!");
+        return metadata;
     }
 
-    protected MetaProperty getObject(JsonNode element, String type, String key) {
+    private MetaProperty getObject(JsonNode element, String type, String key) {
 
         switch(type.toUpperCase()) {
             case "LONG":

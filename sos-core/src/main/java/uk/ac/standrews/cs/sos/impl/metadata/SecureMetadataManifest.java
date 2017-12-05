@@ -1,13 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.metadata;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.json.SecureMetadataDeserializer;
-import uk.ac.standrews.cs.sos.impl.json.SecureMetadataSerializer;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureMetadata;
@@ -20,22 +16,16 @@ import java.util.LinkedHashMap;
 
 /**
  *
- * TODO - work in progress
+ * TODO - must test!
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@JsonDeserialize(using = SecureMetadataDeserializer.class)
-@JsonSerialize(using = SecureMetadataSerializer.class)
 public class SecureMetadataManifest extends MetadataManifest implements SecureMetadata {
 
     private HashMap<IGUID, String> rolesToKeys;
 
-    public SecureMetadataManifest(Role signer) {
-        super(ManifestType.METADATA_PROTECTED, signer);
-    }
-
     public SecureMetadataManifest(HashMap<String, MetaProperty> metadata, Role signer) throws ManifestNotMadeException {
-        this(signer);
+        super(ManifestType.METADATA_PROTECTED, signer);
 
         try {
             this.metadata = encryptMetadata(metadata);
@@ -53,7 +43,16 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
     }
 
     public SecureMetadataManifest(IGUID guid, HashMap<String, MetaProperty> encryptedMetadata, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) {
-        this(signer);
+        super(ManifestType.METADATA_PROTECTED, signer);
+
+        this.guid = guid;
+        this.metadata = encryptedMetadata;
+        this.signature = signature;
+        this.rolesToKeys = rolesToKeys;
+    }
+
+    public SecureMetadataManifest(IGUID guid, HashMap<String, MetaProperty> encryptedMetadata, IGUID signerRef, String signature, HashMap<IGUID, String> rolesToKeys) {
+        super(ManifestType.METADATA_PROTECTED, signerRef);
 
         this.guid = guid;
         this.metadata = encryptedMetadata;
