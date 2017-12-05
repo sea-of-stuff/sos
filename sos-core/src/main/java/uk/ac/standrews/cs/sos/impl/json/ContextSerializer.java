@@ -28,11 +28,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_INVARIANT, context.invariant().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_CONTENT, context.content().toMultiHash());
 
-        Set<IGUID> prev = context.previous();
-        if (prev != null && !prev.isEmpty()) {
-            IGUID previous = prev.iterator().next();
-            jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREVIOUS, previous.toMultiHash());
-        }
+        writePrevious(context, jsonGenerator);
 
         jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_DOMAIN, context.domain());
         jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_CODOMAIN, context.codomain());
@@ -40,13 +36,27 @@ public class ContextSerializer extends JsonSerializer<Context> {
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREDICATE, context.predicate().toMultiHash());
         jsonGenerator.writeNumberField(JSONConstants.KEY_CONTEXT_MAX_AGE, context.maxAge());
 
+        writePolicies(context, jsonGenerator);
+
+        jsonGenerator.writeEndObject();
+    }
+
+    private void writePrevious(Context context, JsonGenerator jsonGenerator) throws IOException {
+
+        Set<IGUID> prev = context.previous();
+        if (prev != null && !prev.isEmpty()) {
+            IGUID previous = prev.iterator().next();
+            jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREVIOUS, previous.toMultiHash());
+        }
+    }
+
+    private void writePolicies(Context context, JsonGenerator jsonGenerator) throws IOException {
+
         jsonGenerator.writeFieldName(JSONConstants.KEY_CONTEXT_POLICIES);
         jsonGenerator.writeStartArray();
         for(IGUID policy:context.policies()) {
             jsonGenerator.writeString(policy.toMultiHash());
         }
         jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeEndObject();
     }
 }

@@ -5,13 +5,15 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
+import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.NodesCollectionType;
+import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
+import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
+import uk.ac.standrews.cs.sos.model.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -22,7 +24,7 @@ import java.util.Set;
 public class ContextSerializerTest {
 
     @Test
-    public void basicContextSerializer() throws NodesCollectionException, GUIDGenerationException, ManifestNotMadeException {
+    public void basicContextSerializer() throws NodesCollectionException, GUIDGenerationException, ManifestNotMadeException, SignatureException, ProtectionException {
 
         String expectedContextJSON = "" +
                 "{\n" +
@@ -59,7 +61,9 @@ public class ContextSerializerTest {
 
         IGUID content = GUIDFactory.recreateGUID("SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547");
 
-        Context basicContext = new ContextManifest("TEST", domain, codomain, predicate, 1, policies, null, content);
+        User user = new UserImpl("TEST");
+        Role role = new RoleImpl(user, "ROLE_TEST");
+        Context basicContext = new ContextManifest("TEST", domain, codomain, predicate, 1, policies, role, content);
 
         JSONAssert.assertEquals(expectedContextJSON, basicContext.toString(), false);
     }
