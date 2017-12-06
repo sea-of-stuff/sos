@@ -119,7 +119,8 @@ public class WData {
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
                 Role roleToProtect = sos.getUSRO().getRole(roleGUID);
-                compoundBuilder.setRole(roleToProtect);
+                compoundBuilder.setRole(roleToProtect)
+                    .setProtectFlag(true);
             }
             VersionBuilder versionBuilder = new VersionBuilder().setCompoundBuilder(compoundBuilder);
 
