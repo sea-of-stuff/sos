@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
@@ -23,7 +22,7 @@ public class NodeSerializer extends JsonSerializer<Node> {
             jsonGenerator.writeStartObject();
 
             jsonGenerator.writeStringField(JSONConstants.KEY_GUID, node.guid().toMultiHash());
-            jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.NODE.toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, node.getType().toString());
 
             jsonGenerator.writeStringField(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
             jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getIP());

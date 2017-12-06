@@ -70,7 +70,7 @@ public class CommonJson {
         return rolesToKeys;
     }
 
-    static void serializeKeys(SecureManifest secureManifest, JsonGenerator jsonGenerator) throws IOException {
+    static void  serializeKeys(SecureManifest secureManifest, JsonGenerator jsonGenerator) throws IOException {
 
         jsonGenerator.writeFieldName(JSONConstants.KEYS_PROTECTION);
         jsonGenerator.writeStartArray();

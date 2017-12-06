@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetaType;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -32,7 +33,7 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
-            HashMap<String, MetaProperty> metadata = getMetadata(node);
+            HashMap<String, MetaProperty> metadata = getMetadata(node, false);
 
             String signature = getSignature(node);
             IGUID signerRef = getSignerRef(node);
@@ -49,7 +50,7 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
         }
     }
 
-    protected HashMap<String, MetaProperty> getMetadata(JsonNode node) {
+    protected HashMap<String, MetaProperty> getMetadata(JsonNode node, boolean encrypted) {
         HashMap<String, MetaProperty> metadata = new HashMap<>();
 
         JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
@@ -60,14 +61,18 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
             String key = n.get(JSONConstants.KEY_META_KEY).asText();
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
 
-            MetaProperty metaProperty = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key);
+            MetaProperty metaProperty = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key, encrypted);
             metadata.put(key, metaProperty);
         }
 
         return metadata;
     }
 
-    private MetaProperty getObject(JsonNode element, String type, String key) {
+    private MetaProperty getObject(JsonNode element, String type, String key, boolean encrypted) {
+
+        if (encrypted) {
+            return new MetaProperty(MetaType.get(type), key, element.asText());
+        }
 
         switch(type.toUpperCase()) {
             case "LONG":

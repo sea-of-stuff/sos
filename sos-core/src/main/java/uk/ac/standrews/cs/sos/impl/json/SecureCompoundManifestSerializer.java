@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.Content;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureCompound;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class SecureCompoundManifestSerializer extends JsonSerializer<SecureCompo
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.COMPOUND_PROTECTED.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, compoundManifest.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, compoundManifest.guid().toMultiHash());
 

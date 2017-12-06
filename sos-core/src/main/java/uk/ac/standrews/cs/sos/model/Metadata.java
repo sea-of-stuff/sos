@@ -43,7 +43,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
  */
 @JsonDeserialize(using = MetadataDeserializer.class)
 @JsonSerialize(using = MetadataSerializer.class)
-public interface Metadata extends Manifest {
+public interface Metadata extends SignedManifest {
 
     MetaProperty getProperty(String propertyName);
 

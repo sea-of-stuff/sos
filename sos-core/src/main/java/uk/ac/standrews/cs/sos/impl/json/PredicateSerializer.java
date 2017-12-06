@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Predicate;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class PredicateSerializer extends JsonSerializer<Predicate> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.PREDICATE.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, predicate.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, predicate.guid().toMultiHash());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);

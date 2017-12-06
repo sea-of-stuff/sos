@@ -16,8 +16,6 @@ import java.util.LinkedHashMap;
 
 /**
  *
- * TODO - must test!
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SecureMetadataManifest extends MetadataManifest implements SecureMetadata {
@@ -26,6 +24,8 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
 
     public SecureMetadataManifest(HashMap<String, MetaProperty> metadata, Role signer) throws ManifestNotMadeException {
         super(ManifestType.METADATA_PROTECTED, signer);
+
+        this.rolesToKeys = new LinkedHashMap<>();
 
         try {
             this.metadata = encryptMetadata(metadata);

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, metadata.guid().toMultiHash());
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.METADATA.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, metadata.getType().toString());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_META_PROPERTIES);
         jsonGenerator.writeStartArray();
@@ -31,7 +30,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         jsonGenerator.writeEndObject();
     }
 
-    private void serializeElements(Metadata metadata, JsonGenerator jsonGenerator) throws IOException {
+    void serializeElements(Metadata metadata, JsonGenerator jsonGenerator) throws IOException {
 
         String[] properties = metadata.getAllPropertyNames();
         for(String property:properties) {
@@ -48,16 +47,23 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
     }
 
     private void writeValue(JsonGenerator jsonGenerator, MetaProperty metaProperty) throws IOException {
-        switch(metaProperty.getMetaType()) {
-            case LONG:
-                jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_l());
-                break;
-            case STRING:
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
-                break;
-            case GUID:
-                jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_g().toMultiHash());
-                break;
+
+        if (metaProperty.isEncrypted()) {
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
+
+        } else {
+
+            switch (metaProperty.getMetaType()) {
+                case LONG:
+                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_l());
+                    break;
+                case STRING:
+                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
+                    break;
+                case GUID:
+                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_g().toMultiHash());
+                    break;
+            }
         }
     }
 

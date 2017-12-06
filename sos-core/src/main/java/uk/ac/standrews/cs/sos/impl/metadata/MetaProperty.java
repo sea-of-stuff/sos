@@ -14,12 +14,14 @@ public class MetaProperty {
     private String value_s;
     private long value_l;
     private IGUID value_g;
+    private boolean encrypted = false;
 
     // Should be used only for encrypted meta properties!
-    protected MetaProperty(MetaType metaType, String key, String value) {
+    public MetaProperty(MetaType metaType, String key, String value) {
         this.metaType = metaType;
         this.key = key;
         this.value_s = value;
+        this.encrypted = true;
     }
 
     public MetaProperty(String key, String value) {
@@ -60,6 +62,10 @@ public class MetaProperty {
         return value_g;
     }
 
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
     @Override
     public String toString() {
 
@@ -67,16 +73,23 @@ public class MetaProperty {
         retval += "::";
         retval += key;
         retval += "=";
-        switch (metaType) {
-            case LONG:
-                retval += value_l;
-                break;
-            case STRING:
-                retval += value_s;
-                break;
-            case GUID:
-                retval += value_g.toMultiHash();
-                break;
+
+        if (encrypted) {
+            retval += value_s;
+
+        } else {
+
+            switch (metaType) {
+                case LONG:
+                    retval += value_l;
+                    break;
+                case STRING:
+                    retval += value_s;
+                    break;
+                case GUID:
+                    retval += value_g.toMultiHash();
+                    break;
+            }
         }
 
         return retval;

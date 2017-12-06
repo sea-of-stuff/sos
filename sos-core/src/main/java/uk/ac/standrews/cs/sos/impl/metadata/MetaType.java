@@ -11,4 +11,10 @@ public enum MetaType {
     MetaType(String type) {
         this.type = type;
     }
+
+    public static MetaType get(String value) {
+        for(MetaType v : values())
+            if(v.toString().equalsIgnoreCase(value)) return v;
+        throw new IllegalArgumentException();
+    }
 }

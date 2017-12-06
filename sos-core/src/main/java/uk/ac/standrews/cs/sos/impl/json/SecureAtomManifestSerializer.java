@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class SecureAtomManifestSerializer extends JsonSerializer<SecureAtom> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.ATOM_PROTECTED.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, atomManifest.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, atomManifest.guid().toMultiHash());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_LOCATIONS);

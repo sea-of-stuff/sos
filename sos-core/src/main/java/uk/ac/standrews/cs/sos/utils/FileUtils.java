@@ -72,8 +72,12 @@ public class FileUtils {
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Version.class);
                     break;
+
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Metadata.class);
+                    break;
+                case METADATA_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureMetadata.class);
                     break;
 
                 case CONTEXT:
@@ -96,10 +100,6 @@ public class FileUtils {
                 case NODE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Node.class);
                     break;
-
-                case METADATA_PROTECTED:
-                    throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
-
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
@@ -130,8 +130,12 @@ public class FileUtils {
                 case VERSION:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Version.class);
                     break;
+
                 case METADATA:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Metadata.class);
+                    break;
+                case METADATA_PROTECTED:
+                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureMetadata.class);
                     break;
 
                 case CONTEXT:
@@ -154,9 +158,6 @@ public class FileUtils {
                 case NODE:
                     manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Node.class);
                     break;
-
-                case METADATA_PROTECTED:
-                    throw new UnknownManifestTypeException("JSON parsing not supported yet for manifest of type: " + type);
 
                 default:
                     throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");

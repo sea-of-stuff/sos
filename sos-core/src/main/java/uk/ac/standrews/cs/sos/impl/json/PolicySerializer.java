@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class PolicySerializer extends JsonSerializer<Policy> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.POLICY.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, policy.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, policy.guid().toMultiHash());
 
         jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);

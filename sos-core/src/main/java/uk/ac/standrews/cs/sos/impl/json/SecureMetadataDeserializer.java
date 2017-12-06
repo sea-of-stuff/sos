@@ -28,7 +28,7 @@ public class SecureMetadataDeserializer extends MetadataDeserializer {
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
-            HashMap<String, MetaProperty> metadata = getMetadata(node);
+            HashMap<String, MetaProperty> metadata = getMetadata(node, true);
             HashMap<IGUID, String> rolesToKeys = getRolesToKeys(node);
 
             String signature = getSignature(node);

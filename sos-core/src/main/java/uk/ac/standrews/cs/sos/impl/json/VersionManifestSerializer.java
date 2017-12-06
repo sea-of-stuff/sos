@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Version;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class VersionManifestSerializer extends JsonSerializer<Version> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.VERSION.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, versionManifest.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, versionManifest.version().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_INVARIANT, versionManifest.invariant().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT_GUID, versionManifest.content().toMultiHash());

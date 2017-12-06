@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Content;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 
 import java.io.IOException;
 import java.util.Set;
@@ -22,7 +21,7 @@ public class CompoundManifestSerializer extends JsonSerializer<Compound> {
 
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, ManifestType.COMPOUND.toString());
+        jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, compoundManifest.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_COMPOUND_TYPE, compoundManifest.getCompoundType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, compoundManifest.guid().toMultiHash());
 

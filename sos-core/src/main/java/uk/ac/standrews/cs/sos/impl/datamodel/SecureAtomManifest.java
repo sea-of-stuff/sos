@@ -18,8 +18,9 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
     /**
      * Creates a valid secure atom manifest
      *
-     * @param guid
-     * @param locations
+     * @param guid of protected atom
+     * @param locations where protected atom is stored
+     * @param rolesToKeys for protected atom
      */
     public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations, HashMap<IGUID, String> rolesToKeys) {
         super(guid, locations);
