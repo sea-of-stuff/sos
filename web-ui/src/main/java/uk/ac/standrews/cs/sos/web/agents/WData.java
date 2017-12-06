@@ -68,7 +68,8 @@ public class WData {
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
                 Role roleToProtect = sos.getUSRO().getRole(roleGUID);
-                atomBuilder.setRole(roleToProtect);
+                atomBuilder.setRole(roleToProtect)
+                    .setProtectFlag(true);
             }
             VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
 
@@ -177,7 +178,8 @@ public class WData {
             if (protect) {
                 IGUID roleGUID = GUIDFactory.recreateGUID(roleid);
                 Role roleToProtect = sos.getUSRO().getRole(roleGUID);
-                atomBuilder.setRole(roleToProtect);
+                atomBuilder.setRole(roleToProtect)
+                    .setProtectFlag(true);
             }
             atom = sos.getAgent().addAtom(atomBuilder);
 
