@@ -1,6 +1,9 @@
 {
   "settings": {
     "services": {
+      "experiment": {
+        "exposed": true
+      },
       "agent": {
         "exposed": true
       },

@@ -22,11 +22,11 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/sos/")
+@Path("/sos/experiment/")
 @ExperimentNode
 public class RESTExperiment {
 
-    @POST
+    @GET
     @Path("/cms/guid/{guid}/predicate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response triggerPredicateOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
