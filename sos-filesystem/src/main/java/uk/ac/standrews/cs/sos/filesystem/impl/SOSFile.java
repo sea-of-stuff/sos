@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.filesystem.utils.Helper;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Content;
@@ -71,9 +72,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
              InputStream streamForMetadata = new ByteArrayInputStream(baos.toByteArray())) {
 
             AtomBuilder atomBuilder = new AtomBuilder().setData(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForAtom));
-
             this.atom = sos.addAtom(atomBuilder); // Atom is saved and manifest returned by the SOS
-            this.metadata = sos.addMetadata(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForMetadata), null); // Metadata is generated, saved and returned by the SOS
+
+            MetadataBuilder metadataBuilder = new MetadataBuilder().setData(new uk.ac.standrews.cs.castore.data.InputStreamData(streamForMetadata));
+            this.metadata = sos.addMetadata(metadataBuilder); // Metadata is generated, saved and returned by the SOS
 
             VersionBuilder versionBuilder = new VersionBuilder()
                     .setAtomBuilder(atomBuilder)

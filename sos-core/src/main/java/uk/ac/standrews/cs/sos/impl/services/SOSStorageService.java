@@ -100,7 +100,7 @@ public class SOSStorageService implements StorageService {
         }
 
         Atom atom;
-        if (storedAtomInfo.getRole() != null && !storedAtomInfo.getRole().isInvalid()) {
+        if (atomBuilder.isProtect()) {
             HashMap<IGUID, String> rolesToKeys = new HashMap<>();
             rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
 

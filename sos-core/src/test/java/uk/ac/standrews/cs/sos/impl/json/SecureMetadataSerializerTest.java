@@ -52,8 +52,6 @@ public class SecureMetadataSerializerTest extends SetUpTest {
 
         assertEquals(parsedSecureMetadata.getType(), ManifestType.METADATA_PROTECTED);
         assertEquals(parsedSecureMetadata.getAllPropertyNames().length, 2);
-        assertEquals(parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[0]).getMetaType(), MetaType.STRING);
-        assertEquals(parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[1]).getMetaType(), MetaType.LONG);
 
         assertNotNull(parsedSecureMetadata.keysRoles());
         assertEquals(parsedSecureMetadata.keysRoles().size(), 1);

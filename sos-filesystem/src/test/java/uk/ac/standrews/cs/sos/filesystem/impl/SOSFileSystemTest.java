@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Compound;
 import uk.ac.standrews.cs.sos.model.Metadata;
@@ -87,7 +88,8 @@ public class SOSFileSystemTest {
         when(mockAtom.getData()).thenReturn(new EmptyData());
 
         Metadata mockMeta = mock(Metadata.class);
-        when(mockAgent.addMetadata(mockAtom.getData(), null)).thenReturn(mockMeta);
+        MetadataBuilder metadataBuilder = new MetadataBuilder().setData(mockAtom.getData());
+        when(mockAgent.addMetadata(metadataBuilder)).thenReturn(mockMeta);
 
         return mockAgent;
     }

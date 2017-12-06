@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.sos.impl.datamodel.builders;
 
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
-import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
@@ -11,19 +10,8 @@ import java.util.Set;
  */
 public class CompoundBuilder extends ManifestBuilder {
 
-    private boolean makeSecureCompound;
     private CompoundType type;
     private Set<Content> contents;
-
-    public boolean isMakeSecureCompound() {
-        return makeSecureCompound;
-    }
-
-    public CompoundBuilder setMakeSecureCompound(boolean makeSecureCompound) {
-        this.makeSecureCompound = makeSecureCompound;
-
-        return this;
-    }
 
     public CompoundType getType() {
         return type;
@@ -41,13 +29,6 @@ public class CompoundBuilder extends ManifestBuilder {
 
     public CompoundBuilder setContents(Set<Content> contents) {
         this.contents = contents;
-
-        return this;
-    }
-
-    @Override
-    public CompoundBuilder setRole(Role role) {
-        this.role = role;
 
         return this;
     }

@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 
@@ -136,7 +137,8 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData(), null);
+        MetadataBuilder metadataBuilder = new MetadataBuilder().setData(atom.getData());
+        Metadata metadata = agent.addMetadata(metadataBuilder);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -155,7 +157,8 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData(), null);
+        MetadataBuilder metadataBuilder = new MetadataBuilder().setData(atom.getData());
+        Metadata metadata = agent.addMetadata(metadataBuilder);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);
@@ -174,7 +177,8 @@ public class SOSAddVersionTest extends AgentTest {
         AtomBuilder atomBuilder = new AtomBuilder().setLocation(location);
         Atom atom = agent.addAtom(atomBuilder);
 
-        Metadata metadata = agent.addMetadata(atom.getData(), null);
+        MetadataBuilder metadataBuilder = new MetadataBuilder().setData(atom.getData());
+        Metadata metadata = agent.addMetadata(metadataBuilder);
 
         VersionBuilder builder = new VersionBuilder(atom.guid())
                 .setMetadata(metadata);

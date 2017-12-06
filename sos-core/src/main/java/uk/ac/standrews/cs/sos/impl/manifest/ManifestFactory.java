@@ -22,7 +22,7 @@ public class ManifestFactory {
     /**
      * Creates an AtomManifest given an atom.
      *
-     * @param guid
+     * @param guid of atom
      * @param locations where the atom resides.
      * @return the manifest for the atom
      */

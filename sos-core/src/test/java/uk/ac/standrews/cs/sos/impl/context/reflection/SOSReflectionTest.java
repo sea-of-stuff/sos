@@ -162,7 +162,4 @@ public class SOSReflectionTest extends SetUpTest {
         assertFalse(policy.satisfied(null, null, null));
     }
 
-
-    // TODO - load policies
-    // TODO - load context from JSON File, load multiple context, etc
 }

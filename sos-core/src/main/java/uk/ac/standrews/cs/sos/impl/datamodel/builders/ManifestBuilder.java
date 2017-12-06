@@ -8,10 +8,26 @@ import uk.ac.standrews.cs.sos.model.Role;
 public abstract class ManifestBuilder {
 
     protected Role role = null;
+    private boolean protect = false;
 
-    public abstract ManifestBuilder setRole(Role role);
+    public ManifestBuilder setRole(Role role) {
+        this.role = role;
+
+        return this;
+    }
 
     public Role getRole() {
         return role;
     }
+
+    public ManifestBuilder setProtectFlag(boolean protect) {
+        this.protect = protect;
+
+        return this;
+    }
+
+    public boolean isProtect() {
+        return protect;
+    }
+
 }

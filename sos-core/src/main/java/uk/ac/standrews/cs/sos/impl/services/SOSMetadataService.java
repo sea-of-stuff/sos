@@ -1,17 +1,16 @@
 package uk.ac.standrews.cs.sos.impl.services;
 
-import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.MetadataService;
 
@@ -29,9 +28,9 @@ public class SOSMetadataService implements MetadataService {
     }
 
     @Override
-    public Metadata processMetadata(Data data, Role role) throws MetadataException {
+    public Metadata processMetadata(MetadataBuilder metadataBuilder) throws MetadataException {
 
-        return engine.processData(data, role, false); // FIXME
+        return engine.processData(metadataBuilder);
     }
 
     @Override
@@ -53,8 +52,6 @@ public class SOSMetadataService implements MetadataService {
             throw new MetadataNotFoundException("Unable to find metadata");
         }
     }
-
-    // TODO - get metadata with role!
 
     @Override
     public Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException {

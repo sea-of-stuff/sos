@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleType;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -96,13 +95,6 @@ public class AtomBuilder extends ManifestBuilder {
 
     public BundleType getBundleType() {
         return bundleType;
-    }
-
-    @Override
-    public AtomBuilder setRole(Role role) {
-        this.role = role;
-
-        return this;
     }
 
     public int getReplicationFactor() {

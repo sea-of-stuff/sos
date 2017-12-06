@@ -10,10 +10,11 @@ import org.xml.sax.SAXException;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.impl.metadata.AbstractMetadataEngine;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
+import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.Misc;
 
@@ -25,10 +26,10 @@ import java.util.HashMap;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TikaMetadataEngine extends AbstractMetadataEngine {
+public class TikaMetadataEngine implements MetadataEngine {
 
     @Override
-    public uk.ac.standrews.cs.sos.model.Metadata processData(Data data, Role role, boolean encrypt) throws MetadataException {
+    public uk.ac.standrews.cs.sos.model.Metadata processData(MetadataBuilder metadataBuilder) throws MetadataException {
 
         AutoDetectParser parser = new AutoDetectParser();
         BodyContentHandler handler = new BodyContentHandler(-1); // No limits on how much data to process
@@ -36,16 +37,16 @@ public class TikaMetadataEngine extends AbstractMetadataEngine {
         ParseContext context = new ParseContext();
         context.set(Parser.class, new AutoDetectParser());
 
-        try (InputStream stream = data.getInputStream()) {
+        try (InputStream stream = metadataBuilder.getData().getInputStream()) {
             parser.parse(stream, handler, metadata, context);
 
             HashMap<String, MetaProperty> metamap = new HashMap<>();
 
             processTikaProperties(metamap, metadata);
-            sizeProperty(metamap, data);
+            sizeProperty(metamap, metadataBuilder.getData());
             timestampProperty(metamap);
 
-            return makeMetadataManifest(metamap, role, encrypt);
+            return makeMetadataManifest(metamap, metadataBuilder.getRole(), metadataBuilder.isProtect());
 
         } catch (IOException | TikaException | SAXException e) {
             throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);

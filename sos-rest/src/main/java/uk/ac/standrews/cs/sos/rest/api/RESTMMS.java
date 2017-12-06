@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
@@ -90,7 +91,8 @@ public class RESTMMS {
 
         try {
             Data data = new InputStreamData(inputStream);
-            Metadata metadata = MetadataService.processMetadata(data, null); // FIXME - maybe role is passed as param
+            MetadataBuilder metadataBuilder = new MetadataBuilder().setData(data); // FIXME - maybe role is passed as param ?
+            Metadata metadata = MetadataService.processMetadata(metadataBuilder);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, metadata.toString());
         } catch (MetadataException e) {

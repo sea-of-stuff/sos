@@ -1,13 +1,12 @@
 package uk.ac.standrews.cs.sos.services;
 
-import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Role;
 
 /**
  * Metadata Service
@@ -19,12 +18,11 @@ public interface MetadataService extends Service {
     /**
      * Computes the metadata for some given data
      *
-     * @param data
-     * @param role
-     * @return
-     * @throws MetadataException
+     * @param metadataBuilder containing info for metadata
+     * @return metadata object
+     * @throws MetadataException if metadata could not be processed
      */
-    Metadata processMetadata(Data data, Role role) throws MetadataException;
+    Metadata processMetadata(MetadataBuilder metadataBuilder) throws MetadataException;
 
     /**
      * Add the given metadata to the sea of stuff
@@ -38,7 +36,7 @@ public interface MetadataService extends Service {
      *
      * @param guid of the metadata
      * @return metadata associated with the GUID
-     * @throws MetadataNotFoundException
+     * @throws MetadataNotFoundException if not found
      */
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
     Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException;

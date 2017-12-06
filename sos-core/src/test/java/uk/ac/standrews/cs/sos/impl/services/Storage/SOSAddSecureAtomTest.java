@@ -28,9 +28,10 @@ public class SOSAddSecureAtomTest extends StorageServiceTest {
         Atom atomManifest = storageService.addAtom(clearDataBuilder);
         assertNotNull(atomManifest.getData());
 
-        AtomBuilder builder = new AtomBuilder()
+        AtomBuilder builder = (AtomBuilder) new AtomBuilder()
                 .setLocation(location)
-                .setRole(role);
+                .setRole(role)
+                .setProtectFlag(true);
         SecureAtom secureAtomManifest = (SecureAtom) storageService.addAtom(builder);
 
         assertNotNull(secureAtomManifest.getData());
@@ -48,9 +49,10 @@ public class SOSAddSecureAtomTest extends StorageServiceTest {
 
         Location location = HelperTest.createDummyDataFile(localStorage);
 
-        AtomBuilder builder = new AtomBuilder()
+        AtomBuilder builder = (AtomBuilder) new AtomBuilder()
                 .setLocation(location)
-                .setRole(role);
+                .setRole(role)
+                .setProtectFlag(true);
         SecureAtom secureAtomManifest = (SecureAtom) storageService.addAtom(builder);
 
         // TODO - storage.getData(role)

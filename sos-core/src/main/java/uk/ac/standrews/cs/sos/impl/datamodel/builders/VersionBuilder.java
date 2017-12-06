@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.builders;
 
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Metadata;
-import uk.ac.standrews.cs.sos.model.Role;
 
 import java.util.Set;
 
@@ -17,9 +17,7 @@ public class VersionBuilder extends ManifestBuilder {
     private Set<IGUID> previousCollection;
     private AtomBuilder atomBuilder;
     private CompoundBuilder compoundBuilder;
-
-    private boolean protect; // TODO - use this flag
-    private boolean sign; // TODO - use this flag
+    private MetadataBuilder metadataBuilder;
 
     private boolean invariantIsSet = false;
     private boolean metadataIsSet = false;
@@ -70,6 +68,12 @@ public class VersionBuilder extends ManifestBuilder {
         return this;
     }
 
+    public VersionBuilder setMetadataBuilder(MetadataBuilder metadataBuilder) {
+        this.metadataBuilder = metadataBuilder;
+
+        return this;
+    }
+
     public VersionBuilder setContent(IGUID content) {
         this.content = content;
 
@@ -104,10 +108,13 @@ public class VersionBuilder extends ManifestBuilder {
         return compoundBuilder;
     }
 
-    @Override
-    public VersionBuilder setRole(Role role) {
-        this.role = role;
+    public MetadataBuilder getMetadataBuilder() {
 
-        return this;
+        return metadataBuilder;
     }
+
+    public boolean hasMetadataBuilder() {
+        return metadataBuilder != null;
+    }
+
 }

@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
@@ -82,7 +83,7 @@ public class SOSAgent implements Agent {
             Role role = usersRolesService.getRole(compoundBuilder);
 
             Compound compound;
-            if (compoundBuilder.isMakeSecureCompound()) {
+            if (compoundBuilder.isProtect()) {
                 compound = ManifestFactory.createSecureCompoundManifest(type, contents, role);
             } else {
                 compound = ManifestFactory.createCompoundManifest(type, contents, role);
@@ -123,31 +124,21 @@ public class SOSAgent implements Agent {
     public Version addData(VersionBuilder versionBuilder) throws ServiceException {
 
         AtomBuilder atomBuilder = versionBuilder.getAtomBuilder();
-        try (Data data = atomBuilder.getData()) {
+        Atom atom = addAtom(atomBuilder);
+        versionBuilder.setContent(atom.guid());
 
-            Role role = versionBuilder.getRole();
-
-            Metadata metadata = addMetadata(data, role);
-            Atom atom = addAtom(atomBuilder);
-
-            versionBuilder.setContent(atom.guid());
+        if (versionBuilder.hasMetadataBuilder()) {
+            Metadata metadata = addMetadata(versionBuilder.getMetadataBuilder());
             versionBuilder.setMetadata(metadata);
-
-            return addVersion(versionBuilder);
-
-        } catch (Exception e) {
-            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }
+
+        return addVersion(versionBuilder);
     }
 
     @Override
     public Version addCollection(VersionBuilder versionBuilder) throws ServiceException {
 
         CompoundBuilder compoundBuilder = versionBuilder.getCompoundBuilder();
-        if(compoundBuilder.getRole() != null) {
-            compoundBuilder.setMakeSecureCompound(true);
-        }
-
         Compound compound = addCompound(compoundBuilder);
         versionBuilder.setContent(compound.guid());
 
@@ -255,10 +246,10 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public Metadata addMetadata(Data data, Role role) throws ServiceException {
+    public Metadata addMetadata(MetadataBuilder metadataBuilder) throws ServiceException {
 
         try {
-            Metadata metadata = metadataService.processMetadata(data, role);
+            Metadata metadata = metadataService.processMetadata(metadataBuilder);
             metadataService.addMetadata(metadata);
 
             return metadata;

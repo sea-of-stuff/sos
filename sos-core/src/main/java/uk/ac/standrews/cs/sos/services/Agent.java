@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.*;
 
 /**
@@ -40,7 +41,7 @@ public interface Agent extends Service {
      *
      * @param compoundBuilder for this compound.
      * @return the added compound.
-     * @throws ServiceException
+     * @throws ServiceException if compound could not be added
      *
      * @see Manifest
      *
@@ -53,7 +54,7 @@ public interface Agent extends Service {
      *
      * @param versionBuilder for this version
      * @return Version for the added asset.
-     * @throws ServiceException
+     * @throws ServiceException if version could not be added
      *
      */
     Version addVersion(VersionBuilder versionBuilder) throws ServiceException;
@@ -67,16 +68,16 @@ public interface Agent extends Service {
      *
      * @param atom describing the atom to retrieve.
      * @return InputStream
-     * @throws ServiceException
+     * @throws ServiceException if data is not found
      */
     Data getAtomContent(Atom atom) throws ServiceException;
 
     /**
      * Get data given the guid of the atom
      *
-     * @param atomGUID
-     * @return
-     * @throws ServiceException
+     * @param atomGUID for the atom
+     * @return data
+     * @throws ServiceException if data is not found
      */
     Data getData(IGUID atomGUID) throws ServiceException;
 
@@ -93,21 +94,18 @@ public interface Agent extends Service {
     Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ServiceException;
 
     /**
-     * Generate and add metadata for this atom
+     * Generate and add metadata
      *
-     * @param data used to generate the metadata
-     * @param role used to protect the metadata. If null, the metadata will not be protected.
+     * @param metadataBuilder for this metadata
      * @return the metadata generated
      * @throws ServiceException if the metadata could not be generated
      */
-    Metadata addMetadata(Data data, Role role) throws ServiceException;
-
-    // TODO - add secure metadata method
+    Metadata addMetadata(MetadataBuilder metadataBuilder) throws ServiceException;
 
     /**
      * Get the metadata of version
      *
-     * @param version
+     * @param version from which to get the metadata
      * @return SOSMetadata mapped with the version
      */
     Metadata getMetadata(Version version) throws ServiceException;
@@ -146,12 +144,19 @@ public interface Agent extends Service {
      * Get the propery value for the given manifest matching GUID
      * The manifest MUST be a version manifest
      *
-     * @param guid
-     * @param property
-     * @return
-     * @throws ServiceException
+     * @param guid of the metadata
+     * @param property key for the property
+     * @return the metadata (type, key, value) property
+     * @throws ServiceException if not found
      */
     MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException;
 
+    /**
+     * Get the role matching the guid.
+     *
+     * @param guid of the role
+     * @return the role
+     * @throws RoleNotFoundException if not found
+     */
     Role getRole(IGUID guid) throws RoleNotFoundException;
 }
