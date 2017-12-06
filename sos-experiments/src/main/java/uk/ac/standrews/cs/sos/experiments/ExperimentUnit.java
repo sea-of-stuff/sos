@@ -146,7 +146,8 @@ public interface ExperimentUnit {
             try {
                 AtomBuilder atomBuilder = (AtomBuilder) new AtomBuilder()
                         .setLocation(new URILocation(file.toUri().toString()))
-                        .setRole(role);
+                        .setRole(role)
+                        .setProtectFlag(true);
                 VersionBuilder versionBuilder = new VersionBuilder()
                         .setAtomBuilder(atomBuilder);
 
