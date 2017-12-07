@@ -77,6 +77,8 @@ public interface NodeDiscoveryService extends Service {
      */
     NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit);
 
+    NodesCollection filterNodesCollection(NodesCollection nodesCollection, int limit);
+
     /**
      * Get all known nodes
      *

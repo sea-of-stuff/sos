@@ -19,7 +19,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
-import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleType;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -55,33 +55,17 @@ public class AtomStorage {
         this.localStorage = storage;
     }
 
-    public StoredAtomInfo persist(AtomBuilder atomBuilder) throws DataStorageException {
+    public StoredAtomInfo store(AtomBuilder atomBuilder, BundleType type) throws DataStorageException {
 
         try {
             StoredAtomInfo storedAtomInfo = storeToLocalStorage(atomBuilder);
             Location localLocation = makeLocalSOSLocation(storedAtomInfo.getGuid());
-            LocationBundle bundle = new LocationBundle(BundleTypes.PERSISTENT, localLocation);
+            LocationBundle bundle = new LocationBundle(type, localLocation);
 
             return storedAtomInfo.setLocationBundle(bundle);
 
         } catch (SourceLocationException e) {
-            throw new DataStorageException("Unable to persist data properly");
-        }
-
-    }
-
-    // Data is stored in disk, but marked as cached
-    public StoredAtomInfo cache(AtomBuilder atomBuilder) throws DataStorageException {
-
-        try {
-            StoredAtomInfo storedAtomInfo = storeToLocalStorage(atomBuilder);
-            Location localLocation = makeLocalSOSLocation(storedAtomInfo.getGuid());
-            LocationBundle bundle = new LocationBundle(BundleTypes.CACHE, localLocation);
-
-            return storedAtomInfo.setLocationBundle(bundle);
-
-        } catch (SourceLocationException e) {
-            throw new DataStorageException("Unable to persist data properly");
+            throw new DataStorageException("Unable to store data properly");
         }
 
     }
@@ -119,7 +103,7 @@ public class AtomStorage {
             return storedAtomInfo.setGuid(guid);
 
         } catch (RenameException | URISyntaxException e) {
-            throw new DataStorageException("Unable to persist data properly");
+            throw new DataStorageException("Unable to store data properly");
         }
 
     }
@@ -158,7 +142,10 @@ public class AtomStorage {
         try {
             StoredAtomInfo storedAtomInfo = new StoredAtomInfo();
 
-            if (atomBuilder.getRole() != null) {
+            if (!atomBuilder.isAlreadyProtected() && atomBuilder.isProtect()) {
+
+                if (atomBuilder.getRole() == null) throw new DataStorageException("No role provided for protecting data");
+
                 Pair<Data, String> encryptionResult = encrypt(data, atomBuilder.getRole());
                 data = encryptionResult.X();
 

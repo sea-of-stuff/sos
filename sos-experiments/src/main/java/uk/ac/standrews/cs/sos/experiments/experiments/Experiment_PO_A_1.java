@@ -82,6 +82,8 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
             // Must have multiple nodes up and running
             addContext(cms, experiment, "data_replication_1");
             addContext(cms, experiment, "manifest_replication_1");
+
+            // TODO - manifest & data replication, all versions replication?
         }
 
     }

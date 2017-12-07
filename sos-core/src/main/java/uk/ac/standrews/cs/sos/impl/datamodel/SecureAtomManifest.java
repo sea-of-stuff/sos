@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -26,6 +27,12 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
         super(guid, locations);
         this.manifestType = ManifestType.ATOM_PROTECTED;
         this.rolesToKeys = rolesToKeys;
+    }
+
+    public SecureAtomManifest(IGUID guid, Set<LocationBundle> locations) {
+        super(guid, locations);
+        this.manifestType = ManifestType.ATOM_PROTECTED;
+        this.rolesToKeys = new LinkedHashMap<>();
     }
 
     @Override

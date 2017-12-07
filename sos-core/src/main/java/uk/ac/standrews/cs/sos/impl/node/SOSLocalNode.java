@@ -388,7 +388,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     /**
      * Initialise all the remaining services for this node
      *
-     * The services use the localStorage to persist their indices/caches to disk
+     * The services use the localStorage to store their indices/caches to disk
      * The manifestsDataService allow entities to be handles as first class entities in the SOS and in a consistent manner
      */
     private void initServices() throws ServiceException {

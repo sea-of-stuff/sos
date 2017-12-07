@@ -95,14 +95,14 @@ public class CommonUtilities {
      * @param replicationFactor a value of 1 will replicate the data to 1 node
      * @throws PolicyException if the data could not be replicated
      */
-    public void replicateData(Data data, NodesCollection codomain, int replicationFactor) throws PolicyException {
+    public void replicateData(Data data, NodesCollection codomain, int replicationFactor, boolean dataIsAlreadyProtected) throws PolicyException {
 
-        // FIXME - differentiate between clear data and protected data
         try {
-            AtomBuilder atomBuilder = new AtomBuilder()
+            AtomBuilder atomBuilder = (AtomBuilder) new AtomBuilder()
                     .setData(data)
                     .setReplicationNodes(codomain)
-                    .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */);
+                    .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */)
+                    .setAlreadyProtected(dataIsAlreadyProtected);
 
             storageService.addAtom(atomBuilder);
 
@@ -278,9 +278,9 @@ public class CommonUtilities {
     /**
      * Get the manifest from a codomain
      *
-     * @param guid
-     * @return
-     * @throws ManifestNotFoundException
+     * @param guid of the manifest
+     * @return the manifest
+     * @throws ManifestNotFoundException if the manifest could not be found
      */
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
@@ -291,7 +291,7 @@ public class CommonUtilities {
     /**
      * Get the manifest of a version's content.
      *
-     * @param version
+     * @param version from which to get the content
      * @return the manifest of the version's content
      * @throws ManifestNotFoundException if the manifest was not found
      */
@@ -326,8 +326,8 @@ public class CommonUtilities {
     /**
      * Filter the codomain by type
      *
-     * @param codomain
-     * @param type
+     * @param codomain from which to get the nodes
+     * @param type of the nodes to get
      * @return a collection of nodes within the specified codomain and type
      */
     public NodesCollection getNodes(NodesCollection codomain, NodeType type) {
@@ -335,12 +335,17 @@ public class CommonUtilities {
         return nodeDiscoveryService.filterNodesCollection(codomain, type, NO_LIMIT);
     }
 
+    public NodesCollection getNodes(NodesCollection codomain) {
+
+        return nodeDiscoveryService.filterNodesCollection(codomain, NO_LIMIT);
+    }
+
     /**
      * Get the role with the specified guid
      *
-     * @param guid
-     * @return
-     * @throws RoleNotFoundException
+     * @param guid of the role
+     * @return the role
+     * @throws RoleNotFoundException if the role could not be found
      */
     public Role getRole(IGUID guid) throws RoleNotFoundException {
 
@@ -350,9 +355,9 @@ public class CommonUtilities {
     /**
      * Get the user with the specified guid
      *
-     * @param guid
-     * @return
-     * @throws UserNotFoundException
+     * @param guid of the user
+     * @return the user
+     * @throws UserNotFoundException if the user could not be found
      */
     public User getUser(IGUID guid) throws UserNotFoundException {
 

@@ -9,6 +9,7 @@ public abstract class ManifestBuilder {
 
     protected Role role = null;
     private boolean protect = false;
+    private boolean isAlreadyProtected = false;
 
     public ManifestBuilder setRole(Role role) {
         this.role = role;
@@ -30,4 +31,13 @@ public abstract class ManifestBuilder {
         return protect;
     }
 
+    public ManifestBuilder setAlreadyProtected(boolean alreadyProtected) {
+        isAlreadyProtected = alreadyProtected;
+
+        return this;
+    }
+
+    public boolean isAlreadyProtected() {
+        return isAlreadyProtected;
+    }
 }

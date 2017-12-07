@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The SOSNDS represents a basic NDS implementation.
@@ -219,6 +220,16 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
         }
 
         return new NodesCollectionImpl(filteredNodes);
+    }
+
+    @Override
+    public NodesCollection filterNodesCollection(NodesCollection nodesCollection, int limit) {
+
+        Set<Node> filteredNodes = getNodes(nodesCollection, limit);
+        Set<IGUID> filteredNodesRef = filteredNodes.stream()
+                .map(Manifest::guid)
+                .collect(Collectors.toSet());
+        return new NodesCollectionImpl(filteredNodesRef);
     }
 
     @Override

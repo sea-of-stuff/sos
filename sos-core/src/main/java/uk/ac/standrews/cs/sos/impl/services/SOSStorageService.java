@@ -100,7 +100,11 @@ public class SOSStorageService implements StorageService {
         }
 
         Atom atom;
-        if (atomBuilder.isProtect()) {
+        if (atomBuilder.isAlreadyProtected()) {
+            // Keys are unknown
+            atom = ManifestFactory.createSecureAtomManifest(guid, bundles);
+
+        } else if (atomBuilder.isProtect()) {
             HashMap<IGUID, String> rolesToKeys = new HashMap<>();
             rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
 
@@ -368,9 +372,9 @@ public class SOSStorageService implements StorageService {
 
         StoredAtomInfo retval;
         if (storageSettings.isCanPersist() && atomBuilder.getBundleType() == BundleTypes.PERSISTENT) {
-            retval = atomStorage.persist(atomBuilder);
+            retval = atomStorage.store(atomBuilder, BundleTypes.PERSISTENT);
         } else {
-            retval = atomStorage.cache(atomBuilder);
+            retval = atomStorage.store(atomBuilder, BundleTypes.CACHE);
         }
 
         if (atomBuilder.isLocation()) {

@@ -15,7 +15,6 @@ import java.util.Set;
 /**
  * Common methods for policies
  *
- * TODO - methods to replicate metadata
  * TODO - notify nodes
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -33,7 +32,7 @@ public class CommonPolicies {
     @SuppressWarnings("WeakerAccess")
     public static void replicateManifest(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
-        NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
+        NodesCollection nodes = commonUtilities.getNodes(codomain);
         commonUtilities.replicateManifest(manifest, nodes, factor);
     }
 
@@ -44,24 +43,26 @@ public class CommonPolicies {
         return numberReplicas >= factor;
     }
 
-    // TODO - have param for canPersist (e.g. replicate only to nodes that can persist data)
+    // TODO - have param for canPersist (e.g. replicate only to nodes that can store data)
     @SuppressWarnings("WeakerAccess")
     public static void replicateData(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
 
         try {
             Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
+            ManifestType manifestType = contentManifest.getType();
 
-            switch(contentManifest.getType()) {
+            switch(manifestType) {
 
                 // FIXME - the node receiving the request should know if the atom received is of type protected or not
                 // it is wrong if the storage on the other side stored the data as atom, rather than atomprotected.
                 // I think it is okay if the manifest has no keys, but that storage should know that it is protected data we are talking about.
                 case ATOM: case ATOM_PROTECTED:
 
+                    boolean dataIsAlreadyProtected = (manifestType == ManifestType.ATOM_PROTECTED);
                     try (Data data = ((Atom) contentManifest).getData()) {
 
                         NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
-                        commonUtilities.replicateData(data, nodes, factor);
+                        commonUtilities.replicateData(data, nodes, factor, dataIsAlreadyProtected);
                     } catch (Exception e) {
                         throw new PolicyException("Policy was unable to replicate atom with GUID " + manifest.guid());
                     }

@@ -36,6 +36,11 @@ public class ManifestFactory {
         return new SecureAtomManifest(guid, locations, rolesToKeys);
     }
 
+    public static SecureAtom createSecureAtomManifest(IGUID guid, Set<LocationBundle> locations) {
+
+        return new SecureAtomManifest(guid, locations);
+    }
+
     /**
      *
      * @param type
