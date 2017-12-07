@@ -1,10 +1,13 @@
 package uk.ac.standrews.cs.sos.instrument;
 
+import uk.ac.standrews.cs.guid.ALGORITHM;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public enum StatsTYPE {
 
+    error,
     none,
     any,
 
@@ -28,5 +31,17 @@ public enum StatsTYPE {
     checkPolicies,
     policy_check_dataset,
 
-    experiment
+    experiment;
+
+    public static StatsTYPE getHashType(ALGORITHM algorithm) {
+
+        switch(algorithm) {
+            case SHA1:
+                return sha1;
+            case SHA256:
+                return sha256;
+            default:
+                return error;
+        }
+    }
 }

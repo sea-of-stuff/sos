@@ -43,11 +43,11 @@ public class ManifestFactory {
 
     /**
      *
-     * @param type
-     * @param contents
-     * @param role
+     * @param type of compound
+     * @param contents of compound
+     * @param role to sign compound
      * @return a compound manifest
-     * @throws ManifestNotMadeException
+     * @throws ManifestNotMadeException if compound manifest could not be created
      */
     public static Compound createCompoundManifest(CompoundType type,
                                                           Set<Content> contents,
@@ -79,12 +79,12 @@ public class ManifestFactory {
      * asset and an identity which will be used to sign the manifest.
      *
      * @param content - required
-     * @param invariant
-     * @param prevs
-     * @param metadata
-     * @param role
+     * @param invariant of version
+     * @param prevs of version
+     * @param metadata of version
+     * @param role to sign version
      * @return an asset manifest
-     * @throws ManifestNotMadeException
+     * @throws ManifestNotMadeException if version manifest could not be created
      */
     public static Version createVersionManifest(IGUID content,
                                                         IGUID invariant,

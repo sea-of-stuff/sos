@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.ALGORITHM;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -191,8 +190,7 @@ public class AtomStorage {
             IGUID guid = generateGUID(data);
             long duration = System.nanoTime() - start;
 
-            // NOTE: Support only for SHA1 and SHA256
-            StatsTYPE subtype = Internals.GUID_ALGORITHM == ALGORITHM.SHA1 ? StatsTYPE.sha1 : StatsTYPE.sha256;
+            StatsTYPE subtype = StatsTYPE.getHashType(Internals.GUID_ALGORITHM);
             InstrumentFactory.instance().measure(StatsTYPE.guid, subtype, Long.toString(data.getSize()), duration);
 
             return guid;
