@@ -193,7 +193,10 @@ public class DataReplication extends Task {
 
                 metadata.setReplicationNodes(replicationNodes);
             }
-            metadata.setProtectedData(dataIsAlreadyProtected);
+
+            if (dataIsAlreadyProtected) {
+                metadata.setProtectedData(true);
+            }
             dataPackage.setMetadata(metadata);
 
             String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);

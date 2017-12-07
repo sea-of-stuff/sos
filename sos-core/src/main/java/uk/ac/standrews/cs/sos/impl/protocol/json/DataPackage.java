@@ -51,7 +51,7 @@ public class DataPackage {
         this.data = data;
     }
 
-    private String getGuid() {
+    public String getGuid() {
         return guid;
     }
 
@@ -71,9 +71,9 @@ public class DataPackage {
 
     public static class Metadata {
 
-        private int replicationFactor;
-        private ReplicationNodes replicationNodes;
-        private boolean protectedData;
+        private int replicationFactor = 0;
+        private ReplicationNodes replicationNodes = new ReplicationNodes();
+        private boolean protectedData = false;
 
         public Metadata() {}
 
@@ -103,8 +103,8 @@ public class DataPackage {
 
         public static class ReplicationNodes {
 
-            private NodesCollectionType type;
-            private String[] refs;
+            private NodesCollectionType type = NodesCollectionType.ANY;
+            private String[] refs = new String[]{};
 
             public ReplicationNodes() {}
 
@@ -124,6 +124,7 @@ public class DataPackage {
                 this.refs = refs;
             }
 
+            @JsonIgnore
             public NodesCollection getNodesCollection() throws NodesCollectionException {
 
                 if (type.equals(NodesCollectionType.ANY)) {

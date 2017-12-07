@@ -48,8 +48,16 @@ public class ClientReplicationTest extends SetUpTest {
 
     // This is the exact body request. Would be good if we have a JSON matcher method, so this string does not have to be exact, but simply an equivalent JSON obj of what we expect
     private static final String BASIC_REQUEST = "" +
-            "{\n" +
-            "  \"data\" : \"{DATA}\",\n" +
+            "{\n"+
+            "  \"metadata\" : {\n"+
+            "    \"replicationFactor\" : 0,\n"+
+            "    \"replicationNodes\" : {\n"+
+            "      \"type\" : \"ANY\",\n"+
+            "      \"refs\" : [ ]\n"+
+            "    },\n"+
+            "    \"protectedData\" : false\n"+
+            "  },\n"+
+            "  \"data\" : \"{DATA}\",\n"+
             "  \"guid\" : \"" + TEST_DATA_HASH + "\"\n" +
             "}";
 
