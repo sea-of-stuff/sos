@@ -55,4 +55,64 @@ public class RESTExperiment {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
+
+    @GET
+    @Path("/cms/guid/{guid}/policy_apply")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response triggerPolicyApplyOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/policy_apply");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        IGUID contextGUID;
+        try {
+            contextGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        try {
+            ContextService contextService = RESTConfig.sos.getCMS();
+            contextService.runContextPolicyNow(contextGUID); // Returns when all apply functions are run for all assets.
+
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+        } catch (ContextNotFoundException e) {
+
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
+        } catch (Exception e) {
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
+        }
+    }
+
+    @GET
+    @Path("/cms/guid/{guid}/policy_check")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response triggerPolicyCheckOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/policy_check");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        IGUID contextGUID;
+        try {
+            contextGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        try {
+            ContextService contextService = RESTConfig.sos.getCMS();
+            contextService.runContextPolicyCheckNow(contextGUID); // Returns when all check function are run for all assets.
+
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+        } catch (ContextNotFoundException e) {
+
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
+        } catch (Exception e) {
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
+        }
+    }
 }
