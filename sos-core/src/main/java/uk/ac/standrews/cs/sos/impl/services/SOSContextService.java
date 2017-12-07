@@ -200,12 +200,12 @@ public class SOSContextService implements ContextService {
             addContext(context);
             return context.guid();
 
-        } catch (ManifestPersistException | IOException e) {
+        } catch (ManifestPersistException e) {
             throw new ContextException("Unable to add context to SOS node");
         }
     }
 
-    private IGUID addPredicate(JsonNode jsonNode) throws IOException, ManifestPersistException {
+    private IGUID addPredicate(JsonNode jsonNode) throws ManifestPersistException {
 
         Predicate predicate = JSONHelper.JsonObjMapper().convertValue(jsonNode, Predicate.class);
         manifestsDataService.addManifest(predicate);
@@ -213,7 +213,7 @@ public class SOSContextService implements ContextService {
         return predicate.guid();
     }
 
-    private IGUID addPolicy(JsonNode jsonNode) throws IOException, ManifestPersistException {
+    private IGUID addPolicy(JsonNode jsonNode) throws ManifestPersistException {
 
         Policy policy = JSONHelper.JsonObjMapper().convertValue(jsonNode, Policy.class);
         manifestsDataService.addManifest(policy);
@@ -912,7 +912,7 @@ public class SOSContextService implements ContextService {
 
             long start = System.nanoTime();
             for (Policy policy:policies) {
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);;
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
             policy_time_to_run_check_on_current_dataset += duration;

@@ -44,14 +44,10 @@ public class WVerify {
         IGUID manifestId = GUIDFactory.recreateGUID(request.params("id"));
         Manifest manifest = agent.getManifest(manifestId);
 
-        try {
-            if (agent.verifyManifestIntegrity(manifest)) {
-                return "VERIFIED";
-            } else {
-                return "NOT VERIFIED";
-            }
-        } catch (ServiceException e) {
-            return "ManifestVerificationException";
+        if (agent.verifyManifestIntegrity(manifest)) {
+            return "VERIFIED";
+        } else {
+            return "NOT VERIFIED";
         }
     }
 }

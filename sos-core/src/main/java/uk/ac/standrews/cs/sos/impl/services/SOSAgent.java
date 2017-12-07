@@ -231,7 +231,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public boolean verifyManifestIntegrity(Manifest manifest) throws ServiceException {
+    public boolean verifyManifestIntegrity(Manifest manifest) {
 
         return manifest.verifyIntegrity();
     }

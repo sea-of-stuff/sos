@@ -134,7 +134,8 @@ public class RESTStorage {
 
 
                 if (metadata.isProtectedData()) {
-                    builder.setRole(null); // FIXME
+                    builder.setAlreadyProtected(true);
+                    // builder.setRole(null); // FIXME
                 }
             }
 

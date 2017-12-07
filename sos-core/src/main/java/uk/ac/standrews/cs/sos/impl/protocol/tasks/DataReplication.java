@@ -63,6 +63,7 @@ public class DataReplication extends Task {
     private NodesCollection nodesCollection;
     private int replicationFactor;
     private boolean delegateReplication;
+    private boolean dataIsAlreadyProtected;
 
     private StorageService storageService;
     private NodeDiscoveryService nodeDiscoveryService;
@@ -76,18 +77,11 @@ public class DataReplication extends Task {
      *
      * Construct the data replication task.
      * The data, nodes and replication factor paramters are needed to carry out the task
-     * The index, nds and dds are needed to promptly update this node about the new replicated content
-     *
-     * @param data
-     * @param nodesCollection
-     * @param replicationFactor
-     * @param storageService
-     * @param nodeDiscoveryService
-     * @throws SOSProtocolException
+     * The index, nds and dds are needed to promptly update this node about the new replicated content.
      */
     public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
                            StorageService storageService, NodeDiscoveryService nodeDiscoveryService,
-                           boolean delegateReplication) throws SOSProtocolException {
+                           boolean delegateReplication, boolean dataIsAlreadyProtected) throws SOSProtocolException {
 
         if (storageService == null || nodeDiscoveryService == null) {
             throw new SOSProtocolException("At least one of the SOS services is null. Data replication process is aborted.");
@@ -96,12 +90,12 @@ public class DataReplication extends Task {
         this.storageService = storageService;
         this.nodeDiscoveryService = nodeDiscoveryService;
 
-
         this.guid = guid;
         this.data = data;
         this.nodesCollection = nodesCollection;
         this.replicationFactor = replicationFactor;
         this.delegateReplication = delegateReplication;
+        this.dataIsAlreadyProtected = dataIsAlreadyProtected;
     }
 
     @Override
@@ -186,8 +180,8 @@ public class DataReplication extends Task {
             dataPackage.setGuid(guid.toMultiHash());
             dataPackage.setData(IO.InputStreamToBase64String(data)); // Data is transformed to base64 as expected by the REST API
 
+            DataPackage.Metadata metadata = new DataPackage.Metadata();
             if (delegateReplication) {
-                DataPackage.Metadata metadata = new DataPackage.Metadata();
                 metadata.setReplicationFactor(replicationFactor);
 
                 DataPackage.Metadata.ReplicationNodes replicationNodes = new DataPackage.Metadata.ReplicationNodes();
@@ -198,8 +192,9 @@ public class DataReplication extends Task {
                         .toArray(String[]::new));
 
                 metadata.setReplicationNodes(replicationNodes);
-                dataPackage.setMetadata(metadata);
             }
+            metadata.setProtectedData(dataIsAlreadyProtected);
+            dataPackage.setMetadata(metadata);
 
             String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);
             request.setJSONBody(jsonBody);

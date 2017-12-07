@@ -260,8 +260,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant) {
 
-        Set<IGUID> versions = new LinkedHashSet<>();
-        versions.addAll(index.getVersions(invariant));
+        Set<IGUID> versions = new LinkedHashSet<>(index.getVersions(invariant));
 
         if (!nodesCollection.type().equals(NodesCollectionType.LOCAL)) {
 

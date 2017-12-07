@@ -145,7 +145,7 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public Role getRole(ManifestBuilder manifestBuilder) throws RoleNotFoundException {
+    public Role getRole(ManifestBuilder manifestBuilder) {
 
         return manifestBuilder.getRole();
     }

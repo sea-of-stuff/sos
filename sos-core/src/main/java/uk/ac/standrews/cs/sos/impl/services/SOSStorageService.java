@@ -120,7 +120,11 @@ public class SOSStorageService implements StorageService {
         if (replicationFactor > 0) {
 
             try (Data data = atomBuilder.getData()){
-                DataReplication dataReplication = new DataReplication(atom.guid(), data, atomBuilder.getReplicationNodes(), replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication());
+
+                // TODO - re-order params
+                DataReplication dataReplication = new DataReplication(atom.guid(), data, atomBuilder.getReplicationNodes(),
+                        replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication(),
+                        atomBuilder.isAlreadyProtected());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (SOSProtocolException e) {
