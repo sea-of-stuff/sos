@@ -33,7 +33,7 @@ public abstract class Task implements Runnable {
     /**
      * Perform the actual task
      */
-    public abstract void performAction();
+    protected abstract void performAction();
 
 
     /**

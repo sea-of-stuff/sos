@@ -51,7 +51,7 @@ public class DataPackage {
         this.data = data;
     }
 
-    public String getGuid() {
+    private String getGuid() {
         return guid;
     }
 
