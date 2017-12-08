@@ -16,40 +16,40 @@ public interface ManifestsIndex {
 
     /**
      *
-     * @param manifest
+     * @param manifest to track
      */
     void track(Manifest manifest);
 
     /**
      *
-     * @param type
-     * @return
+     * @param type of manifests to get
+     * @return list of refs to manifests
      */
     Set<IGUID> getManifests(ManifestType type);
 
     /**
      * References to Versionable manifests (i.e. Version, Context)
      *
-     * @param invariant
-     * @return
+     * @param invariant of the asset
+     * @return refs to versions of the asset
      */
     Set<IGUID> getVersions(IGUID invariant);
 
     /**
      * Tips of versionable manifest
      *
-     * @param invariant
-     * @return
-     * @throws TIPNotFoundException
+     * @param invariant of the asset
+     * @return refs to tips
+     * @throws TIPNotFoundException if the tip was not found
      */
     Set<IGUID> getTips(IGUID invariant) throws TIPNotFoundException;
 
     /**
      * Head of versionable manifest
      *
-     * @param invariant
-     * @return
-     * @throws HEADNotFoundException
+     * @param invariant of the asset
+     * @return ref to head
+     * @throws HEADNotFoundException if the head was not found
      */
     IGUID getHead(IGUID invariant) throws HEADNotFoundException;
 
@@ -57,14 +57,14 @@ public interface ManifestsIndex {
     /**
      * Set this version to be the head
      *
-     * @param versionable
+     * @param versionable type of manifest
      */
     void setHead(Versionable versionable);
 
     /**
      * Advance the tip for this version
      *
-     * @param versionable
+     * @param versionable type of manifest
      */
     void advanceTip(Versionable versionable);
 
