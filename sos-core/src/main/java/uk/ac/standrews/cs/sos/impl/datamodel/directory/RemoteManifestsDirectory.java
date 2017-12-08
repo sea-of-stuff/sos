@@ -134,6 +134,11 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
     }
 
+    @Override
+    public void delete(IGUID guid) throws ManifestNotFoundException {
+        // TODO
+    }
+
     public Manifest findManifest(NodesCollection nodesCollection, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException {
 
         Set<IGUID> nodesToCheck;
