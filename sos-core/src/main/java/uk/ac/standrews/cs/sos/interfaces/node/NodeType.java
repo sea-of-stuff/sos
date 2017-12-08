@@ -11,7 +11,8 @@ public enum NodeType {
     MMS("mms"),
     NDS("nds"),
     RMS("rms"),
-    STORAGE("storage");
+    STORAGE("storage"),
+    UNKNOWN("unknown");
 
     private final String text;
 

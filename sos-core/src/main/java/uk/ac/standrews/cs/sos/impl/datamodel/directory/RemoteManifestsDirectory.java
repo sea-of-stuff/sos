@@ -63,7 +63,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         try {
             NodeType nodeType = getNodeType(manifest);
-            if (nodeType == null) throw new SOSProtocolException("Unable to tell what node type to talk to");
+            if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), nodeType, 1);
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, manifestsDataService);
@@ -86,7 +86,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         try {
             NodeType nodeType = getNodeType(manifest);
-            if (nodeType == null) throw new SOSProtocolException("Unable to tell what node type to talk to");
+            if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
             // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
@@ -119,7 +119,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                 return NodeType.CMS;
 
             default:
-                return null;
+                return NodeType.UNKNOWN;
         }
     }
 
