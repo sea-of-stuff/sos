@@ -59,7 +59,7 @@ public class LocationsIndexImplTest {
     }
 
     @Test
-    public void noLocationsTest() throws URISyntaxException {
+    public void noLocationsTest() {
         LocationsIndex locationsIndex = new LocationsIndexImpl();
 
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);

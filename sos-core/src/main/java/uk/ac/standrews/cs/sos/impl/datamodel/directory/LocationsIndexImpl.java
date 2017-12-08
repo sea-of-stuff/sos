@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.utils.LRU_GUID;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -24,13 +26,20 @@ import java.util.*;
 public class LocationsIndexImpl implements LocationsIndex {
 
     private transient HashMap<IGUID, PriorityQueue<LocationBundle>> index;
+    private transient LRU_GUID lru;
 
     public LocationsIndexImpl() {
         index = new HashMap<>();
+        lru = new LRU_GUID();
     }
 
     @Override
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
+
+        IGUID guidToRemove = lru.applyLRU(guid);
+        if (!guidToRemove.isInvalid()) {
+            index.remove(guidToRemove);
+        }
 
         if (index.containsKey(guid)) {
             if (!index.get(guid).contains(locationBundle)) {
@@ -45,6 +54,8 @@ public class LocationsIndexImpl implements LocationsIndex {
 
     @Override
     public Queue<LocationBundle> findLocations(IGUID guid) {
+
+        lru.applyReadLRU(guid);
 
         if (index.containsKey(guid)) {
             return index.get(guid);
@@ -171,6 +182,7 @@ public class LocationsIndexImpl implements LocationsIndex {
     @Override
     public void clear() {
         index = new HashMap<>();
+        lru = new LRU_GUID();
     }
 
     // This method defines how the cache is serialised
@@ -178,14 +190,19 @@ public class LocationsIndexImpl implements LocationsIndex {
         out.defaultWriteObject();
 
         out.writeInt(index.size());
-        for (IGUID key : index.keySet()) {
 
-            out.writeUTF(key.toMultiHash());
+        // Store entries as ordered in the LRU
+        ConcurrentLinkedQueue<IGUID> lruQueue = new  ConcurrentLinkedQueue<>(lru.getQueue());
+        IGUID guid;
+        while ((guid = lruQueue.poll()) != null) {
 
-            int numberOfLocations = index.get(key).size();
+            out.writeUTF(guid.toMultiHash());
+
+            PriorityQueue<LocationBundle> values = index.get(guid);
+            int numberOfLocations = values.size();
             out.writeInt(numberOfLocations);
 
-            for (LocationBundle bundle : findLocations(key)) {
+            for (LocationBundle bundle : findLocations(guid)) {
                 out.writeUTF(bundle.toString());
             }
         }
@@ -194,6 +211,8 @@ public class LocationsIndexImpl implements LocationsIndex {
     // This method defines how the cache is de-serialised
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
+
+        lru = new LRU_GUID();
 
         int indexSize = in.readInt();
         index = new HashMap<>();
