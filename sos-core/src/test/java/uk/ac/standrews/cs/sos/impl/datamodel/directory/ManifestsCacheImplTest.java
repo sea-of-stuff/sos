@@ -71,7 +71,7 @@ public class ManifestsCacheImplTest extends CommonTest {
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)
-    public void cacheMissTest() throws ManifestPersistException, ManifestNotFoundException {
+    public void cacheMissTest() throws ManifestNotFoundException {
         ManifestsCache cache = new ManifestsCacheImpl();
 
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);

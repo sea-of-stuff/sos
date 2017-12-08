@@ -20,6 +20,8 @@ import java.util.Queue;
  *
  * Data stored via a storage node is available to other nodes in the SOS.
  *
+ * TODO - have a deprecate location? could downgrade to cache location, which can be removed...
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface StorageService extends Service {
@@ -35,6 +37,14 @@ public interface StorageService extends Service {
      * @throws ManifestPersistException if the atom manifest could not be created
      */
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
+
+    /**
+     * Delete the data for the atom matching the guid from the local node.
+     *
+     * @param guid of the atom
+     * @throws AtomNotFoundException if no atom data was found
+     */
+    void deleteAtom(IGUID guid) throws AtomNotFoundException;
 
     /**
      * Let granterRole grant access to granteeRole to the secure entity
@@ -74,6 +84,14 @@ public interface StorageService extends Service {
      */
     Data getAtomContent(IGUID guid) throws AtomNotFoundException;
 
+    /**
+     * Get the data for the specified atom from a set of nodes.
+     *
+     * @param nodesCollection from which to get the data
+     * @param guid of the atom
+     * @return the data
+     * @throws AtomNotFoundException if the data is not found
+     */
     Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException;
 
     /**
@@ -83,8 +101,6 @@ public interface StorageService extends Service {
      * @param locationBundle the new location
      */
     void addLocation(IGUID guid, LocationBundle locationBundle);
-
-    // TODO - have a deprecate location? could downgrade to cache location, which can be removed...
 
     /**
      * Find all locations for a given atom

@@ -2,14 +2,12 @@ package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.utils.LRU_GUID;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -17,7 +15,6 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.SecureAtom;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.Persistence;
-import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,29 +29,28 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ManifestsCacheImpl extends AbstractManifestsDirectory implements ManifestsCache, Serializable {
 
-    // Maximum number of manifests kept in the cache at one time
-    private static final int MAX_DEFAULT_SIZE = 8192;
-
-    private int size;
     private transient HashMap<IGUID, Manifest> cache;
-    private transient ConcurrentLinkedQueue<IGUID> lru;
+    private transient LRU_GUID lru;
 
     public ManifestsCacheImpl() {
-        this(MAX_DEFAULT_SIZE);
+        cache = new HashMap<>();
+        lru = new LRU_GUID();
     }
 
     public ManifestsCacheImpl(int size) {
-        this.size = size;
-
         cache = new HashMap<>();
-        lru = new ConcurrentLinkedQueue<>();
+        lru = new LRU_GUID(size);
     }
 
     @Override
-    public synchronized void addManifest(Manifest manifest) throws ManifestPersistException {
+    public synchronized void addManifest(Manifest manifest) {
 
         IGUID guid = manifest.guid();
-        applyLRU(guid);
+
+        IGUID guidToRemove = lru.applyLRU(guid);
+        if (!guidToRemove.isInvalid()) {
+            cache.remove(guidToRemove);
+        }
 
         if (manifest.getType().equals(ManifestType.ATOM)) {
 
@@ -92,7 +88,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
             throw new ManifestNotFoundException("Unable to find manifest for GUID: " + guid.toShortString() + " in the cache");
         }
 
-        applyReadLRU(guid);
+        lru.applyReadLRU(guid);
 
         return cache.get(guid);
     }
@@ -103,7 +99,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
-    public ConcurrentLinkedQueue<IGUID> getLRU() {
+    public LRU_GUID getLRU() {
         return lru;
     }
 
@@ -111,7 +107,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     public void clear() {
 
         cache = new HashMap<>();
-        lru = new ConcurrentLinkedQueue<>();
+        lru = new LRU_GUID();
     }
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
@@ -121,11 +117,11 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         if (persistedCache == null) throw new ClassNotFoundException();
         if (persistedCache.getLRU() == null) return persistedCache;
 
-        // Re-build cache
-        ConcurrentLinkedQueue<IGUID> lru = new ConcurrentLinkedQueue<>(persistedCache.getLRU());
-
+        // Reload manifests this way rather than through serialization.
+        // Make a copy of the queue, so that the LRU queue is not changed by the poll() method
+        ConcurrentLinkedQueue<IGUID> lruQueue = new  ConcurrentLinkedQueue<>(persistedCache.getLRU().getQueue());
         IGUID guid;
-        while ((guid = lru.poll()) != null) {
+        while ((guid = lruQueue.poll()) != null) {
             Manifest manifest = loadManifest(storage, manifestsDir, guid);
             if (manifest != null) {
                 try {
@@ -137,21 +133,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         }
 
         return persistedCache;
-    }
-
-    private void applyLRU(IGUID guid) {
-        int currentCacheSize = cache.size();
-        if (currentCacheSize >= size) {
-            IGUID leastUsedGUID = lru.poll();
-            cache.remove(leastUsedGUID);
-        }
-
-        applyReadLRU(guid);
-    }
-
-    private void applyReadLRU(IGUID guid) {
-        lru.remove(guid);
-        lru.add(guid);
     }
 
     private static Manifest loadManifest(LocalStorage storage, IDirectory manifestsDir, IGUID guid) {
@@ -168,28 +149,14 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
-        out.writeInt(lru.size());
-        for (IGUID guid : lru) {
-            out.writeUTF(guid.toMultiHash());
-        }
+        out.writeObject(lru);
     }
 
     // This method defines how the cache is de-serialised
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
-        try {
-            int lruSize = in.readInt();
-            lru = new ConcurrentLinkedQueue<>();
-            for (int i = 0; i < lruSize; i++) {
-                String guid = in.readUTF();
-                lru.add(GUIDFactory.recreateGUID(guid));
-            }
-
-            cache = new HashMap<>();
-
-        } catch (GUIDGenerationException e) {
-            SOS_LOG.log(LEVEL.WARN, "Manifest cache loading - unable to recreated some of the GUIDs");
-        }
+        lru = (LRU_GUID) in.readObject();
+        cache = new HashMap<>();
     }
 }

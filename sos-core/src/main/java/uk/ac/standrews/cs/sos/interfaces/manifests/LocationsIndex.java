@@ -21,5 +21,7 @@ public interface LocationsIndex extends Serializable {
 
     void persist(IFile file) throws IOException;
 
+    void deleteLocation(IGUID node, IGUID guid);
+
     void clear();
 }

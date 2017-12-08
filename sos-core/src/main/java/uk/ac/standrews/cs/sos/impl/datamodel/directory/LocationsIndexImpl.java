@@ -16,10 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -140,12 +137,35 @@ public class LocationsIndexImpl implements LocationsIndex {
             }
         }
 
-        FileOutputStream ostream = new FileOutputStream(file.toFile());
-        ObjectOutputStream p = new ObjectOutputStream(ostream);
+        try (FileOutputStream ostream = new FileOutputStream(file.toFile());
+             ObjectOutputStream p = new ObjectOutputStream(ostream)) {
 
-        p.writeObject(this);
-        p.flush();
-        ostream.close();
+            p.writeObject(this);
+            p.flush();
+        }
+    }
+
+    @Override
+    public void deleteLocation(IGUID node, IGUID guid) {
+
+        if (index.containsKey(guid)) {
+            PriorityQueue<LocationBundle> locationBundles = index.get(guid);
+
+            Iterator<LocationBundle> iterator = locationBundles.iterator();
+            while(iterator.hasNext()) {
+                LocationBundle bundle = iterator.next();
+
+                if (bundle.getLocation() instanceof SOSLocation) {
+                    SOSLocation location = (SOSLocation) bundle.getLocation();
+
+                    if (location.getMachineID().equals(node) && location.getEntityID().equals(guid)) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+
+            }
+        }
     }
 
     @Override

@@ -96,6 +96,14 @@ public interface ManifestsDataService extends Service {
     void addManifestNodeMapping(IGUID manifest, IGUID ddsNode);
 
     /**
+     * Delete the location at a given node for a given atom manifest
+     *
+     * @param atom guid
+     * @param node guid
+     */
+    void deleteLocationFromAtom(IGUID atom, IGUID node) throws ManifestNotFoundException;
+
+    /**
      * Get all the tips for the given invariant.
      * The tips are the leaves in the DAG of the asset.
      *

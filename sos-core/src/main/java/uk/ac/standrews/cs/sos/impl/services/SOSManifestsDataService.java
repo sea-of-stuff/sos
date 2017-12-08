@@ -135,6 +135,14 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
+    public void deleteLocationFromAtom(IGUID atom, IGUID node) throws ManifestNotFoundException {
+
+        // TODO
+        // update atom manifest both in the cache and in disk. not remotely
+        // update - ManifestsLocationsIndex
+    }
+
+    @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
         return getManifest(guid, NodeType.DDS);

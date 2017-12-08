@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.EmptyData;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -64,6 +65,8 @@ public class SOSStorageService implements StorageService {
     // Settings for this service
     private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
 
+    private IGUID localNodeGUID;
+
     // Other node services
     private ManifestsDataService manifestsDataService;
     private NodeDiscoveryService nodeDiscoveryService;
@@ -77,6 +80,7 @@ public class SOSStorageService implements StorageService {
                              ManifestsDataService manifestsDataService, NodeDiscoveryService nodeDiscoveryService) throws ServiceException {
 
         this.storageSettings = storageSettings;
+        this.localNodeGUID = localNodeGUID;
 
         this.storage = storage;
         this.manifestsDataService = manifestsDataService;
@@ -135,6 +139,23 @@ public class SOSStorageService implements StorageService {
         }
 
         return atom;
+    }
+
+    @Override
+    public void deleteAtom(IGUID guid) throws AtomNotFoundException {
+
+
+        try {
+            IDirectory dataDirectory = storage.getDataDirectory();
+            dataDirectory.remove(guid.toMultiHash());
+
+            locationIndex.deleteLocation(localNodeGUID, guid);
+            manifestsDataService.deleteLocationFromAtom(guid, localNodeGUID);
+
+        } catch (DataStorageException | BindingAbsentException | ManifestNotFoundException e) {
+            throw new AtomNotFoundException();
+        }
+
     }
 
     @Override
