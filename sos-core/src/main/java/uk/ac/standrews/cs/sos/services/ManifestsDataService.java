@@ -96,12 +96,20 @@ public interface ManifestsDataService extends Service {
     void addManifestNodeMapping(IGUID manifest, IGUID ddsNode);
 
     /**
-     * Delete the location at a given node for a given atom manifest
+     * Delete manifest from local node.
      *
-     * @param atom guid
-     * @param node guid
+     * @param guid of manifest
+     * @throws ManifestNotFoundException if manifest is not found
      */
-    void deleteLocationFromAtom(IGUID atom, IGUID node) throws ManifestNotFoundException;
+    void delete(IGUID guid) throws ManifestNotFoundException;
+
+    /**
+     * For ATOMS only!
+     *
+     * @param guid of atom
+     * @throws ManifestNotFoundException if atom is not found
+     */
+    void deleteLocalLocation(IGUID guid) throws ManifestNotFoundException;
 
     /**
      * Get all the tips for the given invariant.

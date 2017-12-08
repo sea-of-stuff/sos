@@ -69,6 +69,12 @@ public interface ManifestsIndex {
     void advanceTip(Versionable versionable);
 
     /**
+     * Remove references matching this GUID
+     * @param guid ref to be removed
+     */
+    void delete(IGUID guid);
+
+    /**
      * Persist index to disk
      */
     void flush();

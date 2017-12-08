@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * TODO - set max size of indexes
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
@@ -61,7 +63,6 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
         } else {
             typeToManifest.get(manifest.getType()).add(manifest.guid());
         }
-
 
     }
 
@@ -131,6 +132,11 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
             advanceTip(versionable.invariant(), versionable.previous(), versionable.guid());
         }
 
+    }
+
+    @Override
+    public void delete(IGUID guid) {
+        // TODO
     }
 
     @Override

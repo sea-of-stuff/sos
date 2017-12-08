@@ -28,6 +28,14 @@ public interface ManifestsDirectory {
     Manifest findManifest(IGUID guid) throws ManifestNotFoundException;
 
     /**
+     * Delete manifest from directory.
+     *
+     * @param guid of manifest
+     * @throws ManifestNotFoundException if manifest was not found
+     */
+    void delete(IGUID guid) throws ManifestNotFoundException;
+
+    /**
      * Persist any cache/index of the directory to disk
      */
     void flush();

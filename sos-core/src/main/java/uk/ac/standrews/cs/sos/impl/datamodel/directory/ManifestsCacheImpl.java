@@ -94,6 +94,17 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     }
 
     @Override
+    public void delete(IGUID guid) throws ManifestNotFoundException {
+
+        if (cache.containsKey(guid)) {
+            cache.remove(guid);
+            lru.remove(guid);
+        } else {
+            throw new ManifestNotFoundException("Manifest with GUID "  + guid.toMultiHash() + " was not found and could not be deleted.");
+        }
+    }
+
+    @Override
     public void flush() {
         // NOTE: This method is not implemented, as we use the persist method to actually flush the cache
     }
@@ -114,6 +125,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         ManifestsCache persistedCache = (ManifestsCache) Persistence.Load(file);
 
+        // REMOVEME - we should never have this case
         if (persistedCache == null) throw new ClassNotFoundException();
         if (persistedCache.getLRU() == null) return persistedCache;
 

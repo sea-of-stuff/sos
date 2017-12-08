@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
@@ -82,6 +83,17 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
         }
 
         return getManifestFromGUID(guid);
+    }
+
+    @Override
+    public void delete(IGUID guid) throws ManifestNotFoundException {
+
+        try {
+            IDirectory manifestsDir = localStorage.getManifestsDirectory();
+            manifestsDir.remove(guid.toMultiHash());
+        } catch (DataStorageException | BindingAbsentException e) {
+            throw new ManifestNotFoundException("Manifest with GUID "  + guid.toMultiHash() + " was not found and could not be deleted.");
+        }
     }
 
     @Override

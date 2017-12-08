@@ -63,6 +63,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     // Maps ManifestGUID --> [ Nodes that might have it ]
     private ManifestsLocationsIndex manifestsLocationsIndex;
 
+    private IGUID localNode;
+
     public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
 
         this.ddsSettings = ddsSettings;
@@ -75,6 +77,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         local = new LocalManifestsDirectory(localStorage);
         remote = new RemoteManifestsDirectory(manifestsLocationsIndex, nodeDiscoveryService, this);
+
+        localNode = nodeDiscoveryService.getThisNode().guid();
     }
 
     @Override
@@ -135,11 +139,21 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void deleteLocationFromAtom(IGUID atom, IGUID node) throws ManifestNotFoundException {
+    public void delete(IGUID guid) throws ManifestNotFoundException {
+
+        inMemoryCache.delete(guid);
+        local.delete(guid);
+        index.delete(guid);
+        manifestsLocationsIndex.evictEntry(guid, localNode);
+    }
+
+    @Override
+    public void deleteLocalLocation(IGUID guid) throws ManifestNotFoundException {
 
         // TODO
         // update atom manifest both in the cache and in disk. not remotely
-        // update - ManifestsLocationsIndex
+        // index
+        manifestsLocationsIndex.evictEntry(guid, localNode);
     }
 
     @Override

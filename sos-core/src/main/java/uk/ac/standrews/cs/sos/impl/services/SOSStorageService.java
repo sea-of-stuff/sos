@@ -150,7 +150,7 @@ public class SOSStorageService implements StorageService {
             dataDirectory.remove(guid.toMultiHash());
 
             locationIndex.deleteLocation(localNodeGUID, guid);
-            manifestsDataService.deleteLocationFromAtom(guid, localNodeGUID);
+            manifestsDataService.deleteLocalLocation(guid);
 
         } catch (DataStorageException | BindingAbsentException | ManifestNotFoundException e) {
             throw new AtomNotFoundException();

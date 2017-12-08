@@ -16,7 +16,7 @@ public class DatabaseFactory {
     private TasksDatabase tasksDatabase;
     private ContextsContentsDirectoryDatabase contextsContentsDirectoryDatabase;
 
-    public DatabaseFactory(String path) throws DatabaseException {
+    private DatabaseFactory(String path) throws DatabaseException {
 
         nodesDatabase = new NodesDatabaseImpl(path);
         tasksDatabase = new TasksDatabase(path);
