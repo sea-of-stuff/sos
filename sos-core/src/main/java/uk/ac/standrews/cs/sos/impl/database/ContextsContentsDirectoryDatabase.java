@@ -174,4 +174,9 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
     }
 
+    @Override
+    public void clear() {
+        // DO NOTHING
+    }
+
 }

@@ -20,4 +20,6 @@ public interface ContextsContentsDirectory {
 
     Map<IGUID, ContextVersionInfo> getContentsThatPassedPredicateTestRows(IGUID context, boolean includeEvicted);
 
+    void clear();
+
 }

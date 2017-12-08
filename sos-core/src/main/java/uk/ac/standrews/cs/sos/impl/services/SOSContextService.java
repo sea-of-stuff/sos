@@ -402,6 +402,7 @@ public class SOSContextService implements ContextService {
         }
 
         // RESET IN-MEMORY DATA STRUCTURES
+        contextsContentsDirectory.clear();
         cachedComputationalUnits = new LinkedHashMap<>();
         predicateThreadSessionStatistics = new LinkedList<>();
         applyPolicyThreadSessionStatistics = new LinkedList<>();

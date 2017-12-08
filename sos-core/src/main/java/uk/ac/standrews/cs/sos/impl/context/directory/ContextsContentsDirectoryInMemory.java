@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.impl.utils.LRU_GUID;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -27,13 +29,20 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     // Maps the context to the versions belonging to it
     // [ context -> [version -> ContextVersionInfo] ]
     private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
+    private transient LRU_GUID lru;
     
     ContextsContentsDirectoryInMemory() {
         mappings = new HashMap<>();
+        lru = new LRU_GUID();
     }
 
     @Override
     public void addOrUpdateEntry(IGUID contextInvariant, IGUID version, ContextVersionInfo content) {
+
+        IGUID guidToRemove = lru.applyLRU(contextInvariant);
+        if (!guidToRemove.isInvalid()) {
+            mappings.remove(guidToRemove);
+        }
 
         if (!mappings.containsKey(contextInvariant)) {
             mappings.put(contextInvariant, new HashMap<>());
@@ -52,6 +61,8 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     @Override
     public ContextVersionInfo getEntry(IGUID context, IGUID version) {
 
+        lru.applyReadLRU(context);
+
         if (entryExists(context, version)) {
             return mappings.get(context).get(version);
         } else {
@@ -62,7 +73,13 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     public void remove(IGUID context, IGUID version) {
 
         if (entryExists(context, version)) {
-            mappings.get(context).remove(version);
+            HashMap<IGUID, ContextVersionInfo> mappedVersions = mappings.get(context);
+            mappedVersions.remove(version);
+
+            if (mappedVersions.isEmpty()) {
+                mappings.remove(context);
+                lru.remove(context);
+            }
         }
     }
 
@@ -117,6 +134,11 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         }
     }
 
+    public void clear() {
+        mappings = new HashMap<>();
+        lru = new LRU_GUID();
+    }
+
     ///////////////////
     // Serialization //
     ///////////////////
@@ -126,11 +148,16 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         out.defaultWriteObject();
 
         out.writeInt(mappings.size());
-        for(Map.Entry<IGUID, HashMap<IGUID, ContextVersionInfo>> mapping:mappings.entrySet()) {
-            out.writeUTF(mapping.getKey().toMultiHash());
 
-            out.writeInt(mapping.getValue().size());
-            for(Map.Entry<IGUID, ContextVersionInfo> content:mapping.getValue().entrySet()) {
+        // Store entries as ordered in the LRU
+        ConcurrentLinkedQueue<IGUID> lruQueue = new  ConcurrentLinkedQueue<>(lru.getQueue());
+        IGUID guid;
+        while ((guid = lruQueue.poll()) != null) {
+            out.writeUTF(guid.toMultiHash());
+
+            HashMap<IGUID, ContextVersionInfo> values = mappings.get(guid);
+            out.writeInt(values.size());
+            for(Map.Entry<IGUID, ContextVersionInfo> content:values.entrySet()) {
                 out.writeUTF(content.getKey().toMultiHash());
                 out.writeBoolean(content.getValue().predicateResult);
                 out.writeLong(content.getValue().timestamp.getEpochSecond());
@@ -145,6 +172,8 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         in.defaultReadObject();
 
         try {
+            lru = new LRU_GUID();
+
             mappings = new LinkedHashMap<>();
 
             int numberOfContexts = in.readInt();
