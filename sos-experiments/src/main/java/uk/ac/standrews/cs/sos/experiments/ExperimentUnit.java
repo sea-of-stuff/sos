@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -56,11 +55,9 @@ public interface ExperimentUnit {
      *
      * @param node where to add the content
      * @param folder where the content for the experiment is
-     * @throws URISyntaxException
-     * @throws MetadataException
      * @throws IOException
      */
-    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
+    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder) throws IOException {
 
         PlainFileVisitor<Path> fv = new PlainFileVisitor<>(node);
 
@@ -114,7 +111,7 @@ public interface ExperimentUnit {
 
     }
 
-    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder, Role role) throws URISyntaxException, MetadataException, IOException {
+    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder, Role role) throws IOException {
 
         ProtectedFileVisitor<Path> fv = new ProtectedFileVisitor<>(node, role);
 
@@ -218,7 +215,7 @@ public interface ExperimentUnit {
 
     }
 
-    default List<IGUID> addFolderContentToNodeAsAtoms(SOSLocalNode node, File folder) throws URISyntaxException, MetadataException, IOException {
+    default List<IGUID> addFolderContentToNodeAsAtoms(SOSLocalNode node, File folder) throws IOException {
 
         FileVisitor<Path> fv = new FileVisitor<>(node);
 
@@ -237,7 +234,7 @@ public interface ExperimentUnit {
         }
 
         @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             // System.out.println("File " + file.toUri().toString());
             counter++;
             if (counter % 100 == 0) {

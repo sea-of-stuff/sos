@@ -31,18 +31,19 @@ io_1 <- function(datafile, titlePlot, showSummary=FALSE) {
             axis.text=element_text(size=14),
             axis.title=element_text(size=16,face="bold")) +
       scale_y_continuous(labels = comma) + 
+      expand_limits(x = 0, y = 0) +
       labs(title=titlePlot, x="Operation", y="MB/s")
   }
 }
 
-guid_1 <- function(datafile, titlePlot, showSummary=FALSE) {
+guid <- function(datafile, statsType, titlePlot, showSummary=FALSE) {
   library(ggplot2)
   library(scales)
   
   source("r_scripts/utils_stats.r")
   
   d <- read.csv(datafile, header=TRUE, sep="\t") 
-  d <- d[d$StatsTYPE == 'guid',]
+  d <- d[d$StatsTYPE == statsType,]
   
   d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
   
@@ -60,7 +61,17 @@ guid_1 <- function(datafile, titlePlot, showSummary=FALSE) {
             axis.text=element_text(size=14),
             axis.title=element_text(size=16,face="bold")) +
       scale_y_continuous(labels = comma) + 
+      expand_limits(x = 0, y = 0) +
       labs(title=titlePlot, x="Operation", y="MB/s")
   }
 }
 
+guid_data <- function(datafile, titlePlot, showSummary=FALSE) {
+  
+  guid(datafile, 'guid_data', titlePlot, showSummary)
+}
+
+guid_manifest <- function(datafile, titlePlot, showSummary=FALSE) {
+  
+  guid(datafile, 'guid_manifest', titlePlot, showSummary)
+}
