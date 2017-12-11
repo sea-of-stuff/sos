@@ -35,6 +35,13 @@ io_1("output/test_io_1_on_1000x1mb_2.tsv", "IO performance. Dataset: 1000 files 
 io_1("output/io_1_on_20x50mb_10its.tsv", "IO performance. Dataset: 20 files of 50mb each.")
 
 
+io_1("output/io_1_on_text100k_10its_1.tsv", "IO performance. Dataset: 20 files of 50mb each.")
+io_1("output/io_1_on_text100k_10its_1.tsv", "IO performance. Dataset: 20 files of 50mb each.", ratio=FALSE)
+
+
+guid_data("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
+guid_manifest("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
+
 ############
 # GUID_1
 ############
