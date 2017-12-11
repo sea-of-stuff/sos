@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -191,35 +192,12 @@ public class CommonPredicates {
 
     public static boolean SearchText(IGUID guid, String textToSearch) {
 
-        SOSAgent agent = SOSAgent.instance();
-
-        try (Data data = agent.getData(guid)){
-
-            boolean result = data.toString().contains(textToSearch);
-            return result;
-
-        } catch (ServiceException e) {
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
+        return TextOccurrences(guid, textToSearch) == 1;
     }
 
     public static boolean SearchTextIgnoreCase(IGUID guid, String textToSearch) {
 
-        SOSAgent agent = SOSAgent.instance();
-
-        try (Data data = agent.getData(guid)){
-
-            boolean result = data.toString().toLowerCase().contains(textToSearch);
-            return result;
-
-        } catch (ServiceException e) {
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-
+        return TextOccurrencesIgnoreCase(guid, textToSearch) == 1;
     }
 
     public static int TextOccurrences(IGUID guid, String textToSearch) {
@@ -231,9 +209,7 @@ public class CommonPredicates {
             int result = StringUtils.countMatches(data.toString(), textToSearch);
             return result;
 
-        } catch (ServiceException e) {
-            return 0;
-        } catch (Exception e) {
+        } catch (ServiceException | IOException e) {
             return 0;
         }
 
@@ -245,12 +221,10 @@ public class CommonPredicates {
 
         try (Data data = agent.getData(guid)){
 
-            int result = StringUtils.countMatches(data.toString().toLowerCase(), textToSearch);
+            int result = StringUtils.countMatches(data.toString().toLowerCase(), textToSearch.toLowerCase());
             return result;
 
-        } catch (ServiceException e) {
-            return 0;
-        } catch (Exception e) {
+        } catch (ServiceException | IOException e) {
             return 0;
         }
 
@@ -265,9 +239,7 @@ public class CommonPredicates {
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaFileForMethod(compilationUnit.getChildNodes(), method);
 
-        } catch (ServiceException e) {
-            return false;
-        } catch (Exception e) {
+        } catch (ServiceException | IOException e) {
             return false;
         }
 
@@ -282,9 +254,7 @@ public class CommonPredicates {
             CompilationUnit compilationUnit = JavaParser.parse(data.toString());
             return InspectJavaForClass(compilationUnit.getChildNodes(), clazz);
 
-        } catch (ServiceException e) {
-            return false;
-        } catch (Exception e) {
+        } catch (ServiceException | IOException e) {
             return false;
         }
 

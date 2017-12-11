@@ -1,34 +1,22 @@
 package uk.ac.standrews.cs.sos.impl.datamodel;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import uk.ac.standrews.cs.castore.CastoreBuilder;
-import uk.ac.standrews.cs.castore.CastoreFactory;
-import uk.ac.standrews.cs.castore.CastoreType;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
-import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.GUIDFactory;
-import uk.ac.standrews.cs.sos.CommonTest;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.ExternalLocationBundle;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -38,33 +26,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AtomManifestTest extends CommonTest {
-
-    private LocalStorage localStorage;
-
-    @BeforeMethod
-    public void setUp(Method testMethod) throws Exception {
-        super.setUp(testMethod);
-
-        try {
-            String root = System.getProperty("user.home") + "/sos/";
-
-            CastoreBuilder castoreBuilder = new CastoreBuilder()
-                    .setType(CastoreType.LOCAL)
-                    .setRoot(root);
-            IStorage stor = CastoreFactory.createStorage(castoreBuilder);
-            localStorage = new LocalStorage(stor);
-
-        } catch (StorageException | DataStorageException e) {
-            throw new SOSException(e);
-        }
-
-    }
-
-    @AfterMethod
-    public void tearDown() throws DataStorageException {
-        localStorage.destroy();
-    }
+public class AtomManifestTest extends SetUpTest {
 
     @Test
     public void testNoLocations() throws Exception {
