@@ -70,6 +70,8 @@ pr_1("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run 
 # Number of iterations: 20.
 pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
 
+# its 10
+pr_1("output/test_pr_1_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
 
 ##############
 # PO_A_1

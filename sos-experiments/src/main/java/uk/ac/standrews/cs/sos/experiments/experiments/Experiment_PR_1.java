@@ -77,14 +77,13 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             addContext(cms, experiment, "base");
 
             // Data only
-            // Source: http://norvig.com/ngrams/count_1w.txt
             addContext(cms, experiment, "common_word_occurs_once"); // the
-            addContext(cms, experiment, "uncommon_word_occurs_once"); // poison (10,000th)
+            addContext(cms, experiment, "uncommon_word_occurs_once"); // grain
             addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
 
             // Metadata and Data
             addContext(cms, experiment, "meta_common_word_occurs_once"); // the
-            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // poison (10,000th)
+            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // grain
             addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
 
             // Check one metadata property
@@ -105,7 +104,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1_3");
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1_5");
         experiment_pr_1.process();
     }
 

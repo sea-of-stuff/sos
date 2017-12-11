@@ -13,7 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"poison\");",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"grain\") == 1;",
     "dependencies": []
   },
   "policies": []
