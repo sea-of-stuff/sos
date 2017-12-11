@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
-import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -101,12 +100,12 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
     }
 
-    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
+    public static void main(String[] args) throws ConfigurationException, ExperimentException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1.tsv");
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1_3");
         experiment_pr_1.process();
     }
 

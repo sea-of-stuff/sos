@@ -6,7 +6,11 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Version;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.testng.Assert.*;
 
@@ -194,5 +198,49 @@ public class CommonPredicatesTest extends SetUpTest {
 
         int result = CommonPredicates.TextOccurrencesIgnoreCase(version.guid(), "TEST");
         assertEquals(result, 5);
+    }
+
+    @Test
+    public void contentType() throws ServiceException {
+
+        String stringData = "This is some text";
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setData(new StringData(stringData));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.ContentTypePredicate(version.guid(),
+                Arrays.asList("text/plain; charset=UTF-8",
+                        "text/plain; charset=windows-1252",
+                        "text/plain; charset=ISO-8859-1"));
+        assertTrue(result);
+    }
+
+    @Test
+    public void contentTypeFails() throws ServiceException {
+
+        String stringData = "This is some text";
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setData(new StringData(stringData));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.ContentTypePredicate(version.guid(),
+                Collections.singletonList("FAIL"));
+        assertFalse(result);
     }
 }

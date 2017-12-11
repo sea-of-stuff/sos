@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -55,7 +56,7 @@ public interface ExperimentUnit {
      *
      * @param node where to add the content
      * @param folder where the content for the experiment is
-     * @throws IOException
+     * @throws IOException if content could not be added properly
      */
     default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder) throws IOException {
 
@@ -96,8 +97,13 @@ public interface ExperimentUnit {
             try {
                 AtomBuilder atomBuilder = new AtomBuilder()
                         .setLocation(new URILocation(file.toUri().toString()));
+
+                MetadataBuilder metadataBuilder = new MetadataBuilder()
+                        .setData(atomBuilder.getData());
+
                 VersionBuilder versionBuilder = new VersionBuilder()
-                        .setAtomBuilder(atomBuilder);
+                        .setAtomBuilder(atomBuilder)
+                        .setMetadataBuilder(metadataBuilder);
 
                 Version version = node.getAgent().addData(versionBuilder);
                 versions.add(version.guid());
