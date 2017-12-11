@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.EmptyData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
@@ -37,8 +38,8 @@ public class AtomManifest extends BasicManifest implements Atom {
     /**
      * Creates a valid atom manifest given an atom.
      *
-     * @param guid
-     * @param locations
+     * @param guid of the atom
+     * @param locations where the atom is stored
      */
     public AtomManifest(IGUID guid, Set<LocationBundle> locations) {
         super(ManifestType.ATOM);
@@ -105,8 +106,8 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     /**
      * Verifies the integrity for a specific location
-     * @param locationBundle
-     * @return
+     * @param locationBundle where the data to verify is
+     * @return if the data integrity was verified
      */
     @Override
     public boolean verifyIntegrity(LocationBundle locationBundle) {
@@ -118,7 +119,7 @@ public class AtomManifest extends BasicManifest implements Atom {
                 return false;
             }
 
-        } catch (Exception e) {
+        } catch (IOException | GUIDGenerationException e) {
             return false;
         }
 

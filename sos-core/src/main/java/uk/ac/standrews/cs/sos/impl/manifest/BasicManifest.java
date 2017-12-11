@@ -1,12 +1,17 @@
 package uk.ac.standrews.cs.sos.impl.manifest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.IKey;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.constants.Internals;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -123,11 +128,20 @@ public abstract class BasicManifest implements Manifest {
 
     protected IGUID makeGUID() {
 
-        try (InputStream content = contentToHash()){
-            return GUIDFactory.generateGUID(GUID_ALGORITHM, content);
+        try (Data data = new InputStreamData(contentToHash())){
+
+            long start = System.nanoTime();
+            IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
+            long duration = System.nanoTime() - start;
+
+            StatsTYPE subtype = StatsTYPE.getHashType(Internals.GUID_ALGORITHM);
+            InstrumentFactory.instance().measure(StatsTYPE.guid_manifest, subtype, Long.toString(data.getSize()), duration);
+
+            return guid;
         } catch (GUIDGenerationException | IOException e) {
             return new InvalidID();
         }
+
     }
 
 }

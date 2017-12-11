@@ -11,7 +11,7 @@ public enum StatsTYPE {
     none,
     any,
 
-    guid, // Time to generate GUIDs for data
+    guid_data, guid_manifest, // Time to generate GUIDs for data or manifest
     sha1, sha256,
 
     io, // Time to write/read data, manifests, metadata, etc...

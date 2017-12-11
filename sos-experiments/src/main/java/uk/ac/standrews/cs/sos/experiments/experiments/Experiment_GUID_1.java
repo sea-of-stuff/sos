@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
-import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -37,7 +36,7 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_GUID_1 implements ExperimentUnit {
 
         @Override
-        public void setup() throws ExperimentException {
+        public void setup() {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
         }
 
@@ -68,7 +67,7 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
         }
     }
 
-    public static void main(String[] args) throws ChicShockException, ConfigurationException, ExperimentException, InterruptedException {
+    public static void main(String[] args) throws ConfigurationException, ExperimentException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "guid_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);

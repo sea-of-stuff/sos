@@ -5,9 +5,12 @@ import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
+import uk.ac.standrews.cs.sos.constants.Internals;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
@@ -292,7 +295,12 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
         IGUID guid;
         try {
+            long start = System.nanoTime();
             guid = GUIDFactory.generateGUID(GUID_ALGORITHM, contentToHash);
+            long duration = System.nanoTime() - start;
+
+            StatsTYPE subtype = StatsTYPE.getHashType(Internals.GUID_ALGORITHM);
+            InstrumentFactory.instance().measure(StatsTYPE.guid_manifest, subtype, Long.toString(contentToHash.length()), duration);
         } catch (GUIDGenerationException e) {
             guid = new InvalidID();
         }

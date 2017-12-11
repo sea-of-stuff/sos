@@ -12,16 +12,17 @@ public class Statistics {
     private boolean policies;
     private boolean checkPolicies;
     private boolean io;
-    private boolean guid;
+    private boolean guid_data;
+    private boolean guid_manifest;
 
-    public Statistics() {
-    }
+    // Needed to automatically parse its JSON string into an object
+    public Statistics() {}
 
     /**
      * Returns true if we should collects stats about this statsTYPE
      *
-     * @param statsTYPE
-     * @return
+     * @param statsTYPE to check
+     * @return true if the stats type is enabled
      */
     public boolean isEnabled(StatsTYPE statsTYPE) {
 
@@ -38,8 +39,10 @@ public class Statistics {
                 return isCheckPolicies();
             case io:
                 return isIo();
-            case guid:
-                return isGuid();
+            case guid_data:
+                return isGuid_data();
+            case guid_manifest:
+                return isGuid_manifest();
         }
 
         return false;
@@ -85,11 +88,19 @@ public class Statistics {
         this.io = io;
     }
 
-    public boolean isGuid() {
-        return guid;
+    public boolean isGuid_data() {
+        return guid_data;
     }
 
-    public void setGuid(boolean guid) {
-        this.guid = guid;
+    public void setGuid_data(boolean guid_data) {
+        this.guid_data = guid_data;
+    }
+
+    public boolean isGuid_manifest() {
+        return guid_manifest;
+    }
+
+    public void setGuid_manifest(boolean guid_manifest) {
+        this.guid_manifest = guid_manifest;
     }
 }

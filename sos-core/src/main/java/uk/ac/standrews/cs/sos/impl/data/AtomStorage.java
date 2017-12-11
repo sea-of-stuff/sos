@@ -96,7 +96,8 @@ public class AtomStorage {
             StoredAtomInfo storedAtomInfo = persistData(tmpGUID, atomBuilder);
 
             IFile tmpCachedLocation = atomFileInLocalStorage(tmpGUID);
-            IGUID guid = generateGUID(new URILocation(tmpCachedLocation.getPathname()));
+            Location location = new URILocation(tmpCachedLocation.getPathname());
+            IGUID guid = generateGUID(location);
             tmpCachedLocation.rename(guid.toMultiHash());
 
             return storedAtomInfo.setGuid(guid);
@@ -114,7 +115,7 @@ public class AtomStorage {
             try (Data data = atomBuilder.getData()) {
 
                 return persistData(tmpGUID, atomBuilder, data);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 throw new DataStorageException("Data source could not be closed");
             }
 
@@ -131,7 +132,7 @@ public class AtomStorage {
 
             return persistData(guid, atomBuilder, data);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new DataStorageException(e);
         }
     }
@@ -187,22 +188,17 @@ public class AtomStorage {
         try (Data data = LocationUtility.getDataFromLocation(location)) {
 
             long start = System.nanoTime();
-            IGUID guid = generateGUID(data);
+            IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
             long duration = System.nanoTime() - start;
 
             StatsTYPE subtype = StatsTYPE.getHashType(Internals.GUID_ALGORITHM);
-            InstrumentFactory.instance().measure(StatsTYPE.guid, subtype, Long.toString(data.getSize()), duration);
+            InstrumentFactory.instance().measure(StatsTYPE.guid_data, subtype, Long.toString(data.getSize()), duration);
 
             return guid;
 
-        } catch (Exception e) {
+        } catch (IOException | GUIDGenerationException e) {
             return new InvalidID();
         }
-    }
-
-    private IGUID generateGUID(Data data) throws GUIDGenerationException, IOException {
-
-        return GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
     }
 
     private IFile atomFileInLocalStorage(IGUID guid) throws DataStorageException {

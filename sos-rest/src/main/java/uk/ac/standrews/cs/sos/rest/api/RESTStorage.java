@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -87,7 +88,7 @@ public class RESTStorage {
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, data.getInputStream());
 
-        } catch (Exception e) {
+        } catch (AtomNotFoundException | IOException e) {
             return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Atom not found");
         }
 

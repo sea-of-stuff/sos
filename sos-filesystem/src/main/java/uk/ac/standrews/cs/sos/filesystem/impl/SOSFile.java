@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
+import uk.ac.standrews.cs.fs.store.impl.localfilebased.StringData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -251,11 +252,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
             return new InputStreamData(data.getInputStream(), (int) size);
 
-        } catch (Exception e) {
-            e.printStackTrace(); // TODO - define EmptyDATA() OBJECT
+        } catch (IOException | ServiceException e) {
+            return new StringData("");
         }
 
-        return null;
     }
 
 }

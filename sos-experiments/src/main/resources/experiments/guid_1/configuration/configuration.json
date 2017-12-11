@@ -17,7 +17,8 @@
     },
     "stats": {
       "io": false,
-      "guid": true,
+      "guid_data": true,
+      "guid_manifest": true,
       "experiment": false,
       "predicate": false,
       "policies": false,

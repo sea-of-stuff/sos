@@ -28,7 +28,7 @@ public class AbstractDatabase implements Database {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new DatabaseConnectionException(e);
         }
 

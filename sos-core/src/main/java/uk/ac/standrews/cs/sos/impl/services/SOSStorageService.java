@@ -131,10 +131,8 @@ public class SOSStorageService implements StorageService {
                         atomBuilder.isAlreadyProtected());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
-            } catch (SOSProtocolException e) {
+            } catch (IOException | SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
-            } catch (Exception e) {
-                SOS_LOG.log(LEVEL.ERROR, "General exception occurred while attempting to replicate atom " + guid + " to other storage nodes");
             }
         }
 
@@ -171,7 +169,8 @@ public class SOSStorageService implements StorageService {
             manifestsDataService.addManifest(secureManifest);
 
             return secureManifest;
-        } catch (Exception e) {
+
+        } catch (ManifestPersistException e) {
             throw new ProtectionException(e);
         }
     }
@@ -209,7 +208,7 @@ public class SOSStorageService implements StorageService {
                 throw new ProtectionException("Role/key not available for secure atom with GUID " + atom.guid().toShortString());
             }
 
-        } catch (Exception e) {
+        } catch (IOException | AtomNotFoundException | ProtectionException e) {
             throw new DataNotFoundException();
         }
 

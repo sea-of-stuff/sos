@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
+import uk.ac.standrews.cs.castore.exceptions.RenameException;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -217,7 +219,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
                 backupManifest.persist();
                 return backupManifest;
 
-            } catch (Exception e) {
+            } catch (DataException | IOException e) {
                 throw new PersistenceException("Unable to persist manifest", e);
             }
 
@@ -238,7 +240,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
                 manifestTempFile.persist();
 
                 manifestTempFile.rename(manifestGUID + FileUtils.JSON_EXTENSION);
-            } catch (Exception e) {
+            } catch (DataException | IOException | RenameException e) {
                 throw new PersistenceException("Unabel to persist renamed manifest", e);
             }
 
