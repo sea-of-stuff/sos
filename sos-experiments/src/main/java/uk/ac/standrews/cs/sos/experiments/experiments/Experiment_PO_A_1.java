@@ -73,8 +73,9 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
 
             rest_a_bit();
 
-            System.out.println("Running SCP data replication");
-            scpExperiment();
+            // FIXME - Have proper SCP data transfer?
+//            System.out.println("Running SCP data replication");
+//            scpExperiment();
         }
 
         private void scpExperiment() throws ExperimentException {
