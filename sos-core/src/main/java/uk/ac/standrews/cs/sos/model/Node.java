@@ -22,7 +22,7 @@ public interface Node extends Manifest {
     /**
      * This is the signature certificate the the node can expose to the rest of the SOS.
      *
-     * @return
+     * @return public certificate of node. This is used to verify the node requests.
      */
     PublicKey getSignatureCertificate();
 
@@ -30,52 +30,56 @@ public interface Node extends Manifest {
      * This is the address of the node.
      * This information should be used to contact the node.
      *
-     * @return
+     * @return address of node
      */
     InetSocketAddress getHostAddress();
 
+    /**
+     * IP address as a string
+     * @return IP
+     */
     String getIP();
 
     /**
      * Returns true if this is a client node
-     * @return
+     * @return true if the node is an agent
      */
     boolean isAgent();
 
     /**
      * Returns true if this is a storage node
-     * @return
+     * @return true if the node exposes the storage service
      */
     boolean isStorage();
 
     /**
      * Returns true if this is a DDS node
-     * @return
+     * @return true if the DDS service is exposed
      */
     boolean isDDS();
 
     /**
      * Returns true if this is a NDS node
-     * @return
+     * @return true if the NDS service is exposed
      */
     boolean isNDS();
 
     /**
      * Returns true if this is a MMS node
-     * @return
+     * @return true if the MMS service is exposed
      */
     boolean isMMS();
 
     /**
      * Returns true if this is a CMS node
      *
-     * @return
+     * @return true if the CMS service is exposed
      */
     boolean isCMS();
 
     /**
      * Returns true if this is a RMS node
-     * @return
+     * @return true if the RMS service is exposed
      */
     boolean isRMS();
 

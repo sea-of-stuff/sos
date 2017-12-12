@@ -5,6 +5,8 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.File;
 
@@ -38,15 +40,23 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
+
+            // data to add to nodes
+            // datasets should be split as evenly as possible across nodes
         }
 
         @Override
         public void run() {
+
+            long start = System.nanoTime();
+            // Run predicate locally and trigger remote nodes
+            // wait for all nodes (included local node) to return
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, "TODO - NUMBER OF NODES", duration);
         }
 
     }
 
-    // TODO - this experiment requires nodes to exchange info about their contexts. I am not there yet... :(
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "do_1") + "configuration.json");

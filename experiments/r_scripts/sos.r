@@ -84,6 +84,12 @@ po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply
 po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", 
      titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", showSummary = TRUE)
 
+
+po_1("remote/po_a_1_text_100kb_10its_with_scp_7.tsv", type="policies", subtype="policy_apply_dataset", 
+     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=100)
+
+po_a_1_text_100kb_10its_with_scp_7 
+
 ##############
 # PO_A_3
 ##############
