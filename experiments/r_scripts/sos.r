@@ -72,6 +72,7 @@ pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to r
 
 # its 10
 pr_1("output/test_pr_1_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
+pr_1("output/test_pr_1_5.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
 
 ##############
 # PO_A_1
@@ -79,7 +80,7 @@ pr_1("output/test_pr_1_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a pred
 
 # Number of iterations: 10
 po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", 
-     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=2)
 po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply_dataset", 
      titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", showSummary = TRUE)
 
@@ -88,7 +89,7 @@ po_1("remote/po_a_1_text100kb_10its.tsv", type="policies", subtype="policy_apply
 ##############
 
 # Number of iterations: 10
-po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???")
+po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???", yMax=10)
 po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)
 
 
@@ -97,11 +98,12 @@ po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to ru
 ##############
 
 # Number of iterations: 10
-po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_check_dataset", 
+     titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=2)
 
 ##############
 # PO_C_3
 ##############
 
 # Number of iterations: 10
-po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???")
+po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???", yMax=10)

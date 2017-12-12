@@ -1,4 +1,4 @@
-po_3 <- function(datafile, type, titlePlot="NO TITLE", showSummary=FALSE) {
+po_3 <- function(datafile, type, titlePlot="NO TITLE", showSummary=FALSE, yMax) {
   
   library(ggplot2)
   source("r_scripts/utils_stats.r")
@@ -30,6 +30,7 @@ po_3 <- function(datafile, type, titlePlot="NO TITLE", showSummary=FALSE) {
       theme(axis.text.x=element_text(angle=90,hjust=1), 
             axis.text=element_text(size=14),
             axis.title=element_text(size=16,face="bold")) +
+      ylim(0, yMax) +
       labs(title=titlePlot, x="Policy", y="Time (s)")
   }
   
