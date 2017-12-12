@@ -43,7 +43,7 @@ io_1 <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
             axis.text=element_text(size=14),
             axis.title=element_text(size=16,face="bold")) +
       scale_y_continuous(labels = comma) + 
-      expand_limits(x = 0, y = 0) +
+      expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
       labs(title=titlePlot, x="Operation", y=yLabel)
   }
 }

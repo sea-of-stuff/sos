@@ -48,9 +48,6 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
-                System.out.println("Adding users/roles to node");
-                addFolderUSROToNode(node, experiment);
-
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");
@@ -68,10 +65,14 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
         }
 
         @Override
-        public void run() {
+        public void run() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
             cms.runPolicies();
+
+            rest_a_bit();
+
+            // TODO - perform replication with SCP
         }
 
         private void addContexts() throws Exception {

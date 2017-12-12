@@ -48,9 +48,6 @@ public class Experiment_PO_C_1 extends BaseExperiment implements Experiment {
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
-                System.out.println("Adding users/roles to node");
-                addFolderUSROToNode(node, experiment);
-
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");

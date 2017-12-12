@@ -270,4 +270,12 @@ public interface ExperimentUnit {
         InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added context " + context_name + " " + context.toShortString());
     }
 
+    default void rest_a_bit() throws ExperimentException {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new ExperimentException();
+        }
+    }
+
 }

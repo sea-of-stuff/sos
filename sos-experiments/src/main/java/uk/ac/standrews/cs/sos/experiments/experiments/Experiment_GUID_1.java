@@ -54,6 +54,8 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
                 throw new ExperimentException();
             }
 
+            rest_a_bit();
+
             Internals.GUID_ALGORITHM = ALGORITHM.SHA1;
             try {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();

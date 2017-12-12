@@ -65,6 +65,8 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
                 throw new ExperimentException();
             }
 
+            rest_a_bit();
+
             // TODO - comment this line out to invalidate caches
             // node.getMDS().shutdown();
             Agent agent = node.getAgent();
@@ -76,6 +78,8 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
                     throw new ExperimentException("Unable to get data for atom with GUID " + atom.toMultiHash());
                 }
             }
+
+            rest_a_bit();
 
             // READ/WRITE files via FS and take measurements
             try {
@@ -119,6 +123,12 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             }
             long duration = System.nanoTime() - start;
             InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.fs_read_file, Integer.toString(size), duration);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new IOException();
+            }
 
             // WRITE FILE
             start = System.nanoTime();
