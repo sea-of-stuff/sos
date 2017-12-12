@@ -34,7 +34,7 @@ public class Persistence {
         // Check that file is not empty
         try (BufferedReader br = new BufferedReader(new FileReader(file.getPathname()))) {
             if (br.readLine() == null) {
-                return null;
+                throw new IOException();
             }
 
             try (FileInputStream istream = new FileInputStream(file.toFile());

@@ -74,10 +74,14 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
             rest_a_bit();
 
             System.out.println("Running SCP data replication");
+            scpExperiment();
+        }
+
+        private void scpExperiment() throws ExperimentException {
             ExperimentConfiguration.Experiment.Node slaveNode = getExperiment().getNodes().iterator().next();
             String lDataPath = experiment.getExperimentNode().getDatasetPath();
             String rDataPath = "temp_data/";
-            sendFiles(slaveNode, lDataPath, rDataPath);
+            sendFilesViaRuntime(slaveNode, lDataPath, rDataPath);
         }
 
         private void addContexts() throws Exception {

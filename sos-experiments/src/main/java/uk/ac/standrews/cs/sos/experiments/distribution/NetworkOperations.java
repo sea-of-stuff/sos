@@ -34,11 +34,11 @@ public class NetworkOperations implements Closeable {
 
         try {
             JSch jsch = new JSch();
-            if (ssh.getKnown_hosts() != null && !ssh.getKnown_hosts().isEmpty()) {
+            if (ssh.getKnown_hosts() != null && !ssh.getKnown_hosts().isEmpty() && new File(ssh.getKnown_hosts()).exists()) {
                 jsch.setKnownHosts(ssh.getKnown_hosts());
             }
 
-            if (ssh.getConfig() != null && !ssh.getConfig().isEmpty()) {
+            if (ssh.getConfig() != null && !ssh.getConfig().isEmpty() && new File(ssh.getConfig()).exists()) {
                 ConfigRepository configRepository = com.jcraft.jsch.OpenSSHConfig.parseFile(ssh.getConfig());
                 jsch.setConfigRepository(configRepository);
             }

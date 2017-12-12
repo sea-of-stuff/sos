@@ -240,7 +240,7 @@ public class SOSDistribution {
     }
 
     public static void undoDistributionToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
-        System.out.println("Distributing the SOS-Experiment to a remote node");
+        System.out.println("Undoing distribution of the SOS-Experiment to a remote node");
 
         Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 

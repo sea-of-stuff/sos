@@ -123,6 +123,7 @@ public class ExperimentalFramework {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.unShock(nodeName);
+        chicShock.unChic();
     }
 
     private static void stopAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
@@ -133,8 +134,10 @@ public class ExperimentalFramework {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.unShock();
+        chicShock.unChic();
         Thread.sleep(2000); // Wait a bit before stopping the experiment node
         chicShock.unShockExperiment();
+        chicShock.unChicExperiment();
     }
 
     private static void getStats() throws ConfigurationException, NetworkException {

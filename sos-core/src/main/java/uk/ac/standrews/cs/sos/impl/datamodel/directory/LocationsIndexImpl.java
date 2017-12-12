@@ -227,7 +227,7 @@ public class LocationsIndexImpl implements LocationsIndex {
                 }
 
             } catch (GUIDGenerationException e) {
-                e.printStackTrace();
+                throw new IOException();
             }
 
         }

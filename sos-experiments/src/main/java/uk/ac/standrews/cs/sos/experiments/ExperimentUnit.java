@@ -274,6 +274,7 @@ public interface ExperimentUnit {
 
     default void sendFiles(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
 
+        System.out.println("Sending files via SCP to node: " + node.toString());
         try (NetworkOperations scp = new NetworkOperations()){
             scp.setSsh(node.getSsh());
             scp.connect();
@@ -293,6 +294,40 @@ public interface ExperimentUnit {
         } catch (IOException | NetworkException e) {
             throw new ExperimentException();
         }
+    }
+
+    default void sendFilesViaRuntime(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
+
+        System.out.println("Sending files via SCP to node: " + node.toString());
+
+        try {
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+
+            // Create folder at remote node
+            Runtime rt = Runtime.getRuntime();
+            System.out.println("Creating remote path for SCP");
+            Process process = rt.exec("ssh " + node.getSsh().getHost() + " 'mkdir -p " + path + rDirectoryPath + "'");
+            int exitVal = process.waitFor();
+            System.out.println("Remote path for SCP created. Error code: " + exitVal);
+
+            File[] listOfFiles = new File(lDirectoryPath).listFiles();
+            assert listOfFiles != null;
+            long start = System.nanoTime();
+            for (File file : listOfFiles) {
+
+                process = rt.exec("scp " + file.getAbsolutePath() + " " + node.getSsh().getHost() + ":" + path + rDirectoryPath + file.getName());
+                exitVal = process.waitFor();
+                if (exitVal != 0) {
+                    throw new ExperimentException("Exception for SCP operation");
+                }
+            }
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, StatsTYPE.scp.name(), duration);
+
+        } catch (IOException | InterruptedException e) {
+            throw new ExperimentException();
+        }
+
     }
 
     default void rest_a_bit() throws ExperimentException {

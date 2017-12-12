@@ -12,7 +12,7 @@ po_1 <- function(datafile, type, subtype, titlePlot="NO TITLE", showSummary=FALS
   
   dd <- d[d$Subtype == subtype,]
   dd$Message <- droplevels(dd$Message)
-  dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
+  dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName"))
   
   if (showSummary) {
     dd

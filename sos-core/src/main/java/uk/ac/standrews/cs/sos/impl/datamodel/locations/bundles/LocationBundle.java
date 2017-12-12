@@ -41,10 +41,8 @@ public class LocationBundle {
         try {
             return JSONHelper.JsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return "INVALID LOCATION";
         }
-
-        return null;
     }
 
     @Override

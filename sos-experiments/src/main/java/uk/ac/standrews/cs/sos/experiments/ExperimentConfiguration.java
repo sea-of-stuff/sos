@@ -192,6 +192,11 @@ public class ExperimentConfiguration {
             private String dataset;
             private boolean sendUSRO = false;
 
+            @Override
+            public String toString() {
+                return id + "_" + name + "_" + ssh.toString();
+            }
+
             public Node() {}
 
             public int getId() {
@@ -348,6 +353,11 @@ public class ExperimentConfiguration {
                 private String known_hosts;
                 private String config;
                 private String password;
+
+                @Override
+                public String toString() {
+                    return type + "_" + user + "_" + host;
+                }
 
                 public SSH() {}
 
