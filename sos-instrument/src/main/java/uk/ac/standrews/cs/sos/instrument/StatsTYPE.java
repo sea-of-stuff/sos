@@ -27,6 +27,7 @@ public enum StatsTYPE {
 
     policies,
     policy_apply_dataset,
+    scp,
 
     checkPolicies,
     policy_check_dataset,

@@ -12,7 +12,7 @@ import java.util.concurrent.*;
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
-public class NetworkOperations {
+public class NetworkOperations implements Closeable {
 
     private static final String EXEC_CHANNEL = "exec";
     private static final int PROCESS_KILL_SIGNAL = 15; // Signal name: TERM
@@ -28,7 +28,7 @@ public class NetworkOperations {
     /**
      * Connect to the remote host via SSH
      *
-     * @throws NetworkException
+     * @throws NetworkException if unable to connect to node
      */
     public void connect() throws NetworkException {
 
@@ -62,12 +62,12 @@ public class NetworkOperations {
         }
     }
 
-    /**
-     * Disconnect from the remote host
-     */
-    public void disconnect() {
+    @Override
+    public void close() throws IOException {
 
-        session.disconnect();
+        if (session != null) {
+            session.disconnect();
+        }
     }
 
     public void sendFile(String lfile, String rfile, boolean checkRemoteFile) throws NetworkException {

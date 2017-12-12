@@ -9,6 +9,10 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
  */
 public interface Experiment {
 
+    /**
+     * Experiment unit for the overall experiment
+     * @return experiment unit
+     */
     ExperimentUnit getExperimentUnit();
 
     /**
@@ -32,6 +36,9 @@ public interface Experiment {
      */
     void cleanup() throws ExperimentException;
 
+    /**
+     * Called when the experiment is finished
+     */
     void finish() throws ExperimentException;
 
     /**
@@ -40,9 +47,9 @@ public interface Experiment {
      */
     void process() throws ExperimentException;
 
+    /**
+     * Number of iterations for the experiment
+     * @return number of iterations
+     */
     int numberOfTotalIterations();
-
-    // NOTE (1) Experiments should have a main method to runIteration as standalone java programs.
-    // NOTE (2) This is important if we want to runIteration the experiment from remote while having control using our local machine
-
 }

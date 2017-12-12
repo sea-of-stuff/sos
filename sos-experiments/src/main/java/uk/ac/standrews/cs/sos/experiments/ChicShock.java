@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * ChicShock does not mean anything. This is simply a word I invented and I like, so here it is.
@@ -50,7 +49,7 @@ public class ChicShock {
 
         try {
             SOSDistribution.distribute(experimentConfiguration);
-        } catch (InterruptedException | NetworkException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }
@@ -65,7 +64,7 @@ public class ChicShock {
             if (experimentConfiguration.getExperimentObj().getExperimentNode().isRemote()) {
                 SOSDistribution.distributeToExperimentNode(experimentConfiguration);
             }
-        } catch (NetworkException | IOException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }
@@ -75,7 +74,7 @@ public class ChicShock {
 
         try {
             SOSDistribution.startAllApplications(experimentConfiguration);
-        } catch (InterruptedException | NetworkException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }
@@ -119,7 +118,7 @@ public class ChicShock {
 
         try {
             SOSDistribution.stopAllApplications(experimentConfiguration);
-        } catch (InterruptedException | NetworkException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }
@@ -129,7 +128,7 @@ public class ChicShock {
 
         try {
             SOSDistribution.stopNode(experimentConfiguration, nodeName);
-        } catch (InterruptedException | NetworkException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }
@@ -139,7 +138,7 @@ public class ChicShock {
 
         try {
             SOSDistribution.stopExperiment(experimentConfiguration);
-        } catch (InterruptedException | NetworkException e) {
+        } catch (NetworkException e) {
             throw new ChicShockException();
         }
     }

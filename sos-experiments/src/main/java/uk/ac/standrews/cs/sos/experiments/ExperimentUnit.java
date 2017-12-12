@@ -9,6 +9,8 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
+import uk.ac.standrews.cs.sos.experiments.distribution.NetworkException;
+import uk.ac.standrews.cs.sos.experiments.distribution.NetworkOperations;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
@@ -268,6 +270,29 @@ public interface ExperimentUnit {
         String contextPath = experiment.getExperimentNode().getContextsPath() + experiment.getName() + "/" + context_name + ".json";
         IGUID context = cms.addContext(new File(contextPath));
         InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added context " + context_name + " " + context.toShortString());
+    }
+
+    default void sendFiles(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
+
+        try (NetworkOperations scp = new NetworkOperations()){
+            scp.setSsh(node.getSsh());
+            scp.connect();
+
+            String path = node.getPath() + node.getSsh().getUser() + "/";
+            File[] listOfFiles = new File(lDirectoryPath).listFiles();
+            assert listOfFiles != null;
+            for (File file : listOfFiles) {
+
+                long start = System.nanoTime();
+                scp.sendFile(file.getAbsolutePath(), path + rDirectoryPath + file.getName(), false);
+                long duration = System.nanoTime() - start;
+                InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.scp, Long.toString(file.length()), duration);
+
+            }
+
+        } catch (IOException | NetworkException e) {
+            throw new ExperimentException();
+        }
     }
 
     default void rest_a_bit() throws ExperimentException {
