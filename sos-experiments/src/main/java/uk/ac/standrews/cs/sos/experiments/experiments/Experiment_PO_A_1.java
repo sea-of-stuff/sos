@@ -57,7 +57,7 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
                 System.out.println("Adding contexts to node");
                 addContexts();
 
-                System.out.println("Running predicates");
+                System.out.println("Running Predicates");
                 cms.runPredicates();
             } catch (Exception e) {
                 throw new ExperimentException();
@@ -68,12 +68,12 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
+            System.out.println("Running Policies");
             cms.runPolicies();
 
             rest_a_bit();
 
-            // TODO - perform replication with SCP
-
+            System.out.println("Running SCP data replication");
             ExperimentConfiguration.Experiment.Node slaveNode = getExperiment().getNodes().iterator().next();
             String lDataPath = experiment.getExperimentNode().getDatasetPath();
             String rDataPath = "temp_data/";

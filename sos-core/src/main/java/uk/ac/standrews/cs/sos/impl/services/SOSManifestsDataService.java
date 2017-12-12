@@ -127,7 +127,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         int replicationFactor = (replication - 1) <= ddsSettings.getMaxReplication() ? (replication - 1) : ddsSettings.getMaxReplication();
         if (replicationFactor > 0) {
-            remote.addManifest(manifest, nodes, replication); // This is an async operation
+            remote.addManifest(manifest, nodes, replicationFactor); // This is an async operation
         }
 
         // TODO - IF MANIFEST IS VERSION - should notify nodes that have PREVIOUS versions. See notebook at page 92
