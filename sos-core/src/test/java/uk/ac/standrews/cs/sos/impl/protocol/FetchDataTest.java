@@ -11,8 +11,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -46,7 +44,7 @@ public class FetchDataTest extends ProtocolTest {
     private static final String TEST_DATA = "test-data";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, ConfigurationException, CryptoException, GUIDGenerationException, IOException, SOSException {
+    public void setUp() throws ConfigurationException, CryptoException, GUIDGenerationException, IOException, SOSException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_data_test.json")).getSettingsObj();
@@ -79,7 +77,7 @@ public class FetchDataTest extends ProtocolTest {
     }
 
     @Test
-    public void basicDataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
+    public void basicDataFetchTest() throws IOException, GUIDGenerationException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -98,7 +96,7 @@ public class FetchDataTest extends ProtocolTest {
     }
 
     @Test (expectedExceptions = IOException.class)
-    public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException, SOSURLException {
+    public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -110,7 +108,7 @@ public class FetchDataTest extends ProtocolTest {
     }
 
     @Test (expectedExceptions = IOException.class)
-    public void fetchANullGUIDTest() throws IOException, GUIDGenerationException, SOSURLException {
+    public void fetchANullGUIDTest() throws IOException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,

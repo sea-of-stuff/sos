@@ -151,7 +151,7 @@ public class SOSStorageService implements StorageService {
             manifestsDataService.deleteLocalLocation(guid);
 
         } catch (DataStorageException | BindingAbsentException | ManifestNotFoundException e) {
-            throw new AtomNotFoundException();
+            throw new AtomNotFoundException(guid);
         }
 
     }
@@ -189,7 +189,7 @@ public class SOSStorageService implements StorageService {
         try {
             return getAtomContent(new NodesCollectionImpl(NodesCollectionType.ANY), atom);
         } catch (NodesCollectionException e) {
-            throw new AtomNotFoundException();
+            throw new AtomNotFoundException(atom.guid());
         }
 
     }
@@ -225,7 +225,7 @@ public class SOSStorageService implements StorageService {
                 return getAtomContent(atom);
             }
         } catch (ManifestNotFoundException e) {
-            throw new AtomNotFoundException();
+            throw new AtomNotFoundException(guid);
         }
 
         return new EmptyData();
@@ -242,7 +242,7 @@ public class SOSStorageService implements StorageService {
                 return getAtomContent(nodesCollection, atom);
             }
         } catch (ManifestNotFoundException e) {
-            throw new AtomNotFoundException();
+            throw new AtomNotFoundException(guid);
         }
 
         return new EmptyData();
@@ -378,7 +378,7 @@ public class SOSStorageService implements StorageService {
             }
         }
 
-        throw new AtomNotFoundException();
+        throw new AtomNotFoundException(atom.guid());
     }
 
 

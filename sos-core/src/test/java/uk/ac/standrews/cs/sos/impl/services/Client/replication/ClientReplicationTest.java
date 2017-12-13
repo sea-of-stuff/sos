@@ -138,7 +138,7 @@ public class ClientReplicationTest extends SetUpTest {
     }
 
     @Override
-    protected void createConfiguration() throws ConfigurationException, IOException {
+    protected void createConfiguration() throws ConfigurationException {
         File file = new File(TEST_CONFIGURATIONS_PATH + "config_storage.json");
 
         settings = new SettingsConfiguration(file).getSettingsObj();

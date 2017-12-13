@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
@@ -111,7 +110,7 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "}";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, ConfigurationException, IOException, SOSException, CryptoException, GUIDGenerationException {
+    public void setUp() throws ConfigurationException, IOException, SOSException, CryptoException, GUIDGenerationException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();

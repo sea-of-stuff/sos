@@ -35,7 +35,7 @@ public class ProtocolTest extends SetUpTest {
 //    }
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, CryptoException, IOException, SOSException {
+    public void setUp() throws GUIDGenerationException, ConfigurationException, CryptoException, IOException, SOSException {
 
         try {
             mockSignatureCertificate = mock(PublicKey.class);

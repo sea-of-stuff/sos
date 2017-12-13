@@ -157,7 +157,7 @@ public class ManifestReplicationTest {
     private static final String TEST_BAD_MANIFEST = "BAD Manifest";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException {
+    public void setUp() throws SOSProtocolException, ConfigurationException {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -248,7 +248,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicVersionManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
+    public void basicVersionManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -280,7 +280,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicCompoundManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
+    public void basicCompoundManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_COMPOUND_MANIFEST);
@@ -312,7 +312,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicAtomManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
+    public void basicAtomManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_ATOM_MANIFEST);
@@ -344,7 +344,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicFATContextManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, JsonProcessingException {
+    public void basicFATContextManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, JsonProcessingException {
 
         Context mockManifest = mock(Context.class);
         when(mockManifest.toString()).thenReturn(TEST_THIN_CONTEXT_MANIFEST);
@@ -390,7 +390,7 @@ public class ManifestReplicationTest {
 
     // Cannot replicate VERSION manifest to noDDS node
     @Test
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
+    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -420,7 +420,7 @@ public class ManifestReplicationTest {
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)
-    public void basicManifestReplicationFailsTest() throws InterruptedException, SOSProtocolException {
+    public void basicManifestReplicationFailsTest() throws SOSProtocolException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -442,7 +442,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void badManifestReplicationTest() throws InterruptedException, SOSProtocolException, NodeNotFoundException {
+    public void badManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);

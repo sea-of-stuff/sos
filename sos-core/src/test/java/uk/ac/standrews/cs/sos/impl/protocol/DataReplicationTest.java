@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.impl.protocol;
 
 import com.adobe.xmp.impl.Base64;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.Delay;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -59,6 +61,9 @@ public class DataReplicationTest extends ProtocolTest {
     private static final String TEST_DATA = "test-data";
     private static final String TEST_DATA_HASH = "SHA256_16_a186000422feab857329c684e9fe91412b1a5db084100b37a98cfc95b62aa867";
 
+    private static final String TEST_DATA_TIMEOUT = "test-data-timeout";
+    private static final String TEST_DATA_TIMEOUT_HASH = "SHA256_16_4ff7dd2940c8da777d9ba76e7f5ef4e994934c4d8ea255f8e975b72e176705ec";
+
     // This is the exact body request. Would be good if we have a JSON matcher method, so this string does not have to be exact, but simply an equivalent JSON obj of what we expect
     private static final String BASIC_REQUEST = "" +
             "{\n"+
@@ -71,7 +76,7 @@ public class DataReplicationTest extends ProtocolTest {
             "    \"protectedData\" : false\n"+
             "  },\n"+
             "  \"data\" : \"{DATA}\",\n"+
-            "  \"guid\" : \"" + TEST_DATA_HASH + "\"\n" +
+            "  \"guid\" : \"{DATA_HASH}\"\n" +
             "}";
 
     private static final String NODE_ID = "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
@@ -97,7 +102,9 @@ public class DataReplicationTest extends ProtocolTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(BASIC_REQUEST.replace("{DATA}", Base64.encode(TEST_DATA)))
+                                .withBody(BASIC_REQUEST
+                                        .replace("{DATA}", Base64.encode(TEST_DATA))
+                                        .replace("{DATA_HASH}", TEST_DATA_HASH))
                 )
                 .respond(
                         response()
@@ -117,6 +124,22 @@ public class DataReplicationTest extends ProtocolTest {
                                 )
                 );
 
+        // Request with delayed response
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/sos/storage/stream")
+                                .withBody(BASIC_REQUEST
+                                        .replace("{DATA}", Base64.encode(TEST_DATA_TIMEOUT))
+                                        .replace("{DATA_HASH}", TEST_DATA_TIMEOUT_HASH))
+                )
+                .respond(
+                        response()
+                                .withStatusCode(500)
+                                .withDelay(Delay.delay(TimeUnit.SECONDS, 40))
+                );
+
         mockServerTwin = startClientAndServer(MOCK_TWIN_SERVER_PORT);
         mockServerTwin.dumpToLog();
         mockServerTwin
@@ -124,7 +147,9 @@ public class DataReplicationTest extends ProtocolTest {
                         request()
                                 .withMethod("POST")
                                 .withPath("/sos/storage/stream")
-                                .withBody(BASIC_REQUEST.replace("{DATA}", Base64.encode(TEST_DATA)))
+                                .withBody(BASIC_REQUEST
+                                        .replace("{DATA}", Base64.encode(TEST_DATA))
+                                        .replace("{DATA_HASH}", TEST_DATA_HASH))
                 )
                 .respond(
                         response()
@@ -160,7 +185,6 @@ public class DataReplicationTest extends ProtocolTest {
 
     @Test
     public void basicMockServerTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
-
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -362,6 +386,29 @@ public class DataReplicationTest extends ProtocolTest {
         assertEquals(locationBundle.getType(), BundleTypes.PERSISTENT);
 
         assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void basicTimeoutMockServerTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+                "localhost", MOCK_SERVER_PORT,
+                false, true, false, false, false, false, false);
+        when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
+
+        Set<IGUID> nodes = new HashSet<>();
+        nodes.add(node.guid());
+        NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
+
+        StorageService storageService = localSOSNode.getStorageService();
+
+        IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA_TIMEOUT);
+        Data data = new StringData(TEST_DATA_TIMEOUT);
+        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
+                mockNodeDiscoveryService, false, false);
+        TasksQueue.instance().performSyncTask(replicationTask);
+
+        // TODO - check state of task
     }
 
 }

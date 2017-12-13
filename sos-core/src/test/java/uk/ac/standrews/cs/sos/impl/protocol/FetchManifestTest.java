@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -53,7 +52,7 @@ public class FetchManifestTest extends ProtocolTest {
             "}";
 
     @BeforeMethod
-    public void setUp() throws ConfigurationException, SOSProtocolException, GUIDGenerationException, CryptoException, SOSException, IOException {
+    public void setUp() throws ConfigurationException, GUIDGenerationException, CryptoException, SOSException, IOException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_manifest_test.json")).getSettingsObj();

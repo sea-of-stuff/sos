@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
@@ -66,7 +65,7 @@ public class NodeDiscoveryTest {
     private IGUID nodeNotFound;
 
     @BeforeMethod
-    public void setUp(Method testMethod) throws ConfigurationException, IOException, SOSException, SOSProtocolException {
+    public void setUp(Method testMethod) throws ConfigurationException, IOException, SOSException {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_discovery_test.json")).getSettingsObj();
 
@@ -180,7 +179,7 @@ public class NodeDiscoveryTest {
     }
 
     @Test
-    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
+    public void attemptToContactNDSNodeTest() throws NodeNotFoundException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
         when(ndsMock.getType()).thenReturn(ManifestType.NODE);
@@ -198,7 +197,7 @@ public class NodeDiscoveryTest {
     }
 
     @Test (expectedExceptions = NodeNotFoundException.class)
-    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, SOSProtocolException, NodeRegistrationException, CryptoException {
+    public void attemptToContactNDSNodeFailsTest() throws NodeNotFoundException, NodeRegistrationException, CryptoException {
 
         Node ndsMock = mock(Node.class);
         when(ndsMock.getType()).thenReturn(ManifestType.NODE);

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.protocol;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 /**
  * This class defines the main components of a task.
@@ -18,6 +19,8 @@ import java.io.IOException;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public abstract class Task implements Runnable {
+
+    private int id = new SecureRandom().nextInt(100000) + 1;
 
     /**
      * This method runs the task.
@@ -49,4 +52,12 @@ public abstract class Task implements Runnable {
      * @return the task
      */
     public abstract Task deserialize(String json) throws IOException;
+
+    /**
+     * Unique random id for Task
+     * @return id of task
+     */
+    public int getId() {
+        return id;
+    }
 }

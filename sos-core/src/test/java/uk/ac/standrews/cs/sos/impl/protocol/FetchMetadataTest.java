@@ -10,8 +10,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
@@ -74,7 +72,7 @@ public class FetchMetadataTest extends ProtocolTest {
                     "}";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, GUIDGenerationException, ConfigurationException, SOSException, IOException, CryptoException {
+    public void setUp() throws GUIDGenerationException, ConfigurationException, SOSException, IOException, CryptoException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_metadata_test.json")).getSettingsObj();
@@ -105,7 +103,7 @@ public class FetchMetadataTest extends ProtocolTest {
     }
 
     @Test(timeOut = 10000)
-    public void basicMetadataFetchTest() throws IOException, GUIDGenerationException, SOSURLException {
+    public void basicMetadataFetchTest() throws IOException, GUIDGenerationException {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,

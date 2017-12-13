@@ -5,10 +5,9 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.concurrent.*;
+import java.util.function.Function;
 
 /**
  * Singleton pattern used for this class.
@@ -23,7 +22,8 @@ public class TasksQueue {
     private SettingsConfiguration.Settings.GlobalSettings.TasksSettings settings;
     private int timeout_limit;
     private boolean fallbackToSyncTasks;
-    private ScheduledExecutorService executorService;
+    private ScheduledExecutorService scheduledExecutorService;
+    private ExecutorService executorService;
 
     private static TasksQueue instance;
     private TasksQueue() {
@@ -32,10 +32,11 @@ public class TasksQueue {
         fallbackToSyncTasks = settings.isFallbackToSyncTasks();
 
         int numberOfThreads = settings.getThread().getPs();
-        executorService = Executors.newScheduledThreadPool(numberOfThreads);
+        scheduledExecutorService = Executors.newScheduledThreadPool(1); // NOTE - Not sure if core pool size of 1 is enough
+        executorService = Executors.newFixedThreadPool(numberOfThreads);
 
         // TODO - load tasks from db
-        // for each task, submit it to the executorService
+        // for each task, submit it to the scheduledExecutorService
     }
 
     public static TasksQueue instance() {
@@ -53,7 +54,7 @@ public class TasksQueue {
                 performAsyncTask(task, false);
 
                 task.wait();
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task);
+                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task.getId());
             }
         } catch (InterruptedException e) {
             SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: " + e.getMessage());
@@ -72,23 +73,43 @@ public class TasksQueue {
             performSyncTask(task);
         } else {
 
-            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task.getId());
             persist(task);
 
-            final Future handler = executorService.submit(task);
-            executorService.schedule(() -> {
-                handler.cancel(true);
-                SOS_LOG.log(LEVEL.WARN, "TasksQueue :: Cancelled task " + task);
-
+            CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+                task.run();
                 task.notify();
-            }, timeout_limit, TimeUnit.SECONDS);
+                return 0;
+            }, executorService);
 
-            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task);
+            final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(timeout_limit));
+            responseFuture
+                    .exceptionally(throwable -> {
+                        SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: Error/Timeout for task: " + task.getId() + throwable.getMessage());
+                        task.notify();
+                        return -1;
+                    });
+
+            SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task submitted " + task.getId());
         }
+    }
+
+    private <T> CompletableFuture<T> within(CompletableFuture<T> future, Duration duration) {
+        final CompletableFuture<T> timeout = failAfter(duration);
+        return future.applyToEither(timeout, Function.identity());
+    }
+
+    private <T> CompletableFuture<T> failAfter(Duration duration) {
+        final CompletableFuture<T> promise = new CompletableFuture<>();
+        scheduledExecutorService.schedule(() -> {
+            final TimeoutException ex = new TimeoutException("Timeout after " + duration);
+            return promise.completeExceptionally(ex);
+        }, duration.getSeconds(), TimeUnit.SECONDS);
+        return promise;
     }
 
     private void persist(Task task) {
         // TODO - add task to db
-        SOS_LOG.log(LEVEL.INFO, "TasksQueue :: WIP - task should be persisted " + task);
+        // SOS_LOG.log(LEVEL.INFO, "TasksQueue :: WIP - task should be persisted " + task);
     }
 }
