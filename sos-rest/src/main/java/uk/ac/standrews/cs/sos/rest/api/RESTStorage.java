@@ -140,8 +140,9 @@ public class RESTStorage {
                 }
             }
 
-            Atom atom = storageService.addAtom(builder); // TODO - does this work for secure atoms too?
+            Atom atom = storageService.addAtom(builder); // TODO - check if this work for secure atoms too
 
+            SOS_LOG.log(LEVEL.DEBUG, "Atom manifest sent back is: " + atom.toString());
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | NodesCollectionException | GUIDGenerationException | IOException e) {

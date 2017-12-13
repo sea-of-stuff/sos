@@ -89,7 +89,7 @@ public class SyncRequest extends Request {
         return response;
     }
 
-    protected Response get() throws IOException {
+    protected Response get() {
 
         GetRequest req = Unirest.get(url.toString());
         req = (GetRequest) setChallenge(req);
@@ -97,7 +97,7 @@ public class SyncRequest extends Request {
         return makeRequest(req);
     }
 
-    private Response postJSON() throws IOException {
+    private Response postJSON() {
 
         HttpRequestWithBody requestWithBody = Unirest.post(url.toString())
                 .header("Content-Type", "application/json");
@@ -120,7 +120,7 @@ public class SyncRequest extends Request {
         return makeRequest(requestWithRawBody);
     }
 
-    private Response putJSON() throws IOException {
+    private Response putJSON() {
 
         HttpRequestWithBody requestWithBody = Unirest.put(url.toString())
                 .header("accept", "application/json");
@@ -131,12 +131,12 @@ public class SyncRequest extends Request {
         return makeRequest(requestBodyEntity);
     }
 
-    private Response makeRequest(BaseRequest request) throws IOException {
+    private Response makeRequest(BaseRequest request) {
         try {
             HttpResponse<?> resp = null;
             switch(responseType) {
                 case JSON:
-                    resp = request.asJson();
+                    resp = request.asString();
                     break;
                 case TEXT:
                     resp = request.asString();
