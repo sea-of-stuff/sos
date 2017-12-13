@@ -67,23 +67,23 @@ public class SOSDistribution {
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
-            System.out.println("Deleting files for node " + node.getName());
-            String path = node.getPath() + node.getSsh().getUser() + "/";
+            undoDistribution(node);
+        }
+    }
 
-            try (NetworkOperations scp = new NetworkOperations()) {
-                scp.setSsh(node.getSsh());
-                scp.connect();
+    public static void undoDistribution(ExperimentConfiguration configuration, String nodeName) throws NetworkException {
+        System.out.println("UndoDistribution of the app at the remote nodes");
 
-                scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
-                scp.deleteFile(path + REMOTE_SOS_PID_FILE);
-                scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
-            } catch (IOException e) {
-                throw new NetworkException();
+        List<Experiment.Node> nodes = configuration.getExperimentObj().getNodes();
+        for(Experiment.Node node:nodes) {
+
+            if (node.getName().equals(nodeName)) {
+
+                undoDistribution(node);
+                break;
             }
         }
-
-        System.out.println("App distribution finished");
     }
 
     public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException {
@@ -111,20 +111,8 @@ public class SOSDistribution {
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
-            String path = node.getPath() + node.getSsh().getUser() + "/";
-
-            try (NetworkOperations scp = new NetworkOperations()) {
-                scp.setSsh(node.getSsh());
-                scp.connect();
-
-                System.out.println("\tKilling process at node: " + node.getName());
-                scp.killProcess(path + REMOTE_SOS_PID_FILE);
-
-            } catch (IOException e) {
-                throw new NetworkException();
-            }
+            stopNode(node);
         }
-
     }
 
     public static void stopNode(ExperimentConfiguration configuration, String nodeName) throws NetworkException {
@@ -134,18 +122,7 @@ public class SOSDistribution {
 
             if (node.getName().equals(nodeName)) {
 
-                String path = node.getPath() + node.getSsh().getUser() + "/";
-
-                try (NetworkOperations scp = new NetworkOperations()) {
-                    scp.setSsh(node.getSsh());
-                    scp.connect();
-
-                    System.out.println("\tKilling process at node: " + node.getName());
-                    scp.killProcess(path + REMOTE_SOS_PID_FILE);
-                } catch (IOException e) {
-                    throw new NetworkException();
-                }
-
+                stopNode(node);
                 break;
             }
         }
@@ -225,18 +202,7 @@ public class SOSDistribution {
 
         Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
 
-        String path = experimentNode.getPath() + experimentNode.getSsh().getUser() + "/";
-
-        try (NetworkOperations scp = new NetworkOperations()) {
-            scp.setSsh(experimentNode.getSsh());
-            scp.connect();
-
-            System.out.println("\tKilling process at node: " + experimentNode.getName());
-            scp.killProcess(path + REMOTE_SOS_PID_FILE);
-
-        } catch (IOException e) {
-            throw new NetworkException();
-        }
+        stopNode(experimentNode);
     }
 
     public static void undoDistributionToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {
@@ -276,5 +242,40 @@ public class SOSDistribution {
             throw new NetworkException();
         }
 
+    }
+
+    private static void stopNode(Experiment.Node node) throws NetworkException {
+
+        String path = node.getPath() + node.getSsh().getUser() + "/";
+
+        try (NetworkOperations scp = new NetworkOperations()) {
+            scp.setSsh(node.getSsh());
+            scp.connect();
+
+            System.out.println("\tKilling process at node: " + node.getName());
+            scp.killProcess(path + REMOTE_SOS_PID_FILE);
+
+        } catch (IOException e) {
+            throw new NetworkException();
+        }
+
+    }
+
+    private static void undoDistribution(Experiment.Node node) throws NetworkException {
+
+        System.out.println("Deleting files for node " + node.getName());
+        String path = node.getPath() + node.getSsh().getUser() + "/";
+
+        try (NetworkOperations scp = new NetworkOperations()) {
+            scp.setSsh(node.getSsh());
+            scp.connect();
+
+            scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
+            scp.deleteFile(path + REMOTE_SOS_PID_FILE);
+            scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
+
+        } catch (IOException e) {
+            throw new NetworkException();
+        }
     }
 }

@@ -154,6 +154,17 @@ public class ChicShock {
 
     }
 
+    public void unChic(String nodeName) throws ChicShockException {
+        System.out.println("Removing the SOS files from the remote nodes");
+
+        try {
+            SOSDistribution.undoDistribution(experimentConfiguration, nodeName);
+        } catch (NetworkException e) {
+            throw new ChicShockException();
+        }
+
+    }
+
     public void unChicExperiment() throws ChicShockException {
         System.out.println("Removing the SOS files from the remote nodes");
 

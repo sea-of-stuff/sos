@@ -24,6 +24,7 @@ public class ExperimentalFramework {
     private static final String STOP_ALL_NODES = "stopall";
     private static final String STATS_NODE = "stats";
     private static final String CLEAN_NODE = "clean";
+    private static final String CLEAN_ALL_NODES = "cleanall";
 
     private static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/";
 
@@ -47,12 +48,13 @@ public class ExperimentalFramework {
 
         System.out.println("Enter experiment configuration path relative to " + CONFIGURATION_FOLDER);
         System.out.println("Examples:");
-        System.out.println("\t pr_1/configuration/configuration.json");
-        System.out.println("\t pr_1/configuration/configuration-hogun.json");
-        System.out.println("\t po_a_1/configuration/configuration-hogun.json");
-        System.out.println("\t po_a_3/configuration/configuration-hogun.json");
-        System.out.println("\t po_c_1/configuration/configuration-hogun.json");
-        System.out.println("\t po_c_3/configuration/configuration-hogun.json");
+        System.out.println("\tpr_1/configuration/configuration.json");
+        System.out.println("\tpr_1/configuration/configuration-hogun.json");
+        System.out.println("\tpo_a_1/configuration/configuration-hogun.json");
+        System.out.println("\tpo_a_3/configuration/configuration-hogun.json");
+        System.out.println("\tpo_c_1/configuration/configuration-hogun.json");
+        System.out.println("\tpo_c_3/configuration/configuration-hogun.json");
+        System.out.println("\tco_a_1/configuration/configuration-hogun.json");
         switch(option.toLowerCase()) {
 
             case RUN_EXPERIMENT:
@@ -67,13 +69,21 @@ public class ExperimentalFramework {
                 stopAllNodes();
                 break;
 
+            case CLEAN_NODE:
+                cleanNode();
+                break;
+
+            case CLEAN_ALL_NODES:
+                cleanAllNodes();
+                break;
+
             case STATS_NODE:
                 getStats();
                 break;
 
             case CHECK_NODE:
             case CRON_EXPERIMENT:
-            case CLEAN_NODE:
+                System.err.println("COMMAND NOT IMPLEMENTED YET");
                 break;
         }
 
@@ -123,7 +133,6 @@ public class ExperimentalFramework {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.unShock(nodeName);
-        chicShock.unChic();
     }
 
     private static void stopAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
@@ -134,9 +143,38 @@ public class ExperimentalFramework {
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
         chicShock.unShock();
-        chicShock.unChic();
         Thread.sleep(2000); // Wait a bit before stopping the experiment node
         chicShock.unShockExperiment();
+    }
+
+    private static void cleanNode() throws ConfigurationException, ChicShockException {
+
+        String configurationPath = in.nextLine();
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        System.out.println("Enter name of node to stop. Options:");
+        for(ExperimentConfiguration.Experiment.Node node:experimentConfiguration.getExperimentObj().getNodes()) {
+            System.out.println("\t\t" + node.getName());
+        }
+        ExperimentConfiguration.Experiment.Node node = experimentConfiguration.getExperimentObj().getExperimentNode();
+        System.out.println("\t\t" + node.getName());
+
+        String nodeName = in.nextLine();
+
+        ChicShock chicShock = new ChicShock(experimentConfiguration);
+        chicShock.unChic(nodeName);
+    }
+
+    private static void cleanAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
+
+        String configurationPath = in.nextLine();
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
+
+        ChicShock chicShock = new ChicShock(experimentConfiguration);
+        chicShock.unChic();
+        Thread.sleep(2000); // Wait a bit before stopping the experiment node
         chicShock.unChicExperiment();
     }
 
