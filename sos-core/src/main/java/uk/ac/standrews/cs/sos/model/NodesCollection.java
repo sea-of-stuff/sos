@@ -42,4 +42,6 @@ public interface NodesCollection {
 
     String toUniqueString();
 
+    void shuffle();
+
 }

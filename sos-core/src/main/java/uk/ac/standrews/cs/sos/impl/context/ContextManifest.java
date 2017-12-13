@@ -248,11 +248,13 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
 
     @Override
     public NodesCollection domain() {
+        domain.shuffle();
         return domain;
     }
 
     @Override
     public NodesCollection codomain() {
+        codomain.shuffle();
         return codomain;
     }
 

@@ -6,9 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -64,5 +62,13 @@ public class NodesCollectionImpl implements NodesCollection {
         }
 
         return retval;
+    }
+
+    @Override
+    public void shuffle() {
+
+        List<IGUID> nodes = new ArrayList<>(nodesRefs);
+        Collections.shuffle(nodes);
+        this.nodesRefs = new LinkedHashSet<>(nodes);
     }
 }

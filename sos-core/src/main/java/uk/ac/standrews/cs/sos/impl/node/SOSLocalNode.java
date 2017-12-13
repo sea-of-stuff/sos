@@ -340,6 +340,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                 if (nodeInfo != null && !nodeInfo.isEmpty()) {
                     Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
                     nodeDiscoveryService.registerNode(retrievedNode, true);
+                    SOS_LOG.log(LEVEL.INFO, "Registered bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash());
                 }
 
             } catch (IOException e) {

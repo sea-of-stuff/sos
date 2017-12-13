@@ -20,6 +20,10 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
         super(experimentConfiguration);
     }
 
+    public Experiment_CO_A_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        super(experimentConfiguration, outputFilename);
+    }
+
     @Override
     public ExperimentUnit getExperimentUnit() {
         return new ExperimentUnit_CO_3();
@@ -73,8 +77,13 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws Exception {
 
+            // TODO - WIP
             // each policy with its own codomain size
             // will work on the APPLY function only
+
+            addContext(cms, experiment, "do_nothing_policy");
+            addContext(cms, experiment, "data_replication_1");
+            addContext(cms, experiment, "data_replication_2");
         }
 
     }
