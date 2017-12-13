@@ -101,7 +101,7 @@ public class RESTUSROTest extends CommonRESTTest {
     }
 
     @Test
-    public void getUserRolesTest() throws JSONException, IOException {
+    public void getUserRolesTest() throws IOException {
 
         String role_1_JSON = "" +
                 "{\n" +

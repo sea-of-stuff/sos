@@ -136,7 +136,7 @@ public class SyncRequest extends Request {
             HttpResponse<?> resp = null;
             switch(responseType) {
                 case JSON:
-                    resp = request.asString();
+                    resp = request.asJson();
                     break;
                 case TEXT:
                     resp = request.asString();

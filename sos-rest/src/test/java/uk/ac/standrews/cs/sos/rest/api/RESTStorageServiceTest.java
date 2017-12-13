@@ -91,6 +91,19 @@ public class RESTStorageServiceTest extends CommonRESTTest {
             "  \"data\" : \"{DATA}\"\n" +
             "}";
 
+    private static final String REQUEST_WITH_ONE_REPLICA_INFO = "" +
+            "{\n" +
+            "  \"metadata\" : {\n" +
+            "    \"replicationFactor\" : 1,\n" +
+            "    \"replicationNodes\" : {\n" +
+            "      \"type\" : \"SPECIFIED\",\n" +
+            "      \"refs\" : [\"SHA256_16_000abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\", \"SHA256_16_111abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\"]\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"guid\" : \"SHA256_16_d12abf2146cd61f01f96b3811e94b9dbdebd89325a24a933c50abbe664589886\",\n" +
+            "  \"data\" : \"{DATA}\"\n" +
+            "}";
+
     private static final String REQUEST_WITH_ZERO_REPLICA_INFO = "" +
             "{\n" +
             "  \"metadata\" : {\n" +
@@ -147,7 +160,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test (expectedExceptions = NullPointerException.class)
-    public void testStoreNullInputStream() throws Exception {
+    public void testStoreNullInputStream() {
 
         target("/sos/storage/stream")
                 .request()
@@ -155,7 +168,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void replicasStream() throws Exception {
+    public void replicasStream() {
 
         Response response = target("/sos/storage/stream")
                 .request()
@@ -165,7 +178,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void negativeReplicasStream() throws Exception {
+    public void negativeReplicasStream() {
 
         Response response = target("/sos/storage/stream")
                 .request()
@@ -175,17 +188,27 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void zeroReplicasStream() throws Exception {
+    public void zeroReplicasStream() {
 
         Response response = target("/sos/storage/stream")
                 .request()
                 .post(Entity.json(REQUEST_WITH_ZERO_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
-        assertEquals(response.getStatus(), HTTPStatus.BAD_REQUEST);
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
     }
 
     @Test
-    public void excessiveReplicasStream() throws Exception {
+    public void oneReplicasStream() {
+
+        Response response = target("/sos/storage/stream")
+                .request()
+                .post(Entity.json(REQUEST_WITH_ONE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+    }
+
+    @Test
+    public void excessiveReplicasStream() {
 
         Response response = target("/sos/storage/stream")
                 .request()
@@ -206,7 +229,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void challengeForAtomWorks() throws GUIDGenerationException, IOException {
+    public void challengeForAtomWorks() throws IOException {
 
         Response response = target("/sos/storage/stream")
                 .request()
@@ -226,7 +249,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void noChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
+    public void noChallengeForAtomDoesNotWork() throws IOException {
 
         Response response = target("/sos/storage/stream")
                 .request()
@@ -245,7 +268,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     }
 
     @Test
-    public void spaceChallengeForAtomDoesNotWork() throws GUIDGenerationException, IOException {
+    public void spaceChallengeForAtomDoesNotWork() throws IOException {
 
         Response response = target("/sos/storage/stream")
                 .request()

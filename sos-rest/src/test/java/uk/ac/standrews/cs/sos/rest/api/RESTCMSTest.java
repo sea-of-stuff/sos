@@ -103,7 +103,7 @@ public class RESTCMSTest extends CommonRESTTest {
     }
 
     @Test
-    public void getContextsTest() throws GUIDGenerationException, IOException {
+    public void getContextsTest() throws IOException {
 
         String FATContext = "{\n" +
                 "\t\"context\": {\n" +
