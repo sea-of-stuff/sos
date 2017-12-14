@@ -28,7 +28,7 @@ public class TasksQueue {
     private static TasksQueue instance;
     private TasksQueue() {
         settings = SOSLocalNode.settings.getGlobal().getTasks();
-        timeout_limit = settings.getTimeout_limit() >= 0 ? settings.getTimeout_limit() : TIMEOUT_LIMIT_S;
+        // REMOVEME - timeout_limit = settings.getTimeout_limit() >= 0 ? settings.getTimeout_limit() : TIMEOUT_LIMIT_S;
         fallbackToSyncTasks = settings.isFallbackToSyncTasks();
 
         int numberOfThreads = settings.getThread().getPs();
@@ -84,7 +84,7 @@ public class TasksQueue {
                 return 0;
             }, executorService);
 
-            final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(timeout_limit));
+            final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(TIMEOUT_LIMIT_S));
             responseFuture
                     .exceptionally(throwable -> {
                         SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: Error/Timeout for task: " + task.getId() + throwable.getMessage());
