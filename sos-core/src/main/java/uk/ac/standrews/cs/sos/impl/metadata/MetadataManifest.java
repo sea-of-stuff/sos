@@ -85,13 +85,13 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
     @Override
     public InputStream contentToHash() {
 
-        String toHash = getType().toString();
+        StringBuilder toHash = new StringBuilder(getType().toString());
 
         for(Map.Entry<String, MetaProperty> tuple:metadata.entrySet()) {
-            toHash += "MP" + tuple.getValue().toString();
+            toHash.append("MP").append(tuple.getValue().toString());
         }
 
-        return IO.StringToInputStream(toHash);
+        return IO.StringToInputStream(toHash.toString());
     }
 
 }
