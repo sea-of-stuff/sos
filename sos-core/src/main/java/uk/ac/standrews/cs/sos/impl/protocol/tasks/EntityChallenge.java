@@ -78,14 +78,14 @@ public class EntityChallenge extends Task {
 
             // TODO - data structures of local node should be updated
             if (challengePassed) {
-                state = TaskState.SUCCESSFUL;
+                setState(TaskState.SUCCESSFUL);
                 SOS_LOG.log(LEVEL.INFO, "Entity with GUID " + entity + " was verified against node " + challengedNode);
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 SOS_LOG.log(LEVEL.WARN, "Entity with GUID " + entity + " failed to be verified against node " + challengedNode);
             }
         } catch (SOSURLException |IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to verify entity with GUID " + entity + " against node " + challengedNode);
         }
     }

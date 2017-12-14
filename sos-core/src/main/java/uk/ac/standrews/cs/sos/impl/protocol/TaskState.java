@@ -5,6 +5,7 @@ package uk.ac.standrews.cs.sos.impl.protocol;
  */
 public enum TaskState {
 
+    NONE,
     INITIALIZED,
     RUNNING,
     SUCCESSFUL,

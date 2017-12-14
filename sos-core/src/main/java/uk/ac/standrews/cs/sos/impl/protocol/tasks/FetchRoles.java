@@ -36,7 +36,7 @@ public class FetchRoles extends Task {
         super();
 
         if (!node.isRMS()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch role from non-RMS node");
         }
 
@@ -64,16 +64,16 @@ public class FetchRoles extends Task {
                     // this.roles = JSONHelper.JsonObjMapper().readValue(responseBody, Role.class);
 
                     SOS_LOG.log(LEVEL.INFO, "Roles for given user fetched successfully from node " + node.guid());
-                    state = TaskState.SUCCESSFUL;
+                    setState(TaskState.SUCCESSFUL);
                 }
 
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 SOS_LOG.log(LEVEL.ERROR, "Roles for given user were not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch roles for given user");
         }
     }

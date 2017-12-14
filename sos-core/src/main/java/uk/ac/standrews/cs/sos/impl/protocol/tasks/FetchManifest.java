@@ -35,7 +35,7 @@ public class FetchManifest extends Task {
         super();
 
         if (manifestId == null || manifestId.isInvalid()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
@@ -60,20 +60,20 @@ public class FetchManifest extends Task {
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.manifest = FileUtils.ManifestFromJson(responseBody);
                     SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
-                    state = TaskState.SUCCESSFUL;
+                    setState(TaskState.SUCCESSFUL);
 
                 } catch (ManifestNotFoundException e) {
-                    state = TaskState.ERROR;
+                    setState(TaskState.ERROR);
                     throw new IOException("Unable to parse manifest with GUID " + manifestId);
                 }
 
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 SOS_LOG.log(LEVEL.ERROR, "Manifest was not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch manifest");
         }
     }

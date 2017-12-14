@@ -48,7 +48,7 @@ public class ManifestReplication extends Task {
         super();
 
         if (manifestsDataService == null || nodeDiscoveryService == null) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new SOSProtocolException("At least one of the SOS services is null. Manifest replication process is aborted.");
         }
 
@@ -87,9 +87,9 @@ public class ManifestReplication extends Task {
         }
 
         if (successfulReplicas >= replicationFactor) {
-            state = TaskState.SUCCESSFUL;
+            setState(TaskState.SUCCESSFUL);
         } else {
-            state = TaskState.UNSUCCESSFUL;
+            setState(TaskState.UNSUCCESSFUL);
         }
     }
 

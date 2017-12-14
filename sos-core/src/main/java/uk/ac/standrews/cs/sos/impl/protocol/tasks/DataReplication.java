@@ -86,7 +86,7 @@ public class DataReplication extends Task {
         super();
 
         if (storageService == null || nodeDiscoveryService == null) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new SOSProtocolException("At least one of the SOS services is null. Data replication process is aborted.");
         }
 
@@ -130,13 +130,13 @@ public class DataReplication extends Task {
             }
 
             if (successfulReplicas >= replicationFactor) {
-                state = TaskState.SUCCESSFUL;
+                setState(TaskState.SUCCESSFUL);
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
             }
 
         } catch (IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
         }
 

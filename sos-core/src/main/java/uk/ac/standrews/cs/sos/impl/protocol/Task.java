@@ -21,11 +21,11 @@ import java.security.SecureRandom;
 public abstract class Task implements Runnable {
 
     private final long id;
-    protected TaskState state;
+    private TaskState state;
 
     public Task() {
-        id = new SecureRandom().nextLong();
         state = TaskState.INITIALIZED;
+        id = new SecureRandom().nextLong();
     }
 
     /**
@@ -37,7 +37,7 @@ public abstract class Task implements Runnable {
     public synchronized void run() {
         state = TaskState.RUNNING;
         performAction();
-        notify(); // Awake the SYNC tasks from their wait state
+        // notify(); // Awake the SYNC tasks from their wait state
     }
 
     /**
@@ -68,7 +68,15 @@ public abstract class Task implements Runnable {
         return id;
     }
 
+    public void setState(TaskState state) {
+        this.state = state;
+    }
+
     public TaskState getState() {
         return state;
+    }
+
+    public String toString() {
+        return "Task-ID: " + getId();
     }
 }

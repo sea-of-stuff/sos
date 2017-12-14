@@ -413,7 +413,7 @@ public class DataReplicationTest extends ProtocolTest {
                 mockNodeDiscoveryService, false, false);
         TasksQueue.instance().performSyncTask(replicationTask);
 
-        assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
+        assertEquals(replicationTask.getState(), TaskState.ERROR);
     }
 
 }

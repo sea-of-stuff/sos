@@ -29,4 +29,6 @@ public class Internals {
      * Use this multiplier to make sure that the NDS attempts to return about 3 times as many nodes as requested for a LIMITED nodes' request
      */
     public static final int REPLICATION_FACTOR_MULTIPLIER = 3;
+
+    public static final int TIMEOUT_LIMIT_S = 30;
 }

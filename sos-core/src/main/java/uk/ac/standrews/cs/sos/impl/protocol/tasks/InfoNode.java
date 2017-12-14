@@ -43,10 +43,10 @@ public class InfoNode extends Task {
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
             }
-            state = TaskState.SUCCESSFUL;
+            setState(TaskState.SUCCESSFUL);
 
         } catch (SOSURLException | IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
         }
     }

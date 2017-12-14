@@ -52,17 +52,17 @@ public class PingNode extends Task {
                 valid = pong.contains(message);
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
-                state = TaskState.SUCCESSFUL;
+                setState(TaskState.SUCCESSFUL);
 
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 valid = false;
             }
             timestamp = System.currentTimeMillis();
             latency = System.currentTimeMillis() - startRequest;
 
         } catch (SOSURLException | IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
         }
     }

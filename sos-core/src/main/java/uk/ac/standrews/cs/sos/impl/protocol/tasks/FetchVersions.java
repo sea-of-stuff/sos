@@ -39,12 +39,12 @@ public class FetchVersions extends Task {
         super();
 
         if (!node.isDDS()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch manifest from non-DDS node");
         }
 
         if (invariant == null || invariant.isInvalid()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
@@ -70,18 +70,18 @@ public class FetchVersions extends Task {
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.versions = readJSONArrayOfGUIDs(responseBody);
                     SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
-                    state = TaskState.SUCCESSFUL;
+                    setState(TaskState.SUCCESSFUL);
                 }
 
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions for invariant " + invariant.toMultiHash() + " successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
 
 
         } catch (SOSURLException | IOException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions");
         }
     }

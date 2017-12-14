@@ -34,12 +34,12 @@ public class FetchData extends Task {
         super();
 
         if (!node.isStorage()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch data from non-Storage node");
         }
 
         if (entityId == null || entityId.isInvalid()) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             throw new IOException("Attempting to fetch data, but you have given an invalid GUID");
         }
 
@@ -59,16 +59,16 @@ public class FetchData extends Task {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
-                state = TaskState.SUCCESSFUL;
+                setState(TaskState.SUCCESSFUL);
                 SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.guid());
             } else {
-                state = TaskState.UNSUCCESSFUL;
+                setState(TaskState.UNSUCCESSFUL);
                 SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.guid());
             }
 
             body = response.getBody();
         } catch(IOException | SOSURLException e) {
-            state = TaskState.ERROR;
+            setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "Data not fetched successfully from node " + node.guid() + " - Exception: " + e.getMessage());
         }
     }
