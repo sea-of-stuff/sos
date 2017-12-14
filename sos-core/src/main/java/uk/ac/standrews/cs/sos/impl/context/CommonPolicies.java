@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -63,7 +64,7 @@ public class CommonPolicies {
 
                         NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.DDS);
                         commonUtilities.replicateData(data, nodes, factor, dataIsAlreadyProtected);
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         throw new PolicyException("Policy was unable to replicate atom with GUID " + manifest.guid());
                     }
 

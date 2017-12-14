@@ -116,7 +116,12 @@ public class SOSReflection {
             // Print class to file
             String clazzName = classBuilder.className(node);
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
-            if (sourceClazzFile.exists()) { sourceClazzFile.delete(); }
+            if (sourceClazzFile.exists()) {
+                boolean deleted = sourceClazzFile.delete();
+                if (!deleted) {
+                    throw new IOException("Unable to delete existing source class file: " + sourceClazzFile.getAbsolutePath());
+                }
+            }
             sourceClazzFile.deleteOnExit();
             try (PrintWriter out = new PrintWriter(sourceClazzFile)){
                 out.println(clazzString);

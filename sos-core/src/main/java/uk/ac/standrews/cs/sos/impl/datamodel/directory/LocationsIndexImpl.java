@@ -28,6 +28,7 @@ public class LocationsIndexImpl implements LocationsIndex {
     private transient HashMap<IGUID, PriorityQueue<LocationBundle>> index;
     private transient LRU_GUID lru;
 
+    private static final long serialVersionUID = 1L;
     public LocationsIndexImpl() {
         index = new HashMap<>();
         lru = new LRU_GUID();

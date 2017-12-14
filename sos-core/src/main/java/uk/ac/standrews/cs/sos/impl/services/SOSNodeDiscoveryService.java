@@ -210,6 +210,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                         if (node.isRMS()) filteredNodes.add(nodeRef); break;
                     case MMS:
                         if (node.isMMS()) filteredNodes.add(nodeRef); break;
+                    default:
+                        throw new NodeNotFoundException("Node type is unknown");
                 }
             } catch (NodeNotFoundException e) {
                 SOS_LOG.log(LEVEL.WARN, "Unable to get node with ref: " + nodeRef);

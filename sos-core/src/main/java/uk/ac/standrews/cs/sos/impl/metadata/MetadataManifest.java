@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -86,9 +87,8 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
 
         String toHash = getType().toString();
 
-        for(String key:metadata.keySet()) {
-            MetaProperty metaProperty = metadata.get(key);
-            toHash += "MP" + metaProperty.toString();
+        for(Map.Entry<String, MetaProperty> tuple:metadata.entrySet()) {
+            toHash += "MP" + tuple.getValue().toString();
         }
 
         return IO.StringToInputStream(toHash);

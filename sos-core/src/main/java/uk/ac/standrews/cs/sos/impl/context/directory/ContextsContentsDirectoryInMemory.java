@@ -30,7 +30,8 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     // [ context -> [version -> ContextVersionInfo] ]
     private transient HashMap<IGUID, HashMap<IGUID, ContextVersionInfo>> mappings;
     private transient LRU_GUID lru;
-    
+
+    private static final long serialVersionUID = 1L;
     ContextsContentsDirectoryInMemory() {
         mappings = new HashMap<>();
         lru = new LRU_GUID();

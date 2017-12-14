@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.model.SecureAtom;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -51,4 +52,18 @@ public class SecureAtomManifest extends AtomManifest implements SecureAtom {
         this.rolesToKeys.put(role, encryptedKey);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SecureAtomManifest that = (SecureAtomManifest) o;
+        return Objects.equals(rolesToKeys, that.rolesToKeys);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), rolesToKeys);
+    }
 }

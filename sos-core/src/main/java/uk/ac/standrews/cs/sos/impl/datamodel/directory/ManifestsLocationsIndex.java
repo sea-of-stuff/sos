@@ -25,6 +25,7 @@ public class ManifestsLocationsIndex implements Serializable {
     private transient HashMap<IGUID, Set<IGUID>> index;
     private transient LRU_GUID lru;
 
+    private static final long serialVersionUID = 1L;
     public ManifestsLocationsIndex() {
         index = new HashMap<>();
         lru = new LRU_GUID();

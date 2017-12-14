@@ -38,6 +38,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -236,7 +237,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         DatabaseFactory.kill();
         SOSAgent.destroy();
 
-        System.gc();
         SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
     }
 
@@ -421,6 +421,21 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             nodeMaintainerService = Executors.newScheduledThreadPool(threadSettings.getPs());
             nodeMaintainerService.scheduleAtFixedRate(nodeMaintainer, threadSettings.getInitialDelay(), threadSettings.getPeriod(), NODE_MAINTAINER_TIME_UNIT);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SOSLocalNode that = (SOSLocalNode) o;
+        return Objects.equals(signaturePrivateKey, that.signaturePrivateKey);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), signaturePrivateKey);
     }
 
     /**

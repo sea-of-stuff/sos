@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;
 import javax.crypto.SecretKey;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -84,11 +85,11 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
         try {
             SecretKey key = SymmetricEncryption.generateRandomKey();
 
-            for(String metakey:metadata.keySet()) {
-                MetaProperty metaProperty = metadata.get(metakey);
+            for(Map.Entry<String, MetaProperty> tuple:metadata.entrySet()) {
+                MetaProperty metaProperty = tuple.getValue();
                 String value = getValue(metaProperty);
 
-                String encryptedKey = SymmetricEncryption.encrypt(key, metakey);
+                String encryptedKey = SymmetricEncryption.encrypt(key, tuple.getKey());
                 String encryptedValue = SymmetricEncryption.encrypt(key, value);
 
                 MetaProperty encryptedMetaProperty = new MetaProperty(metaProperty.getMetaType(), encryptedKey, encryptedValue);

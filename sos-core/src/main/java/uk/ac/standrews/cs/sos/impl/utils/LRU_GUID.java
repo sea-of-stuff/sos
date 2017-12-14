@@ -24,6 +24,7 @@ public class LRU_GUID implements Serializable {
     private transient int size;
     private transient ConcurrentLinkedQueue<IGUID> lru;
 
+    private static final long serialVersionUID = 1L;
     public LRU_GUID() {
         this(MAX_DEFAULT_SIZE);
     }

@@ -103,17 +103,17 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
             preparedStatement.setString(1, context.toMultiHash());
             preparedStatement.setString(2, version.toMultiHash());
 
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+                    ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
+                    contextVersionInfo.predicateResult = resultSet.getBoolean(1);
+                    contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(2));
+                    contextVersionInfo.policySatisfied = resultSet.getBoolean(3);
 
-                ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
-                contextVersionInfo.predicateResult = resultSet.getBoolean(1);
-                contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(2));
-                contextVersionInfo.policySatisfied = resultSet.getBoolean(3);
+                    return contextVersionInfo;
 
-                return contextVersionInfo;
-
+                }
             }
 
         } catch (SQLException | DatabaseConnectionException ignored) { }
@@ -130,8 +130,9 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
             preparedStatement.setString(1, context.toMultiHash());
             preparedStatement.setString(2, version.toMultiHash());
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
 
         } catch (SQLException | DatabaseConnectionException e) {
 
@@ -150,20 +151,21 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
             if (!includeEvicted) preparedStatement.setString(1, context.toMultiHash());
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
 
-                try {
-                    IGUID version = GUIDFactory.recreateGUID(resultSet.getString(1));
-                    ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
-                    contextVersionInfo.predicateResult = resultSet.getBoolean(2);
-                    contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(3));
-                    contextVersionInfo.policySatisfied = resultSet.getBoolean(4);
+                    try {
+                        IGUID version = GUIDFactory.recreateGUID(resultSet.getString(1));
+                        ContextVersionInfo contextVersionInfo = new ContextVersionInfo();
+                        contextVersionInfo.predicateResult = resultSet.getBoolean(2);
+                        contextVersionInfo.timestamp = Instant.ofEpochSecond(resultSet.getLong(3));
+                        contextVersionInfo.policySatisfied = resultSet.getBoolean(4);
 
-                    contents.put(version, contextVersionInfo);
+                        contents.put(version, contextVersionInfo);
 
-                } catch (GUIDGenerationException ignored) { /* SKIP - DO NOTHING */ }
+                    } catch (GUIDGenerationException ignored) { /* SKIP - DO NOTHING */ }
 
+                }
             }
 
             return contents;

@@ -117,11 +117,11 @@ public class DataPackage {
             }
 
             public String[] getRefs() {
-                return refs;
+                return refs.clone();
             }
 
             public void setRefs(String[] refs) {
-                this.refs = refs;
+                this.refs = refs.clone();
             }
 
             @JsonIgnore

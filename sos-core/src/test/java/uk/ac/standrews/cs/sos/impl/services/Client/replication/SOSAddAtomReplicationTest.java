@@ -83,10 +83,12 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
                 .setReplicationNodes(nodesCollection);
         Atom manifest = agent.addAtom(builder);
 
-        Thread.sleep(1000); // Let replication happen
+        Thread.sleep(3000); // Let replication happen asynchronously
 
         assertNotNull(manifest.guid());
         assertEquals(1, manifest.getLocations().size());
+
+        // TODO - make sure that atom can be retrieved from remote?
 
         // Delete atom ONLY
         localStorage.getDataDirectory().remove(manifest.guid().toMultiHash());

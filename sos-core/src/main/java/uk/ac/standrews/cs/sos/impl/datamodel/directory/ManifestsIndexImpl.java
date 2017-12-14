@@ -42,6 +42,7 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
     // [invariant --> versionable/head]
     private transient HashMap<IGUID, IGUID> heads;
 
+    private static final long serialVersionUID = 1L;
     public ManifestsIndexImpl() {
 
         tips = new HashMap<>();

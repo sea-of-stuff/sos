@@ -27,8 +27,8 @@ import java.io.SequenceInputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
@@ -43,13 +43,12 @@ import static uk.ac.standrews.cs.sos.impl.protocol.json.TaskJSONFields.*;
 public class EntityChallenge extends Task {
 
 
-    private String challenge;
+    private final String challenge;
+    private final IGUID entity;
+    private final Node challengedNode;
+    private final boolean isData;
+
     private IGUID challengedEntity;
-
-    private IGUID entity;
-    private Node challengedNode;
-    private boolean isData;
-
     private boolean challengePassed;
 
     public EntityChallenge(IGUID entity, Data challengedData, Node challengedNode, boolean isData) throws GUIDGenerationException, IOException {
@@ -64,7 +63,9 @@ public class EntityChallenge extends Task {
         // http://stackoverflow.com/a/41156/2467938
         SecureRandom random = new SecureRandom();
         this.challenge = new BigInteger(130, random).toString(32);
-        List<InputStream> streams = Arrays.asList(challengedData.getInputStream(), new ByteArrayInputStream(challenge.getBytes()));
+        List<InputStream> streams = new LinkedList<>();
+        streams.add(challengedData.getInputStream());
+        streams.add(new ByteArrayInputStream(challenge.getBytes()));
         InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
         this.challengedEntity = GUIDFactory.generateGUID(GUID_ALGORITHM, stream);
     }

@@ -19,8 +19,8 @@ import java.net.URL;
  */
 public class PingNode extends Task {
 
-    private Node node;
-    private String message;
+    private final Node node;
+    private final String message;
     private Long timestamp;
     private boolean valid;
     private Long latency;

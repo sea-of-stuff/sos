@@ -32,6 +32,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     private transient HashMap<IGUID, Manifest> cache;
     private transient LRU_GUID lru;
 
+    private static final long serialVersionUID = 1L;
     public ManifestsCacheImpl() {
         cache = new HashMap<>();
         lru = new LRU_GUID();

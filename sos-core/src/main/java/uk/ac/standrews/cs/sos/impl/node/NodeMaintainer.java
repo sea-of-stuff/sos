@@ -48,8 +48,6 @@ public class NodeMaintainer implements Runnable {
             cleanCache();
         }
 
-        // Run the GC while we are at it...
-        System.gc();
     }
 
     public void flush() {

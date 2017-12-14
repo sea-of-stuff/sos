@@ -39,7 +39,7 @@ public class TasksQueue {
         // for each task, submit it to the scheduledExecutorService
     }
 
-    public static TasksQueue instance() {
+    public synchronized static TasksQueue instance() {
         if (instance == null) {
             instance = new TasksQueue();
         }
@@ -53,7 +53,9 @@ public class TasksQueue {
             synchronized (task) {
                 performAsyncTask(task, false);
 
-                task.wait();
+                while(task.getState() == TaskState.INITIALIZED) {
+                    task.wait();
+                }
                 SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Task finished " + task.getId());
             }
         } catch (InterruptedException e) {

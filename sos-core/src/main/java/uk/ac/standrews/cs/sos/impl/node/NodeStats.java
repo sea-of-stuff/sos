@@ -45,7 +45,7 @@ public class NodeStats {
         return averageAvailability;
     }
 
-    public class DataPoint {
+    public static class DataPoint {
 
         Boolean available;
         Long latency;

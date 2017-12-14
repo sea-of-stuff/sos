@@ -113,6 +113,10 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 index.advanceTip(context);
             }
             break;
+
+            default:
+                // DO NOTHING
+                break;
         }
 
         index.track(manifest);

@@ -32,6 +32,7 @@ public class UsersRolesIndex implements Serializable {
     private transient Role activeRole;
     private transient User activeUser;
 
+    private static final long serialVersionUID = 1L;
     public UsersRolesIndex() {
 
         usersToRoles = new HashMap<>();

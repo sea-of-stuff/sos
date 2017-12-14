@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class InfoNode extends Task {
 
-    private Node node;
+    private final Node node;
     private String info;
 
     public InfoNode(Node node) {
