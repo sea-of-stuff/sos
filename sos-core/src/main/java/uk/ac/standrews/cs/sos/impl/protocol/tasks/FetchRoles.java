@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -32,8 +33,10 @@ public class FetchRoles extends Task {
     private Set<Role> roles;
 
     public FetchRoles(Node node, IGUID userid) throws IOException {
+        super();
 
         if (!node.isRMS()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch role from non-RMS node");
         }
 
@@ -61,13 +64,16 @@ public class FetchRoles extends Task {
                     // this.roles = JSONHelper.JsonObjMapper().readValue(responseBody, Role.class);
 
                     SOS_LOG.log(LEVEL.INFO, "Roles for given user fetched successfully from node " + node.guid());
+                    state = TaskState.SUCCESSFUL;
                 }
 
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 SOS_LOG.log(LEVEL.ERROR, "Roles for given user were not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch roles for given user");
         }
     }

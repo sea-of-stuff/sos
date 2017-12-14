@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.network.*;
@@ -43,10 +44,11 @@ public class ManifestReplication extends Task {
 
     // TODO - replication by delegation. See DataReplication!
     public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor,
-                               NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService)
-            throws SOSProtocolException {
+                               NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) throws SOSProtocolException {
+        super();
 
         if (manifestsDataService == null || nodeDiscoveryService == null) {
+            state = TaskState.ERROR;
             throw new SOSProtocolException("At least one of the SOS services is null. Manifest replication process is aborted.");
         }
 
@@ -82,6 +84,12 @@ public class ManifestReplication extends Task {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to get node with ref: " + ref.toMultiHash());
             }
 
+        }
+
+        if (successfulReplicas >= replicationFactor) {
+            state = TaskState.SUCCESSFUL;
+        } else {
+            state = TaskState.UNSUCCESSFUL;
         }
     }
 

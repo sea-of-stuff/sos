@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.HTTPMethod;
@@ -35,11 +36,15 @@ public class FetchVersions extends Task {
     private Set<IGUID> versions;
 
     public FetchVersions(Node node, IGUID invariant) throws IOException {
+        super();
+
         if (!node.isDDS()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch manifest from non-DDS node");
         }
 
         if (invariant == null || invariant.isInvalid()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
@@ -65,16 +70,18 @@ public class FetchVersions extends Task {
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.versions = readJSONArrayOfGUIDs(responseBody);
                     SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
+                    state = TaskState.SUCCESSFUL;
                 }
 
-
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions for invariant " + invariant.toMultiHash() + " successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
 
 
         } catch (SOSURLException | IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch versions");
         }
     }

@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.*;
@@ -22,6 +23,8 @@ public class InfoNode extends Task {
     private String info;
 
     public InfoNode(Node node) {
+        super();
+
         this.node = node;
         this.info = "";
     }
@@ -40,8 +43,10 @@ public class InfoNode extends Task {
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
             }
+            state = TaskState.SUCCESSFUL;
 
         } catch (SOSURLException | IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
         }
     }

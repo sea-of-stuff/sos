@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.*;
@@ -25,6 +26,8 @@ public class PingNode extends Task {
     private Long latency;
 
     public PingNode(Node node, String message) {
+        super();
+
         this.node = node;
         this.message = message;
 
@@ -49,13 +52,17 @@ public class PingNode extends Task {
                 valid = pong.contains(message);
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+                state = TaskState.SUCCESSFUL;
+
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 valid = false;
             }
             timestamp = System.currentTimeMillis();
             latency = System.currentTimeMillis() - startRequest;
 
         } catch (SOSURLException | IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
         }
     }

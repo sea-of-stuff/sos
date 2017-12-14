@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.HTTPMethod;
@@ -52,6 +53,8 @@ public class EntityChallenge extends Task {
     private boolean challengePassed;
 
     public EntityChallenge(IGUID entity, Data challengedData, Node challengedNode, boolean isData) throws GUIDGenerationException, IOException {
+        super();
+
         this.entity = entity;
         this.challengedNode = challengedNode;
         this.isData = isData;
@@ -74,11 +77,14 @@ public class EntityChallenge extends Task {
 
             // TODO - data structures of local node should be updated
             if (challengePassed) {
+                state = TaskState.SUCCESSFUL;
                 SOS_LOG.log(LEVEL.INFO, "Entity with GUID " + entity + " was verified against node " + challengedNode);
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 SOS_LOG.log(LEVEL.WARN, "Entity with GUID " + entity + " failed to be verified against node " + challengedNode);
             }
         } catch (SOSURLException |IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to verify entity with GUID " + entity + " against node " + challengedNode);
         }
     }

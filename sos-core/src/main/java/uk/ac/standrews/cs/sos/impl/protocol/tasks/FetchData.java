@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.HTTPMethod;
@@ -30,11 +31,15 @@ public class FetchData extends Task {
     private InputStream body;
 
     public FetchData(Node node, IGUID entityId) throws IOException {
+        super();
+
         if (!node.isStorage()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch data from non-Storage node");
         }
 
         if (entityId == null || entityId.isInvalid()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch data, but you have given an invalid GUID");
         }
 
@@ -54,13 +59,16 @@ public class FetchData extends Task {
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (response.getCode() == HTTPStatus.OK) {
+                state = TaskState.SUCCESSFUL;
                 SOS_LOG.log(LEVEL.INFO, "Data fetched successfully from node " + node.guid());
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 SOS_LOG.log(LEVEL.WARN, "Data was not fetched successfully from node " + node.guid());
             }
 
             body = response.getBody();
         } catch(IOException | SOSURLException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Data not fetched successfully from node " + node.guid() + " - Exception: " + e.getMessage());
         }
     }

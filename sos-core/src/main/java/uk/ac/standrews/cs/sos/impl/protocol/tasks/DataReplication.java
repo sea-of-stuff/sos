@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.json.DataPackage;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Atom;
@@ -82,8 +83,10 @@ public class DataReplication extends Task {
     public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
                            StorageService storageService, NodeDiscoveryService nodeDiscoveryService,
                            boolean delegateReplication, boolean dataIsAlreadyProtected) throws SOSProtocolException {
+        super();
 
         if (storageService == null || nodeDiscoveryService == null) {
+            state = TaskState.ERROR;
             throw new SOSProtocolException("At least one of the SOS services is null. Data replication process is aborted.");
         }
 
@@ -126,7 +129,14 @@ public class DataReplication extends Task {
 
             }
 
+            if (successfulReplicas >= replicationFactor) {
+                state = TaskState.SUCCESSFUL;
+            } else {
+                state = TaskState.UNSUCCESSFUL;
+            }
+
         } catch (IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
         }
 

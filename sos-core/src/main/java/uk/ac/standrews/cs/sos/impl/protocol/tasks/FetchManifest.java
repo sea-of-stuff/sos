@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -31,8 +32,10 @@ public class FetchManifest extends Task {
     private Manifest manifest;
 
     public FetchManifest(Node node, IGUID manifestId) throws IOException {
+        super();
 
         if (manifestId == null || manifestId.isInvalid()) {
+            state = TaskState.ERROR;
             throw new IOException("Attempting to fetch manifest, but you have given an invalid GUID");
         }
 
@@ -57,16 +60,20 @@ public class FetchManifest extends Task {
                     String responseBody = IO.InputStreamToString(inputStream);
                     this.manifest = FileUtils.ManifestFromJson(responseBody);
                     SOS_LOG.log(LEVEL.INFO, "Manifest fetched successfully from node " + node.guid());
+                    state = TaskState.SUCCESSFUL;
 
                 } catch (ManifestNotFoundException e) {
+                    state = TaskState.ERROR;
                     throw new IOException("Unable to parse manifest with GUID " + manifestId);
                 }
 
             } else {
+                state = TaskState.UNSUCCESSFUL;
                 SOS_LOG.log(LEVEL.ERROR, "Manifest was not fetched successfully from node " + node.guid().toShortString());
                 throw new IOException();
             }
         } catch (SOSURLException | IOException e) {
+            state = TaskState.ERROR;
             SOS_LOG.log(LEVEL.ERROR, "Unable to fetch manifest");
         }
     }
