@@ -61,6 +61,11 @@ public class LRU_GUID implements Serializable {
         return lru;
     }
 
+    public void clear() {
+
+        lru.clear();
+    }
+
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 

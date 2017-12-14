@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.sos.impl.datamodel.locations.sos;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -21,7 +20,7 @@ public class SOSURLStreamHandler extends URLStreamHandler {
     }
 
     @Override
-    protected URLConnection openConnection(URL url) throws IOException {
+    protected URLConnection openConnection(URL url) {
         return new SOSURLConnection(localStorage, nodeDiscoveryService, url);
     }
 

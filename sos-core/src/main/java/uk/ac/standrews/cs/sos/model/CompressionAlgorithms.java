@@ -6,5 +6,5 @@ package uk.ac.standrews.cs.sos.model;
 public enum CompressionAlgorithms {
 
     NONE,
-    GZIP;
+    GZIP
 }

@@ -71,8 +71,9 @@ public class ManifestsLocationsIndex implements Serializable {
     }
 
     public void clear() {
-        index = new HashMap<>();
-        lru = new LRU_GUID();
+
+        index.clear();
+        lru.clear();
     }
 
     // This method defines how the cache is serialised

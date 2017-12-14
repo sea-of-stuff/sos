@@ -9,7 +9,7 @@ public class ContextException extends SOSException {
 
     public ContextException() {
         super();
-    };
+    }
 
     public ContextException(Throwable throwable) {
         super(throwable);

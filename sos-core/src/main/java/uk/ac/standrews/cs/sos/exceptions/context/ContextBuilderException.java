@@ -7,5 +7,5 @@ public class ContextBuilderException extends ContextException {
 
     public ContextBuilderException() {
         super();
-    };
+    }
 }

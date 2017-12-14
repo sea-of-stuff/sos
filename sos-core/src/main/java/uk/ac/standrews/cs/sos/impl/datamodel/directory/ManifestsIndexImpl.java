@@ -154,10 +154,10 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
     @Override
     public void clear() {
 
-        tips = new HashMap<>();
-        heads = new HashMap<>();
-        assetsToVersions = new HashMap<>();
-        typeToManifest = new HashMap<>();
+        tips.clear();
+        heads.clear();
+        assetsToVersions.clear();
+        typeToManifest.clear();
     }
 
     private void advanceTip(IGUID invariant, IGUID version) {

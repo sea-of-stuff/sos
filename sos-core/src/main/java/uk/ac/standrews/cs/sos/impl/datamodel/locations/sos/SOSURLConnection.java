@@ -47,7 +47,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     @Override
-    public void connect() throws IOException {}
+    public void connect() {}
 
     /**
      * Return the input stream given a sos location.

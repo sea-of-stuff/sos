@@ -53,7 +53,7 @@ public class IO {
         return baos;
     }
 
-    public static InputStream OutputStreamToInputStream(ByteArrayOutputStream out) throws IOException {
+    public static InputStream OutputStreamToInputStream(ByteArrayOutputStream out) {
 
         return new ByteArrayInputStream(out.toByteArray());
     }

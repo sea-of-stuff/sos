@@ -23,7 +23,7 @@ public class LocalNodesDirectory {
     private Node localNode;
     private NodesDatabase nodesDatabase;
 
-    private Set<Node> knownNodes;
+    private final Set<Node> knownNodes;
 
     public LocalNodesDirectory(Node localNode, NodesDatabase nodesDatabase) throws NodesDirectoryException {
         this.localNode = localNode;
@@ -118,7 +118,8 @@ public class LocalNodesDirectory {
     }
 
     public void clear() {
-        this.knownNodes = new HashSet<>();
+
+        knownNodes.clear();
     }
 
     /**

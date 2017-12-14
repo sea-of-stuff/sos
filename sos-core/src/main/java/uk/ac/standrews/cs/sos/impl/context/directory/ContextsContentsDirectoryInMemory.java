@@ -136,8 +136,9 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
     }
 
     public void clear() {
-        mappings = new HashMap<>();
-        lru = new LRU_GUID();
+
+        mappings.clear();
+        lru.clear();
     }
 
     ///////////////////

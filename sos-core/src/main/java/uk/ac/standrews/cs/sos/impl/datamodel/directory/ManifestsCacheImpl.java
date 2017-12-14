@@ -118,8 +118,8 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
     @Override
     public void clear() {
 
-        cache = new HashMap<>();
-        lru = new LRU_GUID();
+        cache.clear();
+        lru.clear();
     }
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {

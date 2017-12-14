@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.security.KeyPair;
@@ -70,8 +69,8 @@ public class UserImpl extends BasicManifest implements User {
         manageSignatureKeys(true);
     }
 
-    public InputStream contentToHash() throws IOException {
-        return new NullInputStream(0);
+    public InputStream contentToHash() {
+        return new NullInputStream(0); // GUID is randomly generated
     }
 
     @Override

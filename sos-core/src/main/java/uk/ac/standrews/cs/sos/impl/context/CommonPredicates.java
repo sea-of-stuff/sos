@@ -206,8 +206,7 @@ public class CommonPredicates {
 
         try (Data data = agent.getData(guid)){
 
-            int result = StringUtils.countMatches(data.toString(), textToSearch);
-            return result;
+            return StringUtils.countMatches(data.toString(), textToSearch);
 
         } catch (ServiceException | IOException e) {
             return 0;
@@ -221,8 +220,7 @@ public class CommonPredicates {
 
         try (Data data = agent.getData(guid)){
 
-            int result = StringUtils.countMatches(data.toString().toLowerCase(), textToSearch.toLowerCase());
-            return result;
+            return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch.toLowerCase());
 
         } catch (ServiceException | IOException e) {
             return 0;
@@ -304,8 +302,7 @@ public class CommonPredicates {
 }
 
 
-/**
-
+/*
  ## Ideas for advanced predicates
 
  - can get geo-location using the service ipinfo.io
