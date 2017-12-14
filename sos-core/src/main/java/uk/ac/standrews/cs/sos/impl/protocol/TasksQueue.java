@@ -71,16 +71,12 @@ public class TasksQueue {
             SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting " + task + " Sync: " + sync);
             persist(task);
 
+            CompletableFuture<Integer> future = CompletableFuture.supplyAsync(task::run, executorService);
             try {
-                CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-                    task.run();
-                    return 0;
-                }, executorService);
 
                 final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(TIMEOUT_LIMIT_S));
                 responseFuture
                         .exceptionally(throwable -> {
-                            future.cancel(true);
                             task.setState(TaskState.ERROR);
                             SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: Error/Timeout for " + task + " Message: " + throwable.getMessage());
                             return -1;
@@ -91,6 +87,7 @@ public class TasksQueue {
                 }
 
             } catch (CompletionException | CancellationException e) {
+                // boolean cancelled = future.cancel(true);
                 task.setState(TaskState.ERROR);
             }
 
@@ -101,7 +98,7 @@ public class TasksQueue {
     private <T> CompletableFuture<T> within(CompletableFuture<T> future, Duration duration) {
 
         final CompletableFuture<T> timeout = failAfter(duration);
-        return future.applyToEither(timeout, Function.identity());
+        return future.applyToEither(timeout, Function.identity()); // TODO - sync vs async
     }
 
     private <T> CompletableFuture<T> failAfter(Duration duration) {

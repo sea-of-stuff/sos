@@ -18,7 +18,7 @@ import java.security.SecureRandom;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class Task implements Runnable {
+public abstract class Task {
 
     private final long id;
     private TaskState state;
@@ -33,11 +33,11 @@ public abstract class Task implements Runnable {
      * When the task is finished, we call notify()
      * The monitoring pattern is used to achieve sync-tasks using the same components that we use for async-tasks.
      */
-    @Override
-    public synchronized void run() {
+    public int run() {
         state = TaskState.RUNNING;
         performAction();
         // notify(); // Awake the SYNC tasks from their wait state
+        return 0;
     }
 
     /**

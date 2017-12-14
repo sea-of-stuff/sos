@@ -28,16 +28,13 @@ public class Void extends Task {
         SOS_LOG.log(LEVEL.DEBUG, toString() + " Performing action. Sleeping time (ms): " + sleepTime);
 
         try {
-            for(int i = 0; i < (sleepTime / 1000); i++) {
-                Thread.sleep(1000);
-            }
+            Thread.sleep(sleepTime);
         } catch (InterruptedException e) {
             setState(TaskState.ERROR);
         }
 
-        SOS_LOG.log(LEVEL.DEBUG, toString() + " Finished performing action");
-
         setState(TaskState.SUCCESSFUL);
+        SOS_LOG.log(LEVEL.DEBUG, toString() + " Finished performing action");
     }
 
     @Override
