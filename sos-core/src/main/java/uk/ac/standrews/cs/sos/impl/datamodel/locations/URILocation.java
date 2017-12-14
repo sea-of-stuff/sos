@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.locations;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Location;
 import uk.ac.standrews.cs.sos.network.HTTPMethod;

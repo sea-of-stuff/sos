@@ -235,7 +235,7 @@ public class SOSReflection {
         }
 
         try {
-            URL url = classesDirectory.toURL();
+            URL url = classesDirectory.toURI().toURL();
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory
