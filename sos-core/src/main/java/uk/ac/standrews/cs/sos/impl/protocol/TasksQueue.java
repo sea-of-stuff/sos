@@ -98,7 +98,7 @@ public class TasksQueue {
     private <T> CompletableFuture<T> within(CompletableFuture<T> future, Duration duration) {
 
         final CompletableFuture<T> timeout = failAfter(duration);
-        return future.applyToEither(timeout, Function.identity()); // TODO - sync vs async
+        return future.applyToEither(timeout, Function.identity());
     }
 
     private <T> CompletableFuture<T> failAfter(Duration duration) {
