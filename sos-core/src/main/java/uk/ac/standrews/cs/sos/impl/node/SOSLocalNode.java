@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.metadata.tika.TikaMetadataEngine;
+import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.services.*;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
@@ -205,6 +206,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (nodeMaintainerService != null) {
             nodeMaintainerService.shutdown();
         }
+
+        TasksQueue.instance().shutdown();
 
         if (agent != null) {
             agent.shutdown();

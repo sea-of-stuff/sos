@@ -46,6 +46,14 @@ public class TasksQueue {
         return instance;
     }
 
+    public void shutdown() {
+
+        executorService.shutdownNow();
+        scheduledExecutorService.shutdownNow();
+
+        instance = null;
+    }
+
     public void performSyncTask(final Task task) {
 
         performAsyncTask(task, true, false);
@@ -87,7 +95,6 @@ public class TasksQueue {
                 }
 
             } catch (CompletionException | CancellationException e) {
-                // boolean cancelled = future.cancel(true);
                 task.setState(TaskState.ERROR);
             }
 
