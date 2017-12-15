@@ -754,7 +754,7 @@ public class SOSContextService implements ContextService {
             runPolicies(context);
             InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policy_time_to_run_apply_on_current_dataset);
 
-            SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
+            SOS_LOG.log(LEVEL.INFO, "Finished running policies for context " + context.getUniqueName());
         }
 
     }

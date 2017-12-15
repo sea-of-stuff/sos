@@ -20,14 +20,14 @@ import static uk.ac.standrews.cs.sos.constants.Internals.TIMEOUT_LIMIT_S;
  */
 public class TasksQueue {
 
-    private SettingsConfiguration.Settings.GlobalSettings.TasksSettings settings;
     private boolean fallbackToSyncTasks;
     private ScheduledExecutorService scheduledExecutorService;
     private ExecutorService executorService;
 
     private static TasksQueue instance;
+
     private TasksQueue() {
-        settings = SOSLocalNode.settings.getGlobal().getTasks();
+        SettingsConfiguration.Settings.GlobalSettings.TasksSettings settings = SOSLocalNode.settings.getGlobal().getTasks();
         fallbackToSyncTasks = settings.isFallbackToSyncTasks();
 
         int numberOfThreads = settings.getThread().getPs();
@@ -46,7 +46,7 @@ public class TasksQueue {
         return instance;
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
 
         executorService.shutdownNow();
         scheduledExecutorService.shutdownNow();
@@ -54,12 +54,12 @@ public class TasksQueue {
         instance = null;
     }
 
-    public void performSyncTask(final Task task) {
+    public synchronized void performSyncTask(final Task task) {
 
         performAsyncTask(task, true, false);
     }
 
-    public void performAsyncTask(Task task) {
+    public synchronized void performAsyncTask(Task task) {
 
         performAsyncTask(task, false, true);
     }

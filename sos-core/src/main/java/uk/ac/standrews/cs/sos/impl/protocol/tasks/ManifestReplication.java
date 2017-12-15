@@ -81,7 +81,7 @@ public class ManifestReplication extends Task {
                 }
 
             } catch (NodeNotFoundException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to get node with ref: " + ref.toMultiHash());
+                SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + ref);
             }
 
         }

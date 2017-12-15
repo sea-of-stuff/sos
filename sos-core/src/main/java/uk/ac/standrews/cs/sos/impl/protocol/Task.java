@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.sos.impl.protocol;
 
+import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
+
 import java.io.IOException;
 import java.security.SecureRandom;
 
@@ -36,7 +39,8 @@ public abstract class Task {
     public int run() {
         state = TaskState.RUNNING;
         performAction();
-        // notify(); // Awake the SYNC tasks from their wait state
+
+        SOS_LOG.log(LEVEL.INFO,"Finishing Task with state " + state.name());
         return 0;
     }
 

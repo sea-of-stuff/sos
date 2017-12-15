@@ -214,7 +214,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                         throw new NodeNotFoundException("Node type is unknown");
                 }
             } catch (NodeNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get node with ref: " + nodeRef);
+                SOS_LOG.log(LEVEL.WARN, "SOSNodeDiscovery - Unable to get node with ref: " + nodeRef);
             }
 
             if (filteredNodes.size() == limit && limit != NO_LIMIT)
