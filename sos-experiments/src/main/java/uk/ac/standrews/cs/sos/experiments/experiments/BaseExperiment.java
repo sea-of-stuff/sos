@@ -6,9 +6,14 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.experiments.*;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.impl.node.BasicNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
+import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.PingNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument;
+import uk.ac.standrews.cs.sos.model.Node;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,6 +105,33 @@ public abstract class BaseExperiment implements Experiment {
 
         currentExperimentUnit = getExperimentUnit();
         currentExperimentUnit.setup();
+
+        // Make sure that all nodes are up and running!
+        int nodesRunning = 0;
+        int totalNumberOfNodes = experiment.getNodes().size();
+        while(nodesRunning < totalNumberOfNodes) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            nodesRunning = 0;
+            for (ExperimentConfiguration.Experiment.Node node : experiment.getNodes()) {
+
+                Node nodeToPing = new BasicNode(node.getSsh().getHost(), 8080);
+                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD"); // TODO - test!!!
+
+                TasksQueue.instance().performSyncTask(pingNode);
+                if (pingNode.getState() == TaskState.SUCCESSFUL) {
+                    nodesRunning++;
+                }
+            }
+
+            System.out.println("Nodes running: " + nodesRunning + " out of " + totalNumberOfNodes + " nodes");
+
+        }
     }
 
     @Override
