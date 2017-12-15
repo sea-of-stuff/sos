@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <jdk.version>1.9</jdk.version>
+        <jdk.version>1.8</jdk.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>

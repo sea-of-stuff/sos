@@ -71,52 +71,28 @@ public class TasksQueue {
             SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting " + task + " Sync: " + sync);
             persist(task);
 
+            CompletableFuture<Integer> future = CompletableFuture.supplyAsync(task::run, executorService);
             try {
-                CompletableFuture<Integer> future = CompletableFuture
-                        .supplyAsync(task::run, executorService)
-                        .orTimeout(TIMEOUT_LIMIT_S, TimeUnit.SECONDS)
-                        .whenComplete((result, error) -> {
-                            if (error == null) {
-                                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Result is " + result);
-                            } else {
-                                task.setState(TaskState.ERROR);
-                                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Timeout");
-                            }
+
+                final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(TIMEOUT_LIMIT_S));
+                responseFuture
+                        .exceptionally(throwable -> {
+                            task.setState(TaskState.ERROR);
+                            SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: Error/Timeout for " + task + " Message: " + throwable.getMessage());
+                            throw new CancellationException();
                         });
 
                 if (sync) {
-                    future.join();
+                    responseFuture.join();
                 }
 
             } catch (CompletionException | CancellationException e) {
-                SOS_LOG.log(LEVEL.INFO, "TasksQueue :: HELLO WORLD");
+                // boolean cancelled = future.cancel(true);
+                task.setState(TaskState.ERROR);
             }
-
-//            try {
-//
-//                final CompletableFuture<Integer> responseFuture = within(future, Duration.ofSeconds(TIMEOUT_LIMIT_S));
-//                responseFuture
-//                        .exceptionally(throwable -> {
-//                            task.setState(TaskState.ERROR);
-//                            SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: Error/Timeout for " + task + " Message: " + throwable.getMessage());
-//                            throw new CancellationException();
-//                        });
-//
-//                if (sync) {
-//                    responseFuture.join();
-//                }
-//
-//            } catch (CompletionException | CancellationException e) {
-//                // boolean cancelled = future.cancel(true);
-//                task.setState(TaskState.ERROR);
-//            }
 
             SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Finished/Submitted " + task);
         }
-    }
-
-    private int handleTimeout() {
-        return -1;
     }
 
     private <T> CompletableFuture<T> within(CompletableFuture<T> future, Duration duration) {
