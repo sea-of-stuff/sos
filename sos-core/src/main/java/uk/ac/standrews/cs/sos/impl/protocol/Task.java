@@ -21,7 +21,7 @@ import java.security.SecureRandom;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class Task {
+public abstract class Task implements Runnable {
 
     private final long id;
     private TaskState state;
@@ -36,12 +36,12 @@ public abstract class Task {
      * When the task is finished, we call notify()
      * The monitoring pattern is used to achieve sync-tasks using the same components that we use for async-tasks.
      */
-    public int run() {
+    @Override
+    public void run() {
         state = TaskState.RUNNING;
         performAction();
 
         SOS_LOG.log(LEVEL.INFO,"Finishing Task with state " + state.name());
-        return 0;
     }
 
     /**
@@ -73,6 +73,10 @@ public abstract class Task {
     }
 
     public void setState(TaskState state) {
+
+        // Once in ERROR or UNSUCCESSFUL state, this cannot change anymore
+        if (this.state == TaskState.ERROR || this.state == TaskState.UNSUCCESSFUL) return;
+
         this.state = state;
     }
 

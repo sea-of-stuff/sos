@@ -51,6 +51,23 @@ public class TasksQueueTest extends SetUpTest {
     }
 
     @Test
+    public void multiAsyncTasksTest() {
+
+        Task voidTask = new Void();
+        TasksQueue.instance().performAsyncTask(voidTask);
+        TasksQueue.instance().performAsyncTask(voidTask);
+        TasksQueue.instance().performAsyncTask(voidTask);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            assertTrue(false);
+        }
+
+        assertEquals(voidTask.getState(), TaskState.SUCCESSFUL);
+    }
+
+    @Test
     public void timeoutSyncTest() {
 
         Task voidTask = new Void(35000);
@@ -59,8 +76,7 @@ public class TasksQueueTest extends SetUpTest {
         assertEquals(voidTask.getState(), TaskState.ERROR);
     }
 
-    // NOTE - This test fails because the current TasksQueue is not able to cancel a future that is already running even if timedout!
-    @Test (enabled = false)
+    @Test
     public void timeoutAsyncTest() {
 
         Task voidTask = new Void(35000);

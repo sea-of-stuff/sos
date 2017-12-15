@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.json;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollectionType;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -14,7 +15,7 @@ import static org.testng.Assert.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ContextDeserializerTest {
+public class ContextDeserializerTest extends SetUpTest {
 
     @Test
     public void basicContextDeserialization() throws IOException, GUIDGenerationException {
@@ -22,9 +23,9 @@ public class ContextDeserializerTest {
         String contextJSON = "" +
                 "{\n" +
                 "  \"type\": \"Context\",\n" +
-                "  \"GUID\": \"SHA256_16_0f6c1edd086984c3ab4d5fff754f891f13e5a19adbfcbeeb5df78aa15a7b14e7\",\n" +
+                "  \"GUID\": \"SHA256_16_ebe6cc0147e8cf26d154c852b2a58faa7063b5a75e908b4574ac5e4ae278b0f9\",\n" +
                 "  \"name\": \"TEST\",\n" +
-                "  \"invariant\": \"SHA256_16_d863a74a3e7a0f1c793390661926ebdb098d71ef35f1714540934995981719fb\",\n" +
+                "  \"invariant\": \"SHA256_16_1b94e313eecb5c13a2a3a33bb6cae3145703dd1aeb0f5c1d461decb32684564b\",\n" +
                 "  \"content\": \"SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547\",\n" +
                 "  \"domain\": {\n" +
                 "    \"type\": \"LOCAL\",\n" +
@@ -40,8 +41,8 @@ public class ContextDeserializerTest {
 
         Context context = JSONHelper.JsonObjMapper().readValue(contextJSON, Context.class);
         assertNotNull(context);
-        assertEquals(context.guid().toMultiHash(), "SHA256_16_9f66ac5a879351d9620f82324cffb07fa047c823ed5a97d3953b03929f4cdaf2");
-        assertEquals(context.invariant().toMultiHash(), "SHA256_16_d863a74a3e7a0f1c793390661926ebdb098d71ef35f1714540934995981719fb");
+        assertEquals(context.guid().toMultiHash(), "SHA256_16_ebe6cc0147e8cf26d154c852b2a58faa7063b5a75e908b4574ac5e4ae278b0f9");
+        assertEquals(context.invariant().toMultiHash(), "SHA256_16_1b94e313eecb5c13a2a3a33bb6cae3145703dd1aeb0f5c1d461decb32684564b");
         assertEquals(context.getName(), "TEST");
         assertEquals(context.predicate().toMultiHash(), "SHA256_16_57daa6858e8bdcc0e2e1ab93a1a782f2cd566186aff620fe0e7d1a545d681cab");
         assertTrue(context.policies().contains(GUIDFactory.recreateGUID("SHA256_16_d9e4b085724893ff91d4666cd0fc63dbf98fd38b1e05952dc7b836ece28d2a84")));

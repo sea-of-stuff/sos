@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchData;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -74,10 +75,14 @@ public class SOSURLConnection extends URLConnection {
 
                 FetchData fetchData = new FetchData(nodeToContact, entityGUID);
                 TasksQueue.instance().performSyncTask(fetchData);
-                inputStream = fetchData.getBody();
+                if (fetchData.getState() == TaskState.SUCCESSFUL) {
+                    inputStream = fetchData.getBody();
+                } else {
+                    throw new IOException("(1) Unable to get data from the node: " + nodeGUID.toMultiHash());
+                }
 
             } else {
-                throw new IOException("Unable to get data from the node: " + nodeGUID.toMultiHash());
+                throw new IOException("(2) Unable to get data from the node: " + nodeGUID.toMultiHash());
             }
 
         } catch (GUIDGenerationException | DataException | BindingAbsentException | DataStorageException | NodeNotFoundException e) {

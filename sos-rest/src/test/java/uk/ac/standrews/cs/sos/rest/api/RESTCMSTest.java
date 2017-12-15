@@ -55,7 +55,7 @@ public class RESTCMSTest extends CommonRESTTest {
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = response.readEntity(String.class);
-        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_e9561e61c65158f11fcf3d553ba0045a882f340ba6461480c2aab7feef4c672e"));
+        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_f2285b2bcc5e2148aee7171af6e5d12a758b7c42fe59627ad9e2ce5c155ab087"));
     }
 
     @Test

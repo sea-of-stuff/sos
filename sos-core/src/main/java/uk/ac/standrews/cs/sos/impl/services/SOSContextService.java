@@ -858,6 +858,7 @@ public class SOSContextService implements ContextService {
         SettingsConfiguration.Settings.ThreadSettings checkPoliciesThreadSettings = SOSLocalNode.settings.getServices().getCms().getCheckPoliciesThread();
 
         service.scheduleWithFixedDelay(() -> {
+            SOS_LOG.log(LEVEL.INFO, "Running check-policies - this is a periodic background thread");
 
             long start = System.currentTimeMillis();
             runCheckPolicies();

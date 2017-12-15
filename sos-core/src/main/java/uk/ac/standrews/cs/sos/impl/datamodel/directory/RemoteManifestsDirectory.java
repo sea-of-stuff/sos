@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchVersions;
@@ -161,16 +162,18 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
                 FetchManifest fetchManifest = new FetchManifest(node, guid);
                 TasksQueue.instance().performSyncTask(fetchManifest);
+                if (fetchManifest.getState() == TaskState.SUCCESSFUL) {
 
-                Manifest manifest = fetchManifest.getManifest();
-                if (manifest == null) {
-                    continue;
+                    Manifest manifest = fetchManifest.getManifest();
+                    if (manifest == null) {
+                        continue;
+                    }
+
+                    // Update the manifest-node mapping
+                    manifestsDataService.addManifestNodeMapping(manifest.guid(), nodeToCheck);
+
+                    return manifest;
                 }
-
-                // Update the manifest-node mapping
-                manifestsDataService.addManifestNodeMapping(manifest.guid(), nodeToCheck);
-
-                return manifest;
 
             } catch (NodeNotFoundException | IOException e) {
                 SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch a manifest with GUID " + guid .toMultiHash()+ " from Node with GUID " + nodeToCheck.toMultiHash());
@@ -209,7 +212,9 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
                 FetchVersions fetchVersions = new FetchVersions(node, invariant);
                 TasksQueue.instance().performSyncTask(fetchVersions);
 
-                versionRefs.addAll(fetchVersions.getVersions());
+                if (fetchVersions.getState() == TaskState.SUCCESSFUL) {
+                    versionRefs.addAll(fetchVersions.getVersions());
+                }
 
             } catch (NodeNotFoundException | IOException e) {
                 SOS_LOG.log(LEVEL.WARN, "A problem occurred while attempting to fetch versions for invariant " + invariant.toMultiHash()+ " from Node with GUID " + nodeToCheck.toMultiHash());

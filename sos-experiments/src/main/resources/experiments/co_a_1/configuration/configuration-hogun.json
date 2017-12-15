@@ -5,7 +5,7 @@
     "description": "The experiment CO_A_1 investigates the size of the codomain",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 2
     },
     "nodes" : [
       {

@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.impl.node.*;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.InfoNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.PingNode;
@@ -250,14 +251,17 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
         InfoNode infoNode = new InfoNode(node);
         TasksQueue.instance().performSyncTask(infoNode);
+        if (infoNode.getState() == TaskState.SUCCESSFUL) {
 
-        String retval = infoNode.getInfo();
-        // TODO - are info about node updated??
-        if (retval == null) {
-            throw new NodeNotFoundException("Unable to find info about node");
-        } else {
-            return retval;
+            String retval = infoNode.getInfo();
+            // TODO - are info about node updated??
+            if (retval != null) {
+                return retval;
+            }
+
         }
+
+        throw new NodeNotFoundException("Unable to find info about node");
     }
 
     @Override
@@ -265,13 +269,16 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
         InfoNode infoNode = new InfoNode(node);
         TasksQueue.instance().performSyncTask(infoNode);
+        if (infoNode.getState() == TaskState.SUCCESSFUL) {
 
-        String retval = infoNode.getInfo();
-        if (retval == null) {
-            throw new NodeNotFoundException("Unable to find info about node");
-        } else {
-            return retval;
+            String retval = infoNode.getInfo();
+            if (retval != null) {
+                return retval;
+            }
+
         }
+
+        throw new NodeNotFoundException("Unable to find info about node");
     }
 
     @Override
@@ -315,7 +322,9 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
                 PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
                 TasksQueue.instance().performSyncTask(pingNode);
-                nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
+                if (pingNode.getState() == TaskState.SUCCESSFUL) {
+                    nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
+                }
             }
 
         }, 10, 10, TimeUnit.SECONDS); // TODO - use settings from node config

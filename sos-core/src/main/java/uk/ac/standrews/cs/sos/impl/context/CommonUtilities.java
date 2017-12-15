@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.CacheLocationBundle;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.EntityChallenge;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
@@ -146,7 +147,7 @@ public class CommonUtilities {
                 EntityChallenge entityChallenge = new EntityChallenge(guid, data, nodeToBeChallenged, false);
 
                 TasksQueue.instance().performSyncTask(entityChallenge);
-                return entityChallenge.isChallengePassed();
+                return entityChallenge.getState() == TaskState.SUCCESSFUL && entityChallenge.isChallengePassed();
             }
 
         } catch (ManifestNotFoundException | NodesCollectionException | NodeNotFoundException | GUIDGenerationException | IOException e) {
@@ -201,7 +202,7 @@ public class CommonUtilities {
             EntityChallenge entityChallenge = new EntityChallenge(guid, storageService.getAtomContent(guid), nodeToBeChallenged, true);
 
             TasksQueue.instance().performSyncTask(entityChallenge);
-            return entityChallenge.isChallengePassed();
+            return entityChallenge.getState() == TaskState.SUCCESSFUL && entityChallenge.isChallengePassed();
 
         } catch (NodeNotFoundException | GUIDGenerationException | AtomNotFoundException | IOException e) {
 
