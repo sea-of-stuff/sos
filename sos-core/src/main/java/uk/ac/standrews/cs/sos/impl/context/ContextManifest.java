@@ -284,9 +284,21 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         return ContextBuilder.toFATString(this, predicate, policies);
     }
 
+    /**
+     * Method to make the invariant of the context.
+     * The elements that make the invariant of a context cannot mutate between versions.
+     * The elements are:
+     * - type of the manifest itself
+     * - the name of the context
+     * - the predicate
+     * - the policies
+     * - the max-age property of the context
+     */
     private IGUID makeInvariantGUID() {
 
-        String contentToHash = "PR" + predicate().toMultiHash();
+        String contentToHash = getType() +
+                "N" + getName() +
+                "PR" + predicate().toMultiHash();
 
         Set<IGUID> policies = policies();
         if (policies != null && !policies.isEmpty()) {

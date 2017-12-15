@@ -69,6 +69,77 @@ public class SOSAddContextTest extends ContextServiceTest {
             "\t\"policies\": []\n" +
             "}";
 
+    private static final String FAT_CONTEXT_3 = "{\n" +
+            "  \"context\": {\n" +
+            "    \"name\": \"data_replication_1\",\n" +
+            "    \"domain\": {\n" +
+            "      \"type\": \"LOCAL\",\n" +
+            "      \"nodes\": []\n" +
+            "    },\n" +
+            "    \"codomain\": {\n" +
+            "      \"type\": \"SPECIFIED\",\n" +
+            "      \"nodes\": [\"SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2\"]\n" +
+            "    },\n" +
+            "    \"max_age\": 0\n" +
+            "  },\n" +
+            "  \"predicate\": {\n" +
+            "    \"type\": \"Predicate\",\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\",\n" +
+            "    \"dependencies\": []\n" +
+            "  },\n" +
+            "  \"policies\": [\n" +
+            "    {\n" +
+            "      \"type\" : \"Policy\",\n" +
+            "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
+            "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
+            "      \"dependencies\" : [],\n" +
+            "      \"fields\" : [\n" +
+            "        {\n" +
+            "          \"type\" : \"int\",\n" +
+            "          \"name\" : \"factor\",\n" +
+            "          \"value\" : \"1\"\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+
+
+    private static final String FAT_CONTEXT_4 = "{\n" +
+            "  \"context\": {\n" +
+            "    \"name\": \"data_replication_2\",\n" +
+            "    \"domain\": {\n" +
+            "      \"type\": \"LOCAL\",\n" +
+            "      \"nodes\": []\n" +
+            "    },\n" +
+            "    \"codomain\": {\n" +
+            "      \"type\": \"SPECIFIED\",\n" +
+            "      \"nodes\": [\"SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2\", \"SHA256_16_c2134ef5253f507dcda39b25e9a999769c1bd5e337145de1662a118682a76cc0\"]\n" +
+            "    },\n" +
+            "    \"max_age\": 0\n" +
+            "  },\n" +
+            "  \"predicate\": {\n" +
+            "    \"type\": \"Predicate\",\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\",\n" +
+            "    \"dependencies\": []\n" +
+            "  },\n" +
+            "  \"policies\": [\n" +
+            "    {\n" +
+            "      \"type\" : \"Policy\",\n" +
+            "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
+            "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
+            "      \"dependencies\" : [],\n" +
+            "      \"fields\" : [\n" +
+            "        {\n" +
+            "          \"type\" : \"int\",\n" +
+            "          \"name\" : \"factor\",\n" +
+            "          \"value\" : \"1\"\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+
     @Test
     public void addContextTest() throws ContextException {
 
@@ -164,6 +235,25 @@ public class SOSAddContextTest extends ContextServiceTest {
         Set<IGUID> contents = contextService.getContents(contextTip.guid());
         assertNotNull(contents);
         assertEquals(contents.size(), 2);
+    }
+
+    @Test
+    public void sameContextsButDifferentDomains() throws ContextException {
+
+        IGUID guid_3 = contextService.addContext(FAT_CONTEXT_3);
+        assertNotNull(guid_3);
+        assertFalse(guid_3.isInvalid());
+        Context context_3 = contextService.getContext(guid_3);
+        assertNotNull(context_3);
+
+        IGUID guid_4 = contextService.addContext(FAT_CONTEXT_4);
+        assertNotNull(guid_4);
+        assertFalse(guid_4.isInvalid());
+        Context context_4 = contextService.getContext(guid_4);
+        assertNotNull(context_4);
+
+        Set<Context> contexts = contextService.getContexts();
+        assertEquals(contexts.size(), 2);
     }
 
     // TODO - test max age property and getting contents from multiple contexts (w previous) WITH EXPIRATION

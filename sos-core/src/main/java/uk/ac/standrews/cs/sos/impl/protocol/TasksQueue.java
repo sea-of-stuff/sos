@@ -66,7 +66,6 @@ public class TasksQueue {
 
     private void performAsyncTask(Task task, boolean sync, boolean checkSettings) {
 
-
         if (task.getState() != TaskState.INITIALIZED) {
             SOS_LOG.log(LEVEL.ERROR, "TasksQueue :: You cannot resubmit " + task);
             return;
@@ -109,6 +108,7 @@ public class TasksQueue {
     }
 
     private <T> CompletableFuture<T> failAfter(Duration duration) {
+
         final CompletableFuture<T> promise = new CompletableFuture<>();
         scheduledExecutorService.schedule(() -> {
             final TimeoutException ex = new TimeoutException("Timeout after " + duration.getSeconds() + " seconds");
