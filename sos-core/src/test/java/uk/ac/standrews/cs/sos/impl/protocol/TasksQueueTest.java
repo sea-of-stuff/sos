@@ -68,7 +68,7 @@ public class TasksQueueTest extends SetUpTest {
 
         // Let task finish
         try {
-            Thread.sleep(45000);
+            Thread.sleep(40000);
         } catch (InterruptedException e) {
             assertTrue(false);
         }
