@@ -32,16 +32,15 @@ public class Persistence {
     public static Object Load(IFile file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
-        try (BufferedReader br = new BufferedReader(new FileReader(file.getPathname()))) {
-            if (br.readLine() == null) {
-                throw new IOException();
-            }
-
-            try (FileInputStream istream = new FileInputStream(file.toFile());
-                 ObjectInputStream q = new ObjectInputStream(istream)) {
-
-                return q.readObject();
-            }
+        if (!file.exists() || file.getSize() == 0) {
+            throw new IOException("File is empty");
         }
+
+        try (FileInputStream istream = new FileInputStream(file.toFile());
+             ObjectInputStream q = new ObjectInputStream(istream)) {
+
+            return q.readObject();
+        }
+
     }
 }

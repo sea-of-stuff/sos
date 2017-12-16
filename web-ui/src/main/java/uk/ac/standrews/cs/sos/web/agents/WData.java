@@ -484,10 +484,14 @@ public class WData {
             case "image/jpg":
             case "image/gif":
             case "image/tiff": // NOT TESTED
-                byte b[] = data.getState();
-                byte[] encodeBase64 = Base64.encode(b);
-                String encodedData = new String(encodeBase64, StandardCharsets.UTF_8);
-                outputData = "<img class=\"img-fluid\" src=\"data:" + type + ";base64," + encodedData + "\">";
+                try (InputStream inputStream = data.getInputStream()) {
+                    byte[] b = IOUtils.toByteArray(inputStream);
+                    byte[] encodeBase64 = Base64.encode(b);
+                    String encodedData = new String(encodeBase64, StandardCharsets.UTF_8);
+                    outputData = "<img class=\"img-fluid\" src=\"data:" + type + ";base64," + encodedData + "\">";
+                } catch (IOException e) {
+                    outputData = "ERROR ON GETTING DATA";
+                }
                 break;
             case "application/pdf":
                 return "<i class=\"fa fa-file-pdf-o fa-5x\" aria-hidden=\"true\"></i>";

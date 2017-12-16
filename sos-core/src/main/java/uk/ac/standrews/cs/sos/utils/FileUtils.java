@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.sos.model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -251,12 +252,6 @@ public class FileUtils {
     /**
      * Create a file object with some given string content.
      * The file object must be persisted by the caller.
-     *
-     * @param storage
-     * @param directory
-     * @param filename
-     * @return
-     * @throws DataStorageException
      */
     public static IFile CreateFileWithContent(LocalStorage storage, IDirectory directory, String filename, String content) throws DataStorageException {
         return storage.createFile(directory, filename, new StringData(content));
@@ -267,7 +262,13 @@ public class FileUtils {
     }
 
     public static String FileContent(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException, DataException {
-        return new String(CreateFile(storage, directory, filename).getData().getState());
+
+        try (InputStream inputStream = CreateFile(storage, directory, filename).getData().getInputStream()) {
+
+            return IO.InputStreamToString(inputStream);
+        } catch (IOException e) {
+            throw new DataException("Unable to get data");
+        }
     }
 
     public static void DeleteFile(IFile file) throws ManifestsDirectoryException {
