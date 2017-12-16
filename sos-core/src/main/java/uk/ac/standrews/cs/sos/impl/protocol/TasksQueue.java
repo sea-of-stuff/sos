@@ -41,7 +41,7 @@ public class TasksQueue {
         // for each task, submit it to the executorService
     }
 
-    public static TasksQueue instance() {
+    public synchronized static TasksQueue instance() {
         if (instance == null) {
             instance = new TasksQueue();
         }
@@ -108,7 +108,7 @@ public class TasksQueue {
             SOS_LOG.log(LEVEL.INFO, "TasksQueue :: Submitting task " + task);
             persist(task);
 
-            final Future future = service.submit(new Thread(task, task.toString()));
+            final Future future = service.submit(task);
             canceller.schedule(() -> {
                 future.cancel(true);
                 task.setState(TaskState.ERROR);
