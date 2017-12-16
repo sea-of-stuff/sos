@@ -20,12 +20,12 @@ public class BasicNode extends BasicManifest implements Node {
 
     private String ip;
     private InetSocketAddress hostname;
-    private int port;
 
     public BasicNode(String ip, int port) {
         super(ManifestType.NODE);
 
         guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+        this.ip = ip;
         this.hostname = new InetSocketAddress(ip, port);
     }
 

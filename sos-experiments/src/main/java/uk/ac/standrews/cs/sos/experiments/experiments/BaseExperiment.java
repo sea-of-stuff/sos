@@ -97,6 +97,9 @@ public abstract class BaseExperiment implements Experiment {
             SettingsConfiguration configuration = new SettingsConfiguration(configFile);
 
             node = ServerState.init(configuration.getSettingsObj());
+
+            waitForSlaveNodesToBeRunning();
+
         } catch (ConfigurationException e) {
             throw new ExperimentException("Unable to process configuration properly", e);
         } catch (IOException e) {
@@ -105,23 +108,26 @@ public abstract class BaseExperiment implements Experiment {
 
         currentExperimentUnit = getExperimentUnit();
         currentExperimentUnit.setup();
+    }
 
-        // Make sure that all nodes are up and running!
+    private void waitForSlaveNodesToBeRunning() throws ExperimentException {
+
         int nodesRunning = 0;
         int totalNumberOfNodes = experiment.getNodes().size();
         while(nodesRunning < totalNumberOfNodes) {
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new ExperimentException("Thread Sleep issue while checking that slave nodes are running");
             }
 
             nodesRunning = 0;
             for (ExperimentConfiguration.Experiment.Node node : experiment.getNodes()) {
 
+                // FIXME - TEST THIS PART OF CODE
                 Node nodeToPing = new BasicNode(node.getSsh().getHost(), 8080);
-                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD"); // TODO - test!!!
+                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD");
 
                 TasksQueue.instance().performSyncTask(pingNode);
                 if (pingNode.getState() == TaskState.SUCCESSFUL) {
@@ -130,8 +136,8 @@ public abstract class BaseExperiment implements Experiment {
             }
 
             System.out.println("Nodes running: " + nodesRunning + " out of " + totalNumberOfNodes + " nodes");
-
         }
+
     }
 
     @Override

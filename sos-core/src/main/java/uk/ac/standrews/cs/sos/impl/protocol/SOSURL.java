@@ -184,6 +184,7 @@ public class SOSURL {
     private static String buildURLBase(Node node) {
         String ip = node.getIP();
         InetSocketAddress address = node.getHostAddress();
-        return HTTP_SCHEME + ip + ":" + address.getPort() + BASE_PATH;
+        int port = address.getPort();
+        return HTTP_SCHEME + ip + ":" + port + BASE_PATH;
     }
 }
