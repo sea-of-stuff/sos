@@ -146,21 +146,6 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    // REMOVEME - need to have node as manifest
-    public static URL NDS_REGISTER_NODE(Node node) throws SOSURLException {
-        String url = buildURLBase(node) +
-                "nds/register";
-
-        return makeURL(url);
-    }
-
-    public static URL NDS_GET_NODE(Node node, String role) throws SOSURLException {
-        String url = buildURLBase(node) +
-                "nds/service/" + role;
-
-        return makeURL(url);
-    }
-
     public static URL USRO_GET_ROLES(Node node, IGUID user) throws SOSURLException {
 
         String url = buildURLBase(node) +
