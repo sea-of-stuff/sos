@@ -78,6 +78,12 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
             addContext(cms, experiment, "data_replication_2");
             addContext(cms, experiment, "data_replication_3");
             addContext(cms, experiment, "data_replication_4");
+            addContext(cms, experiment, "data_replication_5");
+            addContext(cms, experiment, "data_replication_6");
+            addContext(cms, experiment, "data_replication_7");
+            addContext(cms, experiment, "data_replication_8");
+            addContext(cms, experiment, "data_replication_9");
+            addContext(cms, experiment, "data_replication_10");
         }
 
     }

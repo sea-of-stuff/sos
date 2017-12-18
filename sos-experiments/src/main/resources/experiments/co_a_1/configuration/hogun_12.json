@@ -109,6 +109,42 @@
         "hostname" : "192.168.2.5",
         "port" : 8080,
         "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ6qgBOhnnnfaYAWjJKOX/AHzlC2Za+3jWCd+hLXWZz93wYhZTQyb8fzyITRHlv4dv5y4dMmPITlujYDqS8j18sCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_1e31cbf2b2501a646ee1757e8ee204db3af88b3bb1d85512a82bbc79bcce647e",
+        "hostname" : "192.168.2.6",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIYK3VI6Ew0q2QvxMJ+/mycRpyS1fPUgz2ELkAf7tFOPiBkDxJpbn7/C+jH1FC59HZ5pj/ivUX0EEml3E9PP8CECAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_b97f13f165e14fef3377a240b54c48a441b46019b9158b01a7321caa22d5c705",
+        "hostname" : "192.168.2.7",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANpkCXlaUwm77FJhvXEy4Hd0oVl9IZkh5HfzKexl5gSpU8tautr5p6OwnL7GYKm5V6LGPf298vrYGe5idtYEimUCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_9867a3b28b455a66821ae5b1fd6a868baf9dd5e351a08bdc060cc9fc772dc74f",
+        "hostname" : "192.168.2.8",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIkr/9q6YOMSDibYndLlcL+BQgJfnkKTG2Vn9+RZOffIBwSArVRzdMDkhrxLf/YV7piGNEmFtfmeWjP35cIjsHMCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_0566ae1f027bf3c39a1e7795d65b7ac7f81fa5758a7eacc2fa015cd17b62a68b",
+        "hostname" : "192.168.2.9",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOar9/+A6hQ/IHyMwO0aJ6Qjvz/0MywhpPzojxFajKqnRZWYE96FYIDMV6k6CQG6goRb3Z5n2nG9sfXiTxSXYlcCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_195b55d984cf6d1cf6c49a6f8ea77e51dfd33d92da1bb8d1168519f6f33e0ec2",
+        "hostname" : "192.168.2.10",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJxu+hm1WhV21NfSz1itJCPGaGva8TXyF8KjsEYKsIl3XHT2MGcRe3liRTbYHOFet4uQe68073+zeS4e/PjXQosCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_a38bd4c4eb1f08749581fa74d9ef1a714db3488c50fc29be8b1aea01a564c2d3",
+        "hostname" : "192.168.2.11",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKYZXBUjmkV1WkabqmevKisECuscI3ebmLCV2NFiZZFY/yfGrcwNMQVEt3tA+TIs7DQo8vIuJFivB5oSw59Gs/MCAwEAAQ=="
       }
     ]
   }
