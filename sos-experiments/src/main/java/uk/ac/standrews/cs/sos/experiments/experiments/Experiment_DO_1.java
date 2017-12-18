@@ -36,6 +36,10 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         super(experimentConfiguration);
     }
 
+    public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        super(experimentConfiguration, outputFilename);
+    }
+
     @Override
     public ExperimentUnit getExperimentUnit() {
         return new ExperimentUnit_DO_1();
@@ -47,10 +51,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     }
 
     private class ExperimentUnit_DO_1 implements ExperimentUnit {
-
-        ExperimentUnit_DO_1() {
-
-        }
 
         private ContextService cms;
 
@@ -89,7 +89,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     IGUID contextGUID = addContext(cms, experiment, contextToRun);
                     Context context = cms.getContext(contextGUID);
                     cms.spawnContext(context);
-                    // TODO - make sure that context is distributed
 
                     ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
 
