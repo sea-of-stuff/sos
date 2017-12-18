@@ -31,7 +31,7 @@
         {
           "type" : "int",
           "name" : "factor",
-          "value" : "6"
+          "value" : "1"
         }
       ]
     }

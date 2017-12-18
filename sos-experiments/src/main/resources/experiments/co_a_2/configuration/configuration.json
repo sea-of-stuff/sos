@@ -1,0 +1,24 @@
+{
+  "experiment": {
+    "name": "co_a_1",
+    "experimentClass": "Experiment_CO_A_1",
+    "description": "The experiment CO_A_1 investigates the size of the codomain",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 1
+    },
+    "nodes": [],
+    "experimentnode": {
+      "id": 0,
+      "name" : "local",
+      "remote": false,
+      "configurationfile": "node_0.json"
+    },
+    "stats": {
+      "experiment": true,
+      "predicate": false,
+      "policies": true,
+      "checkPolicies": true
+    }
+  }
+}

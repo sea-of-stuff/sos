@@ -9,6 +9,7 @@ source("r_scripts/exp_basic.r")
 source("r_scripts/exp_pr_1.r")
 source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
+source("r_scripts/exp_co.r")
 
 
 ############
@@ -17,6 +18,9 @@ source("r_scripts/exp_po_3.r")
 mem("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
 cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
 cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
+
+mem("remote/co_a_test25_os.tsv")
+cpu("remote/co_a_test25_os.tsv")
 
 ############
 # IO_1
@@ -113,3 +117,11 @@ po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_ch
 
 # Number of iterations: 10
 po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???", yMax=10)
+
+
+##############
+# PO_CO
+##############
+
+co("remote/co_a_test25.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="CO_A_1 (10 iterations), 100kb dataset")
+co("remote/co_c_test1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=5, titlePlot="CO_C_1 (10 iterations), 100kb dataset")

@@ -1,0 +1,296 @@
+{
+  "experiment" : {
+    "name": "co_c_2",
+    "experimentClass": "Experiment_CO_C_2",
+    "description": "The experiment CO_C_2 investigates the size of the codomain",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 10
+    },
+    "nodes" : [
+      {
+        "id" : 2,
+        "name" : "hogun2",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-2.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_2.json",
+        "certificatefile" : "hogun_2.crt",
+        "keyfile" : "hogun_2.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 3,
+        "name" : "hogun3",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-3.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_3.json",
+        "certificatefile" : "hogun_3.crt",
+        "keyfile" : "hogun_3.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 4,
+        "name" : "hogun4",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-4.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_4.json",
+        "certificatefile" : "hogun_4.crt",
+        "keyfile" : "hogun_4.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 5,
+        "name" : "hogun5",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-5.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_5.json",
+        "certificatefile" : "hogun_5.crt",
+        "keyfile" : "hogun_5.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 6,
+        "name" : "hogun6",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-6.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_6.json",
+        "certificatefile" : "hogun_6.crt",
+        "keyfile" : "hogun_6.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 7,
+        "name" : "hogun7",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-7.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_7.json",
+        "certificatefile" : "hogun_7.crt",
+        "keyfile" : "hogun_7.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 8,
+        "name" : "hogun8",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-8.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_8.json",
+        "certificatefile" : "hogun_8.crt",
+        "keyfile" : "hogun_8.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 9,
+        "name" : "hogun9",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-9.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_9.json",
+        "certificatefile" : "hogun_9.crt",
+        "keyfile" : "hogun_9.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 10,
+        "name" : "hogun10",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-10.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_10.json",
+        "certificatefile" : "hogun_10.crt",
+        "keyfile" : "hogun_10.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 11,
+        "name" : "hogun11",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-11.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_11.json",
+        "certificatefile" : "hogun_11.crt",
+        "keyfile" : "hogun_11.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 12,
+      "name" : "hogun12",
+      "path" : "/cs/scratch/",
+      "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
+      "ssh" : {
+        "type" : 1,
+        "host" : "hogun-12.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+      },
+      "configurationfile" : "hogun_12.json",
+      "certificatefile" : "hogun_12.crt",
+      "keyfile" : "hogun_12.key",
+      "dataset" : "text_100kb",
+      "sendUSRO" : false,
+      "behaviour": {
+        "start": 0,
+        "stop": -1,
+        "pause": [],
+        "operations": [ "WIP" ]
+      }
+    },
+    "stats": {
+      "experiment": false,
+      "predicate": false,
+      "policies": false,
+      "checkPolicies": true
+    }
+  }
+}

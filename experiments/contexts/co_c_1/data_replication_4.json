@@ -29,7 +29,7 @@
         {
           "type" : "int",
           "name" : "factor",
-          "value" : "4"
+          "value" : "1"
         }
       ]
     }

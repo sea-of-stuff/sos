@@ -3,7 +3,6 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
   source("r_scripts/utils_stats.r")
   source("r_scripts/kruskal.r")
   
-  
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d <- d[d$StatsTYPE == 'predicate',]
   d$Message <- droplevels(d$Message)

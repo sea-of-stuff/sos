@@ -33,7 +33,7 @@
         {
           "type" : "int",
           "name" : "factor",
-          "value" : "8"
+          "value" : "1"
         }
       ]
     }

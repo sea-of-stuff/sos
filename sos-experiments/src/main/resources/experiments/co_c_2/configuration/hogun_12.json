@@ -1,0 +1,151 @@
+{
+  "settings": {
+    "guid": "SHA256_16_b7a3dc46602f52a8e7d79d8f3174afbcbb276676f98c7885746de539f7f9f368",
+    "services": {
+      "storage": {
+        "exposed": true,
+        "maxReplication": 3
+      },
+      "cms": {
+        "exposed": false,
+        "loadedPath": "sos/java/contexts/",
+        "automatic": false,
+        "predicateOnNewContext" : false,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": false
+      },
+      "rms": {
+        "exposed": false
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : false,
+        "bootstrap": true
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "/cs/scratch/sic2/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "/cs/scratch/sic2/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",
+      "tasks": {
+        "fallbackToSyncTasks": true,
+        "thread": {
+          "ps": 4
+        }
+      },
+      "nodeMaintainer": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": [
+      {
+        "GUID" : "SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2",
+        "hostname" : "192.168.2.2",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALqaEl0k56tgcJKx0f4m01OS+IGFueQjeDt0mC/yUB926G59XEUNuwcKlplOboRaAYcs+MFFXDksGeKFfVkFxN8CAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_c2134ef5253f507dcda39b25e9a999769c1bd5e337145de1662a118682a76cc0",
+        "hostname" : "192.168.2.3",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALNH3H9lHSs3R4/bpnf5sIllLhv0z5B/vNKPmTwJ1WmRYAv+AyNGlN6frDfrGwb7ICzTKaOnZixDy2tI4IM+46ECAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_26db5c721a5aaedf62b8efbbc80f9271bc6d8941dbe428255c2e60c87d64b4d5",
+        "hostname" : "192.168.2.4",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL8Jz3lwTfppcxvw4x4RZchDCNKMulqR/TYgOwaOLGcDo/q8p3P9r9k4aIZbRePRJkj8LMVEvx3kU5f8fGmEzusCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_2594135b7a83e4b6c94d6fa85f9641a7dc0552588c23e041ff2ac6c4e64360fc",
+        "hostname" : "192.168.2.5",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ6qgBOhnnnfaYAWjJKOX/AHzlC2Za+3jWCd+hLXWZz93wYhZTQyb8fzyITRHlv4dv5y4dMmPITlujYDqS8j18sCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_1e31cbf2b2501a646ee1757e8ee204db3af88b3bb1d85512a82bbc79bcce647e",
+        "hostname" : "192.168.2.6",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIYK3VI6Ew0q2QvxMJ+/mycRpyS1fPUgz2ELkAf7tFOPiBkDxJpbn7/C+jH1FC59HZ5pj/ivUX0EEml3E9PP8CECAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_b97f13f165e14fef3377a240b54c48a441b46019b9158b01a7321caa22d5c705",
+        "hostname" : "192.168.2.7",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANpkCXlaUwm77FJhvXEy4Hd0oVl9IZkh5HfzKexl5gSpU8tautr5p6OwnL7GYKm5V6LGPf298vrYGe5idtYEimUCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_9867a3b28b455a66821ae5b1fd6a868baf9dd5e351a08bdc060cc9fc772dc74f",
+        "hostname" : "192.168.2.8",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIkr/9q6YOMSDibYndLlcL+BQgJfnkKTG2Vn9+RZOffIBwSArVRzdMDkhrxLf/YV7piGNEmFtfmeWjP35cIjsHMCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_0566ae1f027bf3c39a1e7795d65b7ac7f81fa5758a7eacc2fa015cd17b62a68b",
+        "hostname" : "192.168.2.9",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOar9/+A6hQ/IHyMwO0aJ6Qjvz/0MywhpPzojxFajKqnRZWYE96FYIDMV6k6CQG6goRb3Z5n2nG9sfXiTxSXYlcCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_195b55d984cf6d1cf6c49a6f8ea77e51dfd33d92da1bb8d1168519f6f33e0ec2",
+        "hostname" : "192.168.2.10",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJxu+hm1WhV21NfSz1itJCPGaGva8TXyF8KjsEYKsIl3XHT2MGcRe3liRTbYHOFet4uQe68073+zeS4e/PjXQosCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_a38bd4c4eb1f08749581fa74d9ef1a714db3488c50fc29be8b1aea01a564c2d3",
+        "hostname" : "192.168.2.11",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKYZXBUjmkV1WkabqmevKisECuscI3ebmLCV2NFiZZFY/yfGrcwNMQVEt3tA+TIs7DQo8vIuJFivB5oSw59Gs/MCAwEAAQ=="
+      }
+    ]
+  }
+}
