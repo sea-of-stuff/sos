@@ -116,7 +116,7 @@ po_1("remote/po_c_1_100kb_10its_2.tsv", type="checkPolicies", subtype="policy_ch
 ##############
 
 # Number of iterations: 10
-po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???", yMax=10)
+po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "Time to run multiple policy apply functions over ???", yMax=3.5)
 
 
 ##############
@@ -124,4 +124,6 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 ##############
 
 co("remote/co_a_test25.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="CO_A_1 (10 iterations), 100kb dataset")
-co("remote/co_c_test1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=5, titlePlot="CO_C_1 (10 iterations), 100kb dataset")
+co("remote/co_a_2_v1.tsv", type="policies", subtype="policy_apply_dataset", yMax=10, titlePlot="CO_A_1 (10 iterations), 100kb dataset")
+co("remote/co_c_test1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_1 (10 iterations), 100kb dataset")
+

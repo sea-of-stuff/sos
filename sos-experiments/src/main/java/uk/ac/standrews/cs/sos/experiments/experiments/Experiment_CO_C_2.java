@@ -69,6 +69,8 @@ public class Experiment_CO_C_2 extends BaseExperiment implements Experiment {
         public void run() {
 
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
+
+            System.out.println("Running CHECK Policies");
             cms.runCheckPolicies();
         }
 
