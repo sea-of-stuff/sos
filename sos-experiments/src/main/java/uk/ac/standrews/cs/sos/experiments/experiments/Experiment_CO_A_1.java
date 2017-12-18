@@ -26,7 +26,7 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_CO_3();
+        return new ExperimentUnit_CO_A_1();
     }
 
     @Override
@@ -34,13 +34,9 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations();
     }
 
-    private class ExperimentUnit_CO_3 implements ExperimentUnit {
+    private class ExperimentUnit_CO_A_1 implements ExperimentUnit {
 
         private ContextService cms;
-
-        ExperimentUnit_CO_3() {
-
-        }
 
         @Override
         public void setup() throws ExperimentException {
