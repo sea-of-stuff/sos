@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -87,6 +88,8 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     System.out.println("Adding contexts to node");
                     IGUID contextGUID = addContext(cms, experiment, contextToRun);
                     Context context = cms.getContext(contextGUID);
+                    cms.spawnContext(context);
+                    // TODO - make sure that context is distributed
 
                     ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
 
@@ -103,7 +106,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     executorService.shutdownNow();
                 }
 
-            } catch (ContextException | InterruptedException e) {
+            } catch (ContextException | InterruptedException | ManifestPersistException e) {
                 throw new ExperimentException(e);
             }
         }

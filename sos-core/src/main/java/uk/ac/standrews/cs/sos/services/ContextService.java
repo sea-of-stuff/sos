@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.services;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
@@ -159,6 +160,9 @@ public interface ContextService extends Service {
      * Run the check policies functions for all contexts
      */
     void runCheckPolicies();
+
+    // TODO - make sure that this call is correctly here
+    void spawnContext(Context context) throws ManifestPersistException;
 
     /**
      * Get the statistics for the predicate thread

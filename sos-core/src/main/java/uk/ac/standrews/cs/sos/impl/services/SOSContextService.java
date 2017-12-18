@@ -970,7 +970,7 @@ public class SOSContextService implements ContextService {
      *
      * @param context to be spawned
      */
-    private void spawnContext(Context context) throws ManifestPersistException {
+    public void spawnContext(Context context) throws ManifestPersistException {
 
         NodesCollection domain = context.domain();
         int replication = domain.nodesRefs().size();
