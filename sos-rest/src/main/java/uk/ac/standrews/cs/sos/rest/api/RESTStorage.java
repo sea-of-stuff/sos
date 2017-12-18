@@ -122,8 +122,6 @@ public class RESTStorage {
 
             if (dataPackage.getMetadata() != null) {
 
-                SOS_LOG.log(LEVEL.DEBUG, "DATA PACKAGE - PROCESSING METADATA");
-
                 DataPackage.Metadata metadata = dataPackage.getMetadata();
                 int replicationFactor = metadata.getReplicationFactor();
 
@@ -142,11 +140,7 @@ public class RESTStorage {
                 }
             }
 
-            SOS_LOG.log(LEVEL.DEBUG, "DATA PACKAGE - ADDING ATOM");
-
             Atom atom = storageService.addAtom(builder); // TODO - check if this work for secure atoms too
-
-            SOS_LOG.log(LEVEL.DEBUG, "Atom manifest sent back is: " + atom.toString());
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | NodesCollectionException | GUIDGenerationException | IOException e) {

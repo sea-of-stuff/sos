@@ -47,7 +47,7 @@ public class ServerState {
             CastoreBuilder builder = settings.getStore().getCastoreBuilder();
             IStorage storage = CastoreFactory.createStorage(builder);
             localStorage = new LocalStorage(storage);
-        } catch (StorageException | DataStorageException | ConfigurationException e) {
+        } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }
 
