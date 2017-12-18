@@ -22,6 +22,7 @@ public class TriggerPredicate extends Task {
     @Override
     protected void performAction() {
 
+        // TODO - make HTTP call!
     }
 
     @Override
