@@ -14,19 +14,19 @@ import java.io.File;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
+public class Experiment_CO_C_1 extends BaseExperiment implements Experiment {
 
-    public Experiment_CO_A_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+    public Experiment_CO_C_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
     }
 
-    public Experiment_CO_A_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_CO_C_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_CO_A_1();
+        return new ExperimentUnit_CO_C_1();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations();
     }
 
-    private class ExperimentUnit_CO_A_1 implements ExperimentUnit {
+    private class ExperimentUnit_CO_C_1 implements ExperimentUnit {
 
         private ContextService cms;
 
@@ -57,6 +57,9 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
 
                 System.out.println("Running Predicates");
                 cms.runPredicates();
+
+                System.out.println("Running Policies");
+                cms.runPolicies();
             } catch (Exception e) {
                 throw new ExperimentException();
             }
@@ -66,9 +69,7 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
         public void run() {
 
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
-
-            System.out.println("Running Policies");
-            cms.runPolicies();
+            cms.runCheckPolicies();
         }
 
         private void addContexts() throws Exception {
@@ -90,11 +91,11 @@ public class Experiment_CO_A_1 extends BaseExperiment implements Experiment {
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "co_a_1") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "co_c_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_CO_A_1 experiment_co_a_1 = new Experiment_CO_A_1(experimentConfiguration);
-        experiment_co_a_1.process();
+        Experiment_CO_C_1 experiment_co_c_1 = new Experiment_CO_C_1(experimentConfiguration);
+        experiment_co_c_1.process();
     }
 
 
