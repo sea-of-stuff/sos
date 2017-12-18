@@ -5,7 +5,7 @@
     "description": "The experiment CO_A_1 investigates the size of the codomain",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 2
+      "iterations": 10
     },
     "nodes" : [
       {
@@ -51,6 +51,56 @@
         "configurationfile" : "hogun_3.json",
         "certificatefile" : "hogun_3.crt",
         "keyfile" : "hogun_3.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 4,
+        "name" : "hogun4",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-4.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_4.json",
+        "certificatefile" : "hogun_4.crt",
+        "keyfile" : "hogun_4.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 5,
+        "name" : "hogun5",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-5.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_5.json",
+        "certificatefile" : "hogun_5.crt",
+        "keyfile" : "hogun_5.key",
         "behaviour": {
           "start": 0,
           "stop": -1,

@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeRegistrationException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.experiments.*;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
@@ -99,11 +100,14 @@ public abstract class BaseExperiment implements Experiment {
             node = ServerState.init(configuration.getSettingsObj());
 
             waitForSlaveNodesToBeRunning();
+            node.loadBootstrapNodes(); // Force re-load
 
         } catch (ConfigurationException e) {
             throw new ExperimentException("Unable to process configuration properly", e);
         } catch (IOException e) {
             throw new ExperimentException("Unable to copy configuration files", e);
+        } catch (NodeRegistrationException e) {
+            throw new ExperimentException("Unable to load bootstrap nodes properly", e);
         }
 
         currentExperimentUnit = getExperimentUnit();

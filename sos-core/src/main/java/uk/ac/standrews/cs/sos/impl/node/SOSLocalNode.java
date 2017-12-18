@@ -318,7 +318,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
      *
      * @throws NodeRegistrationException if the node could not be registered
      */
-    private void loadBootstrapNodes() throws NodeRegistrationException {
+    public void loadBootstrapNodes() throws NodeRegistrationException {
 
         if (!settings.getServices().getNds().isBootstrap()) return;
 

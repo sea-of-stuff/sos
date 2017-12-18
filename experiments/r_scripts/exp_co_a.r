@@ -5,7 +5,7 @@ source("r_scripts/utils_stats.r")
 
 
 # Read the CVS file
-d <- read.csv("remote/co_a_test13.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/co_a_test22.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'policies',] # Filter policies measurements
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
