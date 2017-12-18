@@ -1,0 +1,20 @@
+{
+  "context": {
+    "name": "predicate_1",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;",
+    "dependencies": []
+  },
+  "policies": []
+}

@@ -1,0 +1,97 @@
+{
+  "settings": {
+    "guid": "SHA256_16_b7a3dc46602f52a8e7d79d8f3174afbcbb276676f98c7885746de539f7f9f368",
+    "services": {
+      "storage": {
+        "exposed": true,
+        "maxReplication": 3
+      },
+      "cms": {
+        "exposed": false,
+        "loadedPath": "sos/java/contexts/",
+        "automatic": false,
+        "predicateOnNewContext" : false,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": false
+      },
+      "rms": {
+        "exposed": false
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : false,
+        "bootstrap": true
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "/cs/scratch/sic2/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "/cs/scratch/sic2/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",
+      "tasks": {
+        "fallbackToSyncTasks": true,
+        "thread": {
+          "ps": 4
+        }
+      },
+      "nodeMaintainer": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": [
+      {
+        "GUID" : "SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2",
+        "hostname" : "192.168.2.2",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALqaEl0k56tgcJKx0f4m01OS+IGFueQjeDt0mC/yUB926G59XEUNuwcKlplOboRaAYcs+MFFXDksGeKFfVkFxN8CAwEAAQ=="
+      }
+    ]
+  }
+}

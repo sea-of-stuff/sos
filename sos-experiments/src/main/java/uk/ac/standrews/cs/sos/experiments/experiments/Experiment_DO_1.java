@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 
@@ -38,9 +39,32 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         }
 
+        private ContextService cms;
+
         @Override
         public void setup() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
+            System.out.println("Node GUID is " + node.guid().toMultiHash());
 
+            try {
+                cms = node.getCMS();
+
+                System.out.println("Adding content to node");
+
+                // NOTE - Keep amount of data fixed
+                String datasetPath = experiment.getExperimentNode().getDatasetPath();
+                addFolderContentToNode(node, new File(datasetPath));
+
+                System.out.println("Adding contexts to node");
+                addContexts();
+
+                System.out.println("Running Predicates");
+                cms.runPredicates();
+            } catch (Exception e) {
+                throw new ExperimentException();
+            }
+
+            // TODO
             // data to add to nodes
             // datasets should be split as evenly as possible across nodes
         }
@@ -52,7 +76,14 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             // Run predicate locally and trigger remote nodes
             // wait for all nodes (included local node) to return
             long duration = System.nanoTime() - start;
+            // TODO - have another subtype as to capture only this measurement
             InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, "TODO - NUMBER OF NODES", duration);
+        }
+
+        private void addContexts() throws Exception {
+
+            addContext(cms, experiment, "predicate_1");
+            addContext(cms, experiment, "predicate_2");
         }
 
     }
