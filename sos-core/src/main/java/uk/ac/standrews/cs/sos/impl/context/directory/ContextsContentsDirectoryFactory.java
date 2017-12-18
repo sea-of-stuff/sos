@@ -43,7 +43,7 @@ public class ContextsContentsDirectoryFactory {
             if (cacheDir.contains(CMS_INDEX_FILE)) {
 
                 IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-                return (ContextsContentsDirectoryInMemory) Persistence.Load(contextsContentsFile);
+                return (ContextsContentsDirectoryInMemory) Persistence.load(contextsContentsFile);
 
             } else {
                 return new ContextsContentsDirectoryInMemory();

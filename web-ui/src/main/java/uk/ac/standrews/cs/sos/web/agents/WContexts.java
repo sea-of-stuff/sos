@@ -66,7 +66,7 @@ public class WContexts {
             model.put("contents", contents);
             model.put("context_json", tipContext.toString());
 
-            return JSONHelper.JsonObjMapper().writeValueAsString(model);
+            return JSONHelper.jsonObjMapper().writeValueAsString(model);
 
         } catch (TIPNotFoundException e) {
             return "Unable to find context tip";
@@ -95,7 +95,7 @@ public class WContexts {
         String nameToSearch = request.params("name");
         try {
 
-            ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+            ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
             Set<Context> contexts = sos.getCMS().searchContexts(nameToSearch);
             for(Context context:contexts) {
                 arrayNode.add(context.toString());
@@ -114,7 +114,7 @@ public class WContexts {
 
         try {
             String contextJSON = request.body();
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(contextJSON);
+            JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(contextJSON);
             String clazz = "N/A - have to use predicate and policy class builders"; // ContextClassBuilder.ConstructClass(jsonNode);
 
             response.status(200);
@@ -130,26 +130,26 @@ public class WContexts {
 
     public static String Threads(SOSLocalNode sos) {
 
-        ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
+        ObjectNode node = JSONHelper.jsonObjMapper().createObjectNode();
 
         // Columns
         ArrayNode cols = node.putArray("cols");
         cols.add(
-                JSONHelper.JsonObjMapper().createObjectNode()
+                JSONHelper.jsonObjMapper().createObjectNode()
                         .put("id", "Thread")
                         .put("label", "Thread")
                         .put("type", "string")
         );
 
         cols.add(
-                JSONHelper.JsonObjMapper().createObjectNode()
+                JSONHelper.jsonObjMapper().createObjectNode()
                         .put("id", "Start")
                         .put("label", "Start")
                         .put("type", "date")
         );
 
         cols.add(
-                JSONHelper.JsonObjMapper().createObjectNode()
+                JSONHelper.jsonObjMapper().createObjectNode()
                         .put("id", "End")
                         .put("label", "End")
                         .put("type", "date")
@@ -167,15 +167,15 @@ public class WContexts {
     private static void addThreadStats(ArrayNode rows, Queue<Pair<Long, Long>> stats, String label) {
 
         for (Pair<Long, Long> ts : stats) {
-            ObjectNode cells = JSONHelper.JsonObjMapper().createObjectNode();
+            ObjectNode cells = JSONHelper.jsonObjMapper().createObjectNode();
             ArrayNode values = cells.putArray("c");
-            values.add(JSONHelper.JsonObjMapper().createObjectNode()
+            values.add(JSONHelper.jsonObjMapper().createObjectNode()
                     .put("v", label)
             )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
+                    .add(JSONHelper.jsonObjMapper().createObjectNode()
                             .put("v", "Date(" + ts.X() + ")")
                     )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
+                    .add(JSONHelper.jsonObjMapper().createObjectNode()
                             .put("v", "Date(" + ts.Y() + ")") // Adding half a second, otherwise data cannot be visualised
                     );
 

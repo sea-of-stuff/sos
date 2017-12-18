@@ -136,7 +136,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     }
 
     @Override
-    public void delete(IGUID guid) throws ManifestNotFoundException {
+    public void delete(IGUID guid) {
         // TODO
     }
 

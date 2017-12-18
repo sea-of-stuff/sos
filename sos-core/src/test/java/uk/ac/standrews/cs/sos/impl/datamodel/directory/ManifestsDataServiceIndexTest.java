@@ -83,9 +83,9 @@ public class ManifestsDataServiceIndexTest {
         manifestsLocationsIndex.addEntry(manifestGUID, nodeGUID);
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        Persistence.Persist(manifestsLocationsIndex, file);
+        Persistence.persist(manifestsLocationsIndex, file);
 
-        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.Load(file);
+        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.load(file);
         Set<IGUID> nodesGUIDs = persistedIndex.getNodeRefs(manifestGUID);
         assertNotNull(nodesGUIDs);
         assertNotEquals(nodesGUIDs.size(), 0);
@@ -110,9 +110,9 @@ public class ManifestsDataServiceIndexTest {
         ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
 
         IFile file = localStorage.createFile(cachesDir, "dds.index");
-        Persistence.Persist(manifestsLocationsIndex, file);
+        Persistence.persist(manifestsLocationsIndex, file);
 
-        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.Load(file);
+        ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.load(file);
         IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Set<IGUID> nodesGUIDs = persistedIndex.getNodeRefs(manifestGUID);
         assertEquals(nodesGUIDs.size(), 0);

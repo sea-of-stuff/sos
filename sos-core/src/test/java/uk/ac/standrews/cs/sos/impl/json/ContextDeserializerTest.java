@@ -39,7 +39,7 @@ public class ContextDeserializerTest extends SetUpTest {
                 "  \"policies\": [\"SHA256_16_d9e4b085724893ff91d4666cd0fc63dbf98fd38b1e05952dc7b836ece28d2a84\", \"SHA256_16_acad290a502ea13384879c68d9cc481604190c46a31508ccf8bb93a4a74ee8e2\"]\n" +
                 "}";
 
-        Context context = JSONHelper.JsonObjMapper().readValue(contextJSON, Context.class);
+        Context context = JSONHelper.jsonObjMapper().readValue(contextJSON, Context.class);
         assertNotNull(context);
         assertEquals(context.guid().toMultiHash(), "SHA256_16_ebe6cc0147e8cf26d154c852b2a58faa7063b5a75e908b4574ac5e4ae278b0f9");
         assertEquals(context.invariant().toMultiHash(), "SHA256_16_1b94e313eecb5c13a2a3a33bb6cae3145703dd1aeb0f5c1d461decb32684564b");

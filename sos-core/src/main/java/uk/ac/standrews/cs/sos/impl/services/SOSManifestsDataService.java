@@ -152,7 +152,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void deleteLocalLocation(IGUID guid) throws ManifestNotFoundException {
+    public void deleteLocalLocation(IGUID guid) {
 
         // TODO
         // update atom manifest both in the cache and in disk. not remotely
@@ -318,13 +318,13 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
             IFile cacheFile = localStorage.createFile(cacheDir, MANIFESTS_CACHE_FILE);
-            Persistence.Persist(inMemoryCache, cacheFile);
+            Persistence.persist(inMemoryCache, cacheFile);
 
             IFile mdsIndexFile = localStorage.createFile(cacheDir, MDS_INDEX_FILE);
-            Persistence.Persist(manifestsLocationsIndex, mdsIndexFile);
+            Persistence.persist(manifestsLocationsIndex, mdsIndexFile);
 
             IFile indexFile = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
-            Persistence.Persist(index, indexFile);
+            Persistence.persist(index, indexFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the MDS inMemoryCache and/or index");
@@ -359,7 +359,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile file = localStorage.createFile(cacheDir, MDS_INDEX_FILE);
             if (file.exists()) {
-                manifestsLocationsIndex = (ManifestsLocationsIndex) Persistence.Load(file);
+                manifestsLocationsIndex = (ManifestsLocationsIndex) Persistence.load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS index");
@@ -375,7 +375,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile file = localStorage.createFile(cacheDir, MANIFESTS_INDEX_FILE);
             if (file.exists()) {
-                index = (ManifestsIndex) Persistence.Load(file);
+                index = (ManifestsIndex) Persistence.load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS inMemoryCache");

@@ -147,7 +147,7 @@ public class ContextBuilder {
      */
     public static String toFATString(Context context, Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
 
-        ObjectNode objectNode = JSONHelper.JsonObjMapper().createObjectNode();
+        ObjectNode objectNode = JSONHelper.jsonObjMapper().createObjectNode();
 
         ObjectNode contextNode = objectNode.putObject(CONTEXT_KEY);
         contextNode.put(KEY_CONTEXT_NAME, context.getName());
@@ -158,7 +158,7 @@ public class ContextBuilder {
         objectNode.putPOJO(KEY_CONTEXT_PREDICATE, predicate);
         objectNode.putPOJO(KEY_CONTEXT_POLICIES, policies);
 
-        return JSONHelper.JsonObjMapper().writeValueAsString(objectNode);
+        return JSONHelper.jsonObjMapper().writeValueAsString(objectNode);
     }
 
 }

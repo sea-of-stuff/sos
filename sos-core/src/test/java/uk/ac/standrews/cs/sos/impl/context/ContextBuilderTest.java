@@ -50,18 +50,18 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t}]\n" +
                 "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(FATContext);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(FATContext);
         ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
 
         assertNotNull(contextBuilder.predicate());
-        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
         assertNotNull(predicate);
 
         assertNotNull(contextBuilder.policies());
         Set<Policy> policies = new LinkedHashSet<>();
         JsonNode policies_n = contextBuilder.policies();
         for (JsonNode policy_n : policies_n) {
-            Policy policy = JSONHelper.JsonObjMapper().convertValue(policy_n, Policy.class);
+            Policy policy = JSONHelper.jsonObjMapper().convertValue(policy_n, Policy.class);
             policies.add(policy);
         }
         assertEquals(policies.size(), 1);
@@ -70,7 +70,7 @@ public class ContextBuilderTest extends SetUpTest {
                 .map(Manifest::guid)
                 .collect(Collectors.toSet());
         JsonNode context_n = contextBuilder.context(predicate.guid(), policiesRefs);
-        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+        Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
         assertNotNull(context);
         assertNotNull(context.guid());
         assertNotNull(context.timestamp());
@@ -120,15 +120,15 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t}]\n" +
                 "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(FATContext);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(FATContext);
         ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
 
-        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
 
         Set<Policy> policies = new LinkedHashSet<>();
         JsonNode policies_n = contextBuilder.policies();
         for (JsonNode policy_n : policies_n) {
-            Policy policy = JSONHelper.JsonObjMapper().convertValue(policy_n, Policy.class);
+            Policy policy = JSONHelper.jsonObjMapper().convertValue(policy_n, Policy.class);
             policies.add(policy);
         }
 
@@ -136,7 +136,7 @@ public class ContextBuilderTest extends SetUpTest {
                 .map(Manifest::guid)
                 .collect(Collectors.toSet());
         JsonNode context_n = contextBuilder.context(predicate.guid(), policiesRefs);
-        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+        Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
 
         // Testing the toFATString method
         String reFATContext = context.toFATString(predicate, policies);
@@ -172,18 +172,18 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t}]\n" +
                 "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(FATContext);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(FATContext);
         ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
 
         assertNotNull(contextBuilder.predicate());
-        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
         assertNotNull(predicate);
 
         assertNotNull(contextBuilder.policies());
         Set<Policy> policies = new LinkedHashSet<>();
         JsonNode policies_n = contextBuilder.policies();
         for (JsonNode policy_n : policies_n) {
-            Policy policy = JSONHelper.JsonObjMapper().convertValue(policy_n, Policy.class);
+            Policy policy = JSONHelper.jsonObjMapper().convertValue(policy_n, Policy.class);
             policies.add(policy);
         }
         assertEquals(policies.size(), 1);
@@ -192,7 +192,7 @@ public class ContextBuilderTest extends SetUpTest {
                 .map(Manifest::guid)
                 .collect(Collectors.toSet());
         JsonNode context_n = contextBuilder.context(predicate.guid(), policiesRefs);
-        Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+        Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
         assertNotNull(context);
         assertNotNull(context.guid());
         assertEquals(context.maxAge(), 123456789);

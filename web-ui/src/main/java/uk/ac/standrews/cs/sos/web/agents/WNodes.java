@@ -61,18 +61,18 @@ public class WNodes {
         IGUID nodeid = GUIDFactory.recreateGUID(request.params("nodeid"));
         NodeStats nodeStats = sos.getNDS().getNodeStats(nodeid);
 
-        ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
+        ObjectNode node = JSONHelper.jsonObjMapper().createObjectNode();
 
         // Columns
         ArrayNode cols = node.putArray("cols");
         cols.add(
-                JSONHelper.JsonObjMapper().createObjectNode()
+                JSONHelper.jsonObjMapper().createObjectNode()
                         .put("id", "time")
                         .put("label", "time")
                         .put("type", "date")
         );
         cols.add(
-                JSONHelper.JsonObjMapper().createObjectNode()
+                JSONHelper.jsonObjMapper().createObjectNode()
                         .put("id", "active")
                         .put("label", "avg availability")
                         .put("type", "number")
@@ -82,12 +82,12 @@ public class WNodes {
         ArrayNode rows = node.putArray("rows");
 
         for(Pair<Long, NodeStats.DataPoint> stat:nodeStats.getMeasurements()) {
-            ObjectNode cells = JSONHelper.JsonObjMapper().createObjectNode();
+            ObjectNode cells = JSONHelper.jsonObjMapper().createObjectNode();
             ArrayNode values = cells.putArray("c");
-            values.add(JSONHelper.JsonObjMapper().createObjectNode()
+            values.add(JSONHelper.jsonObjMapper().createObjectNode()
                             .put("v", "Date(" + stat.X() + ")") // Adding half a second, otherwise data cannot be visualised
                     )
-                    .add(JSONHelper.JsonObjMapper().createObjectNode()
+                    .add(JSONHelper.jsonObjMapper().createObjectNode()
                             .put("v", stat.Y().getProgressiveAvgAvailability() * 100)
                     );
 

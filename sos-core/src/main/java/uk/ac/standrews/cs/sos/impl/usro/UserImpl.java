@@ -122,7 +122,7 @@ public class UserImpl extends BasicManifest implements User {
     @Override
     public String toString() {
         try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.jsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for user/role " + guid() + " instanceof " + this.getClass().getName());
             return "";

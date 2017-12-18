@@ -59,7 +59,7 @@ public class CompoundManifestDeserializer extends JsonDeserializer<Compound> {
         Set<Content> contents = new LinkedHashSet<>();
         if (contentsNode.isArray()) {
             for(final JsonNode contentNode:contentsNode) {
-                ContentImpl content = JSONHelper.JsonObjMapper().convertValue(contentNode, ContentImpl.class);
+                ContentImpl content = JSONHelper.jsonObjMapper().convertValue(contentNode, ContentImpl.class);
                 contents.add(content);
             }
         }

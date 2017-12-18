@@ -48,7 +48,7 @@ public class RESTStorage {
         try {
             SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings = SOSLocalNode.settings.getServices().getStorage();
 
-            String storageInfo = JSONHelper.JsonObjMapper()
+            String storageInfo = JSONHelper.jsonObjMapper()
                     .writerWithView(SettingsConfiguration.Views.Public.class)
                     .writeValueAsString(storageSettings);
 

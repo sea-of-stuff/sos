@@ -33,7 +33,7 @@ public class FileUtils {
     public static Manifest ManifestFromFile(IFile file) throws ManifestNotFoundException {
 
         try {
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(file.toFile());
+            JsonNode node = JSONHelper.jsonObjMapper().readTree(file.toFile());
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
 
             return constructManifestFromJsonFile(type, file);
@@ -45,7 +45,7 @@ public class FileUtils {
     public static Manifest ManifestFromJson(String json) throws ManifestNotFoundException {
 
         try {
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
+            JsonNode node = JSONHelper.jsonObjMapper().readTree(json);
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
 
             return constructManifestFromJson(type, json);
@@ -59,47 +59,47 @@ public class FileUtils {
         try {
             switch (type) {
                 case ATOM:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Atom.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Atom.class);
                     break;
                 case ATOM_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureAtom.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureAtom.class);
                     break;
                 case COMPOUND:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Compound.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Compound.class);
                     break;
                 case COMPOUND_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureCompound.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureCompound.class);
                     break;
                 case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Version.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Version.class);
                     break;
 
                 case METADATA:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Metadata.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Metadata.class);
                     break;
                 case METADATA_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), SecureMetadata.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureMetadata.class);
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Context.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Context.class);
                     break;
                 case PREDICATE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
                     break;
                 case POLICY:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Policy.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Policy.class);
                     break;
 
                 case USER:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), User.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), User.class);
                     break;
                     case ROLE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Role.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Role.class);
                     break;
 
                 case NODE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData.toFile(), Node.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Node.class);
                     break;
 
                 default:
@@ -117,47 +117,47 @@ public class FileUtils {
         try {
             switch (type) {
                 case ATOM:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Atom.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Atom.class);
                     break;
                 case ATOM_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureAtom.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, SecureAtom.class);
                     break;
                 case COMPOUND:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Compound.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Compound.class);
                     break;
                 case COMPOUND_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureCompound.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, SecureCompound.class);
                     break;
                 case VERSION:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Version.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Version.class);
                     break;
 
                 case METADATA:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Metadata.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Metadata.class);
                     break;
                 case METADATA_PROTECTED:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, SecureMetadata.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, SecureMetadata.class);
                     break;
 
                 case CONTEXT:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Context.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Context.class);
                     break;
                 case PREDICATE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Predicate.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Predicate.class);
                     break;
                 case POLICY:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Policy.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Policy.class);
                     break;
 
                 case USER:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, User.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, User.class);
                     break;
                 case ROLE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Role.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Role.class);
                     break;
 
                 case NODE:
-                    manifest = JSONHelper.JsonObjMapper().readValue(manifestData, Node.class);
+                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData, Node.class);
                     break;
 
                 default:
@@ -173,7 +173,7 @@ public class FileUtils {
     public static User UserFromFile(File file) throws UserNotFoundException {
 
         try {
-            return JSONHelper.JsonObjMapper().readValue(file, UserImpl.class);
+            return JSONHelper.jsonObjMapper().readValue(file, UserImpl.class);
 
         } catch (IOException e) {
             throw new UserNotFoundException();
@@ -193,7 +193,7 @@ public class FileUtils {
     public static User UserFromString(String json) throws UserNotFoundException {
 
         try {
-            return JSONHelper.JsonObjMapper().readValue(json, UserImpl.class);
+            return JSONHelper.jsonObjMapper().readValue(json, UserImpl.class);
 
         } catch (IOException e) {
             throw new UserNotFoundException();
@@ -203,7 +203,7 @@ public class FileUtils {
     public static Role RoleFromFile(IFile file) throws RoleNotFoundException {
 
         try {
-            return JSONHelper.JsonObjMapper().readValue(file.toFile(), RoleImpl.class);
+            return JSONHelper.jsonObjMapper().readValue(file.toFile(), RoleImpl.class);
 
         } catch (IOException e) {
             throw new RoleNotFoundException();
@@ -214,7 +214,7 @@ public class FileUtils {
     public static Role RoleFromString(String json) throws RoleNotFoundException {
 
         try {
-            return JSONHelper.JsonObjMapper().readValue(json, RoleImpl.class);
+            return JSONHelper.jsonObjMapper().readValue(json, RoleImpl.class);
 
         } catch (IOException e) {
             throw new RoleNotFoundException();

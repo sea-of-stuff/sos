@@ -46,7 +46,7 @@ public class CommonJson {
 
     public static ArrayNode GUIDSetToJsonArray(Set<IGUID> guids) {
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
         for(IGUID guid:guids) {
             arrayNode.add(guid.toMultiHash());
         }
@@ -92,7 +92,7 @@ public class CommonJson {
 
     static NodesCollection getNodesCollection(JsonNode node, String field) {
         JsonNode nodesCollection_n = node.get(field);
-        return JSONHelper.JsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
+        return JSONHelper.jsonObjMapper().convertValue(nodesCollection_n, NodesCollection.class);
     }
 
     static String getSignature(JsonNode node) {

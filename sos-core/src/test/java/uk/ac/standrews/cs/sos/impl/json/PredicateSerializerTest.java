@@ -23,7 +23,7 @@ public class PredicateSerializerTest {
                         "\t\"predicate\": \"true;\",\n" +
                         "\t\"dependencies\": [ \"EXAMPLE\", \"HELLO\" ]\n" +
                         "}";
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
 
         String expected = "{\n" +
                 "  \"type\" : \"Predicate\",\n" +

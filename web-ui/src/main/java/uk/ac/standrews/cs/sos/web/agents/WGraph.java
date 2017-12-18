@@ -34,13 +34,13 @@ public class WGraph {
         // We assume that the manifest is of type version
         try {
             Manifest selectedManifest = sos.getAgent().getManifest(guid);
-            ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
+            ObjectNode graph = JSONHelper.jsonObjMapper().createObjectNode();
             MakeVersionGraph(graph, sos, selectedManifest);
 
             return graph.toString();
         } catch (ServiceException e) {
 
-            return JSONHelper.JsonObjMapper().createObjectNode().toString();
+            return JSONHelper.jsonObjMapper().createObjectNode().toString();
         }
     }
 
@@ -55,13 +55,13 @@ public class WGraph {
             if (!manifest.getType().equals(ManifestType.VERSION)) return "Version manifest should be selected";
 
             Version version = (Version) manifest;
-            ObjectNode graph = JSONHelper.JsonObjMapper().createObjectNode();
+            ObjectNode graph = JSONHelper.jsonObjMapper().createObjectNode();
             MakeAssetGraph(graph, sos, version.invariant(), true);
 
             return graph.toString();
         } catch (ServiceException e) {
 
-            return JSONHelper.JsonObjMapper().createObjectNode().toString();
+            return JSONHelper.jsonObjMapper().createObjectNode().toString();
         }
     }
 
@@ -85,7 +85,7 @@ public class WGraph {
 
     private static ArrayNode AllVersionsNodesGraph(ManifestsDataService manifestsDataService, IGUID invariant, boolean lookForContentEagerly) {
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
 
         NodesCollection nodesCollection;
         try {
@@ -130,7 +130,7 @@ public class WGraph {
 
     private static ArrayNode AllVersionsEdgesGraph(ManifestsDataService manifestsDataService, IGUID invariant, boolean lookForContentEagerly) {
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
 
         NodesCollection nodesCollection;
         try {
@@ -163,7 +163,7 @@ public class WGraph {
     // TODO - must refactor
     private static ArrayNode ManifestNodeGraph(Agent agent, ManifestsDataService manifestsDataService, Manifest manifest) {
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
 
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
@@ -259,7 +259,7 @@ public class WGraph {
 
     private static ArrayNode ManifestEdgesGraph(Manifest manifest) {
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
 
         if (manifest.getType() == ManifestType.VERSION) {
             Version version = (Version) manifest;
@@ -299,7 +299,7 @@ public class WGraph {
     }
 
     private static ObjectNode ManifestNode(Manifest manifest) {
-        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+        ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toMultiHash());
@@ -312,7 +312,7 @@ public class WGraph {
     }
 
     private static ObjectNode ManifestNode(Manifest manifest, String group) {
-        ObjectMapper mapper =JSONHelper.JsonObjMapper();
+        ObjectMapper mapper =JSONHelper.jsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", manifest.guid().toMultiHash());
@@ -325,7 +325,7 @@ public class WGraph {
     }
 
     private static ObjectNode VersionManifestNode(Version version, String group, boolean isHEAD, boolean isTIP) {
-        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+        ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
         String head = isHEAD ? "<b>" + isHEAD + "</b>" : isHEAD + "";
         String tip = isTIP ? "<b>" + isTIP + "</b>" : isTIP + "";
@@ -345,7 +345,7 @@ public class WGraph {
     }
 
     private static ObjectNode DataNode(IGUID guid) {
-        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+        ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", "DATA-" + guid.toMultiHash());
@@ -358,7 +358,7 @@ public class WGraph {
 
     private static ObjectNode UnknownNode(IGUID guid) {
 
-        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+        ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("id", guid.toMultiHash());
@@ -379,7 +379,7 @@ public class WGraph {
     }
 
     private static ObjectNode MakeEdge(IGUID from, IGUID to, String toPrefix, String label) {
-        ObjectMapper mapper = JSONHelper.JsonObjMapper();
+        ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("from", from.toMultiHash());

@@ -16,7 +16,7 @@ public class WSettings {
     public static String Render(SOSLocalNode sos) throws JsonProcessingException {
         Map<String, Object> model = new HashMap<>();
 
-        model.put("settings", JSONHelper.JsonObjMapper().writeValueAsString(SOSLocalNode.settings));
+        model.put("settings", JSONHelper.jsonObjMapper().writeValueAsString(SOSLocalNode.settings));
 
         return VelocityUtils.RenderTemplate("velocity/settings.vm", model);
     }

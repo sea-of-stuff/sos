@@ -43,7 +43,7 @@ public class AtomManifestDeserializer extends JsonDeserializer<Atom> {
         Set<LocationBundle> bundles = new LinkedHashSet<>();
         if (bundlesNode.isArray()) {
             for(final JsonNode bundleNode:bundlesNode) {
-                LocationBundle bundle = JSONHelper.JsonObjMapper().convertValue(bundleNode, LocationBundle.class);
+                LocationBundle bundle = JSONHelper.jsonObjMapper().convertValue(bundleNode, LocationBundle.class);
                 bundles.add(bundle);
             }
         }

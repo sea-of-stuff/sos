@@ -112,7 +112,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         SOS_LOG = new SOS_LOG(guid());
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
-        SOS_LOG.log(LEVEL.INFO,
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO,
                 "\n" +
                         "      ___           ___           ___     \n" +
                         "     /  /\\         /  /\\         /  /\\    \n" +
@@ -144,7 +144,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         isExperimentNode = settings.getServices().getExperiment().isExposed();
         initNodeMaintainer();
 
-        SOS_LOG.log(LEVEL.INFO, "Node started");
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO, "Node started");
     }
 
     public Agent getAgent() {
@@ -189,14 +189,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     // THIS METHOD CLEANS UP EVERTHING...SO USE IT WITH PRECAUTION
     public void cleanup() throws DataStorageException {
 
-        SOS_LOG.log(LEVEL.WARN, "Cleaning up SOS NODE");
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "Cleaning up SOS NODE");
         localStorage.destroy();
-        SOS_LOG.log(LEVEL.WARN, "SOS NODE cleaned up");
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "SOS NODE cleaned up");
     }
 
     @Override
     public void kill() {
-        SOS_LOG.log(LEVEL.WARN, "Killing SOS NODE");
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "Killing SOS NODE");
 
         if (nodeMaintainer != null) {
             nodeMaintainer.flush();
@@ -240,7 +240,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         DatabaseFactory.kill();
         SOSAgent.destroy();
 
-        SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
+        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
     }
 
     public String sign(String message) throws CryptoException {
@@ -331,24 +331,24 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                     // Get info by GUID
                     nodeInfo = nodeDiscoveryService.infoNode(boostrapNodeGUID);
                 } catch (NodeNotFoundException e) {
-                    SOS_LOG.log(LEVEL.WARN, "Unable to bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash() + " -- Will try to contact it with known IP:port into");
+                    uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "Unable to bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash() + " -- Will try to contact it with known IP:port into");
 
                     try {
                         nodeInfo = nodeDiscoveryService.infoNode(node);
                     } catch (NodeNotFoundException e1) {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with address: " + node.getHostAddress().toString());
+                        uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.ERROR, "Unable to bootstrap node with address: " + node.getHostAddress().toString());
                     }
                 }
 
                 if (nodeInfo != null && !nodeInfo.isEmpty()) {
-                    Node retrievedNode = JSONHelper.JsonObjMapper().readValue(nodeInfo, SOSNode.class);
+                    Node retrievedNode = JSONHelper.jsonObjMapper().readValue(nodeInfo, SOSNode.class);
                     nodeDiscoveryService.registerNode(retrievedNode, true);
-                    SOS_LOG.log(LEVEL.INFO, "Registered bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash());
+                    uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO, "Registered bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash());
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
-                SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + boostrapNodeGUID.toMultiHash() + " and address " + node.getHostAddress().toString());
+                uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + boostrapNodeGUID.toMultiHash() + " and address " + node.getHostAddress().toString());
             }
         }
     }
@@ -368,7 +368,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             }
 
         } catch (UnknownHostException | NodeRegistrationException e) {
-            SOS_LOG.log(LEVEL.ERROR, e.getMessage());
+            uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.ERROR, e.getMessage());
         }
 
     }
@@ -418,7 +418,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         SettingsConfiguration.Settings.GlobalSettings.NodeMaintainerSettings nodeMaintainerSettings = SOSLocalNode.settings.getGlobal().getNodeMaintainer();
         if (nodeMaintainerSettings.isEnabled()) {
-            SOS_LOG.log(LEVEL.INFO, "Node Maintainer is ENABLED");
+            uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO, "Node Maintainer is ENABLED");
 
             SettingsConfiguration.Settings.ThreadSettings threadSettings = nodeMaintainerSettings.getThread();
             nodeMaintainerService = Executors.newScheduledThreadPool(threadSettings.getPs());

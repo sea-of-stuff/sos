@@ -47,7 +47,7 @@ public class SecureMetadataSerializerTest extends SetUpTest {
         assertNotNull(secureMetadata);
 
         String secureMetadataJSON = secureMetadata.toString();
-        SecureMetadata parsedSecureMetadata = JSONHelper.JsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
+        SecureMetadata parsedSecureMetadata = JSONHelper.jsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
         assertNotNull(parsedSecureMetadata);
 
         assertEquals(parsedSecureMetadata.getType(), ManifestType.METADATA_PROTECTED);
@@ -68,7 +68,7 @@ public class SecureMetadataSerializerTest extends SetUpTest {
 
         SecureMetadata secureMetadata = new SecureMetadataManifest(metadata, role);
         String secureMetadataJSON = secureMetadata.toString();
-        SecureMetadata parsedSecureMetadata = JSONHelper.JsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
+        SecureMetadata parsedSecureMetadata = JSONHelper.jsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
 
         Map.Entry<IGUID, String> keyRole = parsedSecureMetadata.keysRoles().entrySet().iterator().next();
         SecretKey secretKey = role.decrypt(keyRole.getValue());
@@ -92,7 +92,7 @@ public class SecureMetadataSerializerTest extends SetUpTest {
 
         SecureMetadata secureMetadata = new SecureMetadataManifest(metadata, role);
         String secureMetadataJSON = secureMetadata.toString();
-        SecureMetadata parsedSecureMetadata = JSONHelper.JsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
+        SecureMetadata parsedSecureMetadata = JSONHelper.jsonObjMapper().readValue(secureMetadataJSON, SecureMetadata.class);
 
         Map.Entry<IGUID, String> keyRole = parsedSecureMetadata.keysRoles().entrySet().iterator().next();
         SecretKey secretKey = role.decrypt(keyRole.getValue());

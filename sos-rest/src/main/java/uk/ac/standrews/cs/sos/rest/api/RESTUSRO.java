@@ -87,7 +87,7 @@ public class RESTUSRO {
         try {
             Set<Role> roles = usro.getRoles(userGUID);
 
-            String out = JSONHelper.JsonObjMapper().writeValueAsString(roles);
+            String out = JSONHelper.jsonObjMapper().writeValueAsString(roles);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);
 
         } catch (RoleNotFoundException | JsonProcessingException e) {

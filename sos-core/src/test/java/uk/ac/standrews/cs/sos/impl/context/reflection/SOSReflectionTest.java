@@ -58,7 +58,7 @@ public class SOSReflectionTest extends SetUpTest {
                         "\t\"dependencies\": []\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
         SOSReflection.Load(node);
 
         Predicate predicate = SOSReflection.PredicateInstance(node);
@@ -77,7 +77,7 @@ public class SOSReflectionTest extends SetUpTest {
                         "\t\"dependencies\": []\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
         SOSReflection.Load(node);
 
         Predicate predicate = SOSReflection.PredicateInstance(node);
@@ -128,7 +128,7 @@ public class SOSReflectionTest extends SetUpTest {
                         "  }]\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
         SOSReflection.Load(node);
 
         Policy policy = SOSReflection.PolicyInstance(node);
@@ -153,7 +153,7 @@ public class SOSReflectionTest extends SetUpTest {
                         "  }]\n" +
                         "}";
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
         SOSReflection.Load(node);
 
         Policy policy = SOSReflection.PolicyInstance(node);

@@ -12,7 +12,7 @@ import java.io.*;
  */
 public class Persistence {
 
-    public static void Persist(Object object, IFile file) throws IOException {
+    public static void persist(Object object, IFile file) throws IOException {
         if (!file.exists()) {
             try {
                 file.persist();
@@ -29,7 +29,7 @@ public class Persistence {
         }
     }
 
-    public static Object Load(IFile file) throws IOException, ClassNotFoundException {
+    public static Object load(IFile file) throws IOException, ClassNotFoundException {
 
         // Check that file is not empty
         if (!file.exists() || file.getSize() == 0) {

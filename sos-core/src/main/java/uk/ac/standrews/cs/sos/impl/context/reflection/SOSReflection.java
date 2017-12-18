@@ -72,7 +72,7 @@ public class SOSReflection {
 
         try {
             File file = new File(path);
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
+            JsonNode node = JSONHelper.jsonObjMapper().readTree(file);
 
             Load(node);
 
@@ -85,7 +85,7 @@ public class SOSReflection {
     public static void Load(String node) throws ClassLoaderException {
 
         try {
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(node);
+            JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(node);
             Load(jsonNode);
         } catch (IOException e) {
             throw new ClassLoaderException(e);

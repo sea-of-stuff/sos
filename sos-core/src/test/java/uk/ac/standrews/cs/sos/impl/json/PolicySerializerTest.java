@@ -29,7 +29,7 @@ public class PolicySerializerTest {
                     "    \"value\": \"2\"\n" +
                     "  }]\n" +
                     "}";
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
 
         String expected = "{\n" +
                 "  \"type\" : \"Policy\",\n" +

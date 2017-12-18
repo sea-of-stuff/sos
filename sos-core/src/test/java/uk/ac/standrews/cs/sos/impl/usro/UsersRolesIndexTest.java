@@ -54,7 +54,7 @@ public class UsersRolesIndexTest extends SetUpTest {
 
         IDirectory cacheDir = localStorage.getNodeDirectory();
         IFile file = localStorage.createFile(cacheDir, USRO_INDEX_FILE);
-        Persistence.Persist(cache, file);
+        Persistence.persist(cache, file);
 
         UsersRolesIndex loadedCache = UsersRolesIndex.load(file);
         assertNotNull(loadedCache);
@@ -72,7 +72,7 @@ public class UsersRolesIndexTest extends SetUpTest {
 
         IDirectory cacheDir = localStorage.getNodeDirectory();
         IFile file = localStorage.createFile(cacheDir, USRO_INDEX_FILE);
-        Persistence.Persist(cache, file);
+        Persistence.persist(cache, file);
 
         UsersRolesIndex loadedCache = UsersRolesIndex.load(file);
         assertNotNull(loadedCache);
@@ -92,7 +92,7 @@ public class UsersRolesIndexTest extends SetUpTest {
 
         IDirectory cacheDir = localStorage.getNodeDirectory();
         IFile file = localStorage.createFile(cacheDir, USRO_INDEX_FILE);
-        Persistence.Persist(cache, file);
+        Persistence.persist(cache, file);
 
         UsersRolesIndex loadedCache = UsersRolesIndex.load(file);
         assertNotNull(loadedCache);

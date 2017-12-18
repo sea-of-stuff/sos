@@ -79,7 +79,7 @@ public class UsersRolesIndex implements Serializable {
 
     public static UsersRolesIndex load(IFile file) throws IOException, ClassNotFoundException {
 
-        UsersRolesIndex persistedCache = (UsersRolesIndex) Persistence.Load(file);
+        UsersRolesIndex persistedCache = (UsersRolesIndex) Persistence.load(file);
         if (persistedCache == null) throw new ClassNotFoundException();
 
         return persistedCache;

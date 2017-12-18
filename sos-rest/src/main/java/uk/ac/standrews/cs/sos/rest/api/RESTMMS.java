@@ -40,7 +40,7 @@ public class RESTMMS {
     public Response postMetadata(String json, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) throws IOException {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/metadata");
 
-        Metadata metadata = JSONHelper.JsonObjMapper().readValue(json, Metadata.class);
+        Metadata metadata = JSONHelper.jsonObjMapper().readValue(json, Metadata.class);
 
         MetadataService metadataService = RESTConfig.sos.getMMS();
         try {

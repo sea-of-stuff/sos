@@ -194,7 +194,7 @@ public class SOSContextService implements ContextService {
             }
 
             JsonNode context_n = contextBuilder.context(predicate, policies);
-            Context context = JSONHelper.JsonObjMapper().convertValue(context_n, Context.class);
+            Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
 
             manifestsDataService.addManifest(contextBuilder.getCompoundManifest());
             addContext(context);
@@ -207,7 +207,7 @@ public class SOSContextService implements ContextService {
 
     private IGUID addPredicate(JsonNode jsonNode) throws ManifestPersistException {
 
-        Predicate predicate = JSONHelper.JsonObjMapper().convertValue(jsonNode, Predicate.class);
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(jsonNode, Predicate.class);
         manifestsDataService.addManifest(predicate);
 
         return predicate.guid();
@@ -215,7 +215,7 @@ public class SOSContextService implements ContextService {
 
     private IGUID addPolicy(JsonNode jsonNode) throws ManifestPersistException {
 
-        Policy policy = JSONHelper.JsonObjMapper().convertValue(jsonNode, Policy.class);
+        Policy policy = JSONHelper.jsonObjMapper().convertValue(jsonNode, Policy.class);
         manifestsDataService.addManifest(policy);
 
         return policy.guid();
@@ -225,7 +225,7 @@ public class SOSContextService implements ContextService {
     public IGUID addContext(String jsonContext) throws ContextException {
 
         try {
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(jsonContext);
+            JsonNode node = JSONHelper.jsonObjMapper().readTree(jsonContext);
             ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
             return addContext(contextBuilder);
 
@@ -238,7 +238,7 @@ public class SOSContextService implements ContextService {
     public IGUID addContext(File file) throws ContextException {
 
         try {
-            JsonNode node = JSONHelper.JsonObjMapper().readTree(file);
+            JsonNode node = JSONHelper.jsonObjMapper().readTree(file);
             ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
             return addContext(contextBuilder);
 
@@ -387,7 +387,7 @@ public class SOSContextService implements ContextService {
         try {
             IDirectory cacheDir = localStorage.getNodeDirectory();
             IFile contextsContentsFile = localStorage.createFile(cacheDir, CMS_INDEX_FILE);
-            Persistence.Persist(contextsContentsDirectory, contextsContentsFile);
+            Persistence.persist(contextsContentsDirectory, contextsContentsFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the CMS index");
@@ -682,7 +682,7 @@ public class SOSContextService implements ContextService {
 
         } catch (ManifestNotFoundException e) {
 
-            JsonNode emptyJsonNode = JSONHelper.JsonObjMapper().createObjectNode();
+            JsonNode emptyJsonNode = JSONHelper.jsonObjMapper().createObjectNode();
             return new ReferencePredicate(emptyJsonNode);
         }
     }

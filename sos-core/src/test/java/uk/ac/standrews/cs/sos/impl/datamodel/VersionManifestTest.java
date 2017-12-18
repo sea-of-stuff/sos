@@ -69,7 +69,7 @@ public class VersionManifestTest extends CommonTest {
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(null, guid, null, null, roleMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
         Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
@@ -90,7 +90,7 @@ public class VersionManifestTest extends CommonTest {
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(null, guid, null, metadataGUID, roleMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
         Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
@@ -113,7 +113,7 @@ public class VersionManifestTest extends CommonTest {
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, null, roleMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
         Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 
@@ -139,7 +139,7 @@ public class VersionManifestTest extends CommonTest {
         Role roleMocked = UserRoleUtils.BareRoleMock();
         VersionManifest versionManifest = new VersionManifest(invariantGUID, guid, previous, metadataGUID, roleMocked);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(versionManifest.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(versionManifest.toString());
         Assert.assertTrue(node.has(JSONConstants.KEY_GUID));
         Assert.assertTrue(node.has(JSONConstants.KEY_INVARIANT));
 

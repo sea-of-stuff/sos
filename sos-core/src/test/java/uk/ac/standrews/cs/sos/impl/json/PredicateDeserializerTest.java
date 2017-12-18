@@ -26,7 +26,7 @@ public class PredicateDeserializerTest extends SetUpTest {
                 "  \"predicate\" : \"true;\"\n" +
                 "}";
 
-        Predicate predicate = JSONHelper.JsonObjMapper().readValue(predicateJSON, Predicate.class);
+        Predicate predicate = JSONHelper.jsonObjMapper().readValue(predicateJSON, Predicate.class);
         assertNotNull(predicate);
         assertNotNull(predicate.guid());
         assertNotNull(predicate.predicate());

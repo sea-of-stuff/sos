@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.security.PublicKey;
@@ -30,7 +29,7 @@ public class BasicNode extends BasicManifest implements Node {
     }
 
     @Override
-    public InputStream contentToHash() throws IOException {
+    public InputStream contentToHash() {
         return new StringData("").getInputStream();
     }
 

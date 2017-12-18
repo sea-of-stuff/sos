@@ -41,7 +41,7 @@ public class RESTCMS {
             Set<IGUID> contexts = contextService.getContextsRefs();
 
             ArrayNode jsonArray = CommonJson.GUIDSetToJsonArray(contexts);
-            String output = JSONHelper.JsonObjMapper().writeValueAsString(jsonArray);
+            String output = JSONHelper.jsonObjMapper().writeValueAsString(jsonArray);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
         }  catch (Exception e) {

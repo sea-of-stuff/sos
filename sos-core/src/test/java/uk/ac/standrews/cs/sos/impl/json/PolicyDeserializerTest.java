@@ -33,7 +33,7 @@ public class PolicyDeserializerTest extends SetUpTest {
                 "  } ]\n" +
                 "}";
 
-        Policy policy = JSONHelper.JsonObjMapper().readValue(policyJSON, Policy.class);
+        Policy policy = JSONHelper.jsonObjMapper().readValue(policyJSON, Policy.class);
         assertNotNull(policy);
         assertNotNull(policy.guid());
         assertNotNull(policy.fields());

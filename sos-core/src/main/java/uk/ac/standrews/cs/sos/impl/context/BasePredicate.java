@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Predicate;
 import uk.ac.standrews.cs.sos.utils.IO;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
@@ -57,7 +56,7 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
     }
 
     @Override
-    public InputStream contentToHash() throws IOException {
+    public InputStream contentToHash() {
         return IO.StringToInputStream(predicateManifest.toString());
     }
 

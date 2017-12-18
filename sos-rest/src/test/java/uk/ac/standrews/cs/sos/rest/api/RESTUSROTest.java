@@ -137,7 +137,7 @@ public class RESTUSROTest extends CommonRESTTest {
 
         assertEquals(response.getStatus(), HTTPStatus.OK);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(response.readEntity(String.class));
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class));
         assertTrue(node.isArray());
 
         JsonNode role_1 = node.get(0);

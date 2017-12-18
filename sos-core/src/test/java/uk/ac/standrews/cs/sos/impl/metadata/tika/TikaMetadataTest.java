@@ -29,7 +29,7 @@ public class TikaMetadataTest {
         MetadataBuilder metadataBuilder = new MetadataBuilder().setData(data);
         Metadata output = test.processData(metadataBuilder);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(output.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(output.toString());
         assertTrue(node.has(JSONConstants.KEY_GUID));
         assertTrue(node.has(JSONConstants.KEY_META_PROPERTIES));
         assertEquals(node.get(JSONConstants.KEY_META_PROPERTIES).size(), 5);

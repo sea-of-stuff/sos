@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -33,7 +32,7 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
     }
 
     @Override
-    public InputStream contentToHash() throws IOException {
+    public InputStream contentToHash() {
         return IO.StringToInputStream(policyManifest.toString());
     }
 
@@ -57,7 +56,7 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
         if (policyManifest.has(JSONConstants.KEY_POLICY_FIELDS)) {
             return policyManifest.get(JSONConstants.KEY_POLICY_FIELDS);
         } else {
-            return JSONHelper.JsonObjMapper().createArrayNode();
+            return JSONHelper.jsonObjMapper().createArrayNode();
         }
     }
 }

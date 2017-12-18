@@ -208,7 +208,7 @@ public class SOSUsersRolesService implements UsersRolesService {
             IDirectory cacheDir = localStorage.getNodeDirectory();
 
             IFile cacheFile = localStorage.createFile(cacheDir, USRO_INDEX_FILE);
-            Persistence.Persist(index, cacheFile);
+            Persistence.persist(index, cacheFile);
 
         } catch (DataStorageException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to persist the UserRoleService index");

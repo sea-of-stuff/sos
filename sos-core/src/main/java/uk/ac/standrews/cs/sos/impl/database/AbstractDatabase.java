@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
-import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.interfaces.database.Database;
 
 import java.sql.*;
@@ -13,7 +12,7 @@ public class AbstractDatabase implements Database {
 
     private String path;
 
-    public AbstractDatabase(String path) throws DatabaseException {
+    public AbstractDatabase(String path) {
         this.path = path;
     }
 

@@ -98,7 +98,7 @@ public class RESTCMSTest extends CommonRESTTest {
         Response response2 = target("/sos/cms/guid/" + contextGUID.toMultiHash()).request().get();
         assertEquals(response2.getStatus(), HTTPStatus.OK);
         String contextStringFormat = response2.readEntity(String.class);
-        Context context = JSONHelper.JsonObjMapper().readValue(contextStringFormat, Context.class);
+        Context context = JSONHelper.jsonObjMapper().readValue(contextStringFormat, Context.class);
         assertNotNull(context);
     }
 
@@ -140,7 +140,7 @@ public class RESTCMSTest extends CommonRESTTest {
         Response response2 = target("/sos/cms/contexts").request().get();
         assertEquals(response2.getStatus(), HTTPStatus.OK);
         String arrayOfContexts = response2.readEntity(String.class);
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(arrayOfContexts);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(arrayOfContexts);
         assertTrue(node.isArray());
         assertEquals(node.size(), 1);
     }

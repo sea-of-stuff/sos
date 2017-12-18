@@ -38,7 +38,7 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean manifestIsReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) throws PolicyException {
+    public static boolean manifestIsReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) {
 
         int numberReplicas = commonUtilities.numberOfManifestReplicas(codomain, manifest.guid());
         return numberReplicas >= factor;
@@ -94,13 +94,13 @@ public class CommonPolicies {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static void deleteData(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
+    public static void deleteData(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) {
 
         commonUtilities.deleteData(manifest.guid(), codomain);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static boolean isDataDeleted(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) throws PolicyException {
+    public static boolean isDataDeleted(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) {
 
         int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, manifest.guid());
         return numberReplicas == 0;

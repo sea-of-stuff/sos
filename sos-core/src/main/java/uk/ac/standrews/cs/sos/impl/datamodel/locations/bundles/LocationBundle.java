@@ -39,7 +39,7 @@ public class LocationBundle {
     @Override
     public String toString() {
         try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.jsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             return "INVALID LOCATION";
         }

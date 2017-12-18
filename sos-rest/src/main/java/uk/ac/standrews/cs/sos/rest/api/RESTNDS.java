@@ -93,7 +93,7 @@ public class RESTNDS {
 
             NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
             Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
-            String out = JSONHelper.JsonObjMapper().writeValueAsString(nodes);
+            String out = JSONHelper.jsonObjMapper().writeValueAsString(nodes);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);
 

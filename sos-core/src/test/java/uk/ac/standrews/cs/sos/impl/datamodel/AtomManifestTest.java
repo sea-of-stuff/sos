@@ -74,7 +74,7 @@ public class AtomManifestTest extends SetUpTest {
         Set<LocationBundle> newBundles = atomManifest.getLocations();
         assertEquals(newBundles.size(), 1);
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(atomManifest.toString());
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(atomManifest.toString());
         JsonNode locationsNode = node.get(JSONConstants.KEY_LOCATIONS);
         assertTrue(locationsNode.isArray());
         assertEquals(locationsNode.size(), 1);

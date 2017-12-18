@@ -61,7 +61,7 @@ public class FetchRoles extends Task {
                     String responseBody = IO.InputStreamToString(inputStream);
 
                     // TODO - array of roles...
-                    // this.roles = JSONHelper.JsonObjMapper().readValue(responseBody, Role.class);
+                    // this.roles = JSONHelper.jsonObjMapper().readValue(responseBody, Role.class);
 
                     SOS_LOG.log(LEVEL.INFO, "Roles for given user fetched successfully from node " + node.guid());
                     setState(TaskState.SUCCESSFUL);

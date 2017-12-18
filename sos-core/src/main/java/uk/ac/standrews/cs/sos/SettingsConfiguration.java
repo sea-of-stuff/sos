@@ -40,7 +40,7 @@ public class SettingsConfiguration {
 
     public SettingsConfiguration(File file) throws ConfigurationException {
         try {
-            node = JSONHelper.JsonObjMapper().readTree(file);
+            node = JSONHelper.jsonObjMapper().readTree(file);
         } catch (IOException e) {
             throw new ConfigurationException("Unable to read configuration properly", e);
         }
@@ -48,7 +48,7 @@ public class SettingsConfiguration {
 
     public Settings getSettingsObj() {
 
-        return JSONHelper.JsonObjMapper().convertValue(node, SettingsConfiguration.class).getSettings();
+        return JSONHelper.jsonObjMapper().convertValue(node, SettingsConfiguration.class).getSettings();
     }
 
     public static String absolutePath(String path) {
@@ -296,7 +296,7 @@ public class SettingsConfiguration {
             }
 
             @Override
-            public InputStream contentToHash() throws IOException {
+            public InputStream contentToHash() {
                 throw new NotSupportedException();
             }
         }
@@ -666,7 +666,7 @@ public class SettingsConfiguration {
 
             // NOTE - only local CastoreStorage is supported at the moment.
             @JsonIgnore
-            public CastoreBuilder getCastoreBuilder() throws ConfigurationException {
+            public CastoreBuilder getCastoreBuilder() {
 
                 CastoreType storageType = CastoreType.getEnum(getType());
                 String root = getLocation();

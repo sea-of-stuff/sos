@@ -124,7 +124,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
 
-        ManifestsCache persistedCache = (ManifestsCache) Persistence.Load(file);
+        ManifestsCache persistedCache = (ManifestsCache) Persistence.load(file);
 
         // REMOVEME - we should never have this case
         if (persistedCache == null) throw new ClassNotFoundException();

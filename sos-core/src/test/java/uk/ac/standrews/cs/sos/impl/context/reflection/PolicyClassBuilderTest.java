@@ -30,7 +30,7 @@ public class PolicyClassBuilderTest {
                         "}";
 
         System.out.println(JSON_POLICY);
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
         String clazzString = new PolicyClassBuilder().constructClass(jsonNode);
 
         String MATCHING_CLAZZ =
@@ -98,7 +98,7 @@ public class PolicyClassBuilderTest {
                         "}";
 
         System.out.println(JSON_POLICY);
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_POLICY);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
         String clazzString = new PolicyClassBuilder().constructClass(jsonNode);
 
         System.out.println(clazzString);

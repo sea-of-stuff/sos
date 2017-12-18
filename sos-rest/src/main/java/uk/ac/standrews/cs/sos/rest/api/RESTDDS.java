@@ -45,7 +45,7 @@ public class RESTDDS {
 
         Manifest manifest;
         try {
-            JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(json);
+            JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(json);
             ManifestType type = ManifestType.get(jsonNode.get(JSONConstants.KEY_TYPE).textValue());
             manifest = getManifest(type, json);
         } catch (IOException e) {
@@ -148,7 +148,7 @@ public class RESTDDS {
         ManifestsDataService manifestsDataService = RESTConfig.sos.getMDS();
         Set<IGUID> versions = manifestsDataService.getVersions(manifestGUID);
 
-        ArrayNode arrayNode = JSONHelper.JsonObjMapper().createArrayNode();
+        ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
         for(IGUID version:versions) {
             arrayNode.add(version.toMultiHash());
         }
@@ -176,14 +176,14 @@ public class RESTDDS {
     }
 
     private AtomManifest getAtomManifest(String json) throws IOException {
-        return JSONHelper.JsonObjMapper().readValue(json, AtomManifest.class);
+        return JSONHelper.jsonObjMapper().readValue(json, AtomManifest.class);
     }
 
     private CompoundManifest getCompoundManifest(String json) throws IOException {
-        return JSONHelper.JsonObjMapper().readValue(json, CompoundManifest.class);
+        return JSONHelper.jsonObjMapper().readValue(json, CompoundManifest.class);
     }
 
     private VersionManifest getVersionManifest(String json) throws IOException {
-        return JSONHelper.JsonObjMapper().readValue(json, VersionManifest.class);
+        return JSONHelper.jsonObjMapper().readValue(json, VersionManifest.class);
     }
 }

@@ -110,7 +110,7 @@ public abstract class BasicManifest implements Manifest {
     @Override
     public String toString() {
         try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(this);
+            return JSONHelper.jsonObjMapper().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to generate JSON for manifest object " + guid());
             return "";

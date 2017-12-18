@@ -23,7 +23,7 @@ public class PredicateClassBuilderTest {
                         "\t\"dependencies\": []\n" +
                         "}";
 
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
         String clazzString = new PredicateClassBuilder().constructClass(jsonNode);
 
         String MATCHING_CLAZZ =
@@ -65,7 +65,7 @@ public class PredicateClassBuilderTest {
                         "\t\"dependencies\": []\n" +
                         "}";
 
-        JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(JSON_PREDICATE);
+        JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
         String clazzString = new PredicateClassBuilder().constructClass(jsonNode);
 
         String MATCHING_CLAZZ =

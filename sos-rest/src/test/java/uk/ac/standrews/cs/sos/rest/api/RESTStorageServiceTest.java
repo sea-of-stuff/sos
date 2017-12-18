@@ -130,7 +130,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), false);
 
-        Atom atom = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), Atom.class);
+        Atom atom = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), Atom.class);
         assertNotNull(atom);
         assertEquals(atom.guid().toMultiHash(), "SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7");
         assertFalse(atom.getLocations().isEmpty());
@@ -151,7 +151,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         JSONAssert.assertEquals(TEST_EMPTY_ATOM_MANIFEST, response.readEntity(String.class), false);
 
-        Atom atom = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), Atom.class);
+        Atom atom = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), Atom.class);
         assertNotNull(atom);
         assertEquals(atom.guid().toMultiHash(), "SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
         assertFalse(atom.getLocations().isEmpty());
@@ -239,7 +239,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
                 ));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+        AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
         Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/THIS_IS_MY_CHALLENGE")
                 .request().get();
@@ -259,7 +259,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
                 ));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+        AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
         Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/")
                 .request().get();
@@ -278,7 +278,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
                 ));
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
-        AtomManifest atomManifest = JSONHelper.JsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
+        AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
         Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/ ")
                 .request().get();

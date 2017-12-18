@@ -109,7 +109,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
             try {
                 String manifest = getManifestFromGUID(manifestRef).toString();
-                JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(manifest);
+                JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(manifest);
 
                 // Search
                 int matches = 0;

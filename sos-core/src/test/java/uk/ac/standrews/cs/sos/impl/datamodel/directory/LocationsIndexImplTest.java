@@ -91,7 +91,7 @@ public class LocationsIndexImplTest {
         locationsIndex.persist(file);
 
 
-        LocationsIndex locationsIndexPersisted = (LocationsIndex) Persistence.Load(file);
+        LocationsIndex locationsIndexPersisted = (LocationsIndex) Persistence.load(file);
         assertNotNull(locationsIndexPersisted);
 
         Iterator<LocationBundle> it = locationsIndexPersisted.findLocations(guid).iterator();

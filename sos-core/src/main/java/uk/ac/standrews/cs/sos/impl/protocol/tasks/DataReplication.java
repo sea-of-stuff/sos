@@ -209,7 +209,7 @@ public class DataReplication extends Task {
             }
             dataPackage.setMetadata(metadata);
 
-            String jsonBody = JSONHelper.JsonObjMapper().writeValueAsString(dataPackage);
+            String jsonBody = JSONHelper.jsonObjMapper().writeValueAsString(dataPackage);
             request.setJSONBody(jsonBody);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
@@ -217,7 +217,7 @@ public class DataReplication extends Task {
 
                 if (response.getCode() == HTTPStatus.CREATED) {
 
-                    return JSONHelper.JsonObjMapper().readValue(body, AtomManifest.class);
+                    return JSONHelper.jsonObjMapper().readValue(body, AtomManifest.class);
 
                 } else {
                     throw new SOSProtocolException("Unable to transfer DATA");

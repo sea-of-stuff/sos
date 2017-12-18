@@ -42,7 +42,7 @@ public class ExperimentConfiguration {
      */
     public ExperimentConfiguration(File file) throws ConfigurationException {
         try {
-            node = JSONHelper.JsonObjMapper().readTree(file);
+            node = JSONHelper.jsonObjMapper().readTree(file);
         } catch (IOException e) {
             throw new ConfigurationException("Unable to read configuration properly", e);
         }
@@ -54,13 +54,13 @@ public class ExperimentConfiguration {
      */
     public Experiment getExperimentObj() {
 
-        return JSONHelper.JsonObjMapper().convertValue(node, ExperimentConfiguration.class).getExperiment();
+        return JSONHelper.jsonObjMapper().convertValue(node, ExperimentConfiguration.class).getExperiment();
     }
 
     @Override
     public String toString() {
         try {
-            return JSONHelper.JsonObjMapper().writeValueAsString(node);
+            return JSONHelper.jsonObjMapper().writeValueAsString(node);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return "";

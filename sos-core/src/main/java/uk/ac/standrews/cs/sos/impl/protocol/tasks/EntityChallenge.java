@@ -93,7 +93,7 @@ public class EntityChallenge extends Task {
     @Override
     public String serialize() {
 
-        ObjectNode node = JSONHelper.JsonObjMapper().createObjectNode();
+        ObjectNode node = JSONHelper.jsonObjMapper().createObjectNode();
         node.put(TASK_TYPE, "EntityChallenge");
         node.put(TASK_ENTITY, entity.toMultiHash());
         // TODO - the challenged data will be retrieved again from the node
@@ -105,7 +105,7 @@ public class EntityChallenge extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(json);
 
         return null;
     }

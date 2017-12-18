@@ -35,7 +35,7 @@ public class ResponseImpl implements Response {
     public com.fasterxml.jackson.databind.JsonNode getJSON() {
 
         try {
-            return JSONHelper.JsonObjMapper().readTree(response.getBody().toString());
+            return JSONHelper.jsonObjMapper().readTree(response.getBody().toString());
         } catch (IOException e) {
             return null;
         }

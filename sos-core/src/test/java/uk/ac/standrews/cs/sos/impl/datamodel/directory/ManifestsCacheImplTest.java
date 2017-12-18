@@ -133,7 +133,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest);
 
         IFile file = localStorage.createFile(cachesDir, "manifests.cache");
-        Persistence.Persist(cache, file);
+        Persistence.persist(cache, file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
 
@@ -162,7 +162,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         cache.addManifest(manifest);
 
         IFile file = localStorage.createFile(cachesDir, "manifests.cache");
-        Persistence.Persist(cache, file);
+        Persistence.persist(cache, file);
 
         ManifestsCache persistedCache = ManifestsCacheImpl.load(localStorage, file, manifestsDir);
         persistedCache.findManifest(guid);

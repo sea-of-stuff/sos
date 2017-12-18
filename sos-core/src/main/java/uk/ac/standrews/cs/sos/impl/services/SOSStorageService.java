@@ -424,7 +424,7 @@ public class SOSStorageService implements StorageService {
             IDirectory cacheDir = storage.getNodeDirectory();
             IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
             if (file.exists()) {
-                locationIndex = (LocationsIndex) Persistence.Load(file);
+                locationIndex = (LocationsIndex) Persistence.load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             throw new ServiceException(ServiceException.SERVICE.STORAGE, "Unable to create the LocationIndex");

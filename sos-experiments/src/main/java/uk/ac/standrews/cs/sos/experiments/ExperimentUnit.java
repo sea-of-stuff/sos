@@ -200,16 +200,16 @@ public interface ExperimentUnit {
             if (file.isFile() && file.getName().endsWith(".json")) {
 
                 try {
-                    JsonNode jsonNode = JSONHelper.JsonObjMapper().readTree(file);
+                    JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(file);
                     ManifestType type = ManifestType.get(jsonNode.get(JSONConstants.KEY_TYPE).textValue());
                     switch(type) {
 
                         case ROLE:
-                            Role role = JSONHelper.JsonObjMapper().readValue(file, Role.class);
+                            Role role = JSONHelper.jsonObjMapper().readValue(file, Role.class);
                             node.getUSRO().addRole(role);
                             break;
                         case USER:
-                            User user = JSONHelper.JsonObjMapper().readValue(file, User.class);
+                            User user = JSONHelper.jsonObjMapper().readValue(file, User.class);
                             node.getUSRO().addUser(user);
                             break;
                     }

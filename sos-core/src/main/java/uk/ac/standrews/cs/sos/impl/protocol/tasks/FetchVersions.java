@@ -104,7 +104,7 @@ public class FetchVersions extends Task {
 
         Set<IGUID> retval = new LinkedHashSet<>();
 
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(json);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(json);
         for(JsonNode child:node) {
 
             IGUID guid;

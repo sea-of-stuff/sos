@@ -154,7 +154,7 @@ public class WData {
         pendingContents = new LinkedHashSet<>();
 
         String data = request.queryParams("data");
-        JsonNode node = JSONHelper.JsonObjMapper().readTree(data);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(data);
         for(JsonNode child: node) {
             pendingContents.add(new ContentImpl(GUIDFactory.recreateGUID(child.asText())));
         }

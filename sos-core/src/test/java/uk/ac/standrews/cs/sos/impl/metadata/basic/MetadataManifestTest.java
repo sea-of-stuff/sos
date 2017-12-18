@@ -52,7 +52,7 @@ public class MetadataManifestTest {
                         "}";
 
 
-        Metadata metadata = JSONHelper.JsonObjMapper().readValue(testMetadata, Metadata.class);
+        Metadata metadata = JSONHelper.jsonObjMapper().readValue(testMetadata, Metadata.class);
 
         assertEquals(metadata.getProperty("X-Parsed-By").getValue_s(), "org.apache.tika.parser.DefaultParser");
         assertEquals(metadata.getProperty("Size").getValue_l(), 26L);

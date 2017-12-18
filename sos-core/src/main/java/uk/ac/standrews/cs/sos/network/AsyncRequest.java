@@ -37,7 +37,7 @@ public class AsyncRequest extends Request {
         }
     }
 
-    protected void get() throws IOException {
+    protected void get() {
 //        request = new okhttp3.Request.Builder()
 //                .url(url)
 //                .build();
@@ -45,7 +45,7 @@ public class AsyncRequest extends Request {
 //        client.newCall(request).enqueue(callback);
     }
 
-    protected void postJSON() throws IOException {
+    protected void postJSON() {
 //        RequestBody body = RequestBody.create(JSON, json_body);
 //
 //        request = new okhttp3.Request.Builder()
@@ -56,7 +56,7 @@ public class AsyncRequest extends Request {
 //        client.newCall(request).enqueue(callback);
     }
 
-    protected void putJSON() throws IOException {
+    protected void putJSON() {
 //        RequestBody body = RequestBody.create(JSON, json_body);
 //
 //        new okhttp3.Request.Builder()

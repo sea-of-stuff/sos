@@ -118,7 +118,7 @@ public class SecureAtomManifestTest extends CommonTest {
                 "  } ]\n" +
                 "}";
 
-        SecureAtom secureAtomManifest = JSONHelper.JsonObjMapper().readValue(testSecureAtomJson, SecureAtomManifest.class);
+        SecureAtom secureAtomManifest = JSONHelper.jsonObjMapper().readValue(testSecureAtomJson, SecureAtomManifest.class);
         assertEquals(secureAtomManifest.getType(), ManifestType.ATOM_PROTECTED);
         assertEquals(secureAtomManifest.guid(), GUIDFactory.recreateGUID("SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0"));
 

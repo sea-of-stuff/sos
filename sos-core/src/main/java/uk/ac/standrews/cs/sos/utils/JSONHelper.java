@@ -13,7 +13,7 @@ public class JSONHelper {
 
     private static ObjectMapper mapper;
 
-    public static ObjectMapper JsonObjMapper() {
+    public static ObjectMapper jsonObjMapper() {
         if (mapper == null) {
             mapper = new ObjectMapper()
                     .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)

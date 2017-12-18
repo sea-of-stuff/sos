@@ -224,7 +224,7 @@ public class LocationsIndexImpl implements LocationsIndex {
                 int numberOfLocations = in.readInt();
 
                 for (int j = 0; j < numberOfLocations; j++) {
-                    LocationBundle bundle = JSONHelper.JsonObjMapper().readValue(in.readUTF(), LocationBundle.class);
+                    LocationBundle bundle = JSONHelper.jsonObjMapper().readValue(in.readUTF(), LocationBundle.class);
                     addLocation(key, bundle);
                 }
 
