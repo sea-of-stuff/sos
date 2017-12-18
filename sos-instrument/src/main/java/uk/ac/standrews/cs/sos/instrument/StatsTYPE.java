@@ -19,7 +19,7 @@ public enum StatsTYPE {
     add_manifest, read_manifest,
     fs_write_file, fs_read_file,
 
-    predicate, // time to run the predicate function per asset
+    predicate, predicate_remote, // time to run the predicate function per asset
     predicate_dataset, // time to run the predicate on all the assets
     predicate_prep, // time to prepare before running the predicate for all assets
     predicate_check, // time spent to check if predicate has to be run (for all assets - cumulative)

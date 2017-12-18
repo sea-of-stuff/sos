@@ -60,7 +60,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             try {
                 atoms = addFolderContentToNodeAsAtoms(node, new File(datasetPath));
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 throw new ExperimentException();
             }

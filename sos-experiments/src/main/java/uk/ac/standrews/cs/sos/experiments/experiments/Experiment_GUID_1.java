@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -49,7 +50,7 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNodeAsAtoms(node, new File(datasetPath));
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 throw new ExperimentException();
             }
@@ -61,7 +62,7 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNodeAsAtoms(node, new File(datasetPath));
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 throw new ExperimentException();
             }

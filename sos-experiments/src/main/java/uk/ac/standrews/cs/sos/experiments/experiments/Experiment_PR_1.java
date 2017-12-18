@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -55,7 +56,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNode(node, new File(datasetPath));
                 addContexts();
-            } catch (Exception e) {
+            } catch (ContextException | IOException e) {
                 e.printStackTrace();
                 throw new ExperimentException();
             }
@@ -72,7 +73,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             }
         }
 
-        private void addContexts() throws Exception {
+        private void addContexts() throws ContextException {
 
             addContext(cms, experiment, "base");
 

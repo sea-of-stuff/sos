@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -55,11 +56,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNode(node, new File(datasetPath));
 
-                System.out.println("Adding contexts to node");
-                addContexts();
-
-                System.out.println("Running Predicates");
-                cms.runPredicates();
             } catch (Exception e) {
                 throw new ExperimentException();
             }
@@ -70,20 +66,28 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         }
 
         @Override
-        public void run() {
+        public void run() throws ExperimentException {
 
-            long start = System.nanoTime();
-            // Run predicate locally and trigger remote nodes
-            // wait for all nodes (included local node) to return
-            long duration = System.nanoTime() - start;
-            // TODO - have another subtype as to capture only this measurement
-            InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, "TODO - NUMBER OF NODES", duration);
-        }
+            try {
+                long start = System.nanoTime();
+                // Run predicate locally and trigger remote nodes
+                // wait for all nodes (included local node) to return
 
-        private void addContexts() throws Exception {
 
-            addContext(cms, experiment, "predicate_1");
-            addContext(cms, experiment, "predicate_2");
+                System.out.println("Adding contexts to node");
+                // TODO - iterate over contexts!!!
+                addContext(cms, experiment, "predicate_1");
+                addContext(cms, experiment, "predicate_2");
+
+                System.out.println("Running Predicates");
+                cms.runPredicates();
+
+
+                long duration = System.nanoTime() - start;
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, "TODO - NUMBER OF NODES", duration);
+            } catch (ContextException e) {
+                throw new ExperimentException(e);
+            }
         }
 
     }

@@ -190,6 +190,8 @@ public class ExperimentConfiguration {
             private SSH ssh;
             private Behaviour behaviour;
             private String dataset;
+            // TODO - ratio of dataset to be sent (how much of the dataset to send)
+            // TODO - random or sequential (-1 for random, 0, 1, 2 to indicate which part of the dataset)
             private boolean sendUSRO = false;
 
             @Override

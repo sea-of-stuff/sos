@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -10,6 +11,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -60,7 +62,7 @@ public class Experiment_CO_C_2 extends BaseExperiment implements Experiment {
 
                 System.out.println("Running Policies");
                 cms.runPolicies();
-            } catch (Exception e) {
+            } catch (ContextException | IOException e) {
                 throw new ExperimentException();
             }
         }
@@ -74,7 +76,7 @@ public class Experiment_CO_C_2 extends BaseExperiment implements Experiment {
             cms.runCheckPolicies();
         }
 
-        private void addContexts() throws Exception {
+        private void addContexts() throws ContextException {
 
             addContext(cms, experiment, "do_nothing_policy");
             addContext(cms, experiment, "data_replication_1");

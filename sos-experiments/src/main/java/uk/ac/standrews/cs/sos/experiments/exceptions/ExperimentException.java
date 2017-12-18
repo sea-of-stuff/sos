@@ -13,6 +13,10 @@ public class ExperimentException extends Exception {
         super(s);
     }
 
+    public ExperimentException(Throwable t) {
+        super(t);
+    }
+
     public ExperimentException(String s, Throwable t) {
         super(s, t);
     }
