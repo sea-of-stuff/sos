@@ -266,10 +266,12 @@ public interface ExperimentUnit {
 
     }
 
-    default void addContext(ContextService cms, ExperimentConfiguration.Experiment experiment, String context_name) throws ContextException {
+    default IGUID addContext(ContextService cms, ExperimentConfiguration.Experiment experiment, String context_name) throws ContextException {
         String contextPath = experiment.getExperimentNode().getContextsPath() + experiment.getName() + "/" + context_name + ".json";
         IGUID context = cms.addContext(new File(contextPath));
         InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added context " + context_name + " " + context.toShortString());
+
+        return context;
     }
 
     default void sendFiles(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
