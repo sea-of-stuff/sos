@@ -92,10 +92,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private UsersRolesService usersRolesService;
     private boolean isExperimentNode;
 
-    // Each node will have its own log and it will be used to log errors as well
-    // as useful information about the node itself.
-    private SOS_LOG SOS_LOG;
-
     /**
      * Construct the Node instance for this machine
      *
@@ -109,7 +105,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         manageSignatureKeys();
         manageNodeGUID();
-        SOS_LOG = new SOS_LOG(guid());
+
+        initLog();
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
         uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO,
@@ -299,6 +296,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             throw new SOSException("Unable to generate GUID for SOSLocalNode");
         }
 
+    }
+
+    private void initLog() {
+        // Each node will have its own log and it will be used to log errors as well
+        // as useful information about the node itself.
+        uk.ac.standrews.cs.sos.utils.SOS_LOG SOS_LOG = new SOS_LOG(guid());
     }
 
     private void initDB() throws SOSException {

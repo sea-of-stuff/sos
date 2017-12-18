@@ -118,6 +118,7 @@
     <orderEntry type="library" name="Maven: com.outr.javasysmon:javasysmon_2.10:0.3.4" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.3" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.21.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:15.0" level="project" />
     <orderEntry type="module" module-name="sos-rest-jetty" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.0.M1" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />

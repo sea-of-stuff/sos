@@ -42,7 +42,6 @@ public class PingNode extends Task {
         try {
             URL url = SOSURL.NODE_PING(node, message);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
-            request.setJSONBody(node.toString()); // TODO - not sure why this is the body of this method...
 
             long startRequest = System.currentTimeMillis();
             Response response = RequestsManager.getInstance().playSyncRequest(request);

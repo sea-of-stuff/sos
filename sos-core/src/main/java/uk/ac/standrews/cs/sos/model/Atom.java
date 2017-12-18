@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.impl.json.AtomManifestDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.AtomManifestSerializer;
 
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -43,9 +42,9 @@ public interface Atom extends Manifest {
     /**
      * Return the atom's data
      *
-     * @return
+     * @return the data for the atom
      */
-    Data getData() throws IOException;
+    Data getData();
 
     /**
      * WIP: Algorithm used to compress data

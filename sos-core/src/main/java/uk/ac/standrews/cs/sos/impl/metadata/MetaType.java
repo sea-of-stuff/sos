@@ -7,7 +7,7 @@ public enum MetaType {
 
     LONG("LONG"), STRING("STRING"), GUID("GUID");
 
-    private String type;
+    private final String type;
     MetaType(String type) {
         this.type = type;
     }

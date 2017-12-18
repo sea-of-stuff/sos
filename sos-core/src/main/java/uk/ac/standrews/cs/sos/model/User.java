@@ -60,6 +60,11 @@ public interface User extends Manifest {
      */
     boolean verify(String text, String signatureToVerify) throws SignatureException;
 
+    /**
+     * Return true if this User object has private keys
+     *
+     * @return true if private keys are known
+     */
     boolean hasPrivateKeys();
 
 }
