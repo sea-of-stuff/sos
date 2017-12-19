@@ -15,6 +15,7 @@ public class Statistics {
     private boolean io;
     private boolean guid_data;
     private boolean guid_manifest;
+    private boolean ping;
 
     // Needed to automatically parse its JSON string into an object
     public Statistics() {}
@@ -46,6 +47,8 @@ public class Statistics {
                 return isGuid_data();
             case guid_manifest:
                 return isGuid_manifest();
+            case ping:
+                return isPing();
         }
 
         return false;
@@ -113,5 +116,13 @@ public class Statistics {
 
     public void setPredicate_remote(boolean predicate_remote) {
         this.predicate_remote = predicate_remote;
+    }
+
+    public boolean isPing() {
+        return ping;
+    }
+
+    public void setPing(boolean ping) {
+        this.ping = ping;
     }
 }
