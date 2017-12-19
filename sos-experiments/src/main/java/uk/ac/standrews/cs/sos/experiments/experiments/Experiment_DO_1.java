@@ -101,7 +101,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     long start = System.nanoTime();
                     executorService.invokeAll(runnables); // This method returns when all the calls finish
                     long duration = System.nanoTime() - start;
-                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, "TODO - NUMBER OF NODES", duration);
+                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextToRun, duration);
 
                     executorService.shutdownNow();
                 }

@@ -34,14 +34,27 @@ public interface NodesCollection {
     Set<IGUID> nodesRefs();
 
     /**
+     * Return the size of this nodes collection
+     * @return size of this nodes collection
+     */
+    int size();
+
+    /**
      * Get the type of the collection.
      *
      * @return the type of this nodes collection
      */
     NodesCollectionType type();
 
+    /**
+     * Unique string representing this nodes collection
+     * @return string for this nodes collection
+     */
     String toUniqueString();
 
+    /**
+     * Shuffle this nodes collection
+     */
     void shuffle();
 
 }

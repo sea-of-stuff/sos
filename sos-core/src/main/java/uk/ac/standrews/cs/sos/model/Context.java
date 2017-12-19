@@ -107,6 +107,14 @@ public interface Context extends Versionable, SignedManifest {
      */
     Set<IGUID> policies();
 
+    /**
+     * FAT String representation for this context
+     *
+     * @param predicate needed to create the complete context representation
+     * @param policies needed to create the complete context representation
+     * @return the FAT String representation of this context
+     * @throws JsonProcessingException if unable to process this context
+     */
     String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException;
 
 }

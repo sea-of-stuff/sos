@@ -44,6 +44,11 @@ public class NodesCollectionImpl implements NodesCollection {
     }
 
     @Override
+    public int size() {
+        return nodesRefs.size();
+    }
+
+    @Override
     public NodesCollectionType type() {
         return type;
     }
@@ -65,7 +70,7 @@ public class NodesCollectionImpl implements NodesCollection {
     }
 
     @Override
-    public void shuffle() {
+    public synchronized void shuffle() {
 
         List<IGUID> nodes = new ArrayList<>(nodesRefs);
         Collections.shuffle(nodes);

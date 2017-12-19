@@ -5,9 +5,9 @@ package uk.ac.standrews.cs.sos.model;
  */
 public enum NodesCollectionType {
 
-    LOCAL("LOCAL"), // This local node
-    SPECIFIED("SPECIFIED"), // The collection is limited to the specified nodes
-    ANY("ANY"); // The collection is unlimited
+    LOCAL("LOCAL"),             // This local node
+    SPECIFIED("SPECIFIED"),     // The collection is limited to the specified nodes
+    ANY("ANY");                 // The collection is unlimited
 
     private final String text;
 
