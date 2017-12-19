@@ -43,7 +43,7 @@ public class Experiment_PING extends BaseExperiment implements Experiment {
         @Override
         public void run() {
 
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < 100; i++) {
                 PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD " + i);
 
                 long start = System.nanoTime();
