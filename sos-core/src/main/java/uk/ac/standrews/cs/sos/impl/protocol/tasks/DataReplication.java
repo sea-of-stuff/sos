@@ -54,6 +54,7 @@ import java.util.Iterator;
  *
  * If the data is successfully replicated to a Storage node:
  * - TODO - write down how the internal data structures change
+ * - TODO - parallel data replication
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */

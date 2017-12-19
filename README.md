@@ -342,6 +342,9 @@ log4j.appender.console.layout.ConversionPattern=%d{dd-MM-yyyy HH:mm:ss} [ %-5p ]
 - Hash Online - https://quickhash.com
 - File leak detector - http://file-leak-detector.kohsuke.org/
 
+- cloc - https://github.com/AlDanial/cloc
+    - `cloc . --exclude-dir=datasets,contexts,plots,processed,remote,usro,configuration,target,logs,output`
+
 ## Contributors
 
 This work is developed by Simone Ivan Conte ([@sic2](https://github.com/sic2)) as part of his PhD thesis.
