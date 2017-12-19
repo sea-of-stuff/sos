@@ -55,12 +55,12 @@ public class BasicNode extends BasicManifest implements Node {
 
     @Override
     public boolean isStorage() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isDDS() {
-        return false;
+        return true;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class BasicNode extends BasicManifest implements Node {
 
     @Override
     public boolean isCMS() {
-        return false;
+        return true;
     }
 
     @Override

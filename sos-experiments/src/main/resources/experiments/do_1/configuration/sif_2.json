@@ -6,7 +6,7 @@
         "exposed": true
       },
       "cms": {
-        "exposed": false,
+        "exposed": true,
         "loadedPath": "sos/java/contexts/",
         "automatic": false,
         "predicateOnNewContext" : false,

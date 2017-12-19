@@ -32,7 +32,7 @@ public class TriggerPredicate extends Task {
         try {
             URL url = SOSURL.EXPERIMENT_TRIGGER_PREDICATE(node, context);
 
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             if (response instanceof ErrorResponseImpl) {
                 setState(TaskState.ERROR);

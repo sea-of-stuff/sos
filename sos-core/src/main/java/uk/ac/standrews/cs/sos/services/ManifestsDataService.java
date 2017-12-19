@@ -40,9 +40,11 @@ public interface ManifestsDataService extends Service {
      * @param manifest to be added
      * @param nodes where to add the manifest
      * @param replication suggested replication factor for the manifest
+     * @param limitReplication if true check replication factor against node settings
+     * @param storeLocally if true the manifest is stored locally
      * @throws ManifestPersistException if the manifest could not be added correctly
      */
-    void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException;
+    void addManifest(Manifest manifest, NodesCollection nodes, int replication, boolean limitReplication, boolean storeLocally) throws ManifestPersistException;
 
     /**
      * Get the manifest that matches a given GUID.

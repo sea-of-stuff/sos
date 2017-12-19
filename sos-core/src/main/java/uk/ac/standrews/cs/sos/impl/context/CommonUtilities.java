@@ -80,7 +80,7 @@ public class CommonUtilities {
     public void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
-            manifestsDataService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */);
+            manifestsDataService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */, true, false);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }

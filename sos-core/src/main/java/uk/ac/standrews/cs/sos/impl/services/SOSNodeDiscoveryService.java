@@ -87,7 +87,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
             if (localOnly) {
                 manifestsDataService.addManifest(node);
             } else {
-                manifestsDataService.addManifest(node, new NodesCollectionImpl(NodesCollectionType.ANY), 1);
+                manifestsDataService.addManifest(node, new NodesCollectionImpl(NodesCollectionType.ANY), 1, true, true);
             }
 
         } catch (ManifestPersistException | NodesDirectoryException | NodesCollectionException e) {

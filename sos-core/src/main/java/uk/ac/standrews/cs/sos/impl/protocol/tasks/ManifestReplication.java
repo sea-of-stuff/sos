@@ -123,7 +123,6 @@ public class ManifestReplication extends Task {
             }
 
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
-
             try(InputStream ignored = response.getBody()) {} // Ensure that the connection is closed properly.
 
             return transferWasSuccessful;
@@ -197,7 +196,10 @@ public class ManifestReplication extends Task {
                 }
 
                 try {
-                    return ((Context) manifest).toFATString(predicate, policies);
+                    String contextFAT = ((Context) manifest).toFATString(predicate, policies);
+                    SOS_LOG.log(LEVEL.INFO, contextFAT);
+
+                    return contextFAT;
                 } catch (JsonProcessingException e) {
                     throw new ManifestNotFoundException("Unable to make FAT Context JSON");
                 }

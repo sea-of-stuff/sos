@@ -974,7 +974,7 @@ public class SOSContextService implements ContextService {
 
         NodesCollection domain = context.domain();
         int replication = domain.nodesRefs().size();
-        manifestsDataService.addManifest(context, domain, replication);
+        manifestsDataService.addManifest(context, domain, replication, false, false);
     }
 
 }

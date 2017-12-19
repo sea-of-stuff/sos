@@ -126,10 +126,16 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void addManifest(Manifest manifest, NodesCollection nodes, int replication) throws ManifestPersistException {
-        addManifest(manifest);
+    public void addManifest(Manifest manifest, NodesCollection nodes, int replicationFactor, boolean limitReplication, boolean storeLocally) throws ManifestPersistException {
 
-        int replicationFactor = (replication - 1) <= ddsSettings.getMaxReplication() ? (replication - 1) : ddsSettings.getMaxReplication();
+        if (storeLocally) {
+            addManifest(manifest);
+        }
+
+        if (limitReplication) {
+            replicationFactor = (replicationFactor - 1) <= ddsSettings.getMaxReplication() ? (replicationFactor - 1) : ddsSettings.getMaxReplication();
+        }
+
         if (replicationFactor > 0) {
             remote.addManifest(manifest, nodes, replicationFactor); // This is an async operation
         }

@@ -88,6 +88,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     System.out.println("Adding contexts to node");
                     IGUID contextGUID = addContext(cms, experiment, contextToRun);
                     Context context = cms.getContext(contextGUID);
+                    System.out.println("Spawning context to nodes in domain");
                     cms.spawnContext(context);
 
                     ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
@@ -145,6 +146,5 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         Experiment_DO_1 experiment_do_1 = new Experiment_DO_1(experimentConfiguration);
         experiment_do_1.process();
     }
-
 
 }
