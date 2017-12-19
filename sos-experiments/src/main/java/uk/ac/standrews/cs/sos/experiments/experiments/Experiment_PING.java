@@ -36,19 +36,20 @@ public class Experiment_PING extends BaseExperiment implements Experiment {
         @Override
         public void setup() {
 
-            Node nodeToPing = new BasicNode("NODE TO CONTACT", 8080);
+            ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
+            Node nodeToPing = new BasicNode(slaveNode.getSsh().getHost(), 8080);
             pingNode = new PingNode(nodeToPing, "HELLO WORLD");
         }
 
         @Override
         public void run() {
 
-            // TODO - change size of payload?
             for(int i = 0; i < 10; i++) {
                 long start = System.nanoTime();
                 TasksQueue.instance().performSyncTask(pingNode);
                 long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "data sent", duration);
+                // TODO - change size of payload?
+                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "amount of data sent", duration);
             }
         }
 

@@ -1,0 +1,72 @@
+{
+  "experiment" : {
+    "name": "ping",
+    "experimentClass": "Experiment_PING",
+    "description": "The experiment PING investigates the size of the codomain",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 10
+    },
+    "nodes" : [
+      {
+        "id" : 2,
+        "name" : "sif2",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-2.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_2.json",
+        "certificatefile" : "sif_2.crt",
+        "keyfile" : "sif_2.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 12,
+      "name" : "sif12",
+      "path" : "/cs/scratch/",
+      "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
+      "ssh" : {
+        "type" : 1,
+        "host" : "sif-12.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+      },
+      "configurationfile" : "sif_12.json",
+      "certificatefile" : "sif_12.crt",
+      "keyfile" : "sif_12.key",
+      "sendUSRO" : false,
+      "behaviour": {
+        "start": 0,
+        "stop": -1,
+        "pause": [],
+        "operations": [ "WIP" ]
+      }
+    },
+    "stats": {
+      "ping": true,
+      "experiment": false,
+      "predicate": false,
+      "predicate_remote": false,
+      "policies": false,
+      "checkPolicies": false
+    }
+  }
+}
