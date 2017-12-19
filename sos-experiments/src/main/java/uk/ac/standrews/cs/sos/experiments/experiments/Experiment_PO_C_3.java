@@ -33,13 +33,6 @@ public class Experiment_PO_C_3 extends BaseExperiment implements Experiment {
         return new ExperimentUnit_PO_C_3();
     }
 
-    @Override
-    public void finishIteration() {
-        super.finishIteration();
-
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PO_C_3.");
-    }
-
     private class ExperimentUnit_PO_C_3 implements ExperimentUnit {
 
         private ContextService cms;

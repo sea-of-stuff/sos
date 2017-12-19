@@ -176,7 +176,7 @@ public abstract class BaseExperiment implements Experiment {
     }
 
     @Override
-    public void finish() throws ExperimentException {
+    public void finish() {
 
         InstrumentFactory.stop();
     }

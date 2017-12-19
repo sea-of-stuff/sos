@@ -35,13 +35,6 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         return new ExperimentUnit_PR_1();
     }
 
-    @Override
-    public void finishIteration() {
-        super.finishIteration();
-
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT PR_1. # times a predicate was runIteration: " + counter);
-    }
-
     private class ExperimentUnit_PR_1 implements ExperimentUnit {
 
         private ContextService cms;

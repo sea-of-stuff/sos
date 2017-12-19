@@ -31,11 +31,6 @@ public class Experiment_CO_C_2 extends BaseExperiment implements Experiment {
         return new ExperimentUnit_CO_C_2();
     }
 
-    @Override
-    public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations();
-    }
-
     private class ExperimentUnit_CO_C_2 implements ExperimentUnit {
 
         private ContextService cms;

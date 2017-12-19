@@ -45,11 +45,6 @@ public class Experiment_Scale_1 extends BaseExperiment implements Experiment {
         InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "END OF EXPERIMENT Scale_1. # times a predicate was runIteration: " + counter);
     }
 
-    @Override
-    public int numberOfTotalIterations() {
-        return experiment.getSetup().getIterations();
-    }
-
     private void addContentToNode() throws URISyntaxException, ServiceException {
 
         // Add a bunch of data, versions, and so on here

@@ -120,10 +120,17 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 
 
 ##############
-# PO_CO
+# CO_x
 ##############
 
-co("remote/co_a_test25.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="CO_A_1 (10 iterations), 100kb dataset")
-co("remote/co_a_2_v1.tsv", type="policies", subtype="policy_apply_dataset", yMax=10, titlePlot="CO_A_2 (10 iterations), 100kb dataset")
-co("remote/co_c_1_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_1 (10 iterations), 100kb dataset")
-co("remote/co_c_2_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_2 (10 iterations), 100kb dataset")
+co("remote/co_a_test25.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
+co("remote/co_a_2_v1.tsv", type="policies", subtype="policy_apply_dataset", yMax=10, titlePlot="CO_A_2 (10 iterations), 100kb dataset. Replication factor = 1-10")
+co("remote/co_c_1_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_1 (10 iterations), 100kb dataset. Replication factor = 1")
+co("remote/co_c_2_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_2 (10 iterations), 100kb dataset. Replication factor = 1-10")
+
+##############
+# DO_x
+##############
+
+
+# WORK IN PROGRESS

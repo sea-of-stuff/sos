@@ -11,6 +11,8 @@ public enum StatsTYPE {
     none,
     any,
 
+    ping,
+
     guid_data, guid_manifest, // Time to generate GUIDs for data or manifest
     sha1, sha256,
 
