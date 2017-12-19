@@ -42,8 +42,10 @@ public class InfoNode extends Task {
                 info = response.getJSON().toString();
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+                setState(TaskState.SUCCESSFUL);
+            } else {
+                setState(TaskState.ERROR);
             }
-            setState(TaskState.SUCCESSFUL);
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);

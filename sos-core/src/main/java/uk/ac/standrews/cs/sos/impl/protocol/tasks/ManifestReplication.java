@@ -117,6 +117,11 @@ public class ManifestReplication extends Task {
             request.setJSONBody(manifestToSend);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
+            if (response instanceof ErrorResponseImpl) {
+                setState(TaskState.ERROR);
+                throw new IOException();
+            }
+
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
 
             try(InputStream ignored = response.getBody()) {} // Ensure that the connection is closed properly.

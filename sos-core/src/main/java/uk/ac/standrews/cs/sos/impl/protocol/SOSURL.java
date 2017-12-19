@@ -154,6 +154,14 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL EXPERIMENT_TRIGGER_PREDICATE(Node node, IGUID context) throws SOSURLException {
+
+        String url = buildURLBase(node) +
+                "experiment/cms/guid/" + context.toMultiHash() + "/predicate";
+
+        return makeURL(url);
+    }
+
     private static URL makeURL(String urlString) throws SOSURLException {
 
         URL url;

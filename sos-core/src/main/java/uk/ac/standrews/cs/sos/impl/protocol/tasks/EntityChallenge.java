@@ -13,6 +13,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.network.ErrorResponseImpl;
 import uk.ac.standrews.cs.sos.network.HTTPMethod;
 import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.network.SyncRequest;
@@ -126,6 +127,9 @@ public class EntityChallenge extends Task {
         URL url = isData ? SOSURL.STORAGE_DATA_CHALLENGE(node, entity, challenge) : SOSURL.DDS_MANIFEST_CHALLENGE(node, entity, challenge);
         SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
+        if (response instanceof ErrorResponseImpl) {
+            throw new IOException();
+        }
 
         try (InputStream inputStream = response.getBody()) {
             String responseBody = IO.InputStreamToString(inputStream);

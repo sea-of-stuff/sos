@@ -9,10 +9,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.Role;
-import uk.ac.standrews.cs.sos.network.HTTPMethod;
-import uk.ac.standrews.cs.sos.network.HTTPStatus;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -53,6 +50,10 @@ public class FetchRoles extends Task {
             URL url = SOSURL.USRO_GET_ROLES(node, userid);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
+            if (response instanceof ErrorResponseImpl) {
+                setState(TaskState.ERROR);
+                throw new IOException();
+            }
 
             if (response.getCode() == HTTPStatus.OK) {
 

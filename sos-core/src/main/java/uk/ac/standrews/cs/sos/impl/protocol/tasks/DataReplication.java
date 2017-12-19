@@ -213,6 +213,11 @@ public class DataReplication extends Task {
             request.setJSONBody(jsonBody);
 
             Response response = RequestsManager.getInstance().playSyncRequest(request);
+            if (response instanceof ErrorResponseImpl) {
+                setState(TaskState.ERROR);
+                throw new IOException();
+            }
+
             try(InputStream body = response.getBody()) {
 
                 if (response.getCode() == HTTPStatus.CREATED) {
