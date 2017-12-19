@@ -31,20 +31,21 @@ public class Experiment_PING extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_PING implements ExperimentUnit {
 
-        private PingNode pingNode;
+        private Node nodeToPing;
 
         @Override
         public void setup() {
 
             ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
-            Node nodeToPing = new BasicNode(slaveNode.getSsh().getHost(), 8080);
-            pingNode = new PingNode(nodeToPing, "HELLO WORLD");
+            nodeToPing = new BasicNode(slaveNode.getSsh().getHost(), 8080);
         }
 
         @Override
         public void run() {
 
             for(int i = 0; i < 10; i++) {
+                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD " + i);
+
                 long start = System.nanoTime();
                 TasksQueue.instance().performSyncTask(pingNode);
                 long duration = System.nanoTime() - start;
