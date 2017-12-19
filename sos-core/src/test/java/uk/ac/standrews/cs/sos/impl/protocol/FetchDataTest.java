@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchData;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
@@ -44,7 +43,7 @@ public class FetchDataTest extends ProtocolTest {
     private static final String TEST_DATA = "test-data";
 
     @BeforeMethod
-    public void setUp() throws ConfigurationException, CryptoException, GUIDGenerationException, IOException, SOSException {
+    public void setUp() throws ConfigurationException, GUIDGenerationException, IOException, SOSException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_data_test.json")).getSettingsObj();

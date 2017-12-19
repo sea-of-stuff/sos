@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.concurrent.*;
 
 /**
  * The DataReplication task, as the name suggests, replicates data to other nodes.
@@ -66,6 +67,7 @@ public class DataReplication extends Task {
     private int replicationFactor;
     private boolean delegateReplication;
     private boolean dataIsAlreadyProtected;
+    private boolean sequential;
 
     private StorageService storageService;
     private NodeDiscoveryService nodeDiscoveryService;
@@ -83,7 +85,7 @@ public class DataReplication extends Task {
      */
     public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
                            StorageService storageService, NodeDiscoveryService nodeDiscoveryService,
-                           boolean delegateReplication, boolean dataIsAlreadyProtected) throws SOSProtocolException {
+                           boolean delegateReplication, boolean dataIsAlreadyProtected, boolean sequential) throws SOSProtocolException {
         super();
 
         if (storageService == null || nodeDiscoveryService == null) {
@@ -100,10 +102,20 @@ public class DataReplication extends Task {
         this.replicationFactor = replicationFactor;
         this.delegateReplication = delegateReplication;
         this.dataIsAlreadyProtected = dataIsAlreadyProtected;
+        this.sequential = sequential;
     }
 
     @Override
     public void performAction() {
+
+        if (sequential) {
+            sequentialDataReplication();
+        } else {
+            parallelDataReplication();
+        }
+    }
+
+    private void sequentialDataReplication() {
 
         try (final InputStream inputStream = data.getInputStream();
              final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
@@ -141,6 +153,64 @@ public class DataReplication extends Task {
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
         }
 
+    }
+
+    private void parallelDataReplication() {
+
+        try (final InputStream inputStream = data.getInputStream();
+             final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
+
+            Executor executor = Executors.newFixedThreadPool(4);
+            CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
+
+            for (IGUID iguid : nodesCollection.nodesRefs()) {
+
+                completionService.submit(() -> {
+                    try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
+
+                        Node node = nodeDiscoveryService.getNode(iguid);
+                        if (!node.isStorage()) return false;
+
+                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storageService);
+
+                        if (transferWasSuccessful) return true;
+
+
+                    } catch (IOException | NodeNotFoundException e) {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + iguid);
+                    }
+
+                    return false;
+                });
+            }
+
+            int numberOfCalls = nodesCollection.size();
+            int received = 0;
+            boolean errors = false;
+            int successfulReplicas = 0;
+
+            while (received < numberOfCalls && !errors && successfulReplicas < replicationFactor) {
+                Future<Boolean> resultFuture = completionService.take(); //blocks if none available
+                try {
+                    Boolean result = resultFuture.get();
+                    received++;
+
+                    if (result) successfulReplicas++;
+                } catch (Exception e) {
+                    errors = true;
+                }
+            }
+
+            if (successfulReplicas >= replicationFactor) {
+                setState(TaskState.SUCCESSFUL);
+            } else {
+                setState(TaskState.UNSUCCESSFUL);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            setState(TaskState.ERROR);
+            SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating data");
+        }
     }
 
     @Override

@@ -128,7 +128,7 @@ public class SOSStorageService implements StorageService {
                 NodesCollection codomain = atomBuilder.getReplicationNodes();
                 DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
-                        atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected());
+                        atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), true); // TODO - set based on settings
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (IOException | SOSProtocolException e) {

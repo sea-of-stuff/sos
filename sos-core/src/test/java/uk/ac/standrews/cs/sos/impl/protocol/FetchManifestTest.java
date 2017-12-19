@@ -18,7 +18,6 @@ import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class FetchManifestTest extends ProtocolTest {
             "}";
 
     @BeforeMethod
-    public void setUp() throws ConfigurationException, GUIDGenerationException, CryptoException, SOSException, IOException {
+    public void setUp() throws ConfigurationException, GUIDGenerationException, SOSException, IOException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_manifest_test.json")).getSettingsObj();

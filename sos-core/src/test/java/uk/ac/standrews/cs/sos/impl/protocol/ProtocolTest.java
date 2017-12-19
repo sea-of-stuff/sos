@@ -29,13 +29,9 @@ import static org.mockito.Mockito.mock;
 public class ProtocolTest extends SetUpTest {
 
     protected PublicKey mockSignatureCertificate;
-//    @ObjectFactory
-//    public IObjectFactory getObjectFactory() {
-//        return new org.powermock.modules.testng.PowerMockObjectFactory();
-//    }
 
     @BeforeMethod
-    public void setUp() throws GUIDGenerationException, ConfigurationException, CryptoException, IOException, SOSException {
+    public void setUp() throws GUIDGenerationException, ConfigurationException, IOException, SOSException {
 
         try {
             mockSignatureCertificate = mock(PublicKey.class);

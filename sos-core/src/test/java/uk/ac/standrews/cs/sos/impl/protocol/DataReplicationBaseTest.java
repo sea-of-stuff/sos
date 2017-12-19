@@ -5,7 +5,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Delay;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.StringData;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -28,7 +27,6 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.services.StorageService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +49,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationTest extends ProtocolTest {
+public class DataReplicationBaseTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private ClientAndServer mockServerTwin;
@@ -85,7 +83,7 @@ public class DataReplicationTest extends ProtocolTest {
     private NodeDiscoveryService mockNodeDiscoveryService;
 
     @BeforeMethod
-    public void setUp() throws GUIDGenerationException, ConfigurationException, CryptoException, IOException, SOSException {
+    public void setUp() throws SOSException, GUIDGenerationException, ConfigurationException, IOException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/data_replication_test.json")).getSettingsObj();
@@ -183,8 +181,8 @@ public class DataReplicationTest extends ProtocolTest {
         Thread.sleep(2000);
     }
 
-    @Test
-    public void basicMockServerTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void basicMockServerTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -200,7 +198,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.SUCCESSFUL);
 
@@ -212,8 +210,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertEquals(locationBundle.getLocation().toString(), "sos://" + NODE_ID + "/" + testGUID.toMultiHash());
     }
 
-    @Test
-    public void replicateToNoStorageNodeTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void replicateToNoStorageNodeTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -229,7 +227,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
 
@@ -237,8 +235,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext()); // Data has not been replicated, because we the node is not a storage one
     }
 
-    @Test
-    public void replicateOnlyOnceTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void replicateOnlyOnceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -260,7 +258,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
 
@@ -274,8 +272,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext());
     }
 
-    @Test
-    public void replicateOnlyOnceSecondTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void replicateOnlyOnceSecondTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -303,7 +301,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
 
@@ -317,8 +315,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext());
     }
 
-    @Test
-    public void replicateToSameNodeTwiceTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void replicateToSameNodeTwiceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -341,7 +339,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
-                mockNodeDiscoveryService, false, false); // TODO - test for rep factor 1
+                mockNodeDiscoveryService, false, false, isSequential); // TODO - test for rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
         Iterator<LocationBundle> it = storageService.findLocations(testGUID).iterator();
@@ -354,8 +352,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext());
     }
 
-    @Test
-    public void replicateSameDataTwiceTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void replicateSameDataTwiceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -377,7 +375,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.SUCCESSFUL);
 
@@ -393,8 +391,8 @@ public class DataReplicationTest extends ProtocolTest {
         assertFalse(it.hasNext());
     }
 
-    @Test
-    public void basicTimeoutMockServerTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+    void basicTimeoutMockServerTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
@@ -410,7 +408,7 @@ public class DataReplicationTest extends ProtocolTest {
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA_TIMEOUT);
         Data data = new StringData(TEST_DATA_TIMEOUT);
         DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
-                mockNodeDiscoveryService, false, false);
+                mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         assertEquals(replicationTask.getState(), TaskState.ERROR);

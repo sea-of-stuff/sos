@@ -16,7 +16,6 @@ import uk.ac.standrews.cs.sos.impl.node.SOSNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +71,7 @@ public class FetchMetadataTest extends ProtocolTest {
                     "}";
 
     @BeforeMethod
-    public void setUp() throws GUIDGenerationException, ConfigurationException, SOSException, IOException, CryptoException {
+    public void setUp() throws GUIDGenerationException, ConfigurationException, SOSException, IOException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/fetch_metadata_test.json")).getSettingsObj();

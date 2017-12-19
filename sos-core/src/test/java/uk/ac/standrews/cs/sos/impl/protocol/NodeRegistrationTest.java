@@ -29,7 +29,6 @@ import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.HelperTest;
-import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +115,7 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "}";
 
     @BeforeMethod
-    public void setUp() throws ConfigurationException, IOException, SOSException, CryptoException, GUIDGenerationException {
+    public void setUp() throws ConfigurationException, IOException, SOSException, GUIDGenerationException {
         super.setUp();
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
