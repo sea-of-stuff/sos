@@ -196,10 +196,7 @@ public class ManifestReplication extends Task {
                 }
 
                 try {
-                    String contextFAT = ((Context) manifest).toFATString(predicate, policies);
-                    SOS_LOG.log(LEVEL.INFO, contextFAT);
-
-                    return contextFAT;
+                    return ((Context) manifest).toFATString(predicate, policies);
                 } catch (JsonProcessingException e) {
                     throw new ManifestNotFoundException("Unable to make FAT Context JSON");
                 }

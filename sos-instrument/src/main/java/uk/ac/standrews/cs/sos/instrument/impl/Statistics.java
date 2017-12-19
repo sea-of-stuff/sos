@@ -9,6 +9,7 @@ public class Statistics {
 
     private boolean experiment;
     private boolean predicate;
+    private boolean predicate_remote;
     private boolean policies;
     private boolean checkPolicies;
     private boolean io;
@@ -33,6 +34,8 @@ public class Statistics {
                 return isExperiment();
             case predicate:
                 return isPredicate();
+            case predicate_remote:
+                return isPredicate_remote();
             case policies:
                 return isPolicies();
             case checkPolicies:
@@ -102,5 +105,13 @@ public class Statistics {
 
     public void setGuid_manifest(boolean guid_manifest) {
         this.guid_manifest = guid_manifest;
+    }
+
+    public boolean isPredicate_remote() {
+        return predicate_remote;
+    }
+
+    public void setPredicate_remote(boolean predicate_remote) {
+        this.predicate_remote = predicate_remote;
     }
 }

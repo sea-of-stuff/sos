@@ -64,7 +64,8 @@
     "stats": {
       "experiment": false,
       "predicate": false,
-      "policies": true,
+      "predicate_remote": true,
+      "policies": false,
       "checkPolicies": false
     }
   }
