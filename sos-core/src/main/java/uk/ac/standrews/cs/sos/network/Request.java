@@ -14,6 +14,8 @@ import java.security.SecureRandom;
 public abstract class Request {
 
     public static final String SOS_NODE_CHALLENGE_HEADER = "sos-node-challenge";
+    private static final int NODE_CHALLENGE_LENGTH_BITS = 1024;
+    private static final int NODE_CHALLENGE_BASE = 32;
 
     protected HTTPMethod method;
     protected URL url;
@@ -34,7 +36,7 @@ public abstract class Request {
 
         this.signatureCertificate = signatureCertificate;
         SecureRandom random = new SecureRandom();
-        this.nodeChallenge = new BigInteger(1024, random).toString(32);
+        this.nodeChallenge = new BigInteger(NODE_CHALLENGE_LENGTH_BITS, random).toString(NODE_CHALLENGE_BASE);
     }
 
     public Request setJSONBody(String json_body) {

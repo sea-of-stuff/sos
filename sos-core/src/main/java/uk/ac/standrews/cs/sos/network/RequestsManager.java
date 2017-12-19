@@ -27,10 +27,6 @@ public class RequestsManager {
         return lazyInstance;
     }
 
-    public void playAsyncRequest(AsyncRequest request) throws IOException {
-        request.play();
-    }
-
     public Response playSyncRequest(SyncRequest request) throws IOException {
         return request.play();
     }

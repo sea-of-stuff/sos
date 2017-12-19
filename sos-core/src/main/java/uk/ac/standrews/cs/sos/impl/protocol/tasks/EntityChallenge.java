@@ -42,13 +42,15 @@ import static uk.ac.standrews.cs.sos.impl.protocol.json.TaskJSONFields.*;
  */
 public class EntityChallenge extends Task {
 
+    private static final int CHALLENGE_SUFFIX_LENGTH_BITS = 1024;
+    private static final int CHALLENGE_SUFFIX_BASE = 32;
 
     private final String challenge;
     private final IGUID entity;
     private final Node challengedNode;
     private final boolean isData;
+    private final IGUID challengedEntity;
 
-    private IGUID challengedEntity;
     private boolean challengePassed;
 
     public EntityChallenge(IGUID entity, Data challengedData, Node challengedNode, boolean isData) throws GUIDGenerationException, IOException {
@@ -62,12 +64,21 @@ public class EntityChallenge extends Task {
         // How to generate a random alpha-numeric string?
         // http://stackoverflow.com/a/41156/2467938
         SecureRandom random = new SecureRandom();
-        this.challenge = new BigInteger(130, random).toString(32);
+        this.challenge = new BigInteger(CHALLENGE_SUFFIX_LENGTH_BITS, random).toString(CHALLENGE_SUFFIX_BASE);
+
         List<InputStream> streams = new LinkedList<>();
-        streams.add(challengedData.getInputStream());
-        streams.add(new ByteArrayInputStream(challenge.getBytes()));
-        InputStream stream = new SequenceInputStream(Collections.enumeration(streams));
-        this.challengedEntity = GUIDFactory.generateGUID(GUID_ALGORITHM, stream);
+        try (InputStream data = challengedData.getInputStream();
+            InputStream challengeStream = new ByteArrayInputStream(challenge.getBytes())) {
+
+            streams.add(data);
+            streams.add(challengeStream);
+
+            try (InputStream stream = new SequenceInputStream(Collections.enumeration(streams))) {
+
+                this.challengedEntity = GUIDFactory.generateGUID(GUID_ALGORITHM, stream);
+            }
+        }
+
     }
 
     @Override

@@ -64,7 +64,6 @@ public class SOSStorageService implements StorageService {
 
     // Settings for this service
     private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
-
     private IGUID localNodeGUID;
 
     // Other node services
@@ -125,10 +124,11 @@ public class SOSStorageService implements StorageService {
 
             try (Data data = atomBuilder.getData()){
 
-                // TODO - re-order params
-                DataReplication dataReplication = new DataReplication(atom.guid(), data, atomBuilder.getReplicationNodes(),
-                        replicationFactor, this, nodeDiscoveryService, atomBuilder.isDelegateReplication(),
-                        atomBuilder.isAlreadyProtected());
+                IGUID dataGUID = atom.guid();
+                NodesCollection codomain = atomBuilder.getReplicationNodes();
+                DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
+                        this, nodeDiscoveryService,
+                        atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected());
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (IOException | SOSProtocolException e) {
@@ -141,7 +141,6 @@ public class SOSStorageService implements StorageService {
 
     @Override
     public void deleteAtom(IGUID guid) throws AtomNotFoundException {
-
 
         try {
             IDirectory dataDirectory = storage.getDataDirectory();
