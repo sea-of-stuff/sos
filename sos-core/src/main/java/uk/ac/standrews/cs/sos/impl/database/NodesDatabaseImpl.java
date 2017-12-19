@@ -37,14 +37,15 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             "`DB_is_mms`        BOOLEAN NOT NULL , " +
             "`DB_is_cms`        BOOLEAN NOT NULL , " +
             "`DB_is_rms`        BOOLEAN NOT NULL , " +
+            "`DB_is_experiment` BOOLEAN NOT NULL , " +
             "PRIMARY KEY (`DB_nodeid`) )";
 
     // http://stackoverflow.com/questions/418898/sqlite-upsert-not-insert-or-replace/4330694#4330694
     private static final String SQL_ADD_NODE = "INSERT OR REPLACE INTO nodes " +
-            "(DB_nodeid, cert, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "(DB_nodeid, cert, DB_hostname, DB_port, DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms, DB_is_experiment) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_GET_NODES = "SELECT DB_nodeid, cert, DB_hostname, DB_port, " +
-            "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms FROM nodes";
+            "DB_is_agent, DB_is_storage, DB_is_dds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms, DB_is_experiment FROM nodes";
 
 
     public NodesDatabaseImpl(String path) throws DatabaseException {
@@ -79,6 +80,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             preparedStatement.setBoolean(9, node.isMMS());
             preparedStatement.setBoolean(10, node.isCMS());
             preparedStatement.setBoolean(11, node.isRMS());
+            preparedStatement.setBoolean(12, node.isExperiment());
 
             preparedStatement.execute();
 
@@ -107,8 +109,9 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
                 boolean isMMS = resultSet.getBoolean(9);
                 boolean isCMS = resultSet.getBoolean(10);
                 boolean isRMS = resultSet.getBoolean(11);
+                boolean isExperiment = resultSet.getBoolean(12);
 
-                SOSNode node = new SOSNode(guid, cert, hostname, port, isAgent, isStorage, isDDS,isNDS, isMMS, isCMS, isRMS);
+                SOSNode node = new SOSNode(guid, cert, hostname, port, isAgent, isStorage, isDDS,isNDS, isMMS, isCMS, isRMS, isExperiment);
 
                 retval.add(node);
             }

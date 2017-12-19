@@ -61,6 +61,7 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES_NDS = "nds";
     public static final String KEY_NODE_SERVICES_RMS = "rms";
     public static final String KEY_NODE_SERVICES_MMS = "mms";
+    public static final String KEY_NODE_SERVICES_EXPERIMENT = "experiment";
     public static final String KEY_NODE_SERVICE_IS_EXPOSED = "exposed";
 
     // NodesCollection

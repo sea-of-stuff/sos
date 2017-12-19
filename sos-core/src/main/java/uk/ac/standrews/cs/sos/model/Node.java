@@ -83,4 +83,6 @@ public interface Node extends Manifest {
      */
     boolean isRMS();
 
+    boolean isExperiment();
+
 }

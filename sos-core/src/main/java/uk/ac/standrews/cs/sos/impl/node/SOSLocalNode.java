@@ -90,7 +90,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private MetadataService metadataService;
     private ContextService contextService;
     private UsersRolesService usersRolesService;
-    private boolean isExperimentNode;
 
     /**
      * Construct the Node instance for this machine
@@ -138,7 +137,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         loadBootstrapNodes();
         registerNode();
         initServices();
-        isExperimentNode = settings.getServices().getExperiment().isExposed();
         initNodeMaintainer();
 
         uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO, "Node started");
@@ -176,10 +174,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     @Override
     public UsersRolesService getUSRO() {
         return usersRolesService;
-    }
-
-    public boolean isExperimentNode() {
-        return isExperimentNode;
     }
 
     // THIS METHOD IS GOING TO BE USED BY EXPERIMENTS ONLY.

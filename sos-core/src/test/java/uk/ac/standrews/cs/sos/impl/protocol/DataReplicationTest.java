@@ -188,7 +188,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -217,7 +217,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false, false, false);
+                false, false, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -242,12 +242,12 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false, false, false); // Won't replicate to non-storage
+                false, false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -279,17 +279,17 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false, false, false); // Won't replicate to non-storage
+                false, false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                true, false, true, true, true, false, false); // Won't replicate to non-storage
+                true, false, true, true, true, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(anotherNode.guid())).thenReturn(anotherNode);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -322,13 +322,13 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
         Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.guid())).thenReturn(twinStorageNode);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -359,12 +359,12 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_TWIN_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.guid())).thenReturn(twinStorageNode);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -398,7 +398,7 @@ public class DataReplicationTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
         Set<IGUID> nodes = new HashSet<>();

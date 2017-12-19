@@ -81,7 +81,7 @@ public class FetchDataTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
@@ -100,7 +100,7 @@ public class FetchDataTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, false, false, false, false);
+                false, false, false, false, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
@@ -112,7 +112,7 @@ public class FetchDataTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
 
         FetchData fetchData = new FetchData(node, null);
     }

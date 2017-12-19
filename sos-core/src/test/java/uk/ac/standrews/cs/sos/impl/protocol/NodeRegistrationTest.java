@@ -78,6 +78,9 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "        }," +
                     "        \"mms\": {" +
                     "            \"exposed\": true" +
+                    "        }," +
+                    "        \"experiment\": {" +
+                    "            \"exposed\": true" +
                     "        }" +
                     "    }" +
                     "}";
@@ -104,6 +107,9 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "            \"exposed\": true" +
                     "        }," +
                     "        \"mms\": {" +
+                    "            \"exposed\": true" +
+                    "        }," +
+                    "        \"experiment\": {" +
                     "            \"exposed\": true" +
                     "        }" +
                     "    }" +
@@ -199,7 +205,7 @@ public class NodeRegistrationTest extends ProtocolTest {
     @Test
     public void registerToNDSTest() throws NodeRegistrationException {
 
-        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8080, true, true, false, false, false, false, false);
+        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8080, true, true, false, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
@@ -212,13 +218,13 @@ public class NodeRegistrationTest extends ProtocolTest {
     @Test
     public void registerToNDSFailsTest() throws NodeRegistrationException {
 
-        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8081, true, true, false, false, false, false, false);
+        Node nodeMock = new SOSNode(localNodeGUID, mockSignatureCertificate, "localhost", 8081, true, true, false, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
 
     private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate, "localhost", 8090, true, true, true, true, true, true, true);
+        return new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate, "localhost", 8090, true, true, true, true, true, true, true, true);
     }
 }

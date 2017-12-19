@@ -30,7 +30,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Node node = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         nds.registerNode(node, true);
 
         Set<IGUID> nodes = new HashSet<>();
@@ -69,7 +69,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         Node node = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, true, false, false, false, false, false);
+                false, true, false, false, false, false, false, false);
         nds.registerNode(node, true);
 
         Set<IGUID> nodes = new HashSet<>();

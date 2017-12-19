@@ -295,6 +295,12 @@ public class SettingsConfiguration {
                 return false;
             }
 
+            @JsonIgnore
+            @Override
+            public boolean isExperiment() {
+                return false;
+            }
+
             @Override
             public InputStream contentToHash() {
                 throw new NotSupportedException();

@@ -107,7 +107,7 @@ public class FetchMetadataTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, false, true, true, false, false);
+                false, false, false, true, true, false, false, false);
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_METADATA);
 

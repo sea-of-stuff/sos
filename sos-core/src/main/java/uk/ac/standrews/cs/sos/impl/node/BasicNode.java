@@ -82,4 +82,9 @@ public class BasicNode extends BasicManifest implements Node {
     public boolean isRMS() {
         return false;
     }
+
+    @Override
+    public boolean isExperiment() {
+        return true;
+    }
 }

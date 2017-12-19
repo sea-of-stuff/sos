@@ -130,7 +130,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
                 TasksQueue.instance().performSyncTask(triggerPredicate);
 
-                System.out.println("Finished to run pred for node " + nodeRef.toMultiHash());
+                System.out.println("Finished to run pred for node " + nodeRef.toMultiHash() + " State: " + triggerPredicate.getState().name());
                 return 0;
             };
         }

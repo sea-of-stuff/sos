@@ -39,9 +39,10 @@ public class SOSNode extends BasicManifest implements Node {
     private boolean DB_is_mms;
     private boolean DB_is_cms;
     private boolean DB_is_rms;
+    private boolean DB_is_experiment;
 
     public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
-                   boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS) {
+                   boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS, boolean isExperiment) {
         super(ManifestType.NODE);
 
         this.nodeGUID = guid;
@@ -58,6 +59,7 @@ public class SOSNode extends BasicManifest implements Node {
         this.DB_is_mms = isMMS;
         this.DB_is_cms = isCMS;
         this.DB_is_rms = isRMS;
+        this.DB_is_experiment = isExperiment;
     }
 
     protected SOSNode(SettingsConfiguration.Settings settings) {
@@ -79,6 +81,7 @@ public class SOSNode extends BasicManifest implements Node {
         this.DB_is_mms = settings.getServices().getMms().isExposed();
         this.DB_is_cms = settings.getServices().getCms().isExposed();
         this.DB_is_rms = settings.getServices().getRms().isExposed();
+        this.DB_is_experiment = settings.getServices().getExperiment().isExposed();
     }
 
 
@@ -86,7 +89,7 @@ public class SOSNode extends BasicManifest implements Node {
     public SOSNode(Node node) {
 
         this(node.guid(), node.getSignatureCertificate(), node.getIP(), node.getHostAddress().getPort(),
-                node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS());
+                node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS(), node.isExperiment());
     }
 
     @Override
@@ -160,6 +163,11 @@ public class SOSNode extends BasicManifest implements Node {
     @Override
     public boolean isRMS() {
         return DB_is_rms;
+    }
+
+    @Override
+    public boolean isExperiment() {
+        return DB_is_experiment;
     }
 
     @Override

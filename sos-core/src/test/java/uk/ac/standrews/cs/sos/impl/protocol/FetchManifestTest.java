@@ -85,7 +85,7 @@ public class FetchManifestTest extends ProtocolTest {
 
         Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
                 "localhost", MOCK_SERVER_PORT,
-                false, false, true, false, false, false, false);
+                false, false, true, false, false, false, false, false);
 
         IGUID testGUID = GUIDFactory.recreateGUID(GUID_VERSION);
 

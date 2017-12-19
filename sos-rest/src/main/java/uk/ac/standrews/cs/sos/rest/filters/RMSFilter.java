@@ -9,7 +9,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -19,7 +18,7 @@ import java.io.IOException;
 public class RMSFilter implements ContainerRequestFilter {
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) {
         if (!RESTConfig.sos.isRMS()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not an RMS node");
             throw new WebApplicationException(response);
