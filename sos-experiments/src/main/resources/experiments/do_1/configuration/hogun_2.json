@@ -45,6 +45,9 @@
       },
       "mms": {
         "exposed": false
+      },
+      "experiment": {
+        "exposed": true
       }
     },
     "database": {
