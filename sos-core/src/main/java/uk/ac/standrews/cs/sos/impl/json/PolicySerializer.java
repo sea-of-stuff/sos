@@ -27,8 +27,10 @@ public class PolicySerializer extends JsonSerializer<Policy> {
         jsonGenerator.writeStringField(JSONConstants.KEY_POLICY_APPLY, policy.apply().asText());
         jsonGenerator.writeStringField(JSONConstants.KEY_POLICY_SATISFIED, policy.satisfied().asText());
 
-        jsonGenerator.writeFieldName(JSONConstants.KEY_POLICY_FIELDS);
-        jsonGenerator.writeTree(policy.fields());
+        if (policy.fields().size() > 0) {
+            jsonGenerator.writeFieldName(JSONConstants.KEY_POLICY_FIELDS);
+            jsonGenerator.writeTree(policy.fields());
+        }
 
         jsonGenerator.writeEndObject();
     }

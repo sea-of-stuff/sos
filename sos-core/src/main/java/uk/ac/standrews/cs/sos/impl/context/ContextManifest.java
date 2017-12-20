@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -14,6 +13,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.LinkedHashSet;
@@ -279,7 +279,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     }
 
     @Override
-    public String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
+    public String toFATString(Predicate predicate, Set<Policy> policies) throws IOException {
 
         return ContextBuilder.toFATString(this, predicate, policies);
     }

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.protocol;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -25,6 +24,7 @@ import uk.ac.standrews.cs.sos.utils.FileUtils;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -344,7 +344,7 @@ public class ManifestReplicationTest {
     }
 
     @Test
-    public void basicFATContextManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, JsonProcessingException {
+    public void basicFATContextManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, IOException {
 
         Context mockManifest = mock(Context.class);
         when(mockManifest.toString()).thenReturn(TEST_THIN_CONTEXT_MANIFEST);

@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.context;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,6 +12,8 @@ import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -140,12 +141,12 @@ public class ContextBuilder {
      *
      * This method works similarly to the ContextSerializer, but this one produces a FAT JSON.
      *
-     * @param context
-     * @param predicate
-     * @param policies
-     * @return
+     * @param context object
+     * @param predicate of the context
+     * @param policies of the context
+     * @return FAT Context format
      */
-    public static String toFATString(Context context, Predicate predicate, Set<Policy> policies) throws JsonProcessingException {
+    public static String toFATString(Context context, Predicate predicate, Set<Policy> policies) throws IOException {
 
         ObjectNode objectNode = JSONHelper.jsonObjMapper().createObjectNode();
 
@@ -155,10 +156,38 @@ public class ContextBuilder {
         contextNode.putPOJO(KEY_CONTEXT_CODOMAIN, context.codomain());
         contextNode.put(KEY_CONTEXT_MAX_AGE, context.maxAge());
 
-        objectNode.putPOJO(KEY_CONTEXT_PREDICATE, predicate);
-        objectNode.putPOJO(KEY_CONTEXT_POLICIES, policies);
+        ObjectNode objPredicate = removeField(predicate, KEY_GUID);
+        objectNode.set(KEY_CONTEXT_PREDICATE, objPredicate);
+
+        ArrayNode objPolicies = removeFieldInArray(policies, KEY_GUID);
+        objectNode.set(KEY_CONTEXT_POLICIES, objPolicies);
 
         return JSONHelper.jsonObjMapper().writeValueAsString(objectNode);
+    }
+
+    private static ObjectNode removeField(Object object, String field) throws IOException {
+
+        ObjectNode jsonNode = (ObjectNode) JSONHelper.jsonObjMapper().readTree(
+                JSONHelper.jsonObjMapper().writeValueAsString(object)
+        );
+        jsonNode.remove(field);
+
+        return jsonNode;
+    }
+
+    private static ArrayNode removeFieldInArray(Set<?> objects, String field) throws IOException {
+
+        ArrayNode arrayNode = (ArrayNode) JSONHelper.jsonObjMapper().readTree(
+                JSONHelper.jsonObjMapper().writeValueAsString(objects)
+        );
+
+        Iterator<JsonNode> it = arrayNode.elements();
+        while(it.hasNext()) {
+
+            ((ObjectNode) it.next()).remove(field);
+        }
+
+        return arrayNode;
     }
 
 }

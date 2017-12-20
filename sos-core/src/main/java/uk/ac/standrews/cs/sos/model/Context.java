@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.sos.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.json.ContextDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.ContextSerializer;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Set;
 
@@ -113,8 +113,8 @@ public interface Context extends Versionable, SignedManifest {
      * @param predicate needed to create the complete context representation
      * @param policies needed to create the complete context representation
      * @return the FAT String representation of this context
-     * @throws JsonProcessingException if unable to process this context
+     * @throws IOException if unable to process this context
      */
-    String toFATString(Predicate predicate, Set<Policy> policies) throws JsonProcessingException;
+    String toFATString(Predicate predicate, Set<Policy> policies) throws IOException;
 
 }

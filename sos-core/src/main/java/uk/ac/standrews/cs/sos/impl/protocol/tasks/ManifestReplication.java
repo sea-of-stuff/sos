@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
@@ -128,7 +127,7 @@ public class ManifestReplication extends Task {
             return transferWasSuccessful;
 
         } catch (IOException | SOSURLException | ManifestNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "transferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.guid().toMultiHash());
+            SOS_LOG.log(LEVEL.ERROR, "TransferManifestRequest failed for manifest " + manifest.guid() + " and node " + node.guid().toMultiHash());
         }
 
         return false;
@@ -196,8 +195,10 @@ public class ManifestReplication extends Task {
                 }
 
                 try {
-                    return ((Context) manifest).toFATString(predicate, policies);
-                } catch (JsonProcessingException e) {
+                    String c = ((Context) manifest).toFATString(predicate, policies);
+                    SOS_LOG.log(LEVEL.DEBUG, c); // REMOVEME
+                    return c;
+                } catch (IOException e) {
                     throw new ManifestNotFoundException("Unable to make FAT Context JSON");
                 }
 
