@@ -126,9 +126,10 @@ public class SOSStorageService implements StorageService {
 
                 IGUID dataGUID = atom.guid();
                 NodesCollection codomain = atomBuilder.getReplicationNodes();
+                boolean sequentialReplication = storageSettings.isSequentialReplication();
                 DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
-                        atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), true); // TODO - set based on settings
+                        atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), sequentialReplication);
                 TasksQueue.instance().performAsyncTask(dataReplication);
 
             } catch (IOException | SOSProtocolException e) {

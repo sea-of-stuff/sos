@@ -55,7 +55,6 @@ import java.util.concurrent.*;
  *
  * If the data is successfully replicated to a Storage node:
  * - TODO - write down how the internal data structures change
- * - TODO - parallel data replication
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -71,6 +70,8 @@ public class DataReplication extends Task {
 
     private StorageService storageService;
     private NodeDiscoveryService nodeDiscoveryService;
+
+    private static final int REPLICA_THREADS = 4;
 
     /**
      * Replicates the data at least n times within the specified nodes collection.
@@ -125,28 +126,13 @@ public class DataReplication extends Task {
             while (nodeRefs.hasNext() && successfulReplicas < replicationFactor) {
 
                 IGUID ref = nodeRefs.next();
-                try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-
-                    Node node = nodeDiscoveryService.getNode(ref);
-                    if (!node.isStorage()) continue;
-
-                    boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storageService);
-
-                    if (transferWasSuccessful) {
-                        successfulReplicas++;
-                    }
-
-                } catch (IOException | NodeNotFoundException e) {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + ref);
+                boolean successful = replicate(baos, ref);
+                if (successful) {
+                    successfulReplicas++;
                 }
-
             }
 
-            if (successfulReplicas >= replicationFactor) {
-                setState(TaskState.SUCCESSFUL);
-            } else {
-                setState(TaskState.UNSUCCESSFUL);
-            }
+            checkReplicaConditionAndSetTaskState(successfulReplicas);
 
         } catch (IOException e) {
             setState(TaskState.ERROR);
@@ -160,36 +146,19 @@ public class DataReplication extends Task {
         try (final InputStream inputStream = data.getInputStream();
              final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
 
-            Executor executor = Executors.newFixedThreadPool(4);
+            Executor executor = Executors.newFixedThreadPool(REPLICA_THREADS);
             CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
 
             for (IGUID iguid : nodesCollection.nodesRefs()) {
-
-                completionService.submit(() -> {
-                    try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
-
-                        Node node = nodeDiscoveryService.getNode(iguid);
-                        if (!node.isStorage()) return false;
-
-                        boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storageService);
-
-                        if (transferWasSuccessful) return true;
-
-
-                    } catch (IOException | NodeNotFoundException e) {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + iguid);
-                    }
-
-                    return false;
-                });
+                completionService.submit(() -> replicate(baos, iguid));
             }
 
             int numberOfCalls = nodesCollection.size();
             int received = 0;
             boolean errors = false;
             int successfulReplicas = 0;
-
             while (received < numberOfCalls && !errors && successfulReplicas < replicationFactor) {
+
                 Future<Boolean> resultFuture = completionService.take(); //blocks if none available
                 try {
                     Boolean result = resultFuture.get();
@@ -201,11 +170,7 @@ public class DataReplication extends Task {
                 }
             }
 
-            if (successfulReplicas >= replicationFactor) {
-                setState(TaskState.SUCCESSFUL);
-            } else {
-                setState(TaskState.UNSUCCESSFUL);
-            }
+            checkReplicaConditionAndSetTaskState(successfulReplicas);
 
         } catch (IOException | InterruptedException e) {
             setState(TaskState.ERROR);
@@ -221,6 +186,33 @@ public class DataReplication extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
         return null;
+    }
+
+    private boolean replicate(ByteArrayOutputStream baos, IGUID iguid) {
+
+        try (InputStream dataClone = new ByteArrayInputStream(baos.toByteArray())) {
+
+            Node node = nodeDiscoveryService.getNode(iguid);
+            if (!node.isStorage()) return false;
+
+            boolean transferWasSuccessful = transferDataAndUpdateNodeState(dataClone, node, storageService);
+
+            if (transferWasSuccessful) return true;
+
+        } catch (IOException | NodeNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + iguid);
+        }
+
+        return false;
+    }
+
+    private void checkReplicaConditionAndSetTaskState(int successfulReplicas) {
+
+        if (successfulReplicas >= replicationFactor) {
+            setState(TaskState.SUCCESSFUL);
+        } else {
+            setState(TaskState.UNSUCCESSFUL);
+        }
     }
 
     /**

@@ -397,6 +397,8 @@ public class SettingsConfiguration {
                 @JsonView(Views.Public.class)
                 private int maxReplication = 1; // A value of 1 results in no replication, since this storage service itself will count as replication-1
 
+                private boolean sequentialReplication = false;
+
                 public StorageSettings() {}
 
                 public boolean isCanPersist() {
@@ -409,6 +411,14 @@ public class SettingsConfiguration {
 
                 public void setMaxReplication(int maxReplication) {
                     this.maxReplication = maxReplication;
+                }
+
+                public boolean isSequentialReplication() {
+                    return sequentialReplication;
+                }
+
+                public void setSequentialReplication(boolean sequentialReplication) {
+                    this.sequentialReplication = sequentialReplication;
                 }
             }
 
