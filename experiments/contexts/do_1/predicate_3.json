@@ -1,0 +1,21 @@
+{
+  "context": {
+    "name": "predicate_3",
+    "domain": {
+        "type": "SPECIFIED",
+        "nodes": ["SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
+                  "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4"]
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;",
+    "dependencies": []
+  },
+  "policies": []
+}

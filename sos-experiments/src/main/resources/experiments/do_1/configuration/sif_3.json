@@ -1,13 +1,12 @@
 {
   "settings": {
-    "guid": "SHA256_16_b7a3dc46602f52a8e7d79d8f3174afbcbb276676f98c7885746de539f7f9f368",
+    "guid": "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
     "services": {
       "storage": {
-        "exposed": true,
-        "maxReplication": 3
+        "exposed": true
       },
       "cms": {
-        "exposed": false,
+        "exposed": true,
         "loadedPath": "sos/java/contexts/",
         "automatic": false,
         "predicateOnNewContext" : false,
@@ -34,7 +33,7 @@
         }
       },
       "dds": {
-        "exposed": false
+        "exposed": true
       },
       "rms": {
         "exposed": false
@@ -42,10 +41,13 @@
       "nds": {
         "exposed": false,
         "startupRegistration" : false,
-        "bootstrap": true
+        "bootstrap": false
       },
       "mms": {
         "exposed": false
+      },
+      "experiment": {
+        "exposed": true
       }
     },
     "database": {
@@ -85,19 +87,6 @@
         }
       }
     },
-    "bootstrapNodes": [
-      {
-        "GUID" : "SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2",
-        "hostname" : "192.168.2.2",
-        "port" : 8080,
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALqaEl0k56tgcJKx0f4m01OS+IGFueQjeDt0mC/yUB926G59XEUNuwcKlplOboRaAYcs+MFFXDksGeKFfVkFxN8CAwEAAQ=="
-      },
-      {
-        "GUID" : "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
-        "hostname" : "192.168.1.3",
-        "port" : 8080,
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK5NnFQXC6gV6PgMHl2qSZ6i2gyuepGsj31DkVzdXVnfcIi2TIKkRLXEvX2PyvlByxOl6V9+LGy7O6DLDxHtbqUCAwEAAQ=="
-      }
-    ]
+    "bootstrapNodes": []
   }
 }
