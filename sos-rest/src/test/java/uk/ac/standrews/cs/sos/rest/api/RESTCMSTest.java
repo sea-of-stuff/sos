@@ -59,6 +59,39 @@ public class RESTCMSTest extends CommonRESTTest {
     }
 
     @Test
+    public void addFATContextTestV2() throws GUIDGenerationException {
+
+        String FATContext = "{\n" +
+                "  \"context\" : {\n" +
+                "    \"name\" : \"predicate_2\",\n" +
+                "    \"domain\" : {\n" +
+                "      \"type\" : \"SPECIFIED\",\n" +
+                "      \"nodes\" : [ \"SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef\" ]\n" +
+                "    },\n" +
+                "    \"codomain\" : {\n" +
+                "      \"type\" : \"LOCAL\",\n" +
+                "      \"nodes\" : [ ]\n" +
+                "    },\n" +
+                "    \"max_age\" : 0\n" +
+                "  },\n" +
+                "  \"predicate\" : {\n" +
+                "    \"type\" : \"Predicate\",\n" +
+                "    \"dependencies\" : [ ],\n" +
+                "    \"predicate\" : \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\"\n" +
+                "  },\n" +
+                "  \"policies\" : [ ]\n" +
+                "}";
+
+        Response response = target("/sos/cms/context")
+                .request()
+                .post(Entity.json(FATContext));
+
+        assertEquals(response.getStatus(), HTTPStatus.CREATED);
+        String guidS = response.readEntity(String.class);
+        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_bec9495e774f4bb23c5ada78a3c79409f5adf48d9a7d37ad858066ea9c0b58e7"));
+    }
+
+    @Test
     public void getContextTest() throws GUIDGenerationException, IOException {
 
         String FATContext = "{\n" +

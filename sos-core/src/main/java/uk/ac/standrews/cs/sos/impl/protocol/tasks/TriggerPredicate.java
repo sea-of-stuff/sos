@@ -40,7 +40,12 @@ public class TriggerPredicate extends Task {
             }
 
             try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
-            setState(TaskState.SUCCESSFUL);
+
+            if (response.getCode() == HTTPStatus.OK) {
+                setState(TaskState.SUCCESSFUL);
+            } else {
+                setState(TaskState.UNSUCCESSFUL);
+            }
 
         } catch (IOException | SOSURLException e) {
             setState(TaskState.ERROR);

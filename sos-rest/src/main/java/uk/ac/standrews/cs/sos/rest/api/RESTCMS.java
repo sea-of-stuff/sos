@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.rest.api;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
+import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_GUID;
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 
 /**
@@ -64,9 +66,11 @@ public class RESTCMS {
             // calculate invariant of context without adding it to node
             // if invariant is already in node, then do not add it.
 
+            ObjectNode objectNode = JSONHelper.jsonObjMapper().createObjectNode();
             IGUID guid = contextService.addContext(context);
+            objectNode.put(KEY_GUID, guid.toMultiHash());
 
-            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, guid.toMultiHash());
+            return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, objectNode.toString());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }

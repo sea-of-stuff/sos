@@ -48,8 +48,8 @@ public class RESTExperiment {
             contextService.runContextPredicateNow(contextGUID); // Returns when predicate is run for all assets.
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
-        } catch (ContextNotFoundException e) {
 
+        } catch (ContextNotFoundException e) {
             return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
