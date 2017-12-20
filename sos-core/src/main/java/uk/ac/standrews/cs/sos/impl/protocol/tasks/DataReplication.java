@@ -149,8 +149,8 @@ public class DataReplication extends Task {
             Executor executor = Executors.newFixedThreadPool(REPLICA_THREADS);
             CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
 
-            for (IGUID iguid : nodesCollection.nodesRefs()) {
-                completionService.submit(() -> replicate(baos, iguid));
+            for (IGUID guid : nodesCollection.nodesRefs()) {
+                completionService.submit(() -> replicate(baos, guid));
             }
 
             int numberOfCalls = nodesCollection.size();

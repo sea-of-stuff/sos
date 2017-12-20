@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.*;
 
 /**
  * The ManifestReplication task, as the name suggests, replicates a manifest to other nodes.
@@ -38,11 +39,15 @@ public class ManifestReplication extends Task {
     private Manifest manifest;
     private NodesCollection nodesCollection;
     private int replicationFactor;
+    private boolean sequential;
+
     private NodeDiscoveryService nodeDiscoveryService;
     private ManifestsDataService manifestsDataService;
 
+    private static final int REPLICA_THREADS = 4;
+
     // TODO - replication by delegation. See DataReplication!
-    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor,
+    public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, boolean sequential,
                                NodeDiscoveryService nodeDiscoveryService, ManifestsDataService manifestsDataService) throws SOSProtocolException {
         super();
 
@@ -51,16 +56,26 @@ public class ManifestReplication extends Task {
             throw new SOSProtocolException("At least one of the SOS services is null. Manifest replication process is aborted.");
         }
 
-        this.nodeDiscoveryService = nodeDiscoveryService;
-        this.manifestsDataService = manifestsDataService;
-
         this.manifest = manifest;
         this.nodesCollection = nodesCollection;
         this.replicationFactor = replicationFactor;
+        this.sequential = sequential;
+
+        this.nodeDiscoveryService = nodeDiscoveryService;
+        this.manifestsDataService = manifestsDataService;
     }
 
     @Override
     public void performAction() {
+
+        if (sequential) {
+            sequentialManifestReplication(manifest);
+        } else {
+            parallelManifestReplication(manifest);
+        }
+    }
+
+    private void sequentialManifestReplication(final Manifest manifest) {
 
         int successfulReplicas = 0;
         Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();
@@ -68,15 +83,13 @@ public class ManifestReplication extends Task {
 
             IGUID ref = nodeRefs.next();
             try {
-                Node node = nodeDiscoveryService.getNode(ref);
-                boolean transferWasSuccessful = transferManifestRequest(manifest, node);
-
-                if (transferWasSuccessful) {
-                    SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + node.guid().toMultiHash());
+                boolean successful = replicate(manifest, ref);
+                if (successful) {
+                    SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + ref.toMultiHash());
                     manifestsDataService.addManifestNodeMapping(manifest.guid(), ref);
                     successfulReplicas++;
                 } else {
-                    SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + node.guid().toMultiHash());
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + ref.toMultiHash());
                 }
 
             } catch (NodeNotFoundException e) {
@@ -85,12 +98,69 @@ public class ManifestReplication extends Task {
 
         }
 
+        checkReplicaConditionAndSetTaskState(successfulReplicas);
+    }
+
+    private void parallelManifestReplication(final Manifest manifest) {
+
+        try {
+            Executor executor = Executors.newFixedThreadPool(REPLICA_THREADS);
+            CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
+
+            for (IGUID guid : nodesCollection.nodesRefs()) {
+                completionService.submit(() -> {
+                    boolean successful = replicate(manifest, guid);
+                    if (successful) {
+                        SOS_LOG.log(LEVEL.INFO, "Manifest with GUID " + manifest.guid() + " replicated successfully to node: " + guid.toMultiHash());
+                        manifestsDataService.addManifestNodeMapping(manifest.guid(), guid);
+                    } else {
+                        SOS_LOG.log(LEVEL.ERROR, "Unable to replicate Manifest with GUID " + manifest.guid() + " to node: " + guid.toMultiHash());
+                    }
+
+                    return successful;
+                });
+            }
+
+            int numberOfCalls = nodesCollection.size();
+            int received = 0;
+            boolean errors = false;
+            int successfulReplicas = 0;
+            while (received < numberOfCalls && !errors && successfulReplicas < replicationFactor) {
+
+                Future<Boolean> resultFuture = completionService.take(); //blocks if none available
+                try {
+                    Boolean result = resultFuture.get();
+                    received++;
+
+                    if (result) successfulReplicas++;
+                } catch (Exception e) {
+                    errors = true;
+                }
+            }
+
+            checkReplicaConditionAndSetTaskState(successfulReplicas);
+        } catch (InterruptedException e) {
+            setState(TaskState.ERROR);
+            SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating manifest");
+        }
+
+    }
+
+    private boolean replicate(Manifest manifest, IGUID iguid) throws NodeNotFoundException {
+
+        Node node = nodeDiscoveryService.getNode(iguid);
+        return transferManifestRequest(manifest, node);
+    }
+
+    private void checkReplicaConditionAndSetTaskState(int successfulReplicas) {
+
         if (successfulReplicas >= replicationFactor) {
             setState(TaskState.SUCCESSFUL);
         } else {
             setState(TaskState.UNSUCCESSFUL);
         }
     }
+
 
     @Override
     public String serialize() {

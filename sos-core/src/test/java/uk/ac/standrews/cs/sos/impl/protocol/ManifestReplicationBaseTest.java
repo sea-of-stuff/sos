@@ -3,13 +3,13 @@ package uk.ac.standrews.cs.sos.impl.protocol;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
@@ -40,7 +40,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestReplicationTest {
+public class ManifestReplicationBaseTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10002;
@@ -157,7 +157,7 @@ public class ManifestReplicationTest {
     private static final String TEST_BAD_MANIFEST = "BAD Manifest";
 
     @BeforeMethod
-    public void setUp() throws SOSProtocolException, ConfigurationException {
+    public void setUp() throws SOSException, ConfigurationException {
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -247,8 +247,7 @@ public class ManifestReplicationTest {
         }
     }
 
-    @Test
-    public void basicVersionManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+    public void basicVersionManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -272,15 +271,14 @@ public class ManifestReplicationTest {
 
         ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).getHostAddress();
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    @Test
-    public void basicCompoundManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+    public void basicCompoundManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_COMPOUND_MANIFEST);
@@ -304,15 +302,14 @@ public class ManifestReplicationTest {
 
         ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).getHostAddress();
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    @Test
-    public void basicAtomManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
+    public void basicAtomManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_ATOM_MANIFEST);
@@ -336,15 +333,14 @@ public class ManifestReplicationTest {
 
         ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).getHostAddress();
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    @Test
-    public void basicFATContextManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, IOException {
+    public void basicFATContextManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, IOException {
 
         Context mockManifest = mock(Context.class);
         when(mockManifest.toString()).thenReturn(TEST_THIN_CONTEXT_MANIFEST);
@@ -381,7 +377,7 @@ public class ManifestReplicationTest {
                 GUIDFactory.recreateGUID("SHA256_16_0c094bb01ae9803b22b2c9dd4b350b3456c168eca5173002cdd01c7cd1f09905")))
                 .thenReturn(FileUtils.ManifestFromJson(TEST_POLICY_MANIFEST));
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).getHostAddress();
@@ -389,8 +385,7 @@ public class ManifestReplicationTest {
     }
 
     // Cannot replicate VERSION manifest to noDDS node
-    @Test
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+    public void cannotReplicateManifestToNoDDSNodeReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -412,15 +407,14 @@ public class ManifestReplicationTest {
 
         ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(0)).getHostAddress();
         verify(manifestsDataServiceMock, times(0)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    @Test (expectedExceptions = SOSProtocolException.class)
-    public void basicManifestReplicationFailsTest() throws SOSProtocolException {
+    public void basicManifestReplicationFailsTest(boolean isSequential) throws SOSProtocolException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -438,11 +432,10 @@ public class ManifestReplicationTest {
         nodes.add(nodeGUID);
         NodesCollection nodesCollection = new NodesCollectionImpl(nodes);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, null, null);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, null, null);
     }
 
-    @Test
-    public void badManifestReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+    public void badManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
@@ -466,7 +459,7 @@ public class ManifestReplicationTest {
 
         ManifestsDataService manifestsDataServiceMock = mock(ManifestsDataService.class);
 
-        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, nodeDiscoveryServiceMock, manifestsDataServiceMock);
+        ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, nodeDiscoveryServiceMock, manifestsDataServiceMock);
         TasksQueue.instance().performSyncTask(replicationTask);
 
         verify(node, times(1)).getHostAddress();

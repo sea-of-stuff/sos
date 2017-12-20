@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesCollectionException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
@@ -67,7 +68,8 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), nodeType, 1);
-            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, nodeDiscoveryService, manifestsDataService);
+            boolean sequentialReplication = SOSLocalNode.settings.getServices().getDds().isSequentialReplication();
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, sequentialReplication, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException | NodesCollectionException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
@@ -90,8 +92,9 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
+            boolean sequentialReplication = SOSLocalNode.settings.getServices().getDds().isSequentialReplication();
             // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
-            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, nodeDiscoveryService, manifestsDataService);
+            ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, sequentialReplication, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");

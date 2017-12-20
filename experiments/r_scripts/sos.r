@@ -128,6 +128,9 @@ co("remote/co_a_2_v1.tsv", type="policies", subtype="policy_apply_dataset", yMax
 co("remote/co_c_1_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_1 (10 iterations), 100kb dataset. Replication factor = 1")
 co("remote/co_c_2_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_2 (10 iterations), 100kb dataset. Replication factor = 1-10")
 
+co("remote/co_a_test40.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="paral, CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
+co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="seq, CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
+
 ##############
 # DO_x
 ##############
