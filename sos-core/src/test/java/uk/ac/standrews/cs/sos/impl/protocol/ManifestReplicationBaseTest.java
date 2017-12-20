@@ -247,7 +247,8 @@ public class ManifestReplicationBaseTest {
         }
     }
 
-    public void basicVersionManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+    void basicVersionManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -278,7 +279,8 @@ public class ManifestReplicationBaseTest {
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    public void basicCompoundManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+    void basicCompoundManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_COMPOUND_MANIFEST);
@@ -309,7 +311,8 @@ public class ManifestReplicationBaseTest {
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    public void basicAtomManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
+    void basicAtomManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_ATOM_MANIFEST);
@@ -340,7 +343,8 @@ public class ManifestReplicationBaseTest {
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    public void basicFATContextManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, IOException {
+    void basicFATContextManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException, GUIDGenerationException, ManifestNotFoundException, IOException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Context mockManifest = mock(Context.class);
         when(mockManifest.toString()).thenReturn(TEST_THIN_CONTEXT_MANIFEST);
@@ -385,7 +389,8 @@ public class ManifestReplicationBaseTest {
     }
 
     // Cannot replicate VERSION manifest to noDDS node
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+    void cannotReplicateManifestToNoDDSNodeReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -414,7 +419,8 @@ public class ManifestReplicationBaseTest {
         verify(manifestsDataServiceMock, times(0)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    public void basicManifestReplicationFailsTest(boolean isSequential) throws SOSProtocolException {
+    void basicManifestReplicationFailsTest(boolean isSequential) throws SOSProtocolException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_VERSION_MANIFEST);
@@ -435,7 +441,8 @@ public class ManifestReplicationBaseTest {
         ManifestReplication replicationTask = new ManifestReplication(mockManifest, nodesCollection, 1, isSequential, null, null);
     }
 
-    public void badManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+    void badManifestReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+        System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
         when(mockManifest.toString()).thenReturn(TEST_BAD_MANIFEST);
