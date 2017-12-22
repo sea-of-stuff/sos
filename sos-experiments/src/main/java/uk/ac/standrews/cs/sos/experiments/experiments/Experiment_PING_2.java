@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.experiments.third_party.RandomInputStream;
 import uk.ac.standrews.cs.sos.impl.node.BasicNode;
+import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.Payload;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
@@ -58,7 +59,12 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
 
                         Payload payload = new Payload(nodeToPing, data);
                         TasksQueue.instance().performSyncTask(payload);
-                        InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "amount of data sent", payload.getLatency());
+
+                        if (payload.getState() != TaskState.SUCCESSFUL) {
+                            throw new ExperimentException("Payload request was not successful");
+                        }
+
+                        InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Integer.toString(aPayloadSize), payload.getLatency());
 
                     } catch (IOException e) {
                         throw new ExperimentException();

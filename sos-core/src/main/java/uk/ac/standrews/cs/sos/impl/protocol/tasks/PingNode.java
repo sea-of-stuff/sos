@@ -43,7 +43,7 @@ public class PingNode extends Task {
             URL url = SOSURL.NODE_PING(node, message);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
 
-            long startRequest = System.currentTimeMillis();
+            long startRequest = System.nanoTime();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
@@ -60,7 +60,7 @@ public class PingNode extends Task {
                 setState(TaskState.UNSUCCESSFUL);
             }
             timestamp = System.currentTimeMillis();
-            latency = System.currentTimeMillis() - startRequest;
+            latency = System.nanoTime() - startRequest;
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);

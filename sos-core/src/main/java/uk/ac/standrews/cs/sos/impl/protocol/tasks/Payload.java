@@ -44,7 +44,7 @@ public class Payload extends Task {
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.TEXT);
             request.setBody(payload);
 
-            long startRequest = System.currentTimeMillis();
+            long startRequest = System.nanoTime();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
@@ -61,7 +61,7 @@ public class Payload extends Task {
                 setState(TaskState.UNSUCCESSFUL);
             }
             timestamp = System.currentTimeMillis();
-            latency = System.currentTimeMillis() - startRequest;
+            latency = System.nanoTime() - startRequest;
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);
