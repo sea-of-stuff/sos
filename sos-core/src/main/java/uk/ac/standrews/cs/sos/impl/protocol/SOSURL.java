@@ -29,7 +29,7 @@ public class SOSURL {
 
     public static URL NODE_PAYLOAD(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "payload";
+                "payload/";
 
         return makeURL(url);
     }

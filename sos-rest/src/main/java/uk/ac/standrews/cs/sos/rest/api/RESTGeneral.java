@@ -37,7 +37,7 @@ public class RESTGeneral {
     @Path("/payload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response postMsg(final InputStream inputStream, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/ping/{msg}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/payload");
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, "Data received");
     }

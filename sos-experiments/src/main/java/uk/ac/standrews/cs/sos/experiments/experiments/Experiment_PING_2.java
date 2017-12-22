@@ -50,23 +50,26 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         @Override
         public void run() throws ExperimentException {
 
-            int payloadSize[] = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 5000000, 10000000, 20000000, 30000000, 40000000, 50000000, 60000000, 70000000, 80000000, 90000000, 100000000};
+            int payloadSize[] = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000}; // 5000000, 10000000, 20000000, 30000000, 40000000}; // , 50000000 , 60000000, 70000000, 80000000, 90000000, 100000000};
 
             for(int i = 0; i < 25; i++) {
                 for (int aPayloadSize : payloadSize) {
 
                     try (InputStream data = new RandomInputStream(aPayloadSize)) {
 
+                        System.out.println("i: " + i + " payload size: " + aPayloadSize);
                         Payload payload = new Payload(nodeToPing, data);
                         TasksQueue.instance().performSyncTask(payload);
 
                         if (payload.getState() != TaskState.SUCCESSFUL) {
-                            throw new ExperimentException("Payload request was not successful");
+                            // throw new ExperimentException("Payload request was not successful");
+                            System.out.println("Unsuccessful");
+                        } else {
+                            InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Integer.toString(aPayloadSize), payload.getLatency());
                         }
 
-                        InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Integer.toString(aPayloadSize), payload.getLatency());
-
-                    } catch (IOException e) {
+                        Thread.sleep(250);
+                    } catch (IOException | InterruptedException e) {
                         throw new ExperimentException();
                     }
 

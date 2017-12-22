@@ -59,8 +59,9 @@ public class PingNode extends Task {
             } else {
                 setState(TaskState.UNSUCCESSFUL);
             }
-            timestamp = System.currentTimeMillis();
+
             latency = System.nanoTime() - startRequest;
+            timestamp = System.currentTimeMillis();
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);

@@ -161,7 +161,6 @@ public class SyncRequest extends Request {
             SOS_LOG.log(LEVEL.ERROR, "SyncRequest - Serious error: " + e.getMessage());
             return new ErrorResponseImpl();
         }
-
     }
 
     private HttpRequest setChallenge(HttpRequest httpRequest) {
