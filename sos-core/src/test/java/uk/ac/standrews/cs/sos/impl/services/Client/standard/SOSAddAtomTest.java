@@ -201,7 +201,7 @@ public class SOSAddAtomTest extends AgentTest {
     }
 
     @Test
-    public void testAddAtomsInSequence() throws Exception {
+    public void testAddAtomsInSequence() {
 
         int ONE_MB = 1024 * 1024;
         ConcurrentLinkedQueue<String> testStrings = new ConcurrentLinkedQueue<>();

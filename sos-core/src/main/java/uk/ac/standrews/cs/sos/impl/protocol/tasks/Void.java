@@ -8,6 +8,8 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 
 /**
+ * NOTE: use this only for testing and experiments
+ * 
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Void extends Task {

@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "ping",
-    "experimentClass": "Experiment_PING",
-    "description": "The experiment PING investigates the size of the codomain",
+    "name": "ping_2",
+    "experimentClass": "Experiment_PING_2",
+    "description": "The experiment PING_2 investigates...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 10

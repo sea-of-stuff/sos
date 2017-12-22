@@ -12,24 +12,26 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Node;
 
 /**
+ * PING with not payload
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PING extends BaseExperiment implements Experiment {
+public class Experiment_PING_1 extends BaseExperiment implements Experiment {
 
-    public Experiment_PING(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+    public Experiment_PING_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
     }
 
-    public Experiment_PING(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_PING_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_PING();
+        return new ExperimentUnit_PING_1();
     }
 
-    private class ExperimentUnit_PING implements ExperimentUnit {
+    private class ExperimentUnit_PING_1 implements ExperimentUnit {
 
         private Node nodeToPing;
 
@@ -44,13 +46,9 @@ public class Experiment_PING extends BaseExperiment implements Experiment {
         public void run() {
 
             for(int i = 0; i < 100; i++) {
-                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD " + i);
-
-                long start = System.nanoTime();
+                PingNode pingNode = new PingNode(nodeToPing, "");
                 TasksQueue.instance().performSyncTask(pingNode);
-                long duration = System.nanoTime() - start;
-                // TODO - change size of payload?
-                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "amount of data sent", duration);
+                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "No data sent", pingNode.getLatency());
             }
         }
 

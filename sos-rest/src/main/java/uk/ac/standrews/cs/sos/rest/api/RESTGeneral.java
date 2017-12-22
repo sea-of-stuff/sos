@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 
@@ -24,19 +25,26 @@ public class RESTGeneral {
     public Response getMsg(@PathParam("msg") final String msg, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/ping/{msg}");
 
-        String output = "Pong: ";
-        if (msg == null || msg.isEmpty()) {
-            output += "What? Please give me a message to Pong -- GET /sos/ping/{msg}";
-        } else {
-            output += msg;
+        String output = "Pong";
+        if (msg != null && !msg.isEmpty()) {
+            output += ": " + msg;
         }
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
     }
 
+    @POST
+    @Path("/payload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response postMsg(final InputStream inputStream, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/ping/{msg}");
+
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, "Data received");
+    }
+
     @GET
     @Path("/info")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getInfo(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
@@ -45,7 +53,7 @@ public class RESTGeneral {
 
     @GET
     @Path("/sign/{message}")
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getSignedContent(@PathParam("message") final String message, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/sign/{message}");
 

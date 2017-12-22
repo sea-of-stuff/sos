@@ -322,9 +322,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
                 PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
                 TasksQueue.instance().performSyncTask(pingNode);
-                if (pingNode.getState() == TaskState.SUCCESSFUL) {
-                    nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
-                }
+                nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
             }
 
         }, 10, 10, TimeUnit.SECONDS); // TODO - use settings from node config

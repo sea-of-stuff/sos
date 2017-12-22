@@ -19,18 +19,18 @@ import java.net.URL;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PingNode extends Task {
+public class Payload extends Task {
 
     private final Node node;
-    private final String message;
+    private final InputStream payload;
     private Long timestamp;
     private Long latency;
 
-    public PingNode(Node node, String message) {
+    public Payload(Node node, InputStream payload) {
         super();
 
         this.node = node;
-        this.message = message;
+        this.payload = payload;
 
         timestamp = 0L;
     }
@@ -40,8 +40,9 @@ public class PingNode extends Task {
         SOS_LOG.log(LEVEL.INFO, "Info about node: " + node.guid().toMultiHash());
 
         try {
-            URL url = SOSURL.NODE_PING(node, message);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
+            URL url = SOSURL.NODE_PAYLOAD(node);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.TEXT);
+            request.setBody(payload);
 
             long startRequest = System.currentTimeMillis();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
@@ -76,10 +77,6 @@ public class PingNode extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
         return null;
-    }
-
-    public boolean valid() {
-        return getState() == TaskState.SUCCESSFUL;
     }
 
     public Long getTimestamp() {

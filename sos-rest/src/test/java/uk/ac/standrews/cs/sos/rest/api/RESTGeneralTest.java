@@ -2,9 +2,13 @@ package uk.ac.standrews.cs.sos.rest.api;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.utils.IO;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 
 import static org.testng.Assert.assertEquals;
 
@@ -48,8 +52,47 @@ public class RESTGeneralTest extends CommonRESTTest {
         Response response = target("/sos/info").request().get();
         assertEquals(response.getStatus(), HTTPStatus.OK);
 
-        System.out.println(response.readEntity(String.class));
         JSONAssert.assertEquals(TEST_NODE_INFO, response.readEntity(String.class), false);
+
+        response.close();
+    }
+
+    @Test
+    public void testGetPing() {
+
+        Response response = target("/sos/ping/").request().get();
+        assertEquals(response.getStatus(), HTTPStatus.OK);
+
+        System.out.println(response.readEntity(String.class));
+        assertEquals(response.readEntity(String.class), "Pong");
+
+        response.close();
+    }
+
+    @Test
+    public void testGetPingHello() {
+
+        Response response = target("/sos/ping/hello").request().get();
+        assertEquals(response.getStatus(), HTTPStatus.OK);
+
+        System.out.println(response.readEntity(String.class));
+        assertEquals(response.readEntity(String.class), "Pong: hello");
+
+        response.close();
+    }
+
+    @Test
+    public void testPostPayload() {
+
+        InputStream testData = IO.StringToInputStream("test-body");
+
+        Response response = target("/sos/payload/").request()
+                .post(Entity.entity(testData, MediaType.MULTIPART_FORM_DATA));
+
+        assertEquals(response.getStatus(), HTTPStatus.OK);
+
+        System.out.println(response.readEntity(String.class));
+        assertEquals(response.readEntity(String.class), "Data received");
 
         response.close();
     }
