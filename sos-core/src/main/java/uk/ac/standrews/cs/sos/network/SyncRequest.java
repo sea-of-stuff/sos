@@ -113,7 +113,12 @@ public class SyncRequest extends Request {
         // NOTE - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
-        HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString());
+        HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString())
+                .header("Content-Type", "multipart/form-data");
+//        if (headerPair != null) {
+//            httpRequestWithBody.header(headerPair.X(), headerPair.Y());
+//        }
+
         httpRequestWithBody = (HttpRequestWithBody) setChallenge(httpRequestWithBody);
         RawBody requestWithRawBody = httpRequestWithBody.body(bytes);
 

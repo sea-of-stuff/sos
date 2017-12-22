@@ -1,6 +1,8 @@
 package uk.ac.standrews.cs.sos.network;
 
 
+import uk.ac.standrews.cs.utilities.Pair;
+
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URL;
@@ -25,6 +27,8 @@ public abstract class Request {
     protected PublicKey signatureCertificate;
     protected String nodeChallenge;
 
+    protected Pair<String, String> headerPair;
+
     public Request(HTTPMethod method, URL url) {
         this.method = method;
         this.url = url;
@@ -48,6 +52,13 @@ public abstract class Request {
     public Request setBody(InputStream inputStream) {
         this.inputStream = inputStream;
         this.json_body = null;
+        return this;
+    }
+
+    // TODO - addHeader
+    // REMOVEME?
+    public Request setHeader(String header, String value) {
+        headerPair = new Pair<>(header, value);
         return this;
     }
 
