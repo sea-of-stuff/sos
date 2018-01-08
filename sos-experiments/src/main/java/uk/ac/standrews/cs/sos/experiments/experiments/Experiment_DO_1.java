@@ -18,6 +18,7 @@ import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -56,27 +57,17 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
             try {
                 cms = node.getCMS();
-
-                System.out.println("Adding content to node");
-
-                // NOTE - Keep amount of data fixed
-                String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
-
             } catch (Exception e) {
                 throw new ExperimentException();
             }
 
-            // TODO
-            // data to add to nodes
-            // datasets should be split as evenly as possible across nodes
         }
 
         @Override
         public void run() throws ExperimentException {
 
             try {
-                String[] contextsToRun = new String[] {"predicate_1", "predicate_2"};
+                String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
 
                 for(String contextToRun:contextsToRun) {
 
@@ -85,6 +76,8 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     Context context = cms.getContext(contextGUID);
                     System.out.println("Spawning context to nodes in domain");
                     cms.spawnContext(context);
+                    System.out.println("Adding content to nodes");
+                    distributeData(context);
 
                     ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
 
@@ -101,8 +94,19 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     executorService.shutdownNow();
                 }
 
-            } catch (ContextException | InterruptedException | ManifestPersistException e) {
+            } catch (ContextException | IOException | InterruptedException | ManifestPersistException e) {
                 throw new ExperimentException(e);
+            }
+        }
+
+        private void distributeData(Context context) throws IOException {
+
+            if (context.domain().size() == 0) {
+                String datasetPath = experiment.getExperimentNode().getDatasetPath();
+                addFolderContentToNode(node, new File(datasetPath));
+            } else {
+
+                // TODO - distribute data to nodes with given distribution given in configuration file...
             }
         }
 

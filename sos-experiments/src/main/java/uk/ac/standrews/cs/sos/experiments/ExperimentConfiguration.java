@@ -90,7 +90,7 @@ public class ExperimentConfiguration {
         private String description;
         private Setup setup;
         private List<Node> nodes;
-        private Node experimentNode;
+        private ExperimentNode experimentNode;
         private Statistics stats;
 
         public Experiment() {}
@@ -127,11 +127,11 @@ public class ExperimentConfiguration {
             this.nodes = nodes;
         }
 
-        public Node getExperimentNode() {
+        public ExperimentNode getExperimentNode() {
             return experimentNode;
         }
 
-        public void setExperimentNode(Node experimentNode) {
+        public void setExperimentNode(ExperimentNode experimentNode) {
             this.experimentNode = experimentNode;
         }
 
@@ -482,7 +482,32 @@ public class ExperimentConfiguration {
             }
         }
 
-    }
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        public static class ExperimentNode extends Node {
 
+            // Distribution is applied over nodes of the domain of contexts
+            private boolean equal_distribution_dataset = true;
+            private int[][] distribution_sets = new int[][]{
+                    new int[]{1, 100}
+            };
+
+            public boolean isEqual_distribution_dataset() {
+                return equal_distribution_dataset;
+            }
+
+            public void setEqual_distribution_dataset(boolean equal_distribution_dataset) {
+                this.equal_distribution_dataset = equal_distribution_dataset;
+            }
+
+            public int[][] getDistribution_sets() {
+                return distribution_sets;
+            }
+
+            public void setDistribution_sets(int[][] distribution_sets) {
+                this.distribution_sets = distribution_sets;
+            }
+        }
+
+    }
 
 }
