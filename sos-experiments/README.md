@@ -72,8 +72,6 @@ This is an experiment where multiple nodes interact with each other in order to 
 
 
 
-
-
 ## Experiment Setup
 
 An experiment is defined by a Java class and by a bunch of experiment configuration files.
@@ -157,7 +155,7 @@ The user should have connected to the host via SSH at least once before being ab
         "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
         "user" : "lorna",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
-        "password" : "PASSWORD"
+        "password" : "ENCRYPTED PASSWORD"
       }
 ```
 
@@ -175,7 +173,7 @@ The user should have connected to the host via SSH at least once before being ab
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
-        "passphrase" : "PASSSPHRASE"
+        "passphrase" : "ENCRYPTED PASSPHRASE"
     }
 ```
 
@@ -224,28 +222,48 @@ Thus, we need three configuration files: one for describing the experiment and t
         |-- node_1.json         // The configuration for one of the remote nodes, as specified in configuration.json
 ```
 
+## Generating node configurations
+
+The `NodeGenerator` utility generates:
+
+- The node certificate and private key
+- The node GUID (based on the certificate)
+
+The generate info is stored at the path: `sos-experiments/src/main/resources/generated_nodes/` and partially printed on the terminal.
+
+
+## Generating Users and Roles
+
+The `USROGenerator` utility can be used to generate users/roles to be used for experiments.
+
 ## Instrumentation
 
 Experiments are instrumented using the sos-instrument utility.
 
-It is possible to control what to instrument via the experiment configuration file.
+It is possible to control what to instrument via the experiment configuration file. All the stats are *false* by default.
 
 ```
 "stats": {
-  "experiment": true,
+  "experiment": true, // to enable instrument calls inside sos-instrument
   "predicate": true,
+  "predicate_remote": false,
   "policies": false,
-  "checkPolicies": false
+  "checkPolicies": false,
+  "checkPolicies": false,
+  "io": false,
+  "guid_data": false,
+  "guid_manifest": false,
+  "ping": false
 }
 ```
 
-**Available Stats**:
 
-- experiment: to enable instrument calls inside sos-instrument
-- predicate
-- policies
-- checkPolicies
+## ExperimentalFramework
 
+The ExperimentalFramework is to be used to run all the experiments where SOS nodes are remote.
+
+
+## Useful CLI commands
 
 **Killing all sos jar applications**
 
@@ -263,8 +281,7 @@ It is possible to control what to instrument via the experiment configuration fi
 * jmxterm - http://wiki.cyclopsgroup.org/jmxterm/
 
 
-// https://stackoverflow.com/a/1195461/2467938
-You can write a program to connect to your VM using the Attach API which would then query the MBeans.
+You can write a program to connect to your VM using the Attach API which would then query the MBeans (see https://stackoverflow.com/a/1195461/2467938).
 
 Or you can expose the platform MBeanServer over RMI and query the MBeans that way.
 
