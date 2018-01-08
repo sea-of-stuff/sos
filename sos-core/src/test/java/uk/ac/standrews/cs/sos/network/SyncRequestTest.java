@@ -164,6 +164,7 @@ public class SyncRequestTest extends CommonTest {
         String dataToPost = "test-data";
 
         SyncRequest request = new SyncRequest(HTTPMethod.POST, new URL("http://httpbin.org/post"), ResponseType.JSON);
+        request.setContent_type("application/json");
         InputStream dataStream = HelperTest.StringToInputStream(dataToPost);
         request.setBody(dataStream);
         Response response = RequestsManager.getInstance().playSyncRequest(request);

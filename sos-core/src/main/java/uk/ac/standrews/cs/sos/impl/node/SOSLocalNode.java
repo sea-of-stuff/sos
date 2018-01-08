@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.sos.impl.services.*;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.services.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -227,6 +228,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (nodeDiscoveryService != null) {
             nodeDiscoveryService.shutdown();
         }
+
+        RequestsManager.getInstance().shutdown();
 
         DatabaseFactory.kill();
         SOSAgent.destroy();

@@ -50,7 +50,10 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         @Override
         public void run() throws ExperimentException {
 
-            int payloadSize[] = new int[]{1, 10, 100,
+            int payloadSize[] = new int[]{
+                    1,
+                    10,
+                    100,
                     1000, // 1kb
                     10000, // 10kb
                     100000, // 100kb
@@ -80,7 +83,7 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
                             InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Integer.toString(aPayloadSize), payload.getLatency());
                         }
 
-                        Thread.sleep(250);
+                        Thread.sleep(500);
                     } catch (IOException | InterruptedException e) {
                         throw new ExperimentException();
                     }

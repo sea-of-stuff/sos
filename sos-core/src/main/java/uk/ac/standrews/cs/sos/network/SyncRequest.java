@@ -27,6 +27,7 @@ import java.security.PublicKey;
 public class SyncRequest extends Request {
 
     private ResponseType responseType;
+    private String content_type;
 
     public SyncRequest(HTTPMethod method, URL url) {
         this(method, url, ResponseType.BINARY);
@@ -99,8 +100,8 @@ public class SyncRequest extends Request {
 
     private Response postJSON() {
 
-        HttpRequestWithBody requestWithBody = Unirest.post(url.toString())
-                .header("Content-Type", "application/json");
+        HttpRequestWithBody requestWithBody = Unirest.post(url.toString());
+        requestWithBody = setContentType(requestWithBody,"application/json");
         requestWithBody = (HttpRequestWithBody) setChallenge(requestWithBody);
 
         RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
@@ -108,16 +109,24 @@ public class SyncRequest extends Request {
         return makeRequest(requestBodyEntity);
     }
 
+    private HttpRequestWithBody setContentType(HttpRequestWithBody req, String defaultContentType) {
+
+        if (content_type != null && !content_type.isEmpty()) {
+            req.header("Content-Type", content_type);
+        } else {
+            req.header("Content-Type", defaultContentType);
+        }
+
+        return req;
+    }
+
     private Response postData() throws IOException {
 
         // NOTE - this will most likely fail for large data
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
-        HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString())
-                .header("Content-Type", "multipart/form-data");
-//        if (headerPair != null) {
-//            httpRequestWithBody.header(headerPair.X(), headerPair.Y());
-//        }
+        HttpRequestWithBody httpRequestWithBody = Unirest.post(url.toString());
+        httpRequestWithBody = setContentType(httpRequestWithBody,"multipart/form-data");
 
         httpRequestWithBody = (HttpRequestWithBody) setChallenge(httpRequestWithBody);
         RawBody requestWithRawBody = httpRequestWithBody.body(bytes);
@@ -127,8 +136,8 @@ public class SyncRequest extends Request {
 
     private Response putJSON() {
 
-        HttpRequestWithBody requestWithBody = Unirest.put(url.toString())
-                .header("accept", "application/json");
+        HttpRequestWithBody requestWithBody = Unirest.put(url.toString());
+        requestWithBody = setContentType(requestWithBody,"application/json");
         requestWithBody = (HttpRequestWithBody) setChallenge(requestWithBody);
 
         RequestBodyEntity requestBodyEntity = requestWithBody.body(json_body);
@@ -177,4 +186,7 @@ public class SyncRequest extends Request {
         return httpRequest;
     }
 
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
 }
