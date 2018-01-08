@@ -17,3 +17,5 @@ This is a prototype of a distributed autonomic personal data storage system.
 ```
 
 More to come soon.
+
+![SOS Model](res/sos_model.jpg){:class="img-responsive"}

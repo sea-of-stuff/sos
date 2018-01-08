@@ -485,6 +485,9 @@ public class ExperimentConfiguration {
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         public static class ExperimentNode extends Node {
 
+            // Experiments supporting these params:
+            // DO_1
+            //
             // Distribution is applied over nodes of the domain of contexts
             private boolean equal_distribution_dataset = true;
             private int[][] distribution_sets = new int[][]{

@@ -30,6 +30,7 @@ This is a prototype of a distributed autonomic personal data storage system.
     |-- sos-experiments     // Code with configurations files for the experiments
     |-- experiments         // Scripts to analyse experiments results
                             // + datasets and contexts used for the experiments
+                            // + Results are written here, under the output (local) or remote (distributed exp) folders
     |-- sos-instrument      // Instrumentation code. Useful to get results for the experiments.
     |-- scripts             // A bunch of useful scripts
     |-- README.md           // This README file
@@ -38,17 +39,24 @@ This is a prototype of a distributed autonomic personal data storage system.
 
 ## sos-core
 
-The sos-core module contains the code to:
+The sos-core module contains the code to manage a SOS node and with it:
 - create and manage manifests
 - manage metadata and contexts
-- manage the SOS Roles (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
+- manage the SOS services (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
 
 ### SOS Model
 
-- Manifests
-- Users and Roles
-- Contexts
+The SOS model consists of the following parts:
 
+- Data model
+- Metadata model
+- Users and Roles
+- Context model
+- Node model
+
+All the elements of the SOS model can be represented as manifests and they are identied by a unique ID (GUID).
+
+![SOS Model](docs/res/sos_model.jpg){:class="img-responsive"}
 
 Example of contexts in JSON formats can be found [here](sos-core/src/main/java/uk/ac/standrews/cs/sos/impl/context/README.md).
 
