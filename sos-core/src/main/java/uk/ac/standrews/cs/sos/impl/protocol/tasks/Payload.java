@@ -58,7 +58,8 @@ public class Payload extends Task {
                 }
 
             } else {
-                setState(TaskState.UNSUCCESSFUL);
+                setState(TaskState.ERROR);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to get proper response from node " + node.guid().toMultiHash());
             }
 
             latency = System.nanoTime() - startRequest;
@@ -66,7 +67,7 @@ public class Payload extends Task {
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);
-            SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
+            SOS_LOG.log(LEVEL.ERROR, "Unable to get response on payload request from node " + node.guid().toMultiHash());
         }
     }
 

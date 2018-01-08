@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.protocol;
 
+import org.apache.xmlbeans.impl.util.Base64;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -19,6 +20,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -36,6 +38,14 @@ public class PayloadTest extends ProtocolTest {
     private static final int MOCK_SERVER_PORT = 10006;
 
     private static final String TEST_DATA = "test-data";
+
+    private static byte[] data_l = new byte[5000000]; // 5mb
+    private static byte[] data_l_b64;
+    static {
+        new Random().nextBytes(data_l);
+        data_l_b64 = Base64.encode(data_l);
+    }
+    private static final String LARGE_TEST_DATA= new String(data_l_b64);
 
     @BeforeMethod
     public void setUp() throws ConfigurationException, GUIDGenerationException, IOException, SOSException {
@@ -60,6 +70,18 @@ public class PayloadTest extends ProtocolTest {
                                 .withStatusCode(200)
                 );
 
+        mockServer
+                .when(
+                        request()
+                                .withMethod("POST")
+                                .withPath("/sos/payload/")
+                                .withBody(LARGE_TEST_DATA)
+                )
+                .respond(
+                        response()
+                                .withStatusCode(200)
+                );
+
         SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
     }
 
@@ -77,4 +99,15 @@ public class PayloadTest extends ProtocolTest {
 
         assertEquals(payload.getState(), TaskState.SUCCESSFUL);
     }
+
+    @Test
+    public void largePayloadTask() {
+
+        Node nodeToPing = new BasicNode("localhost", MOCK_SERVER_PORT);
+        Payload payload = new Payload(nodeToPing, IO.StringToInputStream(LARGE_TEST_DATA));
+        TasksQueue.instance().performSyncTask(payload);
+
+        assertEquals(payload.getState(), TaskState.SUCCESSFUL);
+    }
+
 }
