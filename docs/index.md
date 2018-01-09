@@ -16,6 +16,9 @@ This is a prototype of a distributed autonomic personal data storage system.
      \__\/         \__\/         \__\/
 ```
 
-More to come soon.
+
+## SOS Model
 
 <img src="sos/res/sos_model.jpg" height="500" alt="SOS Model">
+
+More to come soon.

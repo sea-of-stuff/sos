@@ -22,6 +22,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
@@ -71,7 +72,13 @@ public class WData {
                 atomBuilder.setRole(roleToProtect)
                     .setProtectFlag(true);
             }
-            VersionBuilder versionBuilder = new VersionBuilder().setAtomBuilder(atomBuilder);
+
+            MetadataBuilder metadataBuilder = new MetadataBuilder()
+                    .setData(atomBuilder.getData());
+
+            VersionBuilder versionBuilder = new VersionBuilder()
+                    .setAtomBuilder(atomBuilder)
+                    .setMetadataBuilder(metadataBuilder);
 
             if (sign) {
                 IGUID signerGUID = GUIDFactory.recreateGUID(roleidSign);
@@ -538,7 +545,7 @@ public class WData {
             case "image/gif":
                 return ".gif";
 
-            case "image/tiff": // NOT TESTED
+            case "image/tiff":
                 return ".tiff";
 
             case "application/pdf":

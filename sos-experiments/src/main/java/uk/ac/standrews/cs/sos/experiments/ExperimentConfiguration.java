@@ -491,6 +491,7 @@ public class ExperimentConfiguration {
             // Distribution is applied over nodes of the domain of contexts
             private boolean equal_distribution_dataset = true;
             private int[][] distribution_sets = new int[][]{
+                    // Default distribution. Assuming one node (local one).
                     new int[]{1, 100}
             };
 

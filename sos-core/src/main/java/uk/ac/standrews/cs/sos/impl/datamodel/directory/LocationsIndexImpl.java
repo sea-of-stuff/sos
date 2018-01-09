@@ -38,7 +38,7 @@ public class LocationsIndexImpl implements LocationsIndex {
     public void addLocation(IGUID guid, LocationBundle locationBundle) {
 
         IGUID guidToRemove = lru.applyLRU(guid);
-        if (!guidToRemove.isInvalid()) {
+        if (guidToRemove != null && !guidToRemove.isInvalid()) {
             index.remove(guidToRemove);
         }
 
@@ -194,18 +194,20 @@ public class LocationsIndexImpl implements LocationsIndex {
         out.writeInt(index.size());
 
         // Store entries as ordered in the LRU
-        ConcurrentLinkedQueue<IGUID> lruQueue = new  ConcurrentLinkedQueue<>(lru.getQueue());
-        IGUID guid;
-        while ((guid = lruQueue.poll()) != null) {
+        ConcurrentLinkedQueue<IGUID> lruQueue = new ConcurrentLinkedQueue<>(lru.getQueue());
+        IGUID key;
+        while ((key = lruQueue.poll()) != null) {
 
-            out.writeUTF(guid.toMultiHash());
-
-            PriorityQueue<LocationBundle> values = index.get(guid);
+            PriorityQueue<LocationBundle> values = index.get(key);
             int numberOfLocations = values.size();
-            out.writeInt(numberOfLocations);
 
-            for (LocationBundle bundle : findLocations(guid)) {
-                out.writeUTF(bundle.toString());
+            out.writeInt(numberOfLocations);
+            if (numberOfLocations > 0) {
+                out.writeUTF(key.toMultiHash());
+
+                for (LocationBundle bundle : findLocations(key)) {
+                    out.writeUTF(bundle.toString());
+                }
             }
         }
     }
@@ -220,8 +222,10 @@ public class LocationsIndexImpl implements LocationsIndex {
         index = new HashMap<>();
         for(int i = 0; i < indexSize; i++) {
             try {
-                IGUID key = GUIDFactory.recreateGUID(in.readUTF());
                 int numberOfLocations = in.readInt();
+                if (numberOfLocations == 0) continue;
+
+                IGUID key = GUIDFactory.recreateGUID(in.readUTF());
 
                 for (int j = 0; j < numberOfLocations; j++) {
                     LocationBundle bundle = JSONHelper.jsonObjMapper().readValue(in.readUTF(), LocationBundle.class);
