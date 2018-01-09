@@ -116,7 +116,9 @@ public class SOSStorageService implements StorageService {
             atom = ManifestFactory.createAtomManifest(guid, bundles);
         }
 
-        manifestsDataService.addManifest(atom);
+        if (!atomBuilder.isDoNotStoreManifestLocally()) {
+            manifestsDataService.addManifest(atom);
+        }
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
         int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();

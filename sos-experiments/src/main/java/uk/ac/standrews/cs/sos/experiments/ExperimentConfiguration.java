@@ -489,6 +489,7 @@ public class ExperimentConfiguration {
             // DO_1
             //
             // Distribution is applied over nodes of the domain of contexts
+            // If true, then the 'distribution_sets' param is ignored.
             private boolean equal_distribution_dataset = true;
             private int[][] distribution_sets = new int[][]{
                     // Default distribution. Assuming one node (local one).

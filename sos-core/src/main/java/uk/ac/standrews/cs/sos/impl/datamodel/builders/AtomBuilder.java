@@ -26,6 +26,8 @@ public class AtomBuilder extends ManifestBuilder {
 
     private BundleType bundleType = BundleTypes.CACHE;
 
+    private boolean doNotStoreDataLocally = false;
+    private boolean doNotStoreManifestLocally = false;
     private int replicationFactor = 1; // A replication factor of 1, means that data is stored in this node only
     private NodesCollection replicationNodes;
     private boolean delegateReplication = false;
@@ -123,6 +125,26 @@ public class AtomBuilder extends ManifestBuilder {
 
     public AtomBuilder setDelegateReplication(boolean delegateReplication) {
         this.delegateReplication = delegateReplication;
+
+        return this;
+    }
+
+    public boolean isDoNotStoreDataLocally() {
+        return doNotStoreDataLocally;
+    }
+
+    public AtomBuilder setDoNotStoreDataLocally(boolean doNotStoreDataLocally) {
+        this.doNotStoreDataLocally = doNotStoreDataLocally;
+
+        return this;
+    }
+
+    public boolean isDoNotStoreManifestLocally() {
+        return doNotStoreManifestLocally;
+    }
+
+    public AtomBuilder setDoNotStoreManifestLocally(boolean doNotStoreManifestLocally) {
+        this.doNotStoreManifestLocally = doNotStoreManifestLocally;
 
         return this;
     }

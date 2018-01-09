@@ -4,23 +4,28 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.TriggerPredicate;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
+import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -101,12 +106,75 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         private void distributeData(Context context) throws IOException {
 
+            ExperimentConfiguration.Experiment.ExperimentNode experimentNode = experiment.getExperimentNode();
             if (context.domain().size() == 0) {
-                String datasetPath = experiment.getExperimentNode().getDatasetPath();
+                String datasetPath = experimentNode.getDatasetPath();
                 addFolderContentToNode(node, new File(datasetPath));
             } else {
+                assert(context.domain().type() == NodesCollectionType.SPECIFIED);
 
-                // TODO - distribute data to nodes with given distribution given in configuration file...
+                // Retrieve list of files to distribute
+                String datasetPath = experimentNode.getDatasetPath();
+                File folder = new File(datasetPath);
+                File[] listOfFiles = folder.listFiles();
+                assert(listOfFiles != null);
+
+                int domainSize = context.size();
+                int filesPerSublist = (listOfFiles.length + domainSize - 1) / domainSize; // Approximate with upper bound
+                File[][] sublists = new File[domainSize][filesPerSublist];
+
+                // Perform list splitting into sublists
+                if (experimentNode.isEqual_distribution_dataset()) {
+
+                    for(int i = 0; i < domainSize; i++) {
+                        for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
+                            sublists[i][j] = listOfFiles[i * filesPerSublist + j];
+                        }
+                    }
+
+                } else {
+
+                    // TODO - consider ranges as specified in configuration
+                    int[][] distributionSets = experimentNode.getDistribution_sets();
+                }
+
+                // Distribute sublists
+                int i = 0;
+                for(IGUID nodeInDomain:context.domain().nodesRefs()) {
+                    distributeDataToNode(sublists[0], nodeInDomain);
+                    i++;
+                }
+
+            }
+        }
+
+        private void distributeDataToNode(File[] sublist, IGUID nodeRef) {
+
+            try {
+                Set<IGUID> nodes = new LinkedHashSet<>();
+                nodes.add(nodeRef);
+                NodesCollection remoteNode = new NodesCollectionImpl(nodes);
+
+                Location dataLocation = new URILocation("filepath");
+
+                // TODO - specify that data should not be added to this local node
+                AtomBuilder atomBuilder = new AtomBuilder()
+                        .setDoNotStoreDataLocally(true) // FIXME - this should be used by storage service
+                        .setDoNotStoreManifestLocally(true)
+                        .setReplicationFactor(2) // This node will be ignored because of params above
+                        .setReplicationNodes(remoteNode)
+                        .setLocation(null);
+
+
+
+                node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
+
+            } catch (DataStorageException e) {
+                e.printStackTrace();
+            } catch (ManifestPersistException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
         }
 
