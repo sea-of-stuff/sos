@@ -38,7 +38,7 @@ public class ExperimentConfiguration {
     /**
      * Create a configuration using the specified file (must be accessibly locally)
      *
-     * @param file
+     * @param file with the experiment configuration
      */
     public ExperimentConfiguration(File file) throws ConfigurationException {
         try {
@@ -50,7 +50,7 @@ public class ExperimentConfiguration {
 
     /**
      * Utility method to get the Experiment object
-     * @return
+     * @return object with all the experiment configuration
      */
     public Experiment getExperimentObj() {
 
