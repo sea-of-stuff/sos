@@ -65,9 +65,10 @@ public class RESTCMS {
             // This is a No-Merge policy
             // calculate invariant of context without adding it to node
             // if invariant is already in node, then do not add it.
+            IGUID guid = contextService.addContext(context);
+            SOS_LOG.log(LEVEL.INFO, "Added context with GUID: " + guid.toMultiHash());
 
             ObjectNode objectNode = JSONHelper.jsonObjMapper().createObjectNode();
-            IGUID guid = contextService.addContext(context);
             objectNode.put(KEY_GUID, guid.toMultiHash());
 
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, objectNode.toString());

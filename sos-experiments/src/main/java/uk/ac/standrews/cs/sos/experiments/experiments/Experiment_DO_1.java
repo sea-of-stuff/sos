@@ -72,15 +72,17 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
 
             try {
-                String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+                String[] contextsToRun = new String[] {"predicate_1", "predicate_2"}; // , "predicate_3"};
 
                 for(String contextToRun:contextsToRun) {
 
                     System.out.println("Adding contexts to node");
                     IGUID contextGUID = addContext(cms, experiment, contextToRun);
-                    Context context = cms.getContext(contextGUID);
+
                     System.out.println("Spawning context to nodes in domain");
+                    Context context = cms.getContext(contextGUID);
                     cms.spawnContext(context);
+
                     System.out.println("Adding content to nodes");
                     distributeData(context);
 
@@ -97,6 +99,8 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                     InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextToRun, duration);
 
                     executorService.shutdownNow();
+
+                    // TODO - remove data from nodes???
                 }
 
             } catch (ContextException | IOException | InterruptedException | ManifestPersistException e) {
@@ -104,26 +108,35 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             }
         }
 
+        // TODO - move to ExperimentUnit interface
         private void distributeData(Context context) throws IOException {
 
+            int domainSize = context.domain().size();
+            System.out.println("Domain size: " + domainSize);
+
             ExperimentConfiguration.Experiment.ExperimentNode experimentNode = experiment.getExperimentNode();
-            if (context.domain().size() == 0) {
-                String datasetPath = experimentNode.getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+            String datasetPath = experimentNode.getDatasetPath();
+            File folderDataset = new File(datasetPath);
+
+            if (domainSize == 0) {
+                addFolderContentToNode(node, folderDataset);
+
             } else {
                 assert(context.domain().type() == NodesCollectionType.SPECIFIED);
 
                 // Retrieve list of files to distribute
-                String datasetPath = experimentNode.getDatasetPath();
-                File folder = new File(datasetPath);
-                File[] listOfFiles = folder.listFiles();
-                assert(listOfFiles != null);
 
-                int domainSize = context.size();
-                int filesPerSublist = (listOfFiles.length + domainSize - 1) / domainSize; // Approximate with upper bound
-                File[][] sublists = new File[domainSize][filesPerSublist];
+                File[] listOfFiles = folderDataset.listFiles();
+                assert(listOfFiles != null);
+                System.out.println("Total number of files: " + listOfFiles.length);
+
+                // The split is done considering this local node too. That is why the (+1) is added to the domain size
+                // The split is approximated with an upper bound
+                int filesPerSublist = (listOfFiles.length + (domainSize + 1) - 1) / (domainSize + 1);
+                System.out.println("Files per node: " + filesPerSublist);
 
                 // Perform list splitting into sublists
+                File[][] sublists = new File[domainSize][filesPerSublist];
                 if (experimentNode.isEqual_distribution_dataset()) {
 
                     for(int i = 0; i < domainSize; i++) {
@@ -141,21 +154,22 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 // Distribute sublists
                 int i = 0;
                 for(IGUID nodeInDomain:context.domain().nodesRefs()) {
-                    distributeDataToNode(sublists[0], nodeInDomain);
+                    distributeDataToNode(sublists[i], nodeInDomain);
                     i++;
                 }
 
             }
         }
 
-        private void distributeDataToNode(File[] sublist, IGUID nodeRef) {
+        private void distributeDataToNode(File[] sublist, IGUID nodeRef) throws IOException {
 
+            System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
             for(File file:sublist) {
                 distributeDatumToNode(file, nodeRef);
             }
         }
 
-        private void distributeDatumToNode(File file, IGUID nodeRef) {
+        private void distributeDatumToNode(File file, IGUID nodeRef) throws IOException {
 
             try {
                 Set<IGUID> nodes = new LinkedHashSet<>();
@@ -165,7 +179,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 Location dataLocation = new URILocation(file.getAbsolutePath());
 
                 AtomBuilder atomBuilder = new AtomBuilder()
-                        .setDoNotStoreDataLocally(true) // FIXME - this should be used by storage service
+                        .setDoNotStoreDataLocally(true)
                         .setDoNotStoreManifestLocally(true)
                         .setReplicationFactor(2) // This node will be ignored because of params above
                         .setReplicationNodes(remoteNode)
@@ -173,12 +187,8 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
                 node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
 
-            } catch (DataStorageException e) {
-                e.printStackTrace();
-            } catch (ManifestPersistException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            } catch (DataStorageException | ManifestPersistException | URISyntaxException e) {
+                throw new IOException("Unable to distribute data to remote experiment node properly");
             }
         }
 

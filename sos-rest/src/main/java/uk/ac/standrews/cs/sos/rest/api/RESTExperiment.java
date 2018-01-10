@@ -33,6 +33,7 @@ public class RESTExperiment {
         SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/predicate");
 
         if (guid == null || guid.isEmpty()) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Bad input (no context guid)");
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
@@ -40,6 +41,7 @@ public class RESTExperiment {
         try {
             contextGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Bad input (malformed context guid)");
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
@@ -50,8 +52,10 @@ public class RESTExperiment {
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
 
         } catch (ContextNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Context not found. GUID: " + contextGUID.toMultiHash());
             return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Internal server error");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }

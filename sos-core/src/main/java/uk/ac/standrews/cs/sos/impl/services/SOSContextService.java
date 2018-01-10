@@ -931,6 +931,7 @@ public class SOSContextService implements ContextService {
     ////////////////////// SPAWN CONTEXT ////////////////////////////
     /////////////////////////////////////////////////////////////////
 
+    // TODO - have toggle in configuration to enable/disable this method
     /**
      * Periodically spawn/replicate contexts to other nodes
      *
