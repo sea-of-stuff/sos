@@ -63,15 +63,15 @@ import static uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl
 public class SOSStorageService implements StorageService {
 
     // Settings for this service
-    private SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
-    private IGUID localNodeGUID;
+    private final SettingsConfiguration.Settings.AdvanceServicesSettings.StorageSettings storageSettings;
+    private final IGUID localNodeGUID;
 
     // Other node services
-    private ManifestsDataService manifestsDataService;
-    private NodeDiscoveryService nodeDiscoveryService;
+    private final ManifestsDataService manifestsDataService;
+    private final NodeDiscoveryService nodeDiscoveryService;
 
     // Internal storage/cache/index/etc
-    private LocalStorage storage;
+    private final LocalStorage storage;
     private AtomStorage atomStorage;
     private LocationsIndex locationIndex;
 
@@ -95,7 +95,14 @@ public class SOSStorageService implements StorageService {
 
         Set<LocationBundle> bundles = new TreeSet<>(comparator());
 
-        StoredAtomInfo storedAtomInfo = addAtom(atomBuilder, bundles); // The atom will be encrypted using the Role of the atom builder
+        StoredAtomInfo storedAtomInfo;
+        if (atomBuilder.isDoNotStoreDataLocally()) {
+            // Data is not stored, but GUID must be calculated anyway
+            storedAtomInfo = generateGUIDOnly(atomBuilder);
+        } else {
+            // The atom will be encrypted using the Role of the atom builder
+            storedAtomInfo = addAtom(atomBuilder, bundles);
+        }
 
         IGUID guid = storedAtomInfo.getGuid();
         if (guid == null || guid.isInvalid()) {
@@ -110,10 +117,11 @@ public class SOSStorageService implements StorageService {
         } else if (atomBuilder.isProtect()) {
             HashMap<IGUID, String> rolesToKeys = new HashMap<>();
             rolesToKeys.put(storedAtomInfo.getRole(), storedAtomInfo.getEncryptedKey());
-
             atom = ManifestFactory.createSecureAtomManifest(guid, bundles, rolesToKeys);
+
         } else {
             atom = ManifestFactory.createAtomManifest(guid, bundles);
+
         }
 
         if (!atomBuilder.isDoNotStoreManifestLocally()) {
@@ -417,6 +425,22 @@ public class SOSStorageService implements StorageService {
         InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.add_atom, Long.toString(atomBuilder.getData().getSize()), duration);
 
         return retval;
+    }
+
+    private StoredAtomInfo generateGUIDOnly(AtomBuilder atomBuilder) throws DataStorageException {
+
+        StoredAtomInfo storedAtomInfo = new StoredAtomInfo();
+
+        try (Data data = atomBuilder.getData();
+             InputStream inputStream = data.getInputStream()) {
+
+            IGUID guid = GUIDFactory.generateGUID(inputStream);
+            storedAtomInfo.setGuid(guid);
+        } catch (IOException | GUIDGenerationException e) {
+            throw new DataStorageException("Unable to generate GUID for data");
+        }
+
+        return storedAtomInfo;
     }
 
     private void loadOrCreateLocationIndex() throws ServiceException {

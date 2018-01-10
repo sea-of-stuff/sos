@@ -150,22 +150,26 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         private void distributeDataToNode(File[] sublist, IGUID nodeRef) {
 
+            for(File file:sublist) {
+                distributeDatumToNode(file, nodeRef);
+            }
+        }
+
+        private void distributeDatumToNode(File file, IGUID nodeRef) {
+
             try {
                 Set<IGUID> nodes = new LinkedHashSet<>();
                 nodes.add(nodeRef);
                 NodesCollection remoteNode = new NodesCollectionImpl(nodes);
 
-                Location dataLocation = new URILocation("filepath");
+                Location dataLocation = new URILocation(file.getAbsolutePath());
 
-                // TODO - specify that data should not be added to this local node
                 AtomBuilder atomBuilder = new AtomBuilder()
                         .setDoNotStoreDataLocally(true) // FIXME - this should be used by storage service
                         .setDoNotStoreManifestLocally(true)
                         .setReplicationFactor(2) // This node will be ignored because of params above
                         .setReplicationNodes(remoteNode)
-                        .setLocation(null);
-
-
+                        .setLocation(dataLocation);
 
                 node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
 

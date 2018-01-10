@@ -79,7 +79,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
     @Override
     public boolean isValid() {
-        return super.isValid() && !locations.isEmpty() && isGUIDValid(guid);
+        return super.isValid() && isGUIDValid(guid);
     }
 
     @Override

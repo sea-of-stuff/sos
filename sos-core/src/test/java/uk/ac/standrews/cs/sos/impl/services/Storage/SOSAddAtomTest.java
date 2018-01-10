@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
+import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
@@ -99,6 +101,63 @@ public class SOSAddAtomTest extends StorageServiceTest {
 
         LocationBundle secondBundle = bundles.next();
         assertEquals(secondBundle.getType(), BundleTypes.EXTERNAL);
+    }
+
+    @Test (expectedExceptions = AtomNotFoundException.class)
+    public void testAddAtomMethodWithoutStoringData() throws Exception {
+        Location location = HelperTest.createDummyDataFile(localStorage);
+
+        AtomBuilder builder = new AtomBuilder()
+                .setLocation(location)
+                .setDoNotStoreDataLocally(true);
+        Atom manifest = storageService.addAtom(builder);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
+
+        storageService.getAtomContent(manifest);
+    }
+
+    @Test (expectedExceptions = AtomNotFoundException.class)
+    public void testAddAtomMethodWithoutStoringManifest_1() throws Exception {
+        Location location = HelperTest.createDummyDataFile(localStorage);
+
+        AtomBuilder builder = new AtomBuilder()
+                .setLocation(location)
+                .setDoNotStoreDataLocally(true)
+                .setDoNotStoreManifestLocally(true);
+
+        Atom manifest = storageService.addAtom(builder);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
+
+        storageService.getAtomContent(manifest);
+    }
+
+    @Test (expectedExceptions = ManifestNotFoundException.class)
+    public void testAddAtomMethodWithoutStoringManifest_2() throws Exception {
+        Location location = HelperTest.createDummyDataFile(localStorage);
+
+        AtomBuilder builder = new AtomBuilder()
+                .setLocation(location)
+                .setDoNotStoreDataLocally(true)
+                .setDoNotStoreManifestLocally(true);
+
+        Atom manifest = storageService.addAtom(builder);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
+
+        localSOSNode.getMDS().getManifest(manifest.guid());
+    }
+
+    @Test (expectedExceptions = ManifestNotFoundException.class)
+    public void testAddAtomMethodWithoutStoringDataAndManifest() throws Exception {
+        Location location = HelperTest.createDummyDataFile(localStorage);
+
+        AtomBuilder builder = new AtomBuilder()
+                .setLocation(location)
+                .setDoNotStoreManifestLocally(true);
+
+        Atom manifest = storageService.addAtom(builder);
+        assertEquals(manifest.getType(), ManifestType.ATOM);
+
+        localSOSNode.getMDS().getManifest(manifest.guid());
     }
 
 }

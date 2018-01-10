@@ -187,3 +187,4 @@ experiments/.*
 !experiments/datasets/README.md
 !experiments/datasets/*.py
 experiments/datasets/
+scripts/sos_who.log

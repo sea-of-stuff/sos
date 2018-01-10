@@ -95,7 +95,7 @@ public class AtomStorage {
             IGUID tmpGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
             StoredAtomInfo storedAtomInfo = persistData(tmpGUID, atomBuilder);
 
-            IFile tmpCachedLocation = atomFileInLocalStorage(tmpGUID);
+            IFile tmpCachedLocation = createAtomFileInLocalStorage(tmpGUID);
             Location location = new URILocation(tmpCachedLocation.getPathname());
             IGUID guid = generateGUID(location);
             tmpCachedLocation.rename(guid.toMultiHash());
@@ -110,30 +110,10 @@ public class AtomStorage {
 
     private StoredAtomInfo persistData(IGUID tmpGUID, AtomBuilder atomBuilder) throws DataStorageException {
 
-        if (atomBuilder.isData()) {
-
-            try (Data data = atomBuilder.getData()) {
-
-                return persistData(tmpGUID, atomBuilder, data);
-            } catch (IOException e) {
-                throw new DataStorageException("Data source could not be closed");
-            }
-
-        } else if (atomBuilder.isLocation()) {
-            return persistDataByLocation(tmpGUID, atomBuilder);
-        } else {
-            throw new DataStorageException("AtomBuilder not set correctly");
-        }
-    }
-
-    private StoredAtomInfo persistDataByLocation(IGUID guid, AtomBuilder atomBuilder) throws DataStorageException {
-
         try (Data data = atomBuilder.getData()) {
-
-            return persistData(guid, atomBuilder, data);
-
+            return persistData(tmpGUID, atomBuilder, data);
         } catch (IOException e) {
-            throw new DataStorageException(e);
+            throw new DataStorageException("Data source could not be closed");
         }
     }
 
@@ -201,7 +181,7 @@ public class AtomStorage {
         }
     }
 
-    private IFile atomFileInLocalStorage(IGUID guid) throws DataStorageException {
+    private IFile createAtomFileInLocalStorage(IGUID guid) throws DataStorageException {
         IDirectory dataDirectory = localStorage.getDataDirectory();
         return localStorage.createFile(dataDirectory, guid.toMultiHash());
     }

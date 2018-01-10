@@ -191,24 +191,30 @@ public class LocationsIndexImpl implements LocationsIndex {
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
 
-        out.writeInt(index.size());
+        int index_size = index.size();
+        if (index_size > 0) {
+            out.writeInt(index_size);
 
-        // Store entries as ordered in the LRU
-        ConcurrentLinkedQueue<IGUID> lruQueue = new ConcurrentLinkedQueue<>(lru.getQueue());
-        IGUID key;
-        while ((key = lruQueue.poll()) != null) {
+            // Store entries as ordered in the LRU
+            ConcurrentLinkedQueue<IGUID> lruQueue = new ConcurrentLinkedQueue<>(lru.getQueue());
+            IGUID key;
+            while ((key = lruQueue.poll()) != null) {
 
-            PriorityQueue<LocationBundle> values = index.get(key);
-            int numberOfLocations = values.size();
+                PriorityQueue<LocationBundle> values = index.get(key);
+                if (values != null) {
+                    int numberOfLocations = values.size();
 
-            out.writeInt(numberOfLocations);
-            if (numberOfLocations > 0) {
-                out.writeUTF(key.toMultiHash());
+                    out.writeInt(numberOfLocations);
+                    if (numberOfLocations > 0) {
+                        out.writeUTF(key.toMultiHash());
 
-                for (LocationBundle bundle : findLocations(key)) {
-                    out.writeUTF(bundle.toString());
+                        for (LocationBundle bundle : findLocations(key)) {
+                            out.writeUTF(bundle.toString());
+                        }
+                    }
                 }
             }
+
         }
     }
 
