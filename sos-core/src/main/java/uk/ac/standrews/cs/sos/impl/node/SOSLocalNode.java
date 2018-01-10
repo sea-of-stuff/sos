@@ -131,7 +131,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "|   Visit https://github.com/stacs-srg/sos for more info |\n" +
                         " --------------------------------------------------------" +
                         "\n\n" +
-                        "Starting up Node with GUID: " + this.guid().toMultiHash() + "\n");
+                        "Starting up Node with GUID: " + this.guid().toMultiHash() + "\n" +
+                        "Address: " + this.getHostAddress().toString() + "\n");
 
         initDB();
         initBasicServices();

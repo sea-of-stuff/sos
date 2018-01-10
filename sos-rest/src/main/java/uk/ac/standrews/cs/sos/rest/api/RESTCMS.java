@@ -66,7 +66,6 @@ public class RESTCMS {
             // calculate invariant of context without adding it to node
             // if invariant is already in node, then do not add it.
             IGUID guid = contextService.addContext(context);
-            SOS_LOG.log(LEVEL.DEBUG, context);
             SOS_LOG.log(LEVEL.INFO, "Added context with GUID: " + guid.toMultiHash());
 
             ObjectNode objectNode = JSONHelper.jsonObjMapper().createObjectNode();
