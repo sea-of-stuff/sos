@@ -113,7 +113,7 @@ It is suggested to call the node configuration files as `node_{NODE_ID}.json`
 
 The node where the experiment is run is configured inside of the `configuration.json` file as follows:
 
-```
+```json
 "experimentnode": {
       "id": 0,
       "remote": false,
@@ -124,7 +124,7 @@ The node where the experiment is run is configured inside of the `configuration.
 
 If the remote option is **true**, then the **ChicShock** utility will distribute it to the specified node. The configuration will then change as follows:
 
-```
+```json
 "experimentnode": {
       "id": 0,
       "remote": true,
@@ -149,7 +149,7 @@ this type of connection with an SSH enabled Mini-MAC.
 
 The user should have connected to the host via SSH at least once before being able to use this configuration.
 
-```
+```json
 "ssh" : {
         "type" : 0,
         "host" : "cs-wifi-056.cs.st-andrews.ac.uk",
@@ -165,7 +165,7 @@ SSH Type 1 connection should be used when private key with passphrase are requir
 
 The user should have connected to the host via SSH at least once before being able to use this configuration.
 
-```
+```json
 "ssh" : {
         "type" : 1,
         "host" : "hogun-10.cluster",
@@ -232,6 +232,29 @@ The `NodeGenerator` utility generates:
 The generate info is stored at the path: `sos-experiments/src/main/resources/generated_nodes/` and partially printed on the terminal.
 
 
+**Remember** to add the node to the boostrap nodes of the main experiment node configuration. Example (`node_exp.json`):
+
+```json
+{
+  "settings": {
+    "bootstrapNodes": [
+          {
+            "GUID" : "SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
+            "hostname" : "192.168.1.2",
+            "port" : 8080,
+            "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALifpBJBNiW9dzEMsm5maYC12C6UP6tKcJr0nB4UJwXj6+elfyye7KErjyXzbP9WoDDNPWNDQKBA/T4hiZgUl7sCAwEAAQ=="
+          },
+          {
+            "GUID" : "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
+            "hostname" : "192.168.1.3",
+            "port" : 8080,
+            "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK3GdXcbp3jOdc+LSgqj6MMDcz7GdmS4ROUM2qjKksrUFEevqcUlPN4D9oyxvd41pchSyGgvrk2eOQnO+NC+NhcCAwEAAQ=="
+          }
+        ]
+  }
+}
+```
+
 ## Generating Users and Roles
 
 The `USROGenerator` utility can be used to generate users/roles to be used for experiments.
@@ -242,7 +265,7 @@ Experiments are instrumented using the sos-instrument utility.
 
 It is possible to control what to instrument via the experiment configuration file. All the stats are *false* by default.
 
-```
+```json
 "stats": {
   "experiment": true, // to enable instrument calls inside sos-instrument
   "predicate": true,
