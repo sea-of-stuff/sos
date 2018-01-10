@@ -199,8 +199,10 @@ public class DataReplication extends Task {
 
             if (transferWasSuccessful) return true;
 
-        } catch (IOException | NodeNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to perform replication at node with ref: " + iguid);
+        } catch (IOException e) {
+            SOS_LOG.log(LEVEL.ERROR, "IOException - Unable to perform replication at node with ref: " + iguid);
+        } catch (NodeNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "NodeNotFoundException - Unable to perform replication at node with ref: " + iguid);
         }
 
         return false;

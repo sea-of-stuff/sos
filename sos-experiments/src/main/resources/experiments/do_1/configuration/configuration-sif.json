@@ -32,6 +32,31 @@
           "pause": [],
           "operations": [ "WIP" ]
         }
+      },
+      {
+        "id" : 3,
+        "name" : "sif3",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-3.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_3.json",
+        "certificatefile" : "sif_3.crt",
+        "keyfile" : "sif_3.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
       }
     ],
     "experimentnode" : {

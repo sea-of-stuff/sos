@@ -72,7 +72,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
 
             try {
-                String[] contextsToRun = new String[] {"predicate_1", "predicate_2"}; // , "predicate_3"};
+                String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
 
                 for(String contextToRun:contextsToRun) {
 
@@ -139,6 +139,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 File[][] sublists = new File[domainSize][filesPerSublist];
                 if (experimentNode.isEqual_distribution_dataset()) {
 
+                    // TODO - ensure that this split is performed properly
                     for(int i = 0; i < domainSize; i++) {
                         for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
                             sublists[i][j] = listOfFiles[i * filesPerSublist + j];
