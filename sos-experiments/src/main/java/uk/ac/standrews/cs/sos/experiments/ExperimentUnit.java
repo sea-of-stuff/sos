@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
+import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -31,8 +32,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -337,6 +340,90 @@ public interface ExperimentUnit {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             throw new ExperimentException();
+        }
+    }
+
+    default void distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context) throws IOException {
+
+        int domainSize = context.domain().size();
+        System.out.println("Domain size: " + domainSize);
+
+        ExperimentConfiguration.Experiment.ExperimentNode experimentNode = experiment.getExperimentNode();
+        String datasetPath = experimentNode.getDatasetPath();
+        File folderDataset = new File(datasetPath);
+
+        if (domainSize == 0) {
+            addFolderContentToNode(node, folderDataset);
+
+        } else {
+            assert(context.domain().type() == NodesCollectionType.SPECIFIED);
+
+            // Retrieve list of files to distribute
+
+            File[] listOfFiles = folderDataset.listFiles();
+            assert(listOfFiles != null);
+            System.out.println("Total number of files: " + listOfFiles.length);
+
+            // The split is done considering this local node too. That is why the (+1) is added to the domain size
+            // The split is approximated with an upper bound
+            int filesPerSublist = (listOfFiles.length + (domainSize + 1) - 1) / (domainSize + 1);
+            System.out.println("Files per node: " + filesPerSublist);
+
+            // Perform list splitting into sublists
+            File[][] sublists = new File[domainSize][filesPerSublist];
+            if (experimentNode.isEqual_distribution_dataset()) {
+
+                // TODO - ensure that this split is performed properly
+                for(int i = 0; i < domainSize; i++) {
+                    for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
+                        sublists[i][j] = listOfFiles[i * filesPerSublist + j];
+                    }
+                }
+
+            } else {
+
+                // TODO - consider ranges as specified in configuration
+                int[][] distributionSets = experimentNode.getDistribution_sets();
+            }
+
+            // Distribute sublists
+            int i = 0;
+            for(IGUID nodeInDomain:context.domain().nodesRefs()) {
+                distributeDataToNode(node, sublists[i], nodeInDomain);
+                i++;
+            }
+
+        }
+    }
+
+    default void distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
+
+        System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
+        for(File file:sublist) {
+            distributeDatumToNode(node, file, nodeRef);
+        }
+    }
+
+    default void distributeDatumToNode(SOSLocalNode node, File file, IGUID nodeRef) throws IOException {
+
+        try {
+            Set<IGUID> nodes = new LinkedHashSet<>();
+            nodes.add(nodeRef);
+            NodesCollection remoteNode = new NodesCollectionImpl(nodes);
+
+            Location dataLocation = new URILocation(file.getAbsolutePath());
+
+            AtomBuilder atomBuilder = new AtomBuilder()
+                    .setDoNotStoreDataLocally(true)
+                    .setDoNotStoreManifestLocally(true)
+                    .setReplicationFactor(2) // This node will be ignored because of params above
+                    .setReplicationNodes(remoteNode)
+                    .setLocation(dataLocation);
+
+            node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
+
+        } catch (DataStorageException | ManifestPersistException | URISyntaxException e) {
+            throw new IOException("Unable to distribute data to remote experiment node properly");
         }
     }
 
