@@ -1,11 +1,15 @@
-# TODO - docs
+import logging
 import subprocess
 import time
 
-with open("sos_who.log", "a") as sos_who_log:
-    while True:
-        # Log time
-        sos_who_log.write(subprocess.check_output("who"))
-        sos_who_log.write("\n")
-        time.sleep(5)
-        sos_who_log.flush()
+logger = logging.getLogger("sos_log_who")
+logger.setLevel(logging.INFO)
+fh = logging.FileHandler("sos_who.log")
+ 
+formatter = logging.Formatter('%(asctime)s \n%(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+while True:
+    logger.info(subprocess.check_output("who"))
+    time.sleep(30)
