@@ -28,8 +28,8 @@ public class PredicateSerializerTest {
         String expected = "{\n" +
                 "  \"type\" : \"Predicate\",\n" +
                 "  \"GUID\" : \"SHA256_16_90cf94ec60bab7127adf5c9646ae9e23fe32276f66f2393d7c6f21744713e369\",\n" +
-                "  \"dependencies\" : [ \"EXAMPLE\", \"HELLO\" ],\n" +
-                "  \"predicate\" : \"true;\"\n" +
+                "  \"predicate\" : \"true;\",\n" +
+                "  \"dependencies\" : [ \"EXAMPLE\", \"HELLO\" ]\n" +
                 "}";
 
         ReferencePredicate referencePredicate = new ReferencePredicate(jsonNode);

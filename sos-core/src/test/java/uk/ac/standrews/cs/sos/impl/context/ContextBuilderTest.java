@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextBuilderException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -305,5 +306,40 @@ public class ContextBuilderTest extends SetUpTest {
 
         String reFATContext = context.toFATString(predicate, policies);
         JSONAssert.assertEquals(reFATContext, FATContext, false);
+    }
+
+    @Test
+    public void addFATContext() throws ContextException {
+
+        String FATContext = "{\n" +
+                "\t\"context\": {\n" +
+                "\t\t\"name\": \"All\",\n" +
+                "\t\t\"domain\": {\n" +
+                "\t\t\t\"type\": \"LOCAL\",\n" +
+                "\t\t\t\"nodes\": []\n" +
+                "\t\t},\n" +
+                "\t\t\"codomain\": {\n" +
+                "\t\t\t\"type\": \"SPECIFIED\",\n" +
+                "\t\t\t\"nodes\": [\"SHA256_16_1111a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\"]\n" +
+                "\t\t},\n" +
+                "\t\t\"max_age\": 0\n" +
+                "\t},\n" +
+                "\t\"predicate\": {\n" +
+                "\t\t\"type\": \"Predicate\",\n" +
+                "\t\t\"predicate\": \"true;\",\n" +
+                "\t\t\"dependencies\": []\n" +
+                "\t},\n" +
+                "\t\"policies\": [{\n" +
+                "\t\t\"type\": \"Policy\",\n" +
+                "\t\t\"apply\": \"\",\n" +
+                "\t\t\"satisfied\": \"return true;\",\n" +
+                "\t\t\"dependencies\": []\n" +
+                "\t}]\n" +
+                "}";
+
+        IGUID contextGUID = localSOSNode.getCMS().addContext(FATContext);
+        assertNotNull(contextGUID);
+        assertFalse(contextGUID.isInvalid());
+        assertEquals(contextGUID.toMultiHash(), "SHA256_16_f2285b2bcc5e2148aee7171af6e5d12a758b7c42fe59627ad9e2ce5c155ab087");
     }
 }

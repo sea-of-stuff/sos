@@ -21,10 +21,10 @@ public class PredicateSerializer extends JsonSerializer<Predicate> {
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, predicate.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, predicate.guid().toMultiHash());
 
+        jsonGenerator.writeStringField(JSONConstants.KEY_PREDICATE, predicate.predicate().asText());
+
         jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
         jsonGenerator.writeTree(predicate.dependencies());
-
-        jsonGenerator.writeStringField(JSONConstants.KEY_PREDICATE, predicate.predicate().asText());
 
         jsonGenerator.writeEndObject();
     }
