@@ -345,11 +345,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                     Node retrievedNode = JSONHelper.jsonObjMapper().readValue(nodeInfo, SOSNode.class);
                     nodeDiscoveryService.registerNode(retrievedNode, true);
                     uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.INFO, "Registered bootstrap node with GUID: " + boostrapNodeGUID.toMultiHash());
+                } else {
+                    uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "Unknown nodeInfo for node with GUID: " + boostrapNodeGUID.toMultiHash() +
+                            " -- Node could not be registered to node service");
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
-                uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + boostrapNodeGUID.toMultiHash() + " and address " + node.getHostAddress().toString());
+                uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.ERROR, "Unable to register node with GUID " + boostrapNodeGUID.toMultiHash() +
+                        " and address " + node.getHostAddress().toString());
             }
         }
     }

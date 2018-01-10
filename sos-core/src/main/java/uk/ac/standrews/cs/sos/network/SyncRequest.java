@@ -164,7 +164,10 @@ public class SyncRequest extends Request {
                 String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
                 boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
 
-                if (!verified) return new ErrorResponseImpl();
+                if (!verified) {
+                    SOS_LOG.log(LEVEL.ERROR, "SyncRequest - Challenged not verified");
+                    return new ErrorResponseImpl();
+                }
             }
 
             return new ResponseImpl(resp);

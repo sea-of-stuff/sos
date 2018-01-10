@@ -238,10 +238,17 @@ public class SettingsConfiguration {
             @JsonIgnore
             public PublicKey getSignatureCertificate() {
 
-                try {
-                    return DigitalSignature.getCertificate(getSignCert());
-                } catch (CryptoException e) {
-                    throw new Error("Settings - certificate for bootstrap node is invalid");
+                String cert = getSignCert();
+                if (cert == null || cert.isEmpty()) {
+
+                    return null;
+                } else {
+
+                    try {
+                        return DigitalSignature.getCertificate(getSignCert());
+                    } catch (CryptoException e) {
+                        throw new Error("Settings - certificate for bootstrap node is invalid");
+                    }
                 }
             }
 

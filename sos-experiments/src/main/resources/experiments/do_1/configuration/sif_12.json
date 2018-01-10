@@ -96,7 +96,7 @@
         "GUID" : "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
         "hostname" : "192.168.1.3",
         "port" : 8080,
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK3GdXcbp3jOdc+LSgqj6MMDcz7GdmS4ROUM2qjKksrUFEevqcUlPN4D9oyxvd41pchSyGgvrk2eOQnO+NC+NhcCAwEAAQ=="
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK5NnFQXC6gV6PgMHl2qSZ6i2gyuepGsj31DkVzdXVnfcIi2TIKkRLXEvX2PyvlByxOl6V9+LGy7O6DLDxHtbqUCAwEAAQ=="
       }
     ]
   }

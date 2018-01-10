@@ -31,7 +31,7 @@ public class InfoNode extends Task {
 
     @Override
     public void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "Info about node: " + node.guid().toMultiHash());
+        SOS_LOG.log(LEVEL.INFO, "InfoNode for: " + node.guid().toMultiHash());
 
         try {
             URL url = SOSURL.NODE_INFO(node);
@@ -40,10 +40,12 @@ public class InfoNode extends Task {
 
             if (!(response instanceof ErrorResponseImpl)) {
                 info = response.getJSON().toString();
+                SOS_LOG.log(LEVEL.DEBUG, "InfoNode -- " + info);
 
                 try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
                 setState(TaskState.SUCCESSFUL);
             } else {
+                SOS_LOG.log(LEVEL.DEBUG, "InfoNode -- ERROR RESPONSE");
                 setState(TaskState.ERROR);
             }
 

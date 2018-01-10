@@ -48,7 +48,9 @@ public class RESTGeneral {
     public Response getInfo(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
-        return HTTPResponses.OK(RESTConfig.sos, node_challenge, RESTConfig.sos.toString());
+        String retval = RESTConfig.sos.toString();
+        SOS_LOG.log(LEVEL.DEBUG, "REST: GET /sos/info -- " + retval);
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, retval);
     }
 
     @GET
