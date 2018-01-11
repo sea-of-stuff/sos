@@ -62,6 +62,7 @@ public interface StorageService extends Service {
      *
      * @param atom describing the atom to retrieve.
      * @return Data
+     * @throws AtomNotFoundException if the atom could not be found
      */
     Data getAtomContent(Atom atom) throws AtomNotFoundException;
 

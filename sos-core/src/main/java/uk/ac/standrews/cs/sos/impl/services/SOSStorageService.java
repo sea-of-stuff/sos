@@ -352,6 +352,7 @@ public class SOSStorageService implements StorageService {
         for (LocationBundle locationBundle : findLocations(atom)) {
             Location location = locationBundle.getLocation();
 
+            // Filter SOS location against nodesCollection
             if (location instanceof SOSLocation) {
 
                 if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
@@ -411,7 +412,7 @@ public class SOSStorageService implements StorageService {
             retval = atomStorage.store(atomBuilder, BundleTypes.CACHE);
         }
 
-        if (atomBuilder.isLocation()) {
+        if (atomBuilder.isSetLocationAdProvenance() && atomBuilder.isLocation()) {
             Location location = atomBuilder.getLocation();
             bundles.add(new ExternalLocationBundle(location));
         }
