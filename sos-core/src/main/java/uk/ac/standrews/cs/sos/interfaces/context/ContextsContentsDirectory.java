@@ -14,6 +14,10 @@ public interface ContextsContentsDirectory {
 
     void evict(IGUID context, IGUID version);
 
+    void delete(IGUID context, IGUID version);
+
+    void delete(IGUID context);
+
     ContextVersionInfo getEntry(IGUID context, IGUID version);
 
     boolean entryExists(IGUID context, IGUID version);

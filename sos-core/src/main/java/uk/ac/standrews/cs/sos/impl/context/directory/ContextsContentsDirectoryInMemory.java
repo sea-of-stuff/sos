@@ -135,6 +135,20 @@ public class ContextsContentsDirectoryInMemory implements Serializable, Contexts
         }
     }
 
+    @Override
+    public void delete(IGUID context, IGUID version) {
+
+        if (mappings.containsKey(context)) {
+            mappings.get(context).remove(version);
+        }
+    }
+
+    @Override
+    public void delete(IGUID context) {
+
+        mappings.remove(context);
+    }
+
     public void clear() {
 
         mappings.clear();

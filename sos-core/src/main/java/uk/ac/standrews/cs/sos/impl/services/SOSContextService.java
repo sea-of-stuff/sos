@@ -382,6 +382,7 @@ public class SOSContextService implements ContextService {
             Context contextToDelete = getContext(context);
             manifestsDataService.delete(context);
             manifestsDataService.delete(contextToDelete.content());
+            contextsContentsDirectory.delete(context);
 
         } catch (ManifestNotFoundException e) {
             throw new ContextNotFoundException("Unable to find contexts or its contents");

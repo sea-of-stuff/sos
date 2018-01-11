@@ -48,6 +48,10 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
     private static final String SQL_EVICT_ENTRY = "UPDATE contexts SET evict=1 WHERE context_id=? version_id=?";
 
+    private static final String SQL_DELETE_ENTRY = "DELETE from contexts WHERE context_id=? version_id=?";
+
+    private static final String SQL_DELETE_ENTRIES = "DELETE from contexts WHERE context_id=?";
+
     ContextsContentsDirectoryDatabase(String path) throws DatabaseException {
         super(path);
 
@@ -88,6 +92,33 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
             preparedStatement.setString(1, context.toMultiHash());
             preparedStatement.setString(2, version.toMultiHash());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException | DatabaseConnectionException ignored) { }
+    }
+
+    @Override
+    public void delete(IGUID context, IGUID version) {
+
+        try (Connection connection = getSQLiteConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_ENTRY)) {
+
+            preparedStatement.setString(1, context.toMultiHash());
+            preparedStatement.setString(2, version.toMultiHash());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException | DatabaseConnectionException ignored) { }
+    }
+
+    @Override
+    public void delete(IGUID context) {
+
+        try (Connection connection = getSQLiteConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_ENTRIES)) {
+
+            preparedStatement.setString(1, context.toMultiHash());
 
             preparedStatement.executeUpdate();
 
