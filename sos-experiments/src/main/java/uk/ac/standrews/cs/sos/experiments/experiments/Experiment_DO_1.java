@@ -110,6 +110,9 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
                 executorService.shutdownNow();
 
+                // Remove data from remote nodes
+                // Remove context results from remote nodes
+
             } catch (InterruptedException e) {
                 throw new ExperimentException(e);
             }

@@ -122,6 +122,20 @@ public interface ContextService extends Service {
     Set<IGUID> getContents(IGUID context);
 
     /**
+     * Delete this context version and its results
+     * @param context to be deleted
+     * @throws ContextNotFoundException if the context could not be found and thus deleted
+     */
+    void deleteContextVersion(IGUID context) throws ContextNotFoundException;
+
+    /**
+     * Delete all the versions for this context and the associated results
+     * @param invariant of context to be deleted
+     * @throws ContextNotFoundException if one of the versions could not be found and thus deleted
+     */
+    void deleteContext(IGUID invariant) throws ContextNotFoundException;
+
+    /**
      * Forces to run the predicate of the context with the matching GUID
      *
      * @param guid of context

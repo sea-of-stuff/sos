@@ -2,20 +2,16 @@ package uk.ac.standrews.cs.sos.impl.services.Context;
 
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.data.StringData;
-import uk.ac.standrews.cs.castore.exceptions.StorageException;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Version;
 
-import java.net.URISyntaxException;
 import java.util.Set;
 
 import static org.testng.Assert.*;
@@ -24,7 +20,7 @@ import static org.testng.AssertJUnit.assertFalse;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddContextTest extends ContextServiceTest {
+public class SOSAddRetrieveContextTest extends ContextServiceTest {
 
     private static final String FAT_CONTEXT_1 = "{\n" +
             "\t\"context\": {\n" +
@@ -180,7 +176,7 @@ public class SOSAddContextTest extends ContextServiceTest {
     }
 
     @Test
-    public void addContextRunPredicateAndGetOneContentTest() throws ContextException, DataStorageException, StorageException, URISyntaxException, ManifestPersistException, ServiceException, TIPNotFoundException {
+    public void addContext_RunPredicate_GetOneContent_Test() throws ContextException, ServiceException, TIPNotFoundException {
 
         IGUID guid = contextService.addContext(FAT_CONTEXT_1);
         Context context = contextService.getContext(guid);
@@ -202,7 +198,7 @@ public class SOSAddContextTest extends ContextServiceTest {
     }
 
     @Test
-    public void addContextRunPredicateMultipleTimesAndGetMultipleContentsCombiningContextVersionsTest() throws ContextException, DataStorageException, StorageException, URISyntaxException, ManifestPersistException, ServiceException, TIPNotFoundException {
+    public void addContextRunPredicateMultipleTimesAndGetMultipleContentsCombiningContextVersionsTest() throws ContextException, ServiceException, TIPNotFoundException {
 
         IGUID guid = contextService.addContext(FAT_CONTEXT_2);
         Context context = contextService.getContext(guid);

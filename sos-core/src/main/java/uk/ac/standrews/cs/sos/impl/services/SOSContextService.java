@@ -376,6 +376,28 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
+    public void deleteContextVersion(IGUID context) throws ContextNotFoundException {
+
+        try {
+            Context contextToDelete = getContext(context);
+            manifestsDataService.delete(context);
+            manifestsDataService.delete(contextToDelete.content());
+
+        } catch (ManifestNotFoundException e) {
+            throw new ContextNotFoundException("Unable to find contexts or its contents");
+        }
+    }
+
+    @Override
+    public void deleteContext(IGUID invariant) throws ContextNotFoundException {
+
+        Set<IGUID> versions = manifestsDataService.getVersions(invariant);
+        for(IGUID version:versions) {
+            deleteContextVersion(version);
+        }
+    }
+
+    @Override
     public ContextVersionInfo getContextContentInfo(IGUID contextInvariant, IGUID version) {
 
         return contextsContentsDirectory.getEntry(contextInvariant, version);
