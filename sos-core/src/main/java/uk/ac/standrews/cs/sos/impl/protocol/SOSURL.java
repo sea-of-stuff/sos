@@ -132,6 +132,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL CMS_DELETE_CONTEXT_VERSIONS(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "cms/invariant/" + guid.toMultiHash() + "/delete";
+
+        return makeURL(url);
+    }
+
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash();

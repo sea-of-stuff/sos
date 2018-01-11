@@ -31,7 +31,7 @@ public class DataDeletion extends Task {
     protected void performAction() {
 
         try {
-            URL url = SOSURL.STORAGE_DELETE_DATA(node, guid);
+            URL url = SOSURL.STORAGE_DELETE_DATA(node, guid); // TODO - extend to support deletion of context
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 

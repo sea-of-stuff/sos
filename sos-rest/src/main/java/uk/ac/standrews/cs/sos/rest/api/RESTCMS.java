@@ -99,8 +99,8 @@ public class RESTCMS {
             Context context = contextService.getContext(contextGUID);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, context.toString());
-        } catch (ContextNotFoundException e) {
 
+        } catch (ContextNotFoundException e) {
             return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
@@ -130,6 +130,35 @@ public class RESTCMS {
             String output = StringUtils.join(contents, ",\n");
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, output);
+        } catch (Exception e) {
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
+        }
+    }
+
+    @GET
+    @Path("/invariant/{guid}/delete")
+    public Response deleteContextVersions(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/invariant/{guid}/delete");
+
+        if (guid == null || guid.isEmpty()) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        IGUID contextGUID;
+        try {
+            contextGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        try {
+            ContextService contextService = RESTConfig.sos.getCMS();
+            contextService.deleteContext(contextGUID);
+
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+
+        } catch (ContextNotFoundException e) {
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
