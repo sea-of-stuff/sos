@@ -126,10 +126,10 @@ public abstract class BaseExperiment implements Experiment {
                 throw new ExperimentException("Thread Sleep issue while checking that slave nodes are running");
             }
 
+            // Check that all nodes are available before continuing
             nodesRunning = 0;
             for (ExperimentConfiguration.Experiment.Node node : experiment.getNodes()) {
 
-                // FIXME - TEST THIS PART OF CODE
                 Node nodeToPing = new BasicNode(node.getSsh().getHost(), 8080);
                 PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD");
 
@@ -191,7 +191,7 @@ public abstract class BaseExperiment implements Experiment {
             runIteration();
             finishIteration();
 
-            cleanup();
+            cleanup(); // TODO - apply to remote nodes too, which will need to be stopped and restarted
 
             try {
                 System.out.println("Going to sleep for 5 seconds before the next iteration");

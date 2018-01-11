@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
@@ -17,8 +16,9 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -33,22 +33,40 @@ import java.util.concurrent.Executors;
  */
 public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
-    public Experiment_DO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
-        super(experimentConfiguration);
-    }
+    private Iterator<ExperimentUnit> experimentUnitIterator;
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+
+        List<ExperimentUnit> units = new LinkedList<>();
+        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
+            for (String aContextsToRun : contextsToRun) {
+                units.add(new ExperimentUnit_DO_1(aContextsToRun));
+            }
+        }
+        Collections.shuffle(units);
+
+        experimentUnitIterator = units.iterator();
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_DO_1();
+
+        return experimentUnitIterator.next();
     }
 
     private class ExperimentUnit_DO_1 implements ExperimentUnit {
 
+        private String contextFilename;
+        private Context context;
+
         private ContextService cms;
+
+        ExperimentUnit_DO_1(String contextFilename) {
+            this.contextFilename = contextFilename;
+        }
 
         @Override
         public void setup() throws ExperimentException {
@@ -57,51 +75,46 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
             try {
                 cms = node.getCMS();
-            } catch (Exception e) {
+
+
+                System.out.println("Adding contexts to node");
+                IGUID contextGUID = addContext(cms, experiment, contextFilename);
+
+                System.out.println("Spawning context to nodes in domain. GUID: " + contextGUID.toMultiHash());
+                context = cms.getContext(contextGUID);
+                cms.spawnContext(context);
+
+                System.out.println("Adding content to nodes");
+                distributeData(experiment, node, context);
+
+            } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException();
             }
-
         }
 
         @Override
         public void run() throws ExperimentException {
 
             try {
-                String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+                ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
 
-                for(String contextToRun:contextsToRun) {
+                List<Callable<Object>> runnables = new LinkedList<>();
+                runnables.add(cms::runPredicates);
+                runnables.addAll(triggerRemotePredicate(context));
 
-                    System.out.println("Adding contexts to node");
-                    IGUID contextGUID = addContext(cms, experiment, contextToRun);
+                System.out.println("Running Predicates");
+                long start = System.nanoTime();
+                executorService.invokeAll(runnables); // This method returns when all the calls finish
+                long duration = System.nanoTime() - start;
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, duration);
 
-                    System.out.println("Spawning context to nodes in domain. GUID: " + contextGUID.toMultiHash());
-                    Context context = cms.getContext(contextGUID);
-                    cms.spawnContext(context);
+                executorService.shutdownNow();
 
-                    System.out.println("Adding content to nodes");
-                    distributeData(experiment, node, context);
-
-                    ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
-
-                    List<Callable<Object>> runnables = new LinkedList<>();
-                    runnables.add(cms::runPredicates);
-                    runnables.addAll(triggerRemotePredicate(context));
-
-                    System.out.println("Running Predicates");
-                    long start = System.nanoTime();
-                    executorService.invokeAll(runnables); // This method returns when all the calls finish
-                    long duration = System.nanoTime() - start;
-                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextToRun, duration);
-
-                    executorService.shutdownNow();
-
-                    // TODO - remove data from nodes???
-                }
-
-            } catch (ContextException | IOException | InterruptedException | ManifestPersistException e) {
+            } catch (InterruptedException e) {
                 throw new ExperimentException(e);
             }
         }
+
 
         private List<Callable<Object>> triggerRemotePredicate(Context context) {
 
@@ -128,15 +141,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             };
         }
 
-    }
-
-    public static void main(String[] args) throws ExperimentException, ConfigurationException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "do_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_DO_1 experiment_do_1 = new Experiment_DO_1(experimentConfiguration);
-        experiment_do_1.process();
     }
 
 }
