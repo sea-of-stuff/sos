@@ -151,6 +151,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public void delete(IGUID guid) throws ManifestNotFoundException {
 
+        // TODO - handle heads/tips
+
         inMemoryCache.delete(guid);
         local.delete(guid);
         index.delete(guid);

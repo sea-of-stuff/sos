@@ -92,7 +92,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
         try {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            manifestsDir.remove(guid.toMultiHash());
+            manifestsDir.remove(guid.toMultiHash() + FileUtils.JSON_EXTENSION);
         } catch (DataStorageException | BindingAbsentException e) {
             throw new ManifestNotFoundException("Manifest with GUID "  + guid.toMultiHash() + " was not found and could not be deleted.");
         }

@@ -52,4 +52,5 @@ public class SOSDeleteAtomTest extends StorageServiceTest {
 
         storageService.deleteAtom(GUIDFactory.generateRandomGUID());
     }
+
 }
