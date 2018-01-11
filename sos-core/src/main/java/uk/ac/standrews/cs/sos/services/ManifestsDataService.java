@@ -106,6 +106,15 @@ public interface ManifestsDataService extends Service {
     void delete(IGUID guid) throws ManifestNotFoundException;
 
     /**
+     * Delete the manifest with the matching guid from the nodes specified
+     * @param guid of the manifest to be deleted
+     * @param nodesCollection nodes where to delete manifest. Type must be SPECIFIED
+     * @param localyCopy if true, delete manifest in this node too
+     * @throws ManifestNotFoundException if manifest could not be deleted
+     */
+    void delete(IGUID guid, NodesCollection nodesCollection, boolean localyCopy) throws ManifestNotFoundException;
+
+    /**
      * For ATOMS only!
      *
      * @param guid of atom

@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
@@ -10,7 +12,9 @@ import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.network.*;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
@@ -24,16 +28,45 @@ import java.net.URL;
  */
 public class ManifestDeletion extends Task {
 
-    private Node node;
+    private NodeDiscoveryService nodeDiscoveryService;
+    private NodesCollection nodesCollection;
     private Manifest manifest;
 
-    public ManifestDeletion(Node node, Manifest manifest) {
-        this.node = node;
+    public ManifestDeletion(NodeDiscoveryService nodeDiscoveryService, NodesCollection nodesCollection, Manifest manifest) {
+        this.nodeDiscoveryService = nodeDiscoveryService;
+        this.nodesCollection = nodesCollection;
         this.manifest = manifest;
     }
 
     @Override
     protected void performAction() {
+
+        // Delete manifests over nodes collection. If deletion fails in one of the nodes, keep going...
+        for(IGUID nodeRef:nodesCollection.nodesRefs()) {
+
+            try {
+                Node node = nodeDiscoveryService.getNode(nodeRef);
+                deleteManifest(node);
+            } catch (SOSProtocolException e) {
+
+                setState(TaskState.UNSUCCESSFUL);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to delete manifest with GUID " + manifest.guid().toMultiHash() + " in node " + nodeRef.toMultiHash());
+
+            } catch (NodeNotFoundException e) {
+
+                setState(TaskState.UNSUCCESSFUL);
+                SOS_LOG.log(LEVEL.ERROR, "Unable to find node " + nodeRef.toMultiHash() + " so manifest with GUID " + manifest.guid().toMultiHash() + " could not be deleted");
+            }
+        }
+
+        if (getState() != TaskState.UNSUCCESSFUL) {
+            setState(TaskState.SUCCESSFUL);
+        }
+
+    }
+
+    // Delete manifest at given node
+    private void deleteManifest(Node node) throws SOSProtocolException {
 
         try {
             URL url = getManifestURL(node, manifest.getType(), manifest.guid());
@@ -43,16 +76,16 @@ public class ManifestDeletion extends Task {
             if (!(response instanceof ErrorResponseImpl)) {
 
                 response.consumeResponse();
-                setState(TaskState.SUCCESSFUL);
+                SOS_LOG.log(LEVEL.DEBUG, "Manifest with GUID " + manifest.guid().toMultiHash() + " deleted in node " + node.guid().toMultiHash());
             } else {
                 SOS_LOG.log(LEVEL.DEBUG, "ManifestDeletion -- ERROR RESPONSE");
-                setState(TaskState.ERROR);
+                throw new SOSProtocolException("ManifestDeletion -- ERROR RESPONSE");
             }
 
         } catch (SOSURLException | IOException e) {
-            setState(TaskState.ERROR);
-            SOS_LOG.log(LEVEL.ERROR, "Unable to delete manifest with GUID " + manifest.guid().toMultiHash() + " in node " + node.guid().toMultiHash());
+            throw new SOSProtocolException("Unable to delete manifest with GUID " + manifest.guid().toMultiHash() + " in node " + node.guid().toMultiHash());
         }
+
     }
 
     private URL getManifestURL(Node node, ManifestType type, IGUID guid) throws SOSURLException {

@@ -18,6 +18,8 @@ import uk.ac.standrews.cs.sos.impl.datamodel.directory.*;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestDeletion;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsCache;
@@ -36,8 +38,7 @@ import java.io.SequenceInputStream;
 import java.util.*;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.*;
-import static uk.ac.standrews.cs.sos.model.NodesCollectionType.ANY;
-import static uk.ac.standrews.cs.sos.model.NodesCollectionType.LOCAL;
+import static uk.ac.standrews.cs.sos.model.NodesCollectionType.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -63,7 +64,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     // Maps ManifestGUID --> [ Nodes that might have it ]
     private ManifestsLocationsIndex manifestsLocationsIndex;
 
-    private IGUID localNode;
+    private final IGUID localNode;
+    private final NodeDiscoveryService nodeDiscoveryService;
 
     public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
 
@@ -78,6 +80,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         local = new LocalManifestsDirectory(localStorage);
         remote = new RemoteManifestsDirectory(manifestsLocationsIndex, nodeDiscoveryService, this);
 
+        this.nodeDiscoveryService = nodeDiscoveryService;
         localNode = nodeDiscoveryService.getThisNode().guid();
     }
 
@@ -151,13 +154,28 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public void delete(IGUID guid) throws ManifestNotFoundException {
 
-
         Manifest manifest = getManifest(guid);
 
         inMemoryCache.delete(guid);
         local.delete(guid);
         index.delete(manifest);
         manifestsLocationsIndex.evictEntry(guid, localNode);
+    }
+
+    @Override
+    public void delete(IGUID guid, NodesCollection nodesCollection, boolean localyCopy) throws ManifestNotFoundException {
+
+        Manifest manifest = getManifest(guid);
+
+        if (localyCopy) {
+            delete(guid);
+        }
+
+        if (nodesCollection.type() == SPECIFIED) {
+
+            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, nodesCollection, manifest);
+            TasksQueue.instance().performAsyncTask(manifestDeletion);
+        }
     }
 
     @Override
