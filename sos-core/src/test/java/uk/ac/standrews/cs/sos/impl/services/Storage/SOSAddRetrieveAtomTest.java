@@ -25,7 +25,7 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddAtomTest extends StorageServiceTest {
+public class SOSAddRetrieveAtomTest extends StorageServiceTest {
 
     @Test
     public void testRetrieveAtomData() throws Exception {

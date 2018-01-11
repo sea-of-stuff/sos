@@ -7,7 +7,6 @@ import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.services.StorageService;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
@@ -28,7 +27,7 @@ public class StorageServiceTest extends SetUpTest {
     }
 
     @Override
-    protected void createConfiguration() throws ConfigurationException, IOException {
+    protected void createConfiguration() throws ConfigurationException {
         File file = new File(TEST_CONFIGURATIONS_PATH + "config_storage.json");
 
         settings = new SettingsConfiguration(file).getSettingsObj();

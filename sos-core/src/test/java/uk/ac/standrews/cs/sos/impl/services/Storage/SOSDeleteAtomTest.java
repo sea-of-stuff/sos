@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.sos.impl.services.Storage;
 
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.BundleTypes;
@@ -17,7 +18,7 @@ import static org.testng.AssertJUnit.assertEquals;
 public class SOSDeleteAtomTest extends StorageServiceTest {
 
     @Test (expectedExceptions = AtomNotFoundException.class)
-    public void testDeleteAtomData() throws Exception {
+    public void deleteAtomDataTest() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder()
@@ -31,9 +32,8 @@ public class SOSDeleteAtomTest extends StorageServiceTest {
         storageService.getAtomContent(manifest);
     }
 
-
     @Test (expectedExceptions = AtomNotFoundException.class)
-    public void testDeleteAtomAlreadyDeleted() throws Exception {
+    public void deleteAtomAlreadyDeletedTest() throws Exception {
         Location location = HelperTest.createDummyDataFile(localStorage);
 
         AtomBuilder builder = new AtomBuilder()
@@ -45,5 +45,11 @@ public class SOSDeleteAtomTest extends StorageServiceTest {
 
         storageService.deleteAtom(manifest.guid());
         storageService.deleteAtom(manifest.guid());
+    }
+
+    @Test (expectedExceptions = AtomNotFoundException.class)
+    public void deleteAtomNotAddedTest() throws Exception {
+
+        storageService.deleteAtom(GUIDFactory.generateRandomGUID());
     }
 }

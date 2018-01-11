@@ -1,0 +1,97 @@
+{
+  "settings": {
+    "services": {
+      "agent": {
+        "exposed": true
+      },
+      "storage": {
+        "exposed": false,
+        "canPersist": true,
+        "maxReplication": 1
+      },
+      "cms": {
+        "exposed": false,
+        "automatic": false,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "dds": {
+        "exposed": true
+      },
+      "rms": {
+        "exposed": false
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : false,
+        "bootstrap": false
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "~/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts",
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "nodeMaintainer": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": [
+      {
+        "GUID" : "SHA256_16_8722c9cc747d9ebd99540921ecf29d14d84352f667c1eed9803510faa951f716",
+        "hostname" : "cs-wifi-093.cs.st-andrews.ac.uk",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMBmrnmk1ohWWN5ZBKh7I5VcR9KKgzWhoG9290zaXKBEYRODrWn0tYYz8g8rqXtiRVzfvZQZ7WkFIt4NwXYl1i0CAwEAAQ=="
+      }
+    ]
+  }
+}

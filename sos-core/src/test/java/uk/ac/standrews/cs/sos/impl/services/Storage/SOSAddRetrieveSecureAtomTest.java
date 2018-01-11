@@ -13,7 +13,7 @@ import static org.testng.AssertJUnit.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSAddSecureAtomTest extends StorageServiceTest {
+public class SOSAddRetrieveSecureAtomTest extends StorageServiceTest {
 
     @Test
     public void basicAddSecureAtomTest() throws Exception {

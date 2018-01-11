@@ -159,4 +159,12 @@ public interface Agent extends Service {
      * @throws RoleNotFoundException if not found
      */
     Role getRole(IGUID guid) throws RoleNotFoundException;
+
+    /**
+     * Delete manifest and data from local node.
+     *
+     * @param guid of entity
+     * @throws ServiceException if deletion failed
+     */
+    void delete(IGUID guid) throws ServiceException;
 }

@@ -285,6 +285,11 @@ public class SOSAgent implements Agent {
         return usersRolesService.getRole(guid);
     }
 
+    @Override
+    public void delete(IGUID guid) throws ServiceException {
+        // TODO
+    }
+
     private void addManifest(Manifest manifest) throws ManifestPersistException {
         manifestsDataService.addManifest(manifest);
     }
