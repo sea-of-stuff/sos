@@ -17,7 +17,6 @@ import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -192,7 +191,7 @@ public class ManifestReplication extends Task {
             }
 
             boolean transferWasSuccessful = response.getCode() == HTTPStatus.CREATED;
-            try(InputStream ignored = response.getBody()) {} // Ensure that the connection is closed properly.
+            response.consumeResponse();
 
             return transferWasSuccessful;
 

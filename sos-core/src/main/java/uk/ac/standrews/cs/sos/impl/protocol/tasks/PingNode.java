@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -48,7 +47,7 @@ public class PingNode extends Task {
 
             if (!(response instanceof ErrorResponseImpl)) {
 
-                try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+                response.consumeResponse();
 
                 if (response.getCode() == HTTPStatus.OK) {
                     setState(TaskState.SUCCESSFUL);

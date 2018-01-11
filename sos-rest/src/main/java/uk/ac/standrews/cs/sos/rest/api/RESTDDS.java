@@ -116,6 +116,30 @@ public class RESTDDS {
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
 
+    @GET
+    @Path("/manifest/guid/{guid}/delete")
+    public Response deleteManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/" + guid + "/delete");
+
+        IGUID manifestGUID;
+        try {
+            manifestGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        try {
+            ManifestsDataService dds = RESTConfig.sos.getMDS();
+            dds.delete(manifestGUID);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+
+        } catch (ManifestNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET  /sos/dds/manifest/guid/{guid}/delete");
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
+        }
+    }
+
     @POST
     @Path("/compound/data")
     public Response makeCompoundData() {

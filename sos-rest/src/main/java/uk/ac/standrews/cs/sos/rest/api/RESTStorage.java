@@ -171,4 +171,29 @@ public class RESTStorage {
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
+
+    @GET
+    @Path("/data/guid/{guid}/delete")
+    public Response deleteData(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/" + guid + "/delete");
+
+        IGUID atomGUID;
+        try {
+            atomGUID = GUIDFactory.recreateGUID(guid);
+        } catch (GUIDGenerationException e) {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
+        }
+
+        try {
+            StorageService storageService = RESTConfig.sos.getStorageService();
+            storageService.deleteAtom(atomGUID);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+
+        } catch (AtomNotFoundException e) {
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/storage/data/guid/{guid}/delete");
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
+        }
+
+    }
 }

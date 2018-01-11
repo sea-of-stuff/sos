@@ -163,9 +163,10 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public void deleteLocalLocation(IGUID guid) {
 
+        // TODO - specify what location to delete or all locations
+
         // TODO
         // update atom manifest both in the cache and in disk. not remotely
-        // index
         manifestsLocationsIndex.evictEntry(guid, localNode);
     }
 

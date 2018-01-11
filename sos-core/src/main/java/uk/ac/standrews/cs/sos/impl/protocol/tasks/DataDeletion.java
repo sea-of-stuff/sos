@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
@@ -16,41 +17,36 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class InfoNode extends Task {
+public class DataDeletion extends Task {
 
-    private final Node node;
-    private String info;
+    private Node node;
+    private IGUID guid;
 
-    public InfoNode(Node node) {
-        super();
-
+    public DataDeletion(Node node, IGUID guid) {
         this.node = node;
-        this.info = "";
+        this.guid = guid;
     }
 
     @Override
-    public void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "InfoNode for: " + node.guid().toMultiHash());
+    protected void performAction() {
 
         try {
-            URL url = SOSURL.NODE_INFO(node);
+            URL url = SOSURL.STORAGE_DELETE_DATA(node, guid);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
-                info = response.getJSON().toString();
-                SOS_LOG.log(LEVEL.DEBUG, "InfoNode -- " + info);
 
                 response.consumeResponse();
                 setState(TaskState.SUCCESSFUL);
             } else {
-                SOS_LOG.log(LEVEL.DEBUG, "InfoNode -- ERROR RESPONSE");
+                SOS_LOG.log(LEVEL.DEBUG, "DataDeletion -- ERROR RESPONSE");
                 setState(TaskState.ERROR);
             }
 
         } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);
-            SOS_LOG.log(LEVEL.ERROR, "Unable to get info about node " + node.guid().toMultiHash());
+            SOS_LOG.log(LEVEL.ERROR, "Unable to delete data with GUID " + guid.toMultiHash() + " in node " + node.guid().toMultiHash());
         }
     }
 
@@ -62,14 +58,5 @@ public class InfoNode extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
         return null;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    @Override
-    public String toString() {
-        return "InfoNode " + node.guid();
     }
 }

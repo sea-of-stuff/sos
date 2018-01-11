@@ -55,4 +55,10 @@ public class ResponseImpl implements Response {
 
         return Integer.parseInt(response.getHeaders().getFirst("Content-Length"));
     }
+
+    @Override
+    public void consumeResponse() throws IOException {
+
+        try(InputStream ignored = getBody()) {} // Ensure that connection is closed properly.
+    }
 }

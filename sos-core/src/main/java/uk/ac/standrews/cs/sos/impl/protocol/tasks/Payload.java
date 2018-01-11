@@ -49,7 +49,7 @@ public class Payload extends Task {
 
             if (!(response instanceof ErrorResponseImpl)) {
 
-                try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+                response.consumeResponse();
 
                 if (response.getCode() == HTTPStatus.OK) {
                     setState(TaskState.SUCCESSFUL);

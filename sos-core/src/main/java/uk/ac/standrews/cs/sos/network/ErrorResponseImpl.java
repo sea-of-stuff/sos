@@ -34,4 +34,7 @@ public class ErrorResponseImpl implements Response {
     public int getContentLength() {
         return 0;
     }
+
+    @Override
+    public void consumeResponse() { }
 }

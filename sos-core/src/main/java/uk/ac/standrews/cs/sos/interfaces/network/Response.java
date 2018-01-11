@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.interfaces.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -40,4 +41,10 @@ public interface Response {
      * @return length of the response body
      */
     int getContentLength();
+
+    /**
+     * Consume resources used by the response.
+     * @throws IOException if unable to consume response.
+     */
+    void consumeResponse() throws IOException;
 }

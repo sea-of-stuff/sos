@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -39,7 +38,7 @@ public class TriggerPredicate extends Task {
                 throw new IOException();
             }
 
-            try(InputStream ignored = response.getBody()) {} // Ensure that connection is closed properly.
+            response.consumeResponse();
 
             if (response.getCode() == HTTPStatus.OK) {
                 setState(TaskState.SUCCESSFUL);

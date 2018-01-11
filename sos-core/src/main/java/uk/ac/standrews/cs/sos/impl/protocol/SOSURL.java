@@ -125,6 +125,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL DDS_DELETE_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "dds/guid/" + guid.toMultiHash() + "/delete";
+
+        return makeURL(url);
+    }
+
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash();
@@ -142,6 +149,13 @@ public class SOSURL {
     public static URL STORAGE_DATA_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
+
+        return makeURL(url);
+    }
+
+    public static URL STORAGE_DELETE_DATA(Node node, IGUID guid) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "storage/data/guid/" + guid.toMultiHash() + "/delete";
 
         return makeURL(url);
     }
