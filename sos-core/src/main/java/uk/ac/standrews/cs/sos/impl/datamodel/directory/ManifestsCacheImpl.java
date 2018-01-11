@@ -126,7 +126,6 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
         ManifestsCache persistedCache = (ManifestsCache) Persistence.load(file);
 
-        // REMOVEME - we should never have this case
         if (persistedCache == null) throw new ClassNotFoundException();
         if (persistedCache.getLRU() == null) return persistedCache;
 

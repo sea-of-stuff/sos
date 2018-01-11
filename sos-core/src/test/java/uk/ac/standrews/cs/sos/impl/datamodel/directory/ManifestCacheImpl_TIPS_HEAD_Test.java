@@ -97,11 +97,10 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
     }
 
     @Test
-    public void basicHeadTest() throws Exception, HEADNotFoundException {
+    public void basicHeadTest() throws Exception {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
-
         index.setHead(versionManifest);
 
         IGUID head = index.getHead(versionManifest.invariant());
@@ -109,7 +108,7 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
     }
 
     @Test
-    public void basicOnlyOneHeadSameVersionTest() throws Exception, HEADNotFoundException {
+    public void basicOnlyOneHeadSameVersionTest() throws Exception {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
@@ -122,7 +121,7 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
     }
 
     @Test
-    public void basicMultiHeadDifferentVersionTest() throws Exception, HEADNotFoundException {
+    public void basicMultiHeadDifferentVersionTest() throws Exception {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
@@ -139,7 +138,7 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
     }
 
     @Test
-    public void noDuplicatesInTip() throws Exception, HEADNotFoundException {
+    public void noDuplicatesInTip() throws Exception {
         ManifestsIndex index = new ManifestsIndexImpl();
 
         Version versionManifest = ManifestUtils.createDummyVersion();
@@ -153,6 +152,31 @@ public class ManifestCacheImpl_TIPS_HEAD_Test {
         assertEquals(tips.size(), 1);
 
         assertTrue(tips.contains(versionManifest.version()));
+    }
+
+    @Test
+    public void basicTipDeletedTest() throws Exception {
+        ManifestsIndex index = new ManifestsIndexImpl();
+
+        Version versionManifest = ManifestUtils.createDummyVersion();
+        index.advanceTip(versionManifest);
+
+        index.delete(versionManifest);
+
+        Set<IGUID> tips = index.getTips(versionManifest.invariant());
+        assertNotNull(tips);
+        assertEquals(tips.size(), 0);
+    }
+
+    @Test (expectedExceptions = HEADNotFoundException.class)
+    public void basicHeadDeletedTest() throws Exception {
+        ManifestsIndex index = new ManifestsIndexImpl();
+
+        Version versionManifest = ManifestUtils.createDummyVersion();
+        index.setHead(versionManifest);
+
+        index.delete(versionManifest);
+        index.getHead(versionManifest.invariant());
     }
 
 }

@@ -112,16 +112,11 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
     @Override
     public void setHead(Versionable versionable) {
 
-        IGUID invariantGUID = versionable.invariant();
-        IGUID versionGUID = versionable.guid();
+        IGUID invariant = versionable.invariant();
+        IGUID version = versionable.guid();
 
-        heads.put(invariantGUID, versionGUID);
-
-        // Update the [invariant --> [version]] map
-        if (!assetsToVersions.containsKey(invariantGUID)) {
-            assetsToVersions.put(invariantGUID, new LinkedHashSet<>());
-        }
-        assetsToVersions.get(invariantGUID).add(versionGUID);
+        heads.put(invariant, version);
+        addVersionInAsset(invariant, version);
     }
 
     @Override
@@ -138,6 +133,7 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
             advanceTip(invariant, versionable.previous(), guid);
         }
 
+        addVersionInAsset(invariant, guid);
     }
 
     @Override
@@ -148,26 +144,34 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
         IGUID guid = manifest.guid();
 
         // 1. Remove from typeToManifest
-        typeToManifest.get(type).remove(guid);
+        if (typeToManifest.containsKey(type)) {
+            typeToManifest.get(type).remove(guid);
+        }
 
         if (manifest instanceof Versionable) {
             Versionable versionable = (Versionable) manifest;
             IGUID invariant = versionable.invariant();
 
             // 2. assetsToVersions
-            assetsToVersions.get(invariant).remove(guid);
+            if (assetsToVersions.containsKey(invariant)) {
+                assetsToVersions.get(invariant).remove(guid);
+            }
 
             Set<IGUID> previous = versionable.previous();
 
             // 3. tips (FIXME set prev is exists - NOT SO EASY FOR TIPS) - see page 88 of notebook
-            tips.get(invariant).remove(guid);
+            if (tips.containsKey(invariant)) {
+                tips.get(invariant).remove(guid);
+            }
 
             // 4. heads. Set prev is exists, else delete entry
-            if (previous != null && !previous.isEmpty()) {
-                IGUID firstPrevious = previous.iterator().next();
-                heads.put(invariant, firstPrevious);
-            } else {
-                heads.remove(invariant);
+            if (heads.containsKey(invariant)) {
+                if (previous != null && !previous.isEmpty()) {
+                    IGUID firstPrevious = previous.iterator().next();
+                    heads.put(invariant, firstPrevious);
+                } else {
+                    heads.remove(invariant);
+                }
             }
         }
     }
@@ -213,7 +217,13 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
         }
     }
 
-
+    private void addVersionInAsset(IGUID invariant, IGUID version) {
+        // Update the [invariant --> [version]] map
+        if (!assetsToVersions.containsKey(invariant)) {
+            assetsToVersions.put(invariant, new LinkedHashSet<>());
+        }
+        assetsToVersions.get(invariant).add(version);
+    }
 
     // This method defines how the cache is serialised
     private void writeObject(ObjectOutputStream out) throws IOException {
