@@ -54,15 +54,17 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
     @Override
     public void track(Manifest manifest) {
 
-        if (!typeToManifest.containsKey(manifest.getType())) {
-            typeToManifest.put(manifest.getType(), new LinkedHashSet<>());
+        ManifestType type = manifest.getType();
+
+        if (!typeToManifest.containsKey(type)) {
+            typeToManifest.put(type, new LinkedHashSet<>());
         }
 
         if (manifest instanceof Versionable) {
             Versionable versionable = (Versionable) manifest;
-            typeToManifest.get(versionable.getType()).add(versionable.invariant());
+            typeToManifest.get(type).add(versionable.invariant());
         } else {
-            typeToManifest.get(manifest.getType()).add(manifest.guid());
+            typeToManifest.get(type).add(manifest.guid());
         }
 
     }
@@ -127,17 +129,47 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
         Set<IGUID> previousVersions = versionable.previous();
 
+        IGUID guid = versionable.guid();
+        IGUID invariant = versionable.invariant();
+
         if (previousVersions == null || previousVersions.isEmpty()) {
-            advanceTip(versionable.invariant(), versionable.guid());
+            advanceTip(invariant, guid);
         } else {
-            advanceTip(versionable.invariant(), versionable.previous(), versionable.guid());
+            advanceTip(invariant, versionable.previous(), guid);
         }
 
     }
 
     @Override
-    public void delete(IGUID guid) {
-        // TODO
+    public void delete(Manifest manifest) {
+        // TODO - finish and test
+
+        ManifestType type = manifest.getType();
+        IGUID guid = manifest.guid();
+
+        // 1. Remove from typeToManifest
+        typeToManifest.get(type).remove(guid);
+
+        if (manifest instanceof Versionable) {
+            Versionable versionable = (Versionable) manifest;
+            IGUID invariant = versionable.invariant();
+
+            // 2. assetsToVersions
+            assetsToVersions.get(invariant).remove(guid);
+
+            Set<IGUID> previous = versionable.previous();
+
+            // 3. tips (FIXME set prev is exists - NOT SO EASY FOR TIPS) - see page 88 of notebook
+            tips.get(invariant).remove(guid);
+
+            // 4. heads. Set prev is exists, else delete entry
+            if (previous != null && !previous.isEmpty()) {
+                IGUID firstPrevious = previous.iterator().next();
+                heads.put(invariant, firstPrevious);
+            } else {
+                heads.remove(invariant);
+            }
+        }
     }
 
     @Override

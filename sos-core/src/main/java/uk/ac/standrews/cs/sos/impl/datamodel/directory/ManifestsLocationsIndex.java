@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.impl.utils.LRU_GUID;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ManifestsLocationsIndex implements Serializable {
         index.get(manifestGUID).add(node);
     }
 
-    public void evictEntry(IGUID manifestGUID, IGUID node) {
+    public void evictEntry(IGUID manifestGUID, IGUID node) throws ManifestNotFoundException {
 
         if (index.containsKey(manifestGUID)) {
             Set<IGUID> nodes = index.get(manifestGUID);
@@ -55,6 +56,8 @@ public class ManifestsLocationsIndex implements Serializable {
                 index.remove(manifestGUID);
                 lru.remove(manifestGUID);
             }
+        } else {
+            throw new ManifestNotFoundException();
         }
 
     }

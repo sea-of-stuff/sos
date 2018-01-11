@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.utils.Persistence;
@@ -49,7 +50,7 @@ public class ManifestsDataServiceIndexTest {
     }
 
     @Test
-    public void evictTest() {
+    public void evictTest() throws ManifestNotFoundException {
         IGUID manifestGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         IGUID nodeGUID = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
 
