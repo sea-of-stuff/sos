@@ -57,7 +57,7 @@ public class SOSDeleteManifestTest extends ManifestDataServiceTest {
         manifestsDataService.delete(GUIDFactory.generateRandomGUID());
     }
 
-    @Test (expectedExceptions = ManifestNotFoundException.class)
+    @Test
     public void deleteLocationOfDeletedManifestTest() throws ManifestPersistException, ManifestNotFoundException {
 
         IGUID guid = GUIDFactory.generateRandomGUID();
@@ -65,7 +65,7 @@ public class SOSDeleteManifestTest extends ManifestDataServiceTest {
 
         manifestsDataService.addManifest(manifest);
         manifestsDataService.delete(guid);
-        manifestsDataService.deleteLocalLocation(guid);
+        manifestsDataService.deleteLocalLocation(guid); // Does not throws any exception
     }
 
     @Test

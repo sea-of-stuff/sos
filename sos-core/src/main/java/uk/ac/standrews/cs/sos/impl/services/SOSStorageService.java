@@ -160,7 +160,7 @@ public class SOSStorageService implements StorageService {
             locationIndex.deleteLocation(localNodeGUID, guid);
             manifestsDataService.deleteLocalLocation(guid);
 
-        } catch (DataStorageException | BindingAbsentException | ManifestNotFoundException e) {
+        } catch (DataStorageException | BindingAbsentException e) {
             throw new AtomNotFoundException(guid);
         }
 

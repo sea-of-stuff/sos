@@ -109,9 +109,8 @@ public interface ManifestsDataService extends Service {
      * For ATOMS only!
      *
      * @param guid of atom
-     * @throws ManifestNotFoundException if atom is not found
      */
-    void deleteLocalLocation(IGUID guid) throws ManifestNotFoundException;
+    void deleteLocalLocation(IGUID guid);
 
     /**
      * Get all the tips for the given invariant.

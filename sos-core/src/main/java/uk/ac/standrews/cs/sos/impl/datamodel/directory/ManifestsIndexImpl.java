@@ -142,7 +142,7 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
     @Override
     public void delete(Manifest manifest) {
-        // TODO - finish and test
+        // TODO - ad-hoc tests
 
         ManifestType type = manifest.getType();
         IGUID guid = manifest.guid();

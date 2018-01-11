@@ -161,7 +161,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void deleteLocalLocation(IGUID guid) throws ManifestNotFoundException {
+    public void deleteLocalLocation(IGUID guid) {
 
         // TODO
         // update atom manifest both in the cache and in disk. not remotely
