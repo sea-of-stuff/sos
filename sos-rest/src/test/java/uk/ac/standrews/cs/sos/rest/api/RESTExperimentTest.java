@@ -43,4 +43,5 @@ public class RESTExperimentTest extends CommonRESTTest {
         Response response = target("/sos/experiment/cms/guid/" + guidContext.toMultiHash() + "/predicate").request().get();
         assertEquals(response.getStatus(), HTTPStatus.OK);
     }
+
 }

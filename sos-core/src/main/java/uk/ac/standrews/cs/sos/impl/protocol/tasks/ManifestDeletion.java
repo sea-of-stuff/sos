@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
-import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.network.*;
@@ -69,7 +69,7 @@ public class ManifestDeletion extends Task {
     private void deleteManifest(Node node) throws SOSProtocolException {
 
         try {
-            URL url = getManifestURL(node, manifest.getType(), manifest.guid());
+            URL url = getManifestURL(node, manifest);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
@@ -88,29 +88,29 @@ public class ManifestDeletion extends Task {
 
     }
 
-    private URL getManifestURL(Node node, ManifestType type, IGUID guid) throws SOSURLException {
+    private URL getManifestURL(Node node, Manifest manifest) throws SOSURLException {
 
-        switch(type) {
+        switch(manifest.getType()) {
 
             case ATOM: case ATOM_PROTECTED:
             case COMPOUND: case COMPOUND_PROTECTED:
             case VERSION:
 
                 if (node.isDDS()) {
-                    return SOSURL.DDS_DELETE_MANIFEST(node, guid);
+                    return SOSURL.DDS_DELETE_MANIFEST(node, manifest.guid());
                 }
 
             case CONTEXT:
 
                 if (node.isCMS()) {
-                    return SOSURL.CMS_DELETE_CONTEXT_VERSIONS(node, guid);
+                    return SOSURL.CMS_DELETE_CONTEXT_VERSIONS(node, ((Context) manifest).invariant());
                 }
 
             case ROLE:
             case USER:
             case METADATA: case METADATA_PROTECTED:
             case NODE:
-                throw new SOSURLException("Type: " + type + " not supported yet");
+                throw new SOSURLException("Type: " + manifest.getType() + " not supported yet");
 
             default:
                 throw new SOSURLException("Unable to return manifest URL for node " + node.toString());

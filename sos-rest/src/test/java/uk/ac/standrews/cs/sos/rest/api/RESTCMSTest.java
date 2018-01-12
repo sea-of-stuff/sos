@@ -5,6 +5,8 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPStatus;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
@@ -250,6 +252,44 @@ public class RESTCMSTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class)).get(KEY_GUID).asText();
         assertEquals(guidS, "SHA256_16_988398f62ba42fb294a73a35f6d0e62f4218d37dde8a4240bb4c4241aa25f7da");
+    }
+
+    @Test
+    public void deleteContextTest() throws ContextException {
+
+        String contextJSON = "{\n" +
+                "\t\"context\": {\n" +
+                "\t\t\"name\": \"All\",\n" +
+                "\t\t\"domain\": {\n" +
+                "\t\t\t\"type\": \"LOCAL\",\n" +
+                "\t\t\t\"nodes\": []\n" +
+                "\t\t},\n" +
+                "\t\t\"codomain\": {\n" +
+                "\t\t\t\"type\": \"LOCAL\",\n" +
+                "\t\t\t\"nodes\": []\n" +
+                "\t\t},\n" +
+                "\t\t\"max_age\": 0\n" +
+                "\t},\n" +
+                "\t\"predicate\": {\n" +
+                "\t\t\"type\": \"Predicate\",\n" +
+                "\t\t\"predicate\": \"true;\",\n" +
+                "\t\t\"dependencies\": []\n" +
+                "\t},\n" +
+                "\t\"policies\": []\n" +
+                "}";
+
+        IGUID guidContext = state.sos.getCMS().addContext(contextJSON);
+        Context context = state.sos.getCMS().getContext(guidContext);
+
+        Response response = target("/sos/cms/invariant/" + context.invariant().toMultiHash() + "/delete").request().get();
+        assertEquals(response.getStatus(), HTTPStatus.OK);
+
+        try {
+            state.sos.getCMS().getContext(guidContext);
+            assertTrue(false);
+        } catch (ContextNotFoundException e) {
+            assertTrue(true);
+        }
     }
 
 }
