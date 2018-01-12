@@ -144,21 +144,21 @@ public class RESTCMS {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
-        IGUID contextGUID;
+        IGUID contextInvariantGUID;
         try {
-            contextGUID = GUIDFactory.recreateGUID(guid);
+            contextInvariantGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            contextService.deleteContext(contextGUID);
+            contextService.deleteContext(contextInvariantGUID);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
 
         } catch (ContextNotFoundException e) {
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
+            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with Invariant GUID " + contextInvariantGUID.toMultiHash());
         } catch (Exception e) {
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }

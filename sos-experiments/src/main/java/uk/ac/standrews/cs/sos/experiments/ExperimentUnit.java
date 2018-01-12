@@ -57,6 +57,14 @@ public interface ExperimentUnit {
     void run() throws ExperimentException;
 
     /**
+     *
+     * @throws ExperimentException
+     */
+    default void finish() throws ExperimentException {
+        // do nothnig
+    }
+
+    /**
      * Add the data inside the folder to the local node
      *
      * @param node where to add the content
@@ -343,7 +351,7 @@ public interface ExperimentUnit {
         }
     }
 
-    default void distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context) throws IOException {
+    default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context) throws IOException {
 
         int domainSize = context.domain().size();
         System.out.println("Domain size: " + domainSize);
@@ -352,8 +360,9 @@ public interface ExperimentUnit {
         String datasetPath = experimentNode.getDatasetPath();
         File folderDataset = new File(datasetPath);
 
+        List<IGUID> addedContent = null; // FIXME - get addedContent from remote methods too
         if (domainSize == 0) {
-            addFolderContentToNode(node, folderDataset);
+            addedContent = addFolderContentToNode(node, folderDataset);
 
         } else {
             assert(context.domain().type() == NodesCollectionType.SPECIFIED);
@@ -394,8 +403,11 @@ public interface ExperimentUnit {
             }
 
         }
+
+        return addedContent;
     }
 
+    // TODO - return list of guids of versions added in remote node
     default void distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
 
         System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
@@ -420,6 +432,7 @@ public interface ExperimentUnit {
                     .setReplicationNodes(remoteNode)
                     .setLocation(dataLocation);
 
+            // FIXME - must be added with version
             node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
 
         } catch (DataStorageException | ManifestPersistException | URISyntaxException e) {

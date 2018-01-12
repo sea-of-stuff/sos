@@ -151,16 +151,17 @@ public abstract class BaseExperiment implements Experiment {
         BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.experiment;
         currentExperimentUnit.run();
         BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.non_experiment;
-    }
 
-    @Override
-    public void finishIteration() {
         end = System.nanoTime();
         long timeToFinish = end - start;
         System.out.println("Experiment iteration {" + (iteration + 1) + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
+    }
+
+    @Override
+    public void finishIteration() throws ExperimentException {
+       currentExperimentUnit.finish();
 
         InstrumentFactory.flush();
-
         ServerState.kill();
     }
 

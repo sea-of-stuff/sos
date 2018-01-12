@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestDeletion;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.TriggerPredicate;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -85,7 +87,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 cms.spawnContext(context);
 
                 System.out.println("Adding content to nodes");
-                distributeData(experiment, node, context);
+                distributeData(experiment, node, context); // TODO - have guids of data..
 
             } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException();
@@ -110,12 +112,34 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
                 executorService.shutdownNow();
 
-                // Remove data from remote nodes
-                // Remove context results from remote nodes
-
             } catch (InterruptedException e) {
                 throw new ExperimentException(e);
             }
+        }
+
+        @Override
+        public void finish() throws ExperimentException {
+
+            // Remove data from remote nodes
+            deleteData();
+
+            // Remove context and context results from remote nodes
+            deleteContext();
+        }
+
+        private void deleteData() {
+
+
+            // attempt data deletion over all nodes in domain
+            // must have GUIDs of data
+        }
+
+        private void deleteContext() {
+
+            NodeDiscoveryService nodeDiscoveryService = node.getNDS();
+            NodesCollection domain = context.domain();
+            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, domain, context);
+            TasksQueue.instance().performSyncTask(manifestDeletion);
         }
 
 
