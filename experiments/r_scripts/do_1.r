@@ -3,7 +3,7 @@ setwd("/Users/sic2/git/sos/experiments")
 library(ggplot2)
 source("r_scripts/utils_stats.r")
 
-d <- read.csv("remote/do_1_test10.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/do_1_test54.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate_remote',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
@@ -22,6 +22,6 @@ ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
-  ylim(0, 2.5) + # yMax
+  ylim(0, 0.3) + # yMax
   labs(title='TEST TITLE', x="Policy", y="Time (s)")
  
