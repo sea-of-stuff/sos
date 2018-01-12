@@ -77,7 +77,7 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
             ExperimentConfiguration.Experiment.Node slaveNode = getExperiment().getNodes().iterator().next();
             String lDataPath = experiment.getExperimentNode().getDatasetPath();
             String rDataPath = "temp_data/";
-            sendFilesViaRuntime(slaveNode, lDataPath, rDataPath);
+            sendFilesViaSSH(slaveNode, lDataPath, rDataPath);
         }
 
         private void addContexts() throws ContextException {

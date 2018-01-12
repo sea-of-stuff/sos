@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.sos.utils;
 
+import java.util.Random;
+
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -22,5 +24,18 @@ public class Misc {
         return true;
     }
 
+    // https://stackoverflow.com/a/1520212/2467938
+    // Implementing Fisher–Yates shuffle
+    public static void shuffleArray(Object[] ar) {
+
+        Random random = new Random();
+        for (int i = ar.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            // Simple swap
+            Object a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
+    }
 
 }

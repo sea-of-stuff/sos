@@ -27,6 +27,7 @@ import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.Misc;
 
 import java.io.File;
 import java.io.IOException;
@@ -313,7 +314,7 @@ public interface ExperimentUnit {
         }
     }
 
-    default void sendFilesViaRuntime(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
+    default void sendFilesViaSSH(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
 
         System.out.println("Sending files via SCP to node: " + node.toString());
 
@@ -375,7 +376,7 @@ public interface ExperimentUnit {
             File[] listOfFiles = folderDataset.listFiles();
             assert(listOfFiles != null);
             System.out.println("Total number of files: " + listOfFiles.length);
-            // TODO - shuffle list of files...
+            Misc.shuffleArray(listOfFiles);
 
             // The split is done considering this local node too. That is why the (+1) is added to the domain size
             // The split is approximated with an upper bound
@@ -383,6 +384,7 @@ public interface ExperimentUnit {
             System.out.println("Files per node: " + filesPerSublist);
 
             // Perform list splitting into sublists
+            // Last elements of last sublist might contain null values
             File[][] sublists = new File[domainSize + 1][filesPerSublist];
             if (experimentNode.isEqual_distribution_dataset()) {
 
@@ -417,9 +419,12 @@ public interface ExperimentUnit {
 
     default List<IGUID> addContentToLocalNode(SOSLocalNode node, File[] sublist) throws IOException {
 
+        System.out.println("Add " + sublist.length + " files to local node with GUID " + node.guid().toMultiHash());
         List<IGUID> addedContents = new LinkedList<>();
 
         for(File file:sublist) {
+
+            if (file == null) break;
 
             try {
                 Location dataLocation = new URILocation(file.getAbsolutePath());
@@ -448,6 +453,9 @@ public interface ExperimentUnit {
         System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
         List<IGUID> addedContents = new LinkedList<>();
         for(File file:sublist) {
+
+            if (file == null) break;
+
             IGUID addedContent = distributeDatumToNode(node, file, nodeRef);
             addedContents.add(addedContent);
         }

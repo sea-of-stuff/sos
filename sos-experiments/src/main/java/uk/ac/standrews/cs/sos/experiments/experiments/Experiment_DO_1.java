@@ -38,7 +38,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+    private static String[] contextsToRun = new String[] {"predicate_3"}; // {"predicate_1", "predicate_2", "predicate_3"};
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
