@@ -100,7 +100,6 @@ public class FetchManifest extends Task {
 
     private URL getManifestURL(Node node, IGUID manifestId) throws SOSURLException {
 
-        System.out.println("Manifest Fetching from node: " + node.toString());
         if (node.isDDS()) {
             return SOSURL.DDS_GET_MANIFEST(node, manifestId);
 

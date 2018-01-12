@@ -8,10 +8,14 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.model.Manifest;
+import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.ManifestUtils;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -27,6 +31,9 @@ public class SOSDeleteManifestTest extends ManifestDataServiceTest {
         manifestsDataService.addManifest(manifest);
         manifestsDataService.delete(guid);
         // No exception is thrown
+
+        Set<IGUID> atoms = manifestsDataService.getManifests(ManifestType.ATOM);
+        assertEquals(atoms.size(), 0);
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)
@@ -76,6 +83,9 @@ public class SOSDeleteManifestTest extends ManifestDataServiceTest {
         manifestsDataService.addManifest(manifest);
         manifestsDataService.delete(manifest.guid());
         // No exception is thrown
+
+        Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
+        assertEquals(assetInvariants.size(), 0);
     }
 
     @Test (expectedExceptions = ManifestNotFoundException.class)

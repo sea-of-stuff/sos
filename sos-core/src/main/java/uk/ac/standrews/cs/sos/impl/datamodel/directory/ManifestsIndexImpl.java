@@ -145,7 +145,13 @@ public class ManifestsIndexImpl implements ManifestsIndex, Serializable {
 
         // 1. Remove from typeToManifest
         if (typeToManifest.containsKey(type)) {
-            typeToManifest.get(type).remove(guid);
+
+            if (manifest instanceof Versionable) {
+                Versionable versionable = (Versionable) manifest;
+                typeToManifest.get(type).remove(versionable.invariant());
+            } else {
+                typeToManifest.get(type).remove(guid);
+            }
         }
 
         if (manifest instanceof Versionable) {
