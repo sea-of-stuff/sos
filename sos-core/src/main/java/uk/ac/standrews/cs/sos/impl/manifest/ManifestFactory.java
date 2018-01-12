@@ -80,9 +80,9 @@ public class ManifestFactory {
      *
      * @param content - required
      * @param invariant of version
-     * @param prevs of version
-     * @param metadata of version
-     * @param role to sign version
+     * @param prevs of version (null is allowed)
+     * @param metadata of version (null is allowed)
+     * @param role to sign version (null is allowed)
      * @return an asset manifest
      * @throws ManifestNotMadeException if version manifest could not be created
      */

@@ -2,10 +2,12 @@ package uk.ac.standrews.cs.sos.experiments;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
@@ -15,6 +17,7 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
+import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -360,9 +363,9 @@ public interface ExperimentUnit {
         String datasetPath = experimentNode.getDatasetPath();
         File folderDataset = new File(datasetPath);
 
-        List<IGUID> addedContent = null; // FIXME - get addedContent from remote methods too
+        List<IGUID> addedContents = new LinkedList<>();
         if (domainSize == 0) {
-            addedContent = addFolderContentToNode(node, folderDataset);
+            addedContents = addFolderContentToNode(node, folderDataset);
 
         } else {
             assert(context.domain().type() == NodesCollectionType.SPECIFIED);
@@ -382,7 +385,6 @@ public interface ExperimentUnit {
             File[][] sublists = new File[domainSize][filesPerSublist];
             if (experimentNode.isEqual_distribution_dataset()) {
 
-                // TODO - ensure that this split is performed properly
                 for(int i = 0; i < domainSize; i++) {
                     for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
                         sublists[i][j] = listOfFiles[i * filesPerSublist + j];
@@ -398,25 +400,29 @@ public interface ExperimentUnit {
             // Distribute sublists
             int i = 0;
             for(IGUID nodeInDomain:context.domain().nodesRefs()) {
-                distributeDataToNode(node, sublists[i], nodeInDomain);
+                List<IGUID> addedContentsInNode = distributeDataToNode(node, sublists[i], nodeInDomain);
+                addedContents.addAll(addedContentsInNode);
                 i++;
             }
 
         }
 
-        return addedContent;
+        return addedContents;
     }
 
-    // TODO - return list of guids of versions added in remote node
-    default void distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
+    default List<IGUID> distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
 
         System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
+        List<IGUID> addedContents = new LinkedList<>();
         for(File file:sublist) {
-            distributeDatumToNode(node, file, nodeRef);
+            IGUID addedContent = distributeDatumToNode(node, file, nodeRef);
+            addedContents.add(addedContent);
         }
+
+        return addedContents;
     }
 
-    default void distributeDatumToNode(SOSLocalNode node, File file, IGUID nodeRef) throws IOException {
+    default IGUID distributeDatumToNode(SOSLocalNode node, File file, IGUID nodeRef) throws IOException {
 
         try {
             Set<IGUID> nodes = new LinkedHashSet<>();
@@ -432,11 +438,15 @@ public interface ExperimentUnit {
                     .setReplicationNodes(remoteNode)
                     .setLocation(dataLocation);
 
-            // FIXME - must be added with version
-            node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
+            Atom atom  = node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
 
-        } catch (DataStorageException | ManifestPersistException | URISyntaxException e) {
-            throw new IOException("Unable to distribute data to remote experiment node properly");
+            Version version = ManifestFactory.createVersionManifest(atom.guid(), GUIDFactory.generateRandomGUID(), null, null, null);
+            node.getMDS().addManifest(version, remoteNode, 2, false, false);
+
+            return version.guid();
+
+        } catch (DataStorageException | ManifestPersistException | URISyntaxException | ManifestNotMadeException e) {
+            throw new IOException("Unable to distribute data and/or version to remote experiment node properly");
         }
     }
 
