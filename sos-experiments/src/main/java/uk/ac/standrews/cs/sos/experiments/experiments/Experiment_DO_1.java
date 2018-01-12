@@ -40,7 +40,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
-        String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+        String[] contextsToRun = new String[] {"predicate_1", "predicate_2"} ; // , "predicate_3"};
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {

@@ -49,7 +49,6 @@ public class RESTGeneral {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/info");
 
         String retval = RESTConfig.sos.toString();
-        SOS_LOG.log(LEVEL.DEBUG, "REST: GET /sos/info -- " + retval);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, retval);
     }
 

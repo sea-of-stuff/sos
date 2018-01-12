@@ -139,9 +139,10 @@ public interface ContextService extends Service {
      * Forces to run the predicate of the context with the matching GUID
      *
      * @param guid of context
+     * @return number of assets processed
      * @throws ContextNotFoundException if not context was found for given GUID
      */
-    void runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
+    int runContextPredicateNow(IGUID guid) throws ContextNotFoundException;
 
     /**
      * Forces to run the policies of the context with the matching GUID

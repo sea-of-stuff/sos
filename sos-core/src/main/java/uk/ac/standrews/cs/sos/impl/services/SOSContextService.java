@@ -459,10 +459,10 @@ public class SOSContextService implements ContextService {
     ////////////////////////////////////////////////////////////
 
     @Override
-    public void runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
+    public int runContextPredicateNow(IGUID guid) throws ContextNotFoundException {
 
         Context context = getContext(guid);
-        runContextPredicateNow(context);
+        return runContextPredicateNow(context);
     }
 
     @Override
@@ -483,23 +483,22 @@ public class SOSContextService implements ContextService {
     ////////////////////// PREDICATE ///////////////////////////
     ////////////////////////////////////////////////////////////
 
-    private void runContextPredicateNow(Context context) {
+    private int runContextPredicateNow(Context context) {
+        SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
 
-        service.schedule(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY predicate for context " + context.getName());
+        int counter = 0;
+        long start = System.currentTimeMillis();
 
-            long start = System.currentTimeMillis();
+        try {
+            counter = runPredicate(context);
+        } catch (ContextException e) {
+            SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
+        }
 
-            try {
-                runPredicate(context);
-            } catch (ContextException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
-            }
+        long end = System.currentTimeMillis();
+        predicateThreadSessionStatistics.add(new Pair<>(start, end));
 
-            long end = System.currentTimeMillis();
-            predicateThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, 0, TimeUnit.MILLISECONDS);
+        return counter;
     }
 
     /**
@@ -729,16 +728,12 @@ public class SOSContextService implements ContextService {
     ////////////////////////////////////////////////////////////
 
     private void runContextPoliciesNow(Context context) {
+        SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
 
-        service.schedule(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
-
-            long start = System.currentTimeMillis();
-            runPolicies(context);
-            long end = System.currentTimeMillis();
-            applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, 0, TimeUnit.MILLISECONDS);
+        long start = System.currentTimeMillis();
+        runPolicies(context);
+        long end = System.currentTimeMillis();
+        applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
     }
 
     /**
@@ -864,16 +859,12 @@ public class SOSContextService implements ContextService {
     //////////////////////////////////////////////////////////////////
 
     private void runContextPoliciesCheckNow(Context context) {
+        SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
 
-        service.schedule(() -> {
-            SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
-
-            long start = System.currentTimeMillis();
-            runCheckPolicies(context);
-            long end = System.currentTimeMillis();
-            checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
-
-        }, 0, TimeUnit.MILLISECONDS);
+        long start = System.currentTimeMillis();
+        runCheckPolicies(context);
+        long end = System.currentTimeMillis();
+        checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
     }
 
     private void checkPoliciesPeriodic() {

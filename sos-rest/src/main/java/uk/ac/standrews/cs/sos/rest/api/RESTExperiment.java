@@ -47,9 +47,9 @@ public class RESTExperiment {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            contextService.runContextPredicateNow(contextGUID); // Returns when predicate is run for all assets.
+            int assetsProcessed = contextService.runContextPredicateNow(contextGUID); // Returns when predicate is run for all assets.
 
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, Integer.toString(assetsProcessed));
 
         } catch (ContextNotFoundException e) {
             SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Context not found. GUID: " + contextGUID.toMultiHash());
