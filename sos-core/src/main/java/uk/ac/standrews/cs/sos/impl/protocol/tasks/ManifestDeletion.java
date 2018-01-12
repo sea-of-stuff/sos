@@ -70,15 +70,15 @@ public class ManifestDeletion extends Task {
 
         try {
             URL url = getManifestURL(node, manifest);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
 
                 response.consumeResponse();
-                SOS_LOG.log(LEVEL.DEBUG, "Manifest with GUID " + manifest.guid().toMultiHash() + " deleted in node " + node.guid().toMultiHash());
+                SOS_LOG.log(LEVEL.DEBUG, "ManifestDeletion - Manifest with GUID " + manifest.guid().toMultiHash() + " deleted in node " + node.guid().toMultiHash());
             } else {
-                SOS_LOG.log(LEVEL.DEBUG, "ManifestDeletion -- ERROR RESPONSE");
+                SOS_LOG.log(LEVEL.DEBUG, "ManifestDeletion -- ERROR RESPONSE for Manifest with GUID " + manifest.guid().toMultiHash() + " to be deleted in node " + node.guid().toMultiHash());
                 throw new SOSProtocolException("ManifestDeletion -- ERROR RESPONSE");
             }
 
