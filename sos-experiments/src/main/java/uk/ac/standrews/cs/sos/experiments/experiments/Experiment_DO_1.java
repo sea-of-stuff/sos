@@ -128,17 +128,17 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         public void finish() throws ExperimentException {
 
             // Remove data from remote nodes
-            deleteData();
+            deleteData(null);
 
             // Remove context and context results from remote nodes
             deleteContext();
         }
 
-        private void deleteData() {
+        private void deleteData(List<IGUID> versionsToDelete) {
 
             System.out.println("Delete data in remote nodes - WIP");
-            // attempt data deletion over all nodes in domain
             // must have GUIDs of data
+            // Delete versions only. It does not matter if atoms are deleted or not since they are not processed directly by contexts
         }
 
         private void deleteContext() {

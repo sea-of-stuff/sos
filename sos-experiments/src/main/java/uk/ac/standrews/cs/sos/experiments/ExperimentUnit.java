@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FileUtils;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
@@ -371,10 +372,10 @@ public interface ExperimentUnit {
             assert(context.domain().type() == NodesCollectionType.SPECIFIED);
 
             // Retrieve list of files to distribute
-
             File[] listOfFiles = folderDataset.listFiles();
             assert(listOfFiles != null);
             System.out.println("Total number of files: " + listOfFiles.length);
+            // TODO - shuffle list of files...
 
             // The split is done considering this local node too. That is why the (+1) is added to the domain size
             // The split is approximated with an upper bound
@@ -382,10 +383,10 @@ public interface ExperimentUnit {
             System.out.println("Files per node: " + filesPerSublist);
 
             // Perform list splitting into sublists
-            File[][] sublists = new File[domainSize][filesPerSublist];
+            File[][] sublists = new File[domainSize + 1][filesPerSublist];
             if (experimentNode.isEqual_distribution_dataset()) {
 
-                for(int i = 0; i < domainSize; i++) {
+                for(int i = 0; i < domainSize + 1; i++) {
                     for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
                         sublists[i][j] = listOfFiles[i * filesPerSublist + j];
                     }
@@ -397,14 +398,46 @@ public interface ExperimentUnit {
                 int[][] distributionSets = experimentNode.getDistribution_sets();
             }
 
-            // Distribute sublists
-            int i = 0;
+            // Add first sublist to local node (which is always part of the domain)
+            List<IGUID> addedContentsInLocalNode = addContentToLocalNode(node, sublists[0]);
+            addedContents.addAll(addedContentsInLocalNode);
+
+            // Distribute data indexed by sublists to remote nodes
+            int i = 1;
             for(IGUID nodeInDomain:context.domain().nodesRefs()) {
                 List<IGUID> addedContentsInNode = distributeDataToNode(node, sublists[i], nodeInDomain);
                 addedContents.addAll(addedContentsInNode);
                 i++;
             }
 
+        }
+
+        return addedContents;
+    }
+
+    default List<IGUID> addContentToLocalNode(SOSLocalNode node, File[] sublist) throws IOException {
+
+        List<IGUID> addedContents = new LinkedList<>();
+
+        for(File file:sublist) {
+
+            try {
+                Location dataLocation = new URILocation(file.getAbsolutePath());
+
+                AtomBuilder atomBuilder = new AtomBuilder()
+                        .setLocation(dataLocation);
+
+                Atom atom = node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
+
+                IGUID invariant = GUIDFactory.generateGUID(atom.guid().toMultiHash());
+                Version version = ManifestFactory.createVersionManifest(atom.guid(), invariant, null, null, null);
+                node.getMDS().addManifest(version);
+
+                addedContents.add(version.guid());
+
+            } catch (GUIDGenerationException | URISyntaxException | DataStorageException | ManifestPersistException | ManifestNotMadeException e) {
+                throw new IOException("Unable to add data and/or version to local experiment node properly");
+            }
         }
 
         return addedContents;
@@ -440,12 +473,13 @@ public interface ExperimentUnit {
 
             Atom atom  = node.getStorageService().addAtom(atomBuilder); // using this method the data is added properly to the other node
 
-            Version version = ManifestFactory.createVersionManifest(atom.guid(), GUIDFactory.generateRandomGUID(), null, null, null);
+            IGUID invariant = GUIDFactory.generateGUID(atom.guid().toMultiHash());
+            Version version = ManifestFactory.createVersionManifest(atom.guid(), invariant, null, null, null);
             node.getMDS().addManifest(version, remoteNode, 2, false, false);
 
             return version.guid();
 
-        } catch (DataStorageException | ManifestPersistException | URISyntaxException | ManifestNotMadeException e) {
+        } catch (DataStorageException | ManifestPersistException | URISyntaxException | ManifestNotMadeException | GUIDGenerationException e) {
             throw new IOException("Unable to distribute data and/or version to remote experiment node properly");
         }
     }
