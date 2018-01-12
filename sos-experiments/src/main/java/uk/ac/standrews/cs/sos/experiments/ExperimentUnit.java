@@ -420,7 +420,6 @@ public interface ExperimentUnit {
 
     default List<IGUID> addContentToLocalNode(SOSLocalNode node, File[] sublist) throws IOException {
 
-        System.out.println("Add " + sublist.length + " files to local node with GUID " + node.guid().toMultiHash());
         List<IGUID> addedContents = new LinkedList<>();
 
         for(File file:sublist) {
@@ -446,12 +445,14 @@ public interface ExperimentUnit {
             }
         }
 
+        System.out.println("Added " + addedContents.size() + " files to local node with GUID " + node.guid().toMultiHash());
+
         return addedContents;
     }
 
     default List<IGUID> distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
 
-        System.out.println("Distribute " + sublist.length + " files to node with GUID " + nodeRef.toMultiHash());
+
         List<IGUID> addedContents = new LinkedList<>();
         for(File file:sublist) {
 
@@ -460,6 +461,8 @@ public interface ExperimentUnit {
             IGUID addedContent = distributeDatumToNode(node, file, nodeRef);
             addedContents.add(addedContent);
         }
+
+        System.out.println("Distributed " + addedContents.size() + " files to node with GUID " + nodeRef.toMultiHash());
 
         return addedContents;
     }

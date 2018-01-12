@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -41,7 +42,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_3"}; // {"predicate_1", "predicate_2", "predicate_3"};
+    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
@@ -89,7 +90,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             try {
                 cms = node.getCMS();
 
-
                 System.out.println("Adding contexts to node");
                 IGUID contextGUID = addContext(cms, experiment, contextFilename);
 
@@ -112,7 +112,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
 
                 List<Callable<Object>> runnables = new LinkedList<>();
-                runnables.add(cms::runPredicates);
+                runnables.add(triggerLocalPredicate());
                 runnables.addAll(triggerRemotePredicate(context));
 
                 System.out.println("Running Predicates");
@@ -140,6 +140,15 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         private void deleteData(List<IGUID> versionsToDelete) {
 
+            System.out.println("Delete data in local node.");
+            for(IGUID guid:versionsToDelete) {
+
+                try {
+                    node.getMDS().delete(guid);
+                } catch (ManifestNotFoundException e) { /* IGNOREME */ }
+
+            }
+
             System.out.println("Delete data in remote nodes.");
             NodeDiscoveryService nodeDiscoveryService = node.getNDS();
 
@@ -161,6 +170,14 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             TasksQueue.instance().performSyncTask(manifestDeletion);
         }
 
+        private Callable<Object> triggerLocalPredicate() {
+
+            return () -> {
+                int numberOfAssets = cms.runPredicates();
+                System.out.println("Local predicate run over " + numberOfAssets + " assets");
+                return 0;
+            };
+        }
 
         private List<Callable<Object>> triggerRemotePredicate(Context context) {
 
