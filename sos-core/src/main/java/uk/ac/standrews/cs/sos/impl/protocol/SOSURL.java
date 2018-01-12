@@ -43,7 +43,7 @@ public class SOSURL {
 
     public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/guid/" + guid.toMultiHash();
+                "dds/manifest/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
@@ -127,7 +127,7 @@ public class SOSURL {
 
     public static URL DDS_DELETE_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/guid/" + guid.toMultiHash() + "/delete";
+                "dds/manifest/guid/" + guid.toMultiHash() + "/delete";
 
         return makeURL(url);
     }

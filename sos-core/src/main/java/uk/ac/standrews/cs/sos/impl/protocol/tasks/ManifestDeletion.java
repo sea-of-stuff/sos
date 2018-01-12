@@ -22,7 +22,6 @@ import java.net.URL;
 
 /**
  * TODO - extend task to all manifest-based services (mms, cms, usro, etc)
- * TODO - use this task in MDS
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
