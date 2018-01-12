@@ -100,7 +100,7 @@ public abstract class BaseExperiment implements Experiment {
             node = ServerState.init(configuration.getSettingsObj());
 
             waitForSlaveNodesToBeRunning();
-            node.loadBootstrapNodes(); // Force re-load
+            node.loadBootstrapNodes(); // Force re-load now that all nodes are running
 
         } catch (ConfigurationException e) {
             throw new ExperimentException("Unable to process configuration properly", e);

@@ -37,10 +37,11 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
+    // Must be static to be initialized before constructor
+    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3"};
+
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
-
-        String[] contextsToRun = new String[] {"predicate_1", "predicate_2"} ; // , "predicate_3"};
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
@@ -57,6 +58,12 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     public ExperimentUnit getExperimentUnit() {
 
         return experimentUnitIterator.next();
+    }
+
+    @Override
+    public int numberOfTotalIterations() {
+
+        return experiment.getSetup().getIterations() * contextsToRun.length;
     }
 
     private class ExperimentUnit_DO_1 implements ExperimentUnit {
@@ -129,7 +136,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         private void deleteData() {
 
-
+            System.out.println("Delete data in remote nodes - WIP");
             // attempt data deletion over all nodes in domain
             // must have GUIDs of data
         }

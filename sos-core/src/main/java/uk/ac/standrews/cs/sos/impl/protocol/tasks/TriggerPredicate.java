@@ -38,6 +38,8 @@ public class TriggerPredicate extends Task {
                 throw new IOException();
             }
 
+            String numberOfAssets = response.getStringBody();
+            System.out.println("Remote predicate run over " + numberOfAssets + " assets");
             response.consumeResponse();
 
             if (response.getCode() == HTTPStatus.OK) {
