@@ -330,6 +330,7 @@ public interface ExperimentUnit {
 
             File[] listOfFiles = new File(lDirectoryPath).listFiles();
             assert listOfFiles != null;
+            Misc.shuffleArray(listOfFiles);
             long start = System.nanoTime();
             for (File file : listOfFiles) {
 
