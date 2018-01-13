@@ -1,26 +1,20 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestDeletion;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.TriggerPredicate;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.ContextService;
-import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -103,7 +97,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
                 cms.spawnContext(context);
 
                 System.out.println("Adding content to nodes");
-                allVersions = distributeData(experiment, node, context);
+                allVersions = distributeData(experiment, node, context, datasetSize);
 
             } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException();
@@ -137,42 +131,10 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
         public void finish() throws ExperimentException {
 
             // Remove data from remote nodes
-            deleteData(allVersions);
+            deleteData(node, context, allVersions);
 
             // Remove context and context results from remote nodes
-            deleteContext();
-        }
-
-        private void deleteData(List<IGUID> versionsToDelete) {
-
-            System.out.println("Delete data in local node.");
-            for(IGUID guid:versionsToDelete) {
-
-                try {
-                    node.getMDS().delete(guid);
-                } catch (ManifestNotFoundException e) { /* IGNOREME */ }
-
-            }
-
-            System.out.println("Delete data in remote nodes.");
-            NodeDiscoveryService nodeDiscoveryService = node.getNDS();
-
-            // Delete versions only. It does not matter if atoms are deleted or not since they are not processed directly by contexts
-            for(IGUID guid:versionsToDelete) {
-                Version versionToDelete = new VersionManifest(GUIDFactory.generateRandomGUID(), guid, GUIDFactory.generateRandomGUID(), null,
-                        GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID(), "");
-
-                ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(), versionToDelete);
-                TasksQueue.instance().performSyncTask(manifestDeletion);
-            }
-        }
-
-        private void deleteContext() {
-
-            NodeDiscoveryService nodeDiscoveryService = node.getNDS();
-            NodesCollection domain = context.domain();
-            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, domain, context);
-            TasksQueue.instance().performSyncTask(manifestDeletion);
+            deleteContext(node, context);
         }
 
         private Callable<Object> triggerLocalPredicate() {

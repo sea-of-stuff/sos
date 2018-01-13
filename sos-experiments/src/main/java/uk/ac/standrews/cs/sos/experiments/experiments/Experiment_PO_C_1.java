@@ -47,7 +47,7 @@ public class Experiment_PO_C_1 extends BaseExperiment implements Experiment {
 
                 System.out.println("Adding content to node");
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+                addFolderContentToNode(node, new File(datasetPath), -1);
 
                 System.out.println("Adding contexts to node");
                 addContexts();

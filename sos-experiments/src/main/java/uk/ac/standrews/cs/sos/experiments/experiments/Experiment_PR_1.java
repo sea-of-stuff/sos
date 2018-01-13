@@ -47,7 +47,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                 cms = node.getCMS();
 
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+                addFolderContentToNode(node, new File(datasetPath), -1);
                 addContexts();
             } catch (ContextException | IOException e) {
                 e.printStackTrace();

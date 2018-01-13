@@ -47,7 +47,7 @@ public class Experiment_CO_A_2 extends BaseExperiment implements Experiment {
 
                 // NOTE - Keep amount of data fixed
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath));
+                addFolderContentToNode(node, new File(datasetPath), -1);
 
                 System.out.println("Adding contexts to node");
                 addContexts();

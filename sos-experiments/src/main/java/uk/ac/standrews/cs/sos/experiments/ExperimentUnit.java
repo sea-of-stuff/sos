@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.distribution.NetworkException;
 import uk.ac.standrews.cs.sos.experiments.distribution.NetworkOperations;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
@@ -22,10 +24,13 @@ import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestDeletion;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.Misc;
 
@@ -37,10 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -74,11 +76,12 @@ public interface ExperimentUnit {
      *
      * @param node where to add the content
      * @param folder where the content for the experiment is
+     * @param datasetSize limits the dataset for this experiment by this param. If -1, no limit will be enforced
      * @throws IOException if content could not be added properly
      */
-    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder) throws IOException {
+    default List<IGUID> addFolderContentToNode(SOSLocalNode node, File folder, int datasetSize) throws IOException {
 
-        PlainFileVisitor<Path> fv = new PlainFileVisitor<>(node);
+        PlainFileVisitor<Path> fv = new PlainFileVisitor<>(node, datasetSize);
 
         long start = System.nanoTime();
         System.out.println("Files added: ");
@@ -91,11 +94,13 @@ public interface ExperimentUnit {
     class PlainFileVisitor<T extends Path> extends SimpleFileVisitor<T> {
 
         SOSLocalNode node;
+        int datasetSize;
         int counter;
         List<IGUID> versions = new LinkedList<>();
 
-        public PlainFileVisitor(SOSLocalNode node) {
+        public PlainFileVisitor(SOSLocalNode node, int datasetSize) {
             this.node = node;
+            this.datasetSize = datasetSize;
 
             counter = 0;
         }
@@ -107,9 +112,8 @@ public interface ExperimentUnit {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             // System.out.println("File " + file.toUri().toString());
-            counter++;
-            if (counter % 100 == 0) {
-                System.out.print("  " + counter);
+            if (datasetSize != -1 && datasetSize <= counter) {
+                return FileVisitResult.CONTINUE;
             }
 
             try {
@@ -128,6 +132,11 @@ public interface ExperimentUnit {
                 InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added version " + version.guid().toShortString() + " from URI " + file.toString());
             } catch (URISyntaxException  | ServiceException e) {
                 e.printStackTrace();
+            }
+
+            counter++;
+            if (counter % 100 == 0) {
+                System.out.print("  " + counter);
             }
 
             return FileVisitResult.CONTINUE;
@@ -152,7 +161,7 @@ public interface ExperimentUnit {
         Role role;
 
         public ProtectedFileVisitor(SOSLocalNode node, Role role) {
-            super(node);
+            super(node, -1);
             this.role = role;
         }
 
@@ -254,7 +263,7 @@ public interface ExperimentUnit {
     class FileVisitor<T extends Path> extends PlainFileVisitor<T> {
 
         public FileVisitor(SOSLocalNode node) {
-            super(node);
+            super(node, -1);
         }
 
         @Override
@@ -357,7 +366,16 @@ public interface ExperimentUnit {
         }
     }
 
-    default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context) throws IOException {
+    /**
+     *
+     * @param experiment
+     * @param node
+     * @param context
+     * @param datasetSize limits the dataset for this experiment by this param. If -1, no limit will be enforced
+     * @return
+     * @throws IOException
+     */
+    default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context, int datasetSize) throws IOException {
 
         int domainSize = context.domain().size();
         System.out.println("Domain size: " + domainSize);
@@ -368,7 +386,7 @@ public interface ExperimentUnit {
 
         List<IGUID> addedContents = new LinkedList<>();
         if (domainSize == 0) {
-            addedContents = addFolderContentToNode(node, folderDataset);
+            addedContents = addFolderContentToNode(node, folderDataset, datasetSize);
 
         } else {
             assert(context.domain().type() == NodesCollectionType.SPECIFIED);
@@ -376,8 +394,12 @@ public interface ExperimentUnit {
             // Retrieve list of files to distribute
             File[] listOfFiles = folderDataset.listFiles();
             assert(listOfFiles != null);
-            System.out.println("Total number of files: " + listOfFiles.length);
+            // Truncate dataset if necessary
+            if (datasetSize != -1) {
+                listOfFiles = Arrays.copyOf(listOfFiles, datasetSize);
+            }
             Misc.shuffleArray(listOfFiles);
+            System.out.println("Total number of files: " + listOfFiles.length);
 
             // The split is done considering this local node too. That is why the (+1) is added to the domain size
             // The split is approximated with an upper bound
@@ -496,4 +518,35 @@ public interface ExperimentUnit {
         }
     }
 
+    default void deleteData(SOSLocalNode node, Context context, List<IGUID> versionsToDelete) {
+
+        System.out.println("Delete data in local node.");
+        for(IGUID guid:versionsToDelete) {
+
+            try {
+                node.getMDS().delete(guid);
+            } catch (ManifestNotFoundException e) { /* IGNOREME */ }
+
+        }
+
+        System.out.println("Delete data in remote nodes.");
+        NodeDiscoveryService nodeDiscoveryService = node.getNDS();
+
+        // Delete versions only. It does not matter if atoms are deleted or not since they are not processed directly by contexts
+        for(IGUID guid:versionsToDelete) {
+            Version versionToDelete = new VersionManifest(GUIDFactory.generateRandomGUID(), guid, GUIDFactory.generateRandomGUID(), null,
+                    GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID(), "");
+
+            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(), versionToDelete);
+            TasksQueue.instance().performSyncTask(manifestDeletion);
+        }
+    }
+
+    default void deleteContext(SOSLocalNode node, Context context) {
+
+        NodeDiscoveryService nodeDiscoveryService = node.getNDS();
+        NodesCollection domain = context.domain();
+        ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, domain, context);
+        TasksQueue.instance().performSyncTask(manifestDeletion);
+    }
 }
