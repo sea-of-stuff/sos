@@ -372,7 +372,7 @@ public interface ExperimentUnit {
      * @param node
      * @param context
      * @param datasetSize limits the dataset for this experiment by this param. If -1, no limit will be enforced
-     * @return
+     * @return set of versions ref for versions added
      * @throws IOException
      */
     default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context, int datasetSize) throws IOException {
@@ -396,6 +396,7 @@ public interface ExperimentUnit {
             assert(listOfFiles != null);
             // Truncate dataset if necessary
             if (datasetSize != -1) {
+                if (datasetSize < listOfFiles.length) throw new IOException("Original dataset is too small to be truncated with a size of " + datasetSize);
                 listOfFiles = Arrays.copyOf(listOfFiles, datasetSize);
             }
             Misc.shuffleArray(listOfFiles);
@@ -446,7 +447,7 @@ public interface ExperimentUnit {
 
         for(File file:sublist) {
 
-            if (file == null) break;
+            if (file == null) continue;
 
             try {
                 Location dataLocation = new URILocation(file.getAbsolutePath());
@@ -474,11 +475,10 @@ public interface ExperimentUnit {
 
     default List<IGUID> distributeDataToNode(SOSLocalNode node, File[] sublist, IGUID nodeRef) throws IOException {
 
-
         List<IGUID> addedContents = new LinkedList<>();
         for(File file:sublist) {
 
-            if (file == null) break;
+            if (file == null) continue;
 
             IGUID addedContent = distributeDatumToNode(node, file, nodeRef);
             addedContents.add(addedContent);
