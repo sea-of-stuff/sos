@@ -31,22 +31,26 @@ import java.util.concurrent.Executors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_DO_2 extends BaseExperiment implements Experiment {
+public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_6"};
-    private static int[] datasetSizes = new int[] {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    private static String[] subdatasets = new String[] { "1kb", "100kb", "1mb" };
 
-    public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    private final String masterDataset;
+
+    public Experiment_DO_3(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        masterDataset = experiment.getExperimentNode().getDataset();
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
-                for(Integer datasetSize : datasetSizes) {
-                    units.add(new ExperimentUnit_DO_2(aContextsToRun, datasetSize));
+                for(String subdataset: subdatasets) {
+                    units.add(new ExperimentUnit_DO_3(aContextsToRun, subdataset));
                 }
             }
         }
@@ -64,21 +68,21 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     @Override
     public int numberOfTotalIterations() {
 
-        return experiment.getSetup().getIterations() * contextsToRun.length * datasetSizes.length;
+        return experiment.getSetup().getIterations() * contextsToRun.length * subdatasets.length;
     }
 
-    private class ExperimentUnit_DO_2 implements ExperimentUnit {
+    private class ExperimentUnit_DO_3 implements ExperimentUnit {
 
-        private int datasetSize;
+        private String subdataset;
         private String contextFilename;
         private Context context;
         private List<IGUID> allVersions;
 
         private ContextService cms;
 
-        ExperimentUnit_DO_2(String contextFilename, int datasetSize) {
+        ExperimentUnit_DO_3(String contextFilename, String subdataset) {
             this.contextFilename = contextFilename;
-            this.datasetSize = datasetSize;
+            this.subdataset = subdataset;
         }
 
         @Override
@@ -96,8 +100,9 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
                 context = cms.getContext(contextGUID);
                 cms.spawnContext(context);
 
-                System.out.println("Adding content to nodes");
-                allVersions = distributeData(experiment, node, context, datasetSize);
+                System.out.println("Adding content to nodes. Subdataset: " + subdataset);
+                experiment.getExperimentNode().setDataset(masterDataset + "/" + subdataset + "/");
+                allVersions = distributeData(experiment, node, context, 100);
 
             } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException();
@@ -118,7 +123,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
                 long start = System.nanoTime();
                 executorService.invokeAll(runnables); // This method returns when all the calls finish
                 long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, Integer.toString(datasetSize), duration);
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, subdataset, duration);
 
                 executorService.shutdownNow();
 

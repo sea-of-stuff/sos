@@ -368,12 +368,12 @@ public interface ExperimentUnit {
 
     /**
      *
-     * @param experiment
-     * @param node
-     * @param context
+     * @param experiment configuration
+     * @param node experiment node
+     * @param context with domain where to distributed content
      * @param datasetSize limits the dataset for this experiment by this param. If -1, no limit will be enforced
      * @return set of versions ref for versions added
-     * @throws IOException
+     * @throws IOException if data could not be distributed properly
      */
     default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context, int datasetSize) throws IOException {
 
