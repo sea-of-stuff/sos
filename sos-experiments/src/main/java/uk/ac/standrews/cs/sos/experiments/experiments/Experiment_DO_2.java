@@ -37,21 +37,23 @@ import java.util.concurrent.Executors;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_DO_1 extends BaseExperiment implements Experiment {
+public class Experiment_DO_2 extends BaseExperiment implements Experiment {
 
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
-                                                         "predicate_4", "predicate_5", "predicate_6"};
+    private static String[] contextsToRun = new String[] {"predicate_6"};
+    private static int[] datasetSizes = new int[] {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
-    public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
-                units.add(new ExperimentUnit_DO_1(aContextsToRun));
+                for(Integer datasetSize : datasetSizes) {
+                    units.add(new ExperimentUnit_DO_2(aContextsToRun, datasetSize));
+                }
             }
         }
         Collections.shuffle(units);
@@ -68,19 +70,21 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     @Override
     public int numberOfTotalIterations() {
 
-        return experiment.getSetup().getIterations() * contextsToRun.length;
+        return experiment.getSetup().getIterations() * contextsToRun.length * datasetSizes.length;
     }
 
-    private class ExperimentUnit_DO_1 implements ExperimentUnit {
+    private class ExperimentUnit_DO_2 implements ExperimentUnit {
 
+        private int datasetSize; // TODO - limit dataset by this field
         private String contextFilename;
         private Context context;
         private List<IGUID> allVersions;
 
         private ContextService cms;
 
-        ExperimentUnit_DO_1(String contextFilename) {
+        ExperimentUnit_DO_2(String contextFilename, int datasetSize) {
             this.contextFilename = contextFilename;
+            this.datasetSize = datasetSize;
         }
 
         @Override
@@ -120,7 +124,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 long start = System.nanoTime();
                 executorService.invokeAll(runnables); // This method returns when all the calls finish
                 long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, duration);
+                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, Integer.toString(datasetSize), duration);
 
                 executorService.shutdownNow();
 
@@ -139,7 +143,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             deleteContext();
         }
 
-        // TODO - move to Experiment Unit
         private void deleteData(List<IGUID> versionsToDelete) {
 
             System.out.println("Delete data in local node.");
@@ -164,7 +167,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
             }
         }
 
-        // TODO - move to Experiment Unit
         private void deleteContext() {
 
             NodeDiscoveryService nodeDiscoveryService = node.getNDS();
