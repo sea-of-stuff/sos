@@ -63,7 +63,7 @@ public class FetchManifestTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/sos/dds/guid/" + GUID_VERSION)
+                                .withPath("/sos/dds/manifest/guid/" + GUID_VERSION)
                 )
                 .respond(
                         response()
