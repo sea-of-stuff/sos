@@ -396,7 +396,7 @@ public interface ExperimentUnit {
             assert(listOfFiles != null);
             // Truncate dataset if necessary
             if (datasetSize != -1) {
-                if (datasetSize < listOfFiles.length) throw new IOException("Original dataset is too small to be truncated with a size of " + datasetSize);
+                if (datasetSize > listOfFiles.length) throw new IOException("Original dataset is too small to be truncated with a size of " + datasetSize);
                 listOfFiles = Arrays.copyOf(listOfFiles, datasetSize);
             }
             Misc.shuffleArray(listOfFiles);

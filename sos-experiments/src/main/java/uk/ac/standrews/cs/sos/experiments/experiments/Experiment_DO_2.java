@@ -37,7 +37,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
 
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_6"};
-    private static int[] datasetSizes = new int[] {10, 20, 30}; // {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    private static int[] datasetSizes = new int[] {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
     public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);

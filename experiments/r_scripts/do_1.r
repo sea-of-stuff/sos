@@ -4,6 +4,7 @@ library(ggplot2)
 source("r_scripts/utils_stats.r")
 
 d <- read.csv("remote/do_1_test57.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/do_2_test4.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'predicate_remote',]
 d$Message <- droplevels(d$Message)
 d$ContextName <- d$Message
