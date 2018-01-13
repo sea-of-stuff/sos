@@ -97,6 +97,24 @@
         "hostname" : "192.168.1.3",
         "port" : 8080,
         "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK5NnFQXC6gV6PgMHl2qSZ6i2gyuepGsj31DkVzdXVnfcIi2TIKkRLXEvX2PyvlByxOl6V9+LGy7O6DLDxHtbqUCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_867ab9daa29ed55ec7761ba4218076cfeaa1f308d6b13cee3e5323b273b24b1f",
+        "hostname" : "192.168.1.4",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALP7CzG4PPjmUr9AN/VmO2fARdj2ZvF6mjxom9DDjiZ62SIghpQQ1hJnBat/Zvqu64OMVjL/zm1i3BM+pnfgn1sCAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_39cf1bcbe1ad206e2e862d9abe5158e05338df0e348661b5a0a8c952337921c0",
+        "hostname" : "192.168.1.5",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAN8Tqy++dMXvOX4E6OXj/3dPEz1fSxb6lCQaiTlzBb07qKEjobstF4GZ5322la87e9SW5O7kDAQH7SpY3yAQ2r0CAwEAAQ=="
+      },
+      {
+        "GUID" : "SHA256_16_5c1e5af5c2c816978946387a3b6ba2bfc5a182226ad1b50780243ba392c830f0",
+        "hostname" : "192.168.1.6",
+        "port" : 8080,
+        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOQqEUM/aii5fP0/mD7GBfVA98o+QvKNfmUA27BGVJkzirgeFGCCpZ9iJFdK9ttvFRnzw2ugEz3m2SiI4dsbghsCAwEAAQ=="
       }
     ]
   }

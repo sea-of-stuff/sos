@@ -42,7 +42,8 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[]{"predicate_1", "predicate_2", "predicate_3"};
+    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
+                                                         "predicate_4", "predicate_5", "predicate_6"};
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
@@ -98,7 +99,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 cms.spawnContext(context);
 
                 System.out.println("Adding content to nodes");
-                allVersions = distributeData(experiment, node, context); // TODO - have guids of data..
+                allVersions = distributeData(experiment, node, context);
 
             } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException();
@@ -174,7 +175,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
             return () -> {
                 int numberOfAssets = cms.runPredicates();
-                System.out.println("Local predicate run over " + numberOfAssets + " assets");
+                System.out.println("Local predicate run over " + numberOfAssets + " assets"); // TODO - commentme
                 return 0;
             };
         }
@@ -193,13 +194,13 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         private Callable<Object> triggerRemotePredicate(IGUID nodeRef, IGUID contextGUID) {
 
             return () -> {
-                System.out.println("Running pred for node " + nodeRef.toMultiHash());
+                System.out.println("Running pred for node " + nodeRef.toMultiHash()); // TODO - commentme
                 Node nodeToContext = node.getNDS().getNode(nodeRef);
                 TriggerPredicate triggerPredicate = new TriggerPredicate(nodeToContext, contextGUID);
 
                 TasksQueue.instance().performSyncTask(triggerPredicate);
 
-                System.out.println("Finished to run pred for node " + nodeRef.toMultiHash() + " State: " + triggerPredicate.getState().name());
+                System.out.println("Finished to run pred for node " + nodeRef.toMultiHash() + " State: " + triggerPredicate.getState().name()); // TODO - commentme
                 return 0;
             };
         }

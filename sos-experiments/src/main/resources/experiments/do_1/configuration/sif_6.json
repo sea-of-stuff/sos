@@ -1,14 +1,15 @@
 {
   "settings": {
-    "guid": "6b67f67f31908dd0e574699f163eda2cc117f7f4",
+    "guid": "SHA256_16_5c1e5af5c2c816978946387a3b6ba2bfc5a182226ad1b50780243ba392c830f0",
     "services": {
       "storage": {
-        "exposed": false
+        "exposed": true
       },
       "cms": {
-        "exposed": false,
-        "indexFile": "cms.index",
+        "exposed": true,
+        "loadedPath": "sos/java/contexts/",
         "automatic": false,
+        "predicateOnNewContext" : false,
         "predicateThread": {
           "initialDelay": 30,
           "period": 60
@@ -32,20 +33,21 @@
         }
       },
       "dds": {
-        "exposed": false,
-        "cacheFile": "manifests.cache",
-        "indexFile": "dds.index"
+        "exposed": true
       },
       "rms": {
-        "exposed": true,
-        "cacheFile": "usro.cache"
+        "exposed": false
       },
       "nds": {
         "exposed": false,
-        "startupRegistration" : false
+        "startupRegistration" : false,
+        "bootstrap": false
       },
       "mms": {
         "exposed": false
+      },
+      "experiment": {
+        "exposed": true
       }
     },
     "database": {
@@ -61,14 +63,16 @@
       "port": 8082
     },
     "keys": {
-      "location": "~/sos/keys/"
+      "location": "/cs/scratch/sic2/sos/keys/"
     },
     "store": {
       "type": "local",
-      "location": "~/sos/"
+      "location": "/cs/scratch/sic2/sos/"
     },
     "global": {
+      "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",
       "tasks": {
+        "fallbackToSyncTasks": true,
         "thread": {
           "ps": 4
         }

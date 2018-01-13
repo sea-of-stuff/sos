@@ -1,0 +1,22 @@
+{
+  "context": {
+    "name": "predicate_4",
+    "domain": {
+        "type": "SPECIFIED",
+        "nodes": ["SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
+                  "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
+                  "SHA256_16_867ab9daa29ed55ec7761ba4218076cfeaa1f308d6b13cee3e5323b273b24b1f"]
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;",
+    "dependencies": []
+  },
+  "policies": []
+}
