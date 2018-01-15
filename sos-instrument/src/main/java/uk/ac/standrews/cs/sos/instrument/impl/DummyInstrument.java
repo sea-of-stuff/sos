@@ -24,5 +24,11 @@ public class DummyInstrument implements Instrument {
     public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure) {}
 
     @Override
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2) {}
+
+    @Override
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2, long measure_3) {}
+
+    @Override
     public void flush() {}
 }

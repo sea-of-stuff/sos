@@ -1,0 +1,20 @@
+{
+  "context": {
+    "name": "meta_common_word_occurs_once",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain; charset=UTF-8\", \"text/plain; charset=windows-1252\")) && CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;",
+    "dependencies": []
+  },
+  "policies": []
+}

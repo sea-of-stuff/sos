@@ -16,6 +16,10 @@ public interface Instrument {
 
     void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure);
 
+    void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2);
+
+    void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2, long measure_3);
+
     void flush();
 
 }

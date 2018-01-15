@@ -520,6 +520,7 @@ public class SOSContextService implements ContextService {
             runPredicates();
             long end = System.currentTimeMillis();
             predicateThreadSessionStatistics.add(new Pair<>(start, end));
+            InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.none, "Thread_Predicate", start, end);
 
         }, predicateThreadSettings.getInitialDelay(), predicateThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }
@@ -757,6 +758,7 @@ public class SOSContextService implements ContextService {
             runPolicies();
             long end = System.currentTimeMillis();
             applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
+            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.none, "Thread_Policies", start, end);
 
         }, policiesThreadSettings.getInitialDelay(), policiesThreadSettings.getPeriod(), TimeUnit.SECONDS);
     }

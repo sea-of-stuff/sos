@@ -93,6 +93,41 @@ public class BasicInstrument implements Instrument {
     }
 
     @Override
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2) {
+
+        if (statistics.isEnabled(statsTYPE)) {
+
+            synchronized (LOCK_MEASUREMENTS_QUEUE) {
+                AppMetrics appMeasure = AppMetrics.measure(message);
+                appMeasure.setUserMeasure(measure);
+                appMeasure.setUserMeasure_2(measure_2);
+                appMeasure.setStatsType(statsTYPE);
+                appMeasure.setSubType(subtype);
+
+                measurementsQueue.add(appMeasure);
+            }
+        }
+    }
+
+    @Override
+    public void measure(StatsTYPE statsTYPE, StatsTYPE subtype, String message, long measure, long measure_2, long measure_3) {
+
+        if (statistics.isEnabled(statsTYPE)) {
+
+            synchronized (LOCK_MEASUREMENTS_QUEUE) {
+                AppMetrics appMeasure = AppMetrics.measure(message);
+                appMeasure.setUserMeasure(measure);
+                appMeasure.setUserMeasure_2(measure_2);
+                appMeasure.setUserMeasure_3(measure_3);
+                appMeasure.setStatsType(statsTYPE);
+                appMeasure.setSubType(subtype);
+
+                measurementsQueue.add(appMeasure);
+            }
+        }
+    }
+
+    @Override
     public void flush() {
 
         synchronized (LOCK_MEASUREMENTS_QUEUE) {

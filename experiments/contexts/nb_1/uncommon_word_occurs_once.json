@@ -1,0 +1,20 @@
+{
+  "context": {
+    "name": "uncommon_word_occurs_once",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"grain\") == 1;",
+    "dependencies": []
+  },
+  "policies": []
+}
