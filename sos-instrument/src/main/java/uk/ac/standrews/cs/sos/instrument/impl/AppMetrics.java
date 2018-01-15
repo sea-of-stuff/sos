@@ -12,7 +12,11 @@ public class AppMetrics implements Metrics {
 
     private Instant now;
     private String message = "n/a";
+    private String message_2 = "n/a";
+    private String message_3 = "n/a";
     private long userMeasure = -1;
+    private long userMeasure_2 = -1;
+    private long userMeasure_3 = -1;
     private StackTraceElement stackTraceElement;
     private StatsTYPE statsTYPE;
     private StatsTYPE subType;
@@ -33,12 +37,54 @@ public class AppMetrics implements Metrics {
         this.message = message;
     }
 
+    public String getMessage_2() {
+        return message_2;
+    }
+
+    public void setMessage_2(String message_2) {
+        this.message_2 = message_2;
+    }
+
+    public String getMessage_3() {
+        return message_3;
+    }
+
+    public void setMessage_3(String message_3) {
+        this.message_3 = message_3;
+    }
+
     public long getUserMeasure() {
         return userMeasure;
     }
 
     public void setUserMeasure(long userMeasure) {
         this.userMeasure = userMeasure;
+    }
+
+    public long getUserMeasure_2() {
+        return userMeasure_2;
+    }
+
+    public void setUserMeasure_2(long userMeasure_2) {
+        this.userMeasure_2 = userMeasure_2;
+    }
+
+    public long getUserMeasure_3() {
+        return userMeasure_3;
+    }
+
+    public void setUserMeasure_3(long userMeasure_3) {
+        this.userMeasure_3 = userMeasure_3;
+    }
+
+    @Override
+    public void setStatsType(StatsTYPE statsType) {
+        this.statsTYPE = statsType;
+    }
+
+    @Override
+    public void setSubType(StatsTYPE subtype) {
+        this.subType = subtype;
     }
 
     public StackTraceElement getStackTraceElement() {
@@ -62,24 +108,19 @@ public class AppMetrics implements Metrics {
 
     @Override
     public String tsvHeader() {
-        return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+"Message"+TAB+"User Measure"+TAB+"Class Name"+TAB+"Method Name";
+        return "Timestamp (ms)"+TAB+"Time(UTC)"+TAB+
+                "Message"+TAB+"Message_2"+TAB+"Message_3"+TAB+
+                "User Measure"+TAB+"User Measure_2"+TAB+"User Measure_3"+TAB+
+                "Class Name"+TAB+"Method Name";
     }
 
     @Override
     public String tsv() {
         return statsTYPE.toString() + TAB + subType.toString() + TAB +
-                getNow().toEpochMilli() + TAB + getNow().toString() + TAB + getMessage() + TAB + getUserMeasure() + TAB +
+                getNow().toEpochMilli() + TAB + getNow().toString() + TAB +
+                getMessage() + TAB + getMessage_2() + TAB + getMessage_3() + TAB +
+                getUserMeasure() + TAB + getUserMeasure_2() + TAB + getUserMeasure_3() + TAB +
                 getStackTraceElement().getClassName() + TAB + getStackTraceElement().getMethodName();
-    }
-
-    @Override
-    public void setStatsType(StatsTYPE statsType) {
-        this.statsTYPE = statsType;
-    }
-
-    @Override
-    public void setSubType(StatsTYPE subtype) {
-        this.subType = subtype;
     }
 
 }
