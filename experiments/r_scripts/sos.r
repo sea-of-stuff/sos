@@ -10,7 +10,7 @@ source("r_scripts/exp_pr_1.r")
 source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
 source("r_scripts/exp_co.r")
-
+source("r_scripts/exp_do.r")
 
 ############
 # CPU/MEM
@@ -135,5 +135,17 @@ co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yM
 # DO_x
 ##############
 
+do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), 100kb dataset");
 
-# WORK IN PROGRESS
+do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), 1kb dataset", isNumeric=TRUE);
+
+
+##############
+# NB_x
+##############
+
+
+
+##############
+# Failure_x
+##############
