@@ -87,13 +87,13 @@ public class DatasetMetrics implements Metrics {
     @Override
     public String tsv() {
 
-        String retval = "";
+        StringBuilder retval = new StringBuilder();
         for(FSEntry entry:entries) {
-            retval += entry.type + TAB + entry.name + TAB + entry.size + TAB + entry.filetype;
-            retval += "\n";
+            retval.append(entry.type).append(TAB).append(entry.name).append(TAB).append(entry.size).append(TAB).append(entry.filetype);
+            retval.append("\n");
         }
 
-        return retval;
+        return retval.toString();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class DatasetMetrics implements Metrics {
     }
 
     public double getMean() {
-        return totalSize/ getNumberOfFiles();
+        return totalSize/ (double) getNumberOfFiles();
     }
 
     public double getMedian() {
