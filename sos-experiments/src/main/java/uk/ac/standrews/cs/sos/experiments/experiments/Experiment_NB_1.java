@@ -76,26 +76,7 @@ public class Experiment_NB_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws ContextException {
 
-            addContext(cms, experiment, "base");
-
-            // Data only
-            addContext(cms, experiment, "common_word_occurs_once"); // the
-            addContext(cms, experiment, "uncommon_word_occurs_once"); // grain
-            addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
-
-            // Metadata and Data
-            addContext(cms, experiment, "meta_common_word_occurs_once"); // the
-            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // grain
-            addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
-
-            // Check one metadata property
-            addContext(cms, experiment, "metadata");
-
-            // Check two metadata features
-            addContext(cms, experiment, "multi_metadata");
-
-            // Manifest
-            addContext(cms, experiment, "manifest");
+            addContext(cms, experiment, "data_replication_1");
         }
     }
 

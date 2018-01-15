@@ -1,11 +1,12 @@
 {
   "settings": {
+    "guid": "SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
     "services": {
       "storage": {
         "exposed": true
       },
       "cms": {
-        "exposed": false,
+        "exposed": true,
         "loadedPath": "sos/java/contexts/",
         "automatic": false,
         "predicateOnNewContext" : false,
@@ -32,7 +33,7 @@
         }
       },
       "dds": {
-        "exposed": false
+        "exposed": true
       },
       "rms": {
         "exposed": false
@@ -44,6 +45,9 @@
       },
       "mms": {
         "exposed": false
+      },
+      "experiment": {
+        "exposed": true
       }
     },
     "database": {
@@ -68,6 +72,7 @@
     "global": {
       "ssl_trust_store" : "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.141-1.b16.el7_3.x86_64/jre/lib/security/cacerts",
       "tasks": {
+        "fallbackToSyncTasks": true,
         "thread": {
           "ps": 4
         }

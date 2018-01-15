@@ -63,6 +63,7 @@ public class ExperimentalFramework {
         System.out.println("\tdo_2/configuration/configuration-sif.json");
         System.out.println("\tping_1/configuration/configuration-sif.json");
         System.out.println("\tping_2/configuration/configuration-sif.json");
+        System.out.println("\tnb_1/configuration/configuration-sif.json");
         switch(option.toLowerCase()) {
 
             case RUN_EXPERIMENT:
