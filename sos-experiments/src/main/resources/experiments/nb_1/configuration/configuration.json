@@ -17,9 +17,7 @@
     },
     "stats": {
       "experiment": false,
-      "predicate": true,
-      "policies": true,
-      "checkPolicies": false
+      "thread": true
     }
   }
 }

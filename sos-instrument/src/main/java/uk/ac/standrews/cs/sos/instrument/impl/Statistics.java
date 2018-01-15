@@ -16,6 +16,7 @@ public class Statistics {
     private boolean guid_data;
     private boolean guid_manifest;
     private boolean ping;
+    private boolean thread;
 
     // Needed to automatically parse its JSON string into an object
     public Statistics() {}
@@ -49,6 +50,8 @@ public class Statistics {
                 return isGuid_manifest();
             case ping:
                 return isPing();
+            case thread:
+                return isThread();
         }
 
         return false;
@@ -124,5 +127,13 @@ public class Statistics {
 
     public void setPing(boolean ping) {
         this.ping = ping;
+    }
+
+    public boolean isThread() {
+        return thread;
+    }
+
+    public void setThread(boolean thread) {
+        this.thread = thread;
     }
 }

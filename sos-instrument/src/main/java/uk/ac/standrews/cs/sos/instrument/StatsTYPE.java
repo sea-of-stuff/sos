@@ -34,6 +34,8 @@ public enum StatsTYPE {
     checkPolicies,
     policy_check_dataset,
 
+    thread,
+
     experiment;
 
     public static StatsTYPE getHashType(ALGORITHM algorithm) {

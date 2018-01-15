@@ -6,8 +6,8 @@ setwd("/Users/sic2/git/sos/experiments")
 library(ggplot2)
 library(ggrepel)
 
-dat <- read.csv("output/nb_1_test2.tsv", header=TRUE, sep="\t")
-dat <- dat[dat$Subtype == 'none',]
+dat <- read.csv("output/nb_1_test3.tsv", header=TRUE, sep="\t")
+dat <- dat[dat$StatsTYPE == 'thread',]
 
 min_start = min(dat$User.Measure)
 
@@ -15,7 +15,7 @@ dat$User.Measure_2 - dat$User.Measure
 
 ggplot(dat, aes(colour=Message)) + 
   geom_segment(aes(x=User.Measure - min_start, xend=User.Measure_2 - min_start, y=Message, yend=Message), size=5) +
-  geom_label_repel(data= subset(dat, Message=='Thread_Policies'), 
+  geom_label_repel(data= subset(dat, Message=='Thread_Policies' | Message=='Thread_Check_Policies'), 
                    aes(x=User.Measure - min_start, y=Message, label = Message),
                    nudge_x =0.05, nudge_y = .1) +
   theme_bw() +
