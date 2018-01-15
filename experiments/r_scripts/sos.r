@@ -139,6 +139,8 @@ do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), 100kb da
 
 do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), 1kb dataset", isNumeric=TRUE);
 
+do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Multiple datasets");
+
 
 ##############
 # NB_x

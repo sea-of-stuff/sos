@@ -37,7 +37,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_6"};
-    private static String[] subdatasets = new String[] { "1kb", "100kb", "1mb" };
+    private static String[] subdatasets = new String[] { "1kb", "100kb", "1mb" }; // NOTE - 1mb dataset has less than 100 files
 
     private final String masterDataset;
 
@@ -96,16 +96,16 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
                 System.out.println("Adding contexts to node");
                 IGUID contextGUID = addContext(cms, experiment, contextFilename);
 
-                System.out.println("Spawning context to nodes in domain. GUID: " + contextGUID.toMultiHash());
+                System.out.println("Spawning context to nodes in domain. Context GUID: " + contextGUID.toMultiHash());
                 context = cms.getContext(contextGUID);
                 cms.spawnContext(context);
 
-                System.out.println("Adding content to nodes. Subdataset: " + subdataset);
                 experiment.getExperimentNode().setDataset(masterDataset + "/" + subdataset + "/");
-                allVersions = distributeData(experiment, node, context, 100);
+                System.out.println("Adding content to nodes. Subdataset: " + subdataset + "   --- Path: " + experiment.getExperimentNode().getDatasetPath());
+                allVersions = distributeData(experiment, node, context, 60);
 
             } catch (ManifestPersistException | ContextException | IOException e) {
-                throw new ExperimentException();
+                throw new ExperimentException(e);
             }
         }
 

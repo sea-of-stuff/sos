@@ -88,7 +88,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
                 System.out.println("Adding contexts to node");
                 IGUID contextGUID = addContext(cms, experiment, contextFilename);
 
-                System.out.println("Spawning context to nodes in domain. GUID: " + contextGUID.toMultiHash());
+                System.out.println("Spawning context to nodes in domain. Context GUID: " + contextGUID.toMultiHash());
                 context = cms.getContext(contextGUID);
                 cms.spawnContext(context);
 
