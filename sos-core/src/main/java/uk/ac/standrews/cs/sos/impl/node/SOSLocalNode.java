@@ -84,6 +84,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private ScheduledExecutorService nodeMaintainerService;
 
     // Services for this node
+    private boolean restEnabled = true;
     private Agent agent;
     private StorageService storageService;
     private ManifestsDataService manifestsDataService;
@@ -443,6 +444,14 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     public int hashCode() {
 
         return Objects.hash(super.hashCode(), signaturePrivateKey);
+    }
+
+    public boolean isRestEnabled() {
+        return restEnabled;
+    }
+
+    public void setRestEnabled(boolean restEnabled) {
+        this.restEnabled = restEnabled;
     }
 
     /**

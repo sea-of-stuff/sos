@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
+import uk.ac.standrews.cs.sos.rest.bindings.GeneralAPI;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 
@@ -18,6 +19,7 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @Path("/sos")
+@GeneralAPI
 public class RESTGeneral {
 
     @GET

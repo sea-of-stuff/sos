@@ -19,7 +19,7 @@ public class CMSFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (!RESTConfig.sos.isCMS()) {
+        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isCMS()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a CMS node");
             throw new WebApplicationException(response);
         }

@@ -26,4 +26,3 @@ public class ExperimentFilter implements ContainerRequestFilter {
 
     }
 }
-

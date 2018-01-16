@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.rest.filters;
 
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
-import uk.ac.standrews.cs.sos.rest.bindings.NDSNode;
+import uk.ac.standrews.cs.sos.rest.bindings.GeneralAPI;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -13,14 +13,15 @@ import javax.ws.rs.ext.Provider;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
+
 @Provider
-@NDSNode
-public class NDSFilter implements ContainerRequestFilter {
+@GeneralAPI
+public class GeneralFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isNDS()) {
-            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not an NDS node");
+        if (!RESTConfig.sos.isRestEnabled()) {
+            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "REST Disabled");
             throw new WebApplicationException(response);
         }
 

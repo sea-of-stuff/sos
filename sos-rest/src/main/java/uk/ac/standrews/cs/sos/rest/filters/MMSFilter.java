@@ -19,7 +19,7 @@ public class MMSFilter implements ContainerRequestFilter {
 
  @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (!RESTConfig.sos.isMMS()) {
+        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isMMS()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a MMS node");
             throw new WebApplicationException(response);
         }

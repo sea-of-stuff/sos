@@ -20,7 +20,7 @@ public class StorageFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (!RESTConfig.sos.isStorage()) {
+        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isStorage()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a storage node");
             throw new WebApplicationException(response);
         }

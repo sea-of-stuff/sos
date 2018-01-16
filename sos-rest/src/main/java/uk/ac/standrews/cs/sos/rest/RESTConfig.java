@@ -8,9 +8,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.rest.filters.DDSFilter;
-import uk.ac.standrews.cs.sos.rest.filters.NDSFilter;
-import uk.ac.standrews.cs.sos.rest.filters.StorageFilter;
+import uk.ac.standrews.cs.sos.rest.filters.*;
 
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
@@ -31,9 +29,14 @@ public class RESTConfig extends ResourceConfig {
         register(JacksonProvider.class);
         register(JacksonFeature.class);
 
+        register(GeneralFilter.class);
         register(StorageFilter.class);
         register(NDSFilter.class);
         register(DDSFilter.class);
+        register(CMSFilter.class);
+        register(RMSFilter.class);
+        register(MMSFilter.class);
+        register(ExperimentFilter.class);
     }
 
     public void setSOS(SOSLocalNode sos) {

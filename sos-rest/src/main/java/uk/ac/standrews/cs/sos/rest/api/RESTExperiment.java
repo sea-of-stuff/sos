@@ -30,10 +30,10 @@ public class RESTExperiment {
     @Path("/cms/guid/{guid}/predicate")
     @Produces(MediaType.TEXT_PLAIN)
     public Response triggerPredicateOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/predicate");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/guid/{guid}/predicate");
 
         if (guid == null || guid.isEmpty()) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Bad input (no context guid)");
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/experiment/guid/{guid}/predicate - Bad input (no context guid)");
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
@@ -41,7 +41,7 @@ public class RESTExperiment {
         try {
             contextGUID = GUIDFactory.recreateGUID(guid);
         } catch (GUIDGenerationException e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Bad input (malformed context guid)");
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/experiment/guid/{guid}/predicate - Bad input (malformed context guid)");
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
         }
 
@@ -52,71 +52,32 @@ public class RESTExperiment {
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, Integer.toString(assetsProcessed));
 
         } catch (ContextNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Context not found. GUID: " + contextGUID.toMultiHash());
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/experiment/guid/{guid}/predicate - Context not found. GUID: " + contextGUID.toMultiHash());
             return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
         } catch (Exception e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: POST /guid/{guid}/predicate - Internal server error");
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/experiment/guid/{guid}/predicate - Internal server error");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
 
+
     @GET
-    @Path("/cms/guid/{guid}/policy_apply")
+    @Path("/rest/disable")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response triggerPolicyApplyOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/policy_apply");
+    public Response disabledREST(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/rest/disable");
 
-        if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        IGUID contextGUID;
-        try {
-            contextGUID = GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        try {
-            ContextService contextService = RESTConfig.sos.getCMS();
-            contextService.runContextPolicyNow(contextGUID); // Returns when all apply functions are run for all assets.
-
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
-        } catch (ContextNotFoundException e) {
-
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
-        } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
-        }
+        RESTConfig.sos.setRestEnabled(false);
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge);
     }
 
     @GET
-    @Path("/cms/guid/{guid}/policy_check")
+    @Path("/rest/enable")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response triggerPolicyCheckOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /guid/{guid}/policy_check");
+    public Response enableREST(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/rest/enable");
 
-        if (guid == null || guid.isEmpty()) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        IGUID contextGUID;
-        try {
-            contextGUID = GUIDFactory.recreateGUID(guid);
-        } catch (GUIDGenerationException e) {
-            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
-        }
-
-        try {
-            ContextService contextService = RESTConfig.sos.getCMS();
-            contextService.runContextPolicyCheckNow(contextGUID); // Returns when all check function are run for all assets.
-
-            return HTTPResponses.OK(RESTConfig.sos, node_challenge);
-        } catch (ContextNotFoundException e) {
-
-            return HTTPResponses.NOT_FOUND(RESTConfig.sos, node_challenge, "Unable to find context with GUID " + contextGUID.toMultiHash());
-        } catch (Exception e) {
-            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
-        }
+        RESTConfig.sos.setRestEnabled(true);
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge);
     }
 }
