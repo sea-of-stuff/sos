@@ -38,4 +38,23 @@ public class Misc {
         }
     }
 
+    public static double toKB(long bytes) {
+        return bytes / 1024.0;
+    }
+
+    public static double toMB(long bytes) {
+        return toKB(bytes) / 1024.0;
+    }
+
+    // https://codereview.stackexchange.com/a/26698/17102
+    private static long gcd(long p, long q) {
+        if (q == 0) return p;
+        else return gcd(q, p % q);
+    }
+
+    // https://codereview.stackexchange.com/a/26698/17102
+    public static String ratio(long a, long b) {
+        final long gcd = gcd(a,b);
+        return String.format("%d:%d\t(%.2f)", a/gcd, b/gcd, (a/(b*1.0)));
+    }
 }
