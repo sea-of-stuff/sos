@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments;
+package uk.ac.standrews.cs.sos.experiments.analyse_internals;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
@@ -17,7 +17,7 @@ import java.util.Scanner;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AnalyseSOSInternals {
+public class AnalyseSOSInternals extends AnalyseInternals {
 
     public static void main(String[] args) {
 
@@ -87,22 +87,4 @@ public class AnalyseSOSInternals {
         }
     }
 
-    private static void analyseFilesInFolder(String path) {
-
-        File folder = new File(path);
-        File[] files = folder.listFiles();
-        assert(files != null);
-
-        for(File file : files) {
-            long size = file.length();
-            System.out.print("\t");
-            printFolderSize(file.getName(), size);
-        }
-    }
-
-    private static void printFolderSize(String folder, long size) {
-        String padding = folder.length() > 10 ? "\t\t" : "\t\t\t";
-        String retval = String.format("%s%s(in bytes): %d\t(in KB): %.2f\t(in MB): %.2f", folder, padding, size, Misc.toKB(size), Misc.toMB(size));
-        System.out.println(retval);
-    }
 }
