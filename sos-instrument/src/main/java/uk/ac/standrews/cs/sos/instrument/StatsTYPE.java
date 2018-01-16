@@ -17,7 +17,7 @@ public enum StatsTYPE {
     sha1, sha256,
 
     io, // Time to write/read data, manifests, metadata, etc...
-    add_atom, read_atom,
+    add_atom, read_atom, replicate_atom,
     add_manifest, read_manifest,
     fs_write_file, fs_read_file,
 

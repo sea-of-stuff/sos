@@ -137,10 +137,13 @@ public class SOSStorageService implements StorageService {
                 IGUID dataGUID = atom.guid();
                 NodesCollection codomain = atomBuilder.getReplicationNodes();
                 boolean sequentialReplication = storageSettings.isSequentialReplication();
+                long start = System.nanoTime();
                 DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
                         atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), sequentialReplication);
                 TasksQueue.instance().performAsyncTask(dataReplication);
+                long duration = System.nanoTime() - start;
+                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_atom, Long.toString(atomBuilder.getData().getSize()), duration);
 
             } catch (IOException | SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
@@ -412,7 +415,7 @@ public class SOSStorageService implements StorageService {
             retval = atomStorage.store(atomBuilder, BundleTypes.CACHE);
         }
 
-        if (atomBuilder.isSetLocationAdProvenance() && atomBuilder.isLocation()) {
+        if (atomBuilder.isSetLocationAndProvenance() && atomBuilder.isLocation()) {
             Location location = atomBuilder.getLocation();
             bundles.add(new ExternalLocationBundle(location));
         }

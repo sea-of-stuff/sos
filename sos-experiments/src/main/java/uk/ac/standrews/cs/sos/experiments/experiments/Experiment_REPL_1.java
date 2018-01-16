@@ -160,7 +160,9 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
                     AtomBuilder atomBuilder = new AtomBuilder()
                             .setLocation(new URILocation(file.toUri().toString()))
                             .setReplicationNodes(codomain)
-                            .setReplicationFactor(replicationFactor);
+                            .setReplicationFactor(replicationFactor + 1) // Since we are not storing the data locally
+                            .setDoNotStoreDataLocally(true)
+                            .setDoNotStoreManifestLocally(true);
 
                     Atom atom = storageService.addAtom(atomBuilder);
                     InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added atom " + atom.guid().toShortString() + " from URI " + file.toString());

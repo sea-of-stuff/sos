@@ -31,7 +31,7 @@ public class AtomBuilder extends ManifestBuilder {
     private int replicationFactor = 1; // A replication factor of 1, means that data is stored in this node only
     private NodesCollection replicationNodes;
     private boolean delegateReplication = false;
-    private boolean setLocationAdProvenance = true;
+    private boolean setLocationAndProvenance = true;
 
     public boolean isBuildIsSet() {
         return buildIsSet;
@@ -150,12 +150,12 @@ public class AtomBuilder extends ManifestBuilder {
         return this;
     }
 
-    public boolean isSetLocationAdProvenance() {
-        return setLocationAdProvenance;
+    public boolean isSetLocationAndProvenance() {
+        return setLocationAndProvenance;
     }
 
-    public AtomBuilder setSetLocationAdProvenance(boolean setLocationAdProvenance) {
-        this.setLocationAdProvenance = setLocationAdProvenance;
+    public AtomBuilder setSetLocationAndProvenance(boolean setLocationAndProvenance) {
+        this.setLocationAndProvenance = setLocationAndProvenance;
 
         return this;
     }

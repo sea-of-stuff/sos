@@ -24,7 +24,7 @@ public class SOSDeleteAtomTest extends StorageServiceTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setBundleType(BundleTypes.PERSISTENT)
-                .setSetLocationAdProvenance(false);
+                .setSetLocationAndProvenance(false);
         Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
@@ -39,7 +39,7 @@ public class SOSDeleteAtomTest extends StorageServiceTest {
         AtomBuilder builder = new AtomBuilder()
                 .setLocation(location)
                 .setBundleType(BundleTypes.PERSISTENT)
-                .setSetLocationAdProvenance(false);
+                .setSetLocationAndProvenance(false);
         Atom manifest = storageService.addAtom(builder);
         assertEquals(manifest.getType(), ManifestType.ATOM);
 
