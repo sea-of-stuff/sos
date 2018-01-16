@@ -1,0 +1,171 @@
+{
+  "experiment" : {
+    "name": "do_3",
+    "experimentClass": "Experiment_DO_3",
+    "description": "The experiment DO_3 investigates the size of the codomain",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 10
+    },
+    "nodes" : [
+      {
+        "id" : 2,
+        "name" : "sif2",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-2.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_2.json",
+        "certificatefile" : "sif_2.crt",
+        "keyfile" : "sif_2.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 3,
+        "name" : "sif3",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-3.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_3.json",
+        "certificatefile" : "sif_3.crt",
+        "keyfile" : "sif_3.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 4,
+        "name" : "sif4",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-4.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_4.json",
+        "certificatefile" : "sif_4.crt",
+        "keyfile" : "sif_4.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 5,
+        "name" : "sif5",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-5.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_5.json",
+        "certificatefile" : "sif_5.crt",
+        "keyfile" : "sif_5.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      },
+      {
+        "id" : 6,
+        "name" : "sif6",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "sif-6.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "sif_6.json",
+        "certificatefile" : "sif_6.crt",
+        "keyfile" : "sif_6.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 12,
+      "name" : "sif12",
+      "path" : "/cs/scratch/",
+      "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
+      "ssh" : {
+        "type" : 1,
+        "host" : "sif-12.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+      },
+      "configurationfile" : "sif_12.json",
+      "certificatefile" : "sif_12.crt",
+      "keyfile" : "sif_12.key",
+      "dataset" : "text_100kb",
+      "sendUSRO" : false,
+      "behaviour": {
+        "start": 0,
+        "stop": -1,
+        "pause": [],
+        "operations": [ "WIP" ]
+      }
+    },
+    "stats": {
+      "io": true,
+      "guid_data": false,
+      "guid_manifest": false,
+      "experiment": false
+    }
+  }
+}

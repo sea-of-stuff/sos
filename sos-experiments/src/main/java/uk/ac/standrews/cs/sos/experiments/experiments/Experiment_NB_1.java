@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -80,12 +79,4 @@ public class Experiment_NB_1 extends BaseExperiment implements Experiment {
         }
     }
 
-    public static void main(String[] args) throws ConfigurationException, ExperimentException {
-
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "nb_1") + "configuration.json");
-        ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
-
-        Experiment_NB_1 experiment_nb_1 = new Experiment_NB_1(experimentConfiguration, "nb_1_test3");
-        experiment_nb_1.process();
-    }
 }

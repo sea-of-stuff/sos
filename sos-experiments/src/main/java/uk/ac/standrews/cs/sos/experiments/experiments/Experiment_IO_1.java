@@ -46,9 +46,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_IO_1 implements ExperimentUnit {
 
         @Override
-        public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
-        }
+        public void setup() {}
 
         @Override
         public void run() throws ExperimentException {
