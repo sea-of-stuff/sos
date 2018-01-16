@@ -143,7 +143,7 @@ public class SOSStorageService implements StorageService {
                         atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), sequentialReplication);
                 TasksQueue.instance().performAsyncTask(dataReplication);
                 long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_atom, Long.toString(atomBuilder.getData().getSize()), duration);
+                InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_atom, Long.toString(atomBuilder.getData().getSize()), Boolean.toString(sequentialReplication), duration, replicationFactor);
 
             } catch (IOException | SOSProtocolException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");

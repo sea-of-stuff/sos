@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "do_3",
-    "experimentClass": "Experiment_DO_3",
-    "description": "The experiment DO_3 investigates the size of the codomain",
+    "name": "repl_1",
+    "experimentClass": "Experiment_REPL_1",
+    "description": "The experiment REPL_1 investigates the size of the codomain",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 10

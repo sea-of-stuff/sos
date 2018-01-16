@@ -87,6 +87,7 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
         public void setup() throws ExperimentException {
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
+            System.out.println("Parallel: " + parallel + " ReplicationFactor: " + replicationFactor);
 
             storageService = node.getStorageService();
 
