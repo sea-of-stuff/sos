@@ -14,6 +14,8 @@ import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchManifest;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchVersions;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestReplication;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.manifests.ManifestsDirectory;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.Manifest;
@@ -93,9 +95,13 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
             NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
             boolean sequentialReplication = SOSLocalNode.settings.getServices().getDds().isSequentialReplication();
+
+            long start = System.nanoTime();
             // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, sequentialReplication, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
+            long duration = System.nanoTime() - start;
+            InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_manifest, Long.toString(manifest.size()), Boolean.toString(sequentialReplication), duration, replicationFactor);
         } catch (SOSProtocolException e) {
             throw new ManifestPersistException("Unable to persist node to remote nodes");
         }

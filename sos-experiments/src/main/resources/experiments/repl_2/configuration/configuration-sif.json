@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "repl_1",
-    "experimentClass": "Experiment_REPL_1",
-    "description": "The experiment REPL_1 ...",
+    "name": "repl_2",
+    "experimentClass": "Experiment_REPL_2",
+    "description": "The experiment REPL_2 investigates ...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 10
@@ -152,7 +152,6 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "text_100kb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

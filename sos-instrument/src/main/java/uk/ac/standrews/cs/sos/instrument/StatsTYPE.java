@@ -18,7 +18,7 @@ public enum StatsTYPE {
 
     io, // Time to write/read data, manifests, metadata, etc...
     add_atom, read_atom, replicate_atom,
-    add_manifest, read_manifest,
+    add_manifest, read_manifest, replicate_manifest,
     fs_write_file, fs_read_file,
 
     predicate, predicate_remote, // time to run the predicate function per asset

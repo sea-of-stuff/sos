@@ -137,6 +137,7 @@ public class SOSStorageService implements StorageService {
                 IGUID dataGUID = atom.guid();
                 NodesCollection codomain = atomBuilder.getReplicationNodes();
                 boolean sequentialReplication = storageSettings.isSequentialReplication();
+
                 long start = System.nanoTime();
                 DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
