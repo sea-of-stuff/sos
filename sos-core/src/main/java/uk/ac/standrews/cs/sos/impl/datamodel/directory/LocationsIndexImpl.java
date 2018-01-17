@@ -192,8 +192,8 @@ public class LocationsIndexImpl implements LocationsIndex {
         out.defaultWriteObject();
 
         int index_size = index.size();
+        out.writeInt(index_size);
         if (index_size > 0) {
-            out.writeInt(index_size);
 
             // Store entries as ordered in the LRU
             ConcurrentLinkedQueue<IGUID> lruQueue = new ConcurrentLinkedQueue<>(lru.getQueue());
