@@ -82,10 +82,10 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     /**
      * Async operation
      *
-     * @param manifest
-     * @param nodesCollection
-     * @param replicationFactor
-     * @throws ManifestPersistException
+     * @param manifest to be added
+     * @param nodesCollection where to add the manifest
+     * @param replicationFactor number of times the manifest should be copied
+     * @throws ManifestPersistException if the manifest could not be replicated properly
      */
     public void addManifest(Manifest manifest, NodesCollection nodesCollection, int replicationFactor) throws ManifestPersistException {
 

@@ -11,6 +11,7 @@ source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
 source("r_scripts/exp_co.r")
 source("r_scripts/exp_do.r")
+source("r_scripts/exp_repl.r")
 
 ############
 # CPU/MEM
@@ -146,6 +147,14 @@ do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Multiple 
 # NB_x
 ##############
 
+
+##############
+# REPL_x
+##############
+
+repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Replication (Dataset: 100KB)");
+
+repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Replication of 100 Version manifests");
 
 
 ##############
