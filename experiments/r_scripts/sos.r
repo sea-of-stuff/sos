@@ -11,6 +11,7 @@ source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
 source("r_scripts/exp_co.r")
 source("r_scripts/exp_do.r")
+source("r_scripts/exp_nb.r")
 source("r_scripts/exp_repl.r")
 
 ############
@@ -147,6 +148,7 @@ do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Multiple 
 # NB_x
 ##############
 
+nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 
 ##############
 # REPL_x
