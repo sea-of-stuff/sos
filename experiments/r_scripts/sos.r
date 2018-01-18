@@ -6,13 +6,13 @@
 setwd("/Users/sic2/git/sos/experiments")
 source("r_scripts/os_background.r")
 source("r_scripts/exp_basic.r")
+source("r_scripts/exp_nb.r")
+source("r_scripts/exp_repl.r")
 source("r_scripts/exp_pr_1.r")
 source("r_scripts/exp_po_1.r")
 source("r_scripts/exp_po_3.r")
 source("r_scripts/exp_co.r")
 source("r_scripts/exp_do.r")
-source("r_scripts/exp_nb.r")
-source("r_scripts/exp_repl.r")
 
 ############
 # CPU/MEM
@@ -65,6 +65,21 @@ guid_1("output/test_guid_5.tsv", "Performance test on GUID functions. Dataset: 1
 # 10 iterations on the random_50mb dataset
 guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. \nDataset: 20 files of 50mb each.", showSummary = FALSE)
 guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = TRUE)
+
+
+##############
+# NB_x
+##############
+
+nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
+
+##############
+# REPL_x
+##############
+
+repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Data replication (Dataset: 100KB)");
+
+repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests)");
 
 ############
 # PR_1
@@ -137,26 +152,11 @@ co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yM
 # DO_x
 ##############
 
-do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), 100kb dataset");
+do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), Dataset: 100 files of 100kb text files distributed evenly over domain.");
 
-do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), 1kb dataset", isNumeric=TRUE);
+do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 1kb text files.", isNumeric=TRUE);
 
-do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Multiple datasets");
-
-
-##############
-# NB_x
-##############
-
-nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
-
-##############
-# REPL_x
-##############
-
-repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Replication (Dataset: 100KB)");
-
-repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Replication of 100 Version manifests");
+do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.");
 
 
 ##############
