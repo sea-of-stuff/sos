@@ -10,9 +10,11 @@ import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -85,13 +87,13 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
     @Override
     public InputStream contentToHash() {
 
-        StringBuilder toHash = new StringBuilder(getType().toString());
+        String toHash = getType().toString() +
+            "MP" + metadata.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .map(p -> p.getValue().toString())
+                .collect(Collectors.joining("."));
 
-        for(Map.Entry<String, MetaProperty> tuple:metadata.entrySet()) {
-            toHash.append("MP").append(tuple.getValue().toString());
-        }
-
-        return IO.StringToInputStream(toHash.toString());
+        return IO.StringToInputStream(toHash);
     }
 
 }

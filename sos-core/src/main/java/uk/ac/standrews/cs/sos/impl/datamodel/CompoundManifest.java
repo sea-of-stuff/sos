@@ -124,7 +124,7 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
         String toHash = getType() +
                 "T" + getCompoundType() +
                 "C" + contents.stream()
-                    .sorted(Comparator.comparing(Content::toString))
+                    .sorted(Comparator.comparing(c -> c.getGUID().toMultiHash()))
                     .map(Object::toString)
                     .collect(Collectors.joining("."));
 
