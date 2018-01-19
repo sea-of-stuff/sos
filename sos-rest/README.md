@@ -358,7 +358,7 @@ POST /coordinator/manifest
 
 {
   "Type": "Atom",
-  "ContentGUID": "42b3edd482b3dfdbc5adc683840c21db06f00b78",
+  "GUID": "42b3edd482b3dfdbc5adc683840c21db06f00b78",
   "Locations": [
     {
     "Type" : "external",

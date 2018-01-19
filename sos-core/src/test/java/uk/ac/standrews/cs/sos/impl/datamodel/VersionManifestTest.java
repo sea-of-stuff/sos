@@ -31,7 +31,7 @@ public class VersionManifestTest extends CommonTest {
             "{\"type\":\"Version\"," +
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_VERSION =
@@ -39,7 +39,7 @@ public class VersionManifestTest extends CommonTest {
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_VERSION =
@@ -48,7 +48,7 @@ public class VersionManifestTest extends CommonTest {
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION =
@@ -58,7 +58,7 @@ public class VersionManifestTest extends CommonTest {
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     @Test

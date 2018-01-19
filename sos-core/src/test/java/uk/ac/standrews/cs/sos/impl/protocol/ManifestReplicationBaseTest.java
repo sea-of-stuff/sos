@@ -54,7 +54,7 @@ public class ManifestReplicationBaseTest {
             "  \"Signature\":\"AAAB\"," +
             "  \"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "  \"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-            "  \"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+            "  \"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
     private static final String GUID_COMPOUND = "SHA256_16_964dab35b9136a610687d31b56fd346bdda027be0a66e6761e0fd1238262cd9f";
@@ -65,7 +65,7 @@ public class ManifestReplicationBaseTest {
             "  \"Signature\":\"AAAB\"," +
             "  \"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
             "  \"Compound_Type\":\"DATA\"," +
-            "  \"Content\":" +
+            "  \"Contents\":" +
             "  [{" +
             "    \"Label\":\"cat\"," +
             "    \"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +

@@ -30,7 +30,7 @@ public class VersionManifestDeserializer extends JsonDeserializer<Version> {
         try {
             IGUID invariant = CommonJson.GetGUID(node, JSONConstants.KEY_INVARIANT);
             IGUID version = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
-            IGUID content = CommonJson.GetGUID(node, JSONConstants.KEY_CONTENT_GUID);
+            IGUID content = CommonJson.GetGUID(node, JSONConstants.KEY_CONTENT);
             Set<IGUID> prevs = CommonJson.GetGUIDCollection(node, JSONConstants.KEY_PREVIOUS_GUID);
             IGUID metadata = getMetadata(node);
 

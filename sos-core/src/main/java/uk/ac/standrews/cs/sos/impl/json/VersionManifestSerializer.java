@@ -23,7 +23,7 @@ public class VersionManifestSerializer extends JsonSerializer<Version> {
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, versionManifest.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, versionManifest.version().toMultiHash());
         jsonGenerator.writeStringField(JSONConstants.KEY_INVARIANT, versionManifest.invariant().toMultiHash());
-        jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT_GUID, versionManifest.content().toMultiHash());
+        jsonGenerator.writeStringField(JSONConstants.KEY_CONTENT, versionManifest.content().toMultiHash());
 
         if (versionManifest.getMetadata() != null) {
             jsonGenerator.writeStringField(JSONConstants.KEY_METADATA_GUID, versionManifest.getMetadata().toMultiHash());

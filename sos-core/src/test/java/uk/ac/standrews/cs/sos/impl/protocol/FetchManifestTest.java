@@ -47,7 +47,7 @@ public class FetchManifestTest extends ProtocolTest {
             "  \"Signature\":\"AAAB\"," +
             "  \"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
             "  \"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-            "  \"ContentGUID\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+            "  \"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
     @BeforeMethod

@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.impl.json.VersionManifestSerializer;
  *  "Type" : "Version",
  *  "GUID" : "0e62db288f2b2bc4e1f6077f2e1732d9b4ad5547",
  *  "Invariant" : "7efcf9267222d8911cd7c7ef05a1b8a1904be5a8",
- *  "ContentGUID" : "32096c2e0eff33d844ee6d675407ace18289357d",
+ *  "Content" : "32096c2e0eff33d844ee6d675407ace18289357d",
  *  "Previous" : [ "69b302db3c23765c3478c69433c108916760e5df" ],
  *  "Metadata" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
  *  "Signature" : "MC0CFFr94rYWRJRoUkWr5KHrh2d6+MOdAhUAgnN35l27nFKeKytaeezb8caP/VE="

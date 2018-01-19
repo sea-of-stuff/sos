@@ -32,7 +32,7 @@ public class CompoundManifestTest extends CommonTest {
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
-                    "\"Content\":" +
+                    "\"Contents\":" +
                     "[{" +
                     "\"Label\":\"cat\"," +
                     "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
@@ -44,7 +44,7 @@ public class CompoundManifestTest extends CommonTest {
                     "\"Signature\":\"AAAB\"," +
                     "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
                     "\"Compound_Type\":\"DATA\"," +
-                    "\"Content\":" +
+                    "\"Contents\":" +
                     "[]}";
 
     @Test
