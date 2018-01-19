@@ -62,7 +62,7 @@ public class CompoundManifestTest extends CommonTest {
         JSONAssert.assertEquals(EXPECTED_JSON_CONTENTS, compoundManifest.toString(), true);
 
         assertNotEquals(compoundManifest.size(), -1);
-        assertEquals(compoundManifest.size(), 393);
+        assertEquals(compoundManifest.size(), 394);
     }
 
     @Test

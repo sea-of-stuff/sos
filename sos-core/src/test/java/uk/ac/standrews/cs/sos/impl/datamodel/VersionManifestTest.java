@@ -76,7 +76,7 @@ public class VersionManifestTest extends CommonTest {
         JSONAssert.assertEquals(EXPECTED_JSON_BASIC_VERSION, versionManifest.toString(), false);
 
         assertNotEquals(versionManifest.size(), -1);
-        assertEquals(versionManifest.size(), 418);
+        assertEquals(versionManifest.size(), 414);
     }
 
     @Test
