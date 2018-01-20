@@ -124,7 +124,7 @@ public class EntityChallenge extends Task {
 
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
-        URL url = isData ? SOSURL.STORAGE_DATA_CHALLENGE(node, entity, challenge) : SOSURL.DDS_MANIFEST_CHALLENGE(node, entity, challenge);
+        URL url = isData ? SOSURL.STORAGE_DATA_CHALLENGE(node, entity, challenge) : SOSURL.MDS_MANIFEST_CHALLENGE(node, entity, challenge);
         SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         if (response instanceof ErrorResponseImpl) {

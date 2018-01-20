@@ -95,8 +95,8 @@ public class ManifestDeletion extends Task {
             case COMPOUND: case COMPOUND_PROTECTED:
             case VERSION:
 
-                if (node.isDDS()) {
-                    return SOSURL.DDS_DELETE_MANIFEST(node, manifest.guid());
+                if (node.isMDS()) {
+                    return SOSURL.MDS_DELETE_MANIFEST(node, manifest.guid());
                 }
 
             case CONTEXT:

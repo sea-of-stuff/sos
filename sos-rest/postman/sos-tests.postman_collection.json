@@ -22,7 +22,7 @@
 			"response": []
 		},
 		{
-			"name": "DDS - info",
+			"name": "MDS - info",
 			"request": {
 				"url": "http://localhost:8100/info",
 				"method": "GET",

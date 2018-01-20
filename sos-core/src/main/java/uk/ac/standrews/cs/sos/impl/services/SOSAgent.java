@@ -209,7 +209,7 @@ public class SOSAgent implements Agent {
     @Override
     public Manifest getManifest(NodesCollection nodesCollection, IGUID guid) throws ServiceException {
         try {
-            return manifestsDataService.getManifest(nodesCollection, NodeType.DDS, guid);
+            return manifestsDataService.getManifest(nodesCollection, NodeType.MDS, guid);
         } catch (ManifestNotFoundException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
         }

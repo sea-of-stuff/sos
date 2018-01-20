@@ -53,10 +53,10 @@ public interface Node extends Manifest {
     boolean isStorage();
 
     /**
-     * Returns true if this is a DDS node
-     * @return true if the DDS service is exposed
+     * Returns true if this is a MDS node
+     * @return true if the MDS service is exposed
      */
-    boolean isDDS();
+    boolean isMDS();
 
     /**
      * Returns true if this is a NDS node

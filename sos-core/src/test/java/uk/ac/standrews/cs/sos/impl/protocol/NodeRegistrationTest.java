@@ -66,7 +66,7 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "        \"cms\": {" +
                     "            \"exposed\": true" +
                     "        }," +
-                    "        \"dds\": {" +
+                    "        \"mds\": {" +
                     "            \"exposed\": true" +
                     "        }," +
                     "        \"nds\": {" +
@@ -96,7 +96,7 @@ public class NodeRegistrationTest extends ProtocolTest {
                     "        \"cms\": {" +
                     "            \"exposed\": true" +
                     "        }," +
-                    "        \"dds\": {" +
+                    "        \"mds\": {" +
                     "            \"exposed\": true" +
                     "        }," +
                     "        \"nds\": {" +
@@ -145,7 +145,7 @@ public class NodeRegistrationTest extends ProtocolTest {
         when(localNode.guid()).thenReturn(localNodeGUID);
 
         nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
-        ManifestsDataService manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nds);
+        ManifestsDataService manifestsDataService = new SOSManifestsDataService(settings.getServices().getMds(), localStorage, nds);
         nds.setMDS(manifestsDataService);
 
         mockServer = startClientAndServer(MOCK_SERVER_PORT);

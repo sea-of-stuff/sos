@@ -134,8 +134,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                 return localNodesDirectory.getNodes(Node::isNDS, NO_LIMIT);
             case CMS:
                 return localNodesDirectory.getNodes(Node::isCMS, NO_LIMIT);
-            case DDS:
-                return localNodesDirectory.getNodes(Node::isDDS, NO_LIMIT);
+            case MDS:
+                return localNodesDirectory.getNodes(Node::isMDS, NO_LIMIT);
             case RMS:
                 return localNodesDirectory.getNodes(Node::isRMS, NO_LIMIT);
             case MMS:
@@ -205,8 +205,8 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
                         if (node.isNDS()) filteredNodes.add(nodeRef); break;
                     case CMS:
                         if (node.isCMS()) filteredNodes.add(nodeRef); break;
-                    case DDS:
-                        if (node.isDDS()) filteredNodes.add(nodeRef); break;
+                    case MDS:
+                        if (node.isMDS()) filteredNodes.add(nodeRef); break;
                     case RMS:
                         if (node.isRMS()) filteredNodes.add(nodeRef); break;
                     case MMS:

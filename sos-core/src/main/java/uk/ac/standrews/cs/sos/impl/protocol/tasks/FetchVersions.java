@@ -35,9 +35,9 @@ public class FetchVersions extends Task {
     public FetchVersions(Node node, IGUID invariant) throws IOException {
         super();
 
-        if (!node.isDDS()) {
+        if (!node.isMDS()) {
             setState(TaskState.ERROR);
-            throw new IOException("Attempting to fetch manifest from non-DDS node");
+            throw new IOException("Attempting to fetch manifest from non-MDS node");
         }
 
         if (invariant == null || invariant.isInvalid()) {
@@ -56,7 +56,7 @@ public class FetchVersions extends Task {
         SOS_LOG.log(LEVEL.INFO, "Versions for invariant " + invariant.toMultiHash() + " will be fetched from node " + node.guid().toShortString());
 
         try {
-            URL url = SOSURL.DDS_GET_VERSIONS(node, invariant);
+            URL url = SOSURL.MDS_GET_VERSIONS(node, invariant);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             if (response instanceof ErrorResponseImpl) {

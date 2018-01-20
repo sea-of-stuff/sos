@@ -214,7 +214,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
           "period": 120
         }
       },
-      "dds": {
+      "mds": {
         "exposed": true,
         "maxReplication": 3
       },

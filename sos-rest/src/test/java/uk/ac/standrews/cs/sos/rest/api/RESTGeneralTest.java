@@ -31,7 +31,7 @@ public class RESTGeneralTest extends CommonRESTTest {
                     "    \"cms\" : {\n"+
                     "      \"exposed\" : true\n"+
                     "    },\n"+
-                    "    \"dds\" : {\n"+
+                    "    \"mds\" : {\n"+
                     "      \"exposed\" : true\n"+
                     "    },\n"+
                     "    \"nds\" : {\n"+

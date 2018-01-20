@@ -57,7 +57,7 @@ public class JSONConstants {
     public static final String KEY_NODE_SERVICES = "services";
     public static final String KEY_NODE_SERVICES_STORAGE = "storage";
     public static final String KEY_NODE_SERVICES_CMS = "cms";
-    public static final String KEY_NODE_SERVICES_DDS = "dds";
+    public static final String KEY_NODE_SERVICES_MDS = "mds";
     public static final String KEY_NODE_SERVICES_NDS = "nds";
     public static final String KEY_NODE_SERVICES_RMS = "rms";
     public static final String KEY_NODE_SERVICES_MMS = "mms";

@@ -274,7 +274,7 @@ public class SettingsConfiguration {
 
             @JsonIgnore
             @Override
-            public boolean isDDS() {
+            public boolean isMDS() {
                 return false;
             }
 
@@ -318,9 +318,9 @@ public class SettingsConfiguration {
         public static class AdvanceServicesSettings {
 
             private RoleSettings agent = new RoleSettings();
-            private StorageSettings storage = new StorageSettings(); // default
-            private DDSSettings dds = new DDSSettings(); // default
-            private NDSSettings nds = new NDSSettings(); // default
+            private StorageSettings storage = new StorageSettings();
+            private MDSSettings mds = new MDSSettings();
+            private NDSSettings nds = new NDSSettings();
             private MMSSettings mms = new MMSSettings();
             private CMSSettings cms = new CMSSettings();
             private RMSSettings rms = new RMSSettings();
@@ -344,12 +344,12 @@ public class SettingsConfiguration {
                 this.cms = cms;
             }
 
-            public DDSSettings getDds() {
-                return dds;
+            public MDSSettings getMds() {
+                return mds;
             }
 
-            public void setDds(DDSSettings dds) {
-                this.dds = dds;
+            public void setMds(MDSSettings mds) {
+                this.mds = mds;
             }
 
             public RMSSettings getRms() {
@@ -476,15 +476,15 @@ public class SettingsConfiguration {
                 public MMSSettings() {}
             }
 
-            public static class DDSSettings extends RoleSettings {
+            public static class MDSSettings extends RoleSettings {
 
                 @JsonView(Views.Public.class)
-                private int maxReplication = 1; // A value of 1 results in no replication, since this dds service itself will count as replication-1
+                private int maxReplication = 1; // A value of 1 results in no replication, since this mds service itself will count as replication-1
 
                 private boolean sequentialReplication = true;
                 private int replicationThreads = 3;
 
-                public DDSSettings() {}
+                public MDSSettings() {}
 
                 public int getMaxReplication() {
                     return maxReplication;

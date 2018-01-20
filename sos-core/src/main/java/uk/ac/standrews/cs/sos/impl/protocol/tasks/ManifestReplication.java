@@ -26,11 +26,11 @@ import java.util.concurrent.*;
 
 /**
  * The ManifestReplication task, as the name suggests, replicates a manifest to other nodes.
- * The manifest can be replicated only to DataDiscoveryServices (DDS).
+ * The manifest can be replicated only to DataDiscoveryServices (MDS).
  * In doing the replication the caller MUST also specify a wished replication factor for the manifest.
  *
- * If the manifest is successfully replicated to a DDS node:
- * - the local DDS is informed that now that such a manifest is now stored in that node too
+ * If the manifest is successfully replicated to a MDS node:
+ * - the local MDS is informed that now that such a manifest is now stored in that node too
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -102,7 +102,7 @@ public class ManifestReplication extends Task {
     private void parallelManifestReplication(final Manifest manifest) {
 
         try {
-            int poolSize = SOSLocalNode.settings.getServices().getDds().getReplicationThreads();
+            int poolSize = SOSLocalNode.settings.getServices().getMds().getReplicationThreads();
             Executor executor = Executors.newFixedThreadPool(poolSize);
             CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
 
@@ -210,8 +210,8 @@ public class ManifestReplication extends Task {
             case COMPOUND: case COMPOUND_PROTECTED:
             case VERSION:
 
-                if (node.isDDS()) {
-                    return SOSURL.DDS_POST_MANIFEST(node);
+                if (node.isMDS()) {
+                    return SOSURL.MDS_POST_MANIFEST(node);
                 }
 
             case ROLE:

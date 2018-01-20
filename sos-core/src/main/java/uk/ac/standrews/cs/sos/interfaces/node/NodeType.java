@@ -6,8 +6,8 @@ package uk.ac.standrews.cs.sos.interfaces.node;
 public enum NodeType {
 
     AGENT("agent"),
-    CMS("cms"), // TODO - find another acronym
-    DDS("dds"), // TODO - DDS -> MDS
+    CMS("cms"), // TODO - find another acronym because it conflicts with content management system
+    MDS("mds"),
     MMS("mms"),
     NDS("nds"),
     RMS("rms"),

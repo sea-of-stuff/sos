@@ -16,7 +16,7 @@ import java.util.Queue;
 
 /**
  * The Storage roles defines an entry point in the SOS to store data.
- * Atom manifests are stored via the DDS (@see DataDiscoveryService)
+ * Atom manifests are stored via the MDS (@see DataDiscoveryService)
  *
  * Data stored via a storage node is available to other nodes in the SOS.
  *
@@ -28,7 +28,7 @@ public interface StorageService extends Service {
 
     /**
      * Adds data to the Sea of Stuff as an atom.
-     * The atom manifest is added to the DDS.
+     * The atom manifest is added to the MDS.
      *
      * @param atomBuilder defines the sources for the atom to be added
      * @return The generated atom manifest. This will contain the locations known to this node prior to any replication.

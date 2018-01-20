@@ -65,7 +65,7 @@ Content-type: application/json
   "services": {
     "client": true/false,
     "store": true/false,
-    "dds": true/false,
+    "mds": true/false,
     "nds": true/false,
     "mcs": true/false
   }
@@ -84,7 +84,7 @@ Content-type: application/json
   "services": {
     "client": true,
     "store": true,
-    "dds": false,
+    "mds": false,
     "nds": true,
     "mcs": false
   }
@@ -339,7 +339,7 @@ Content-type: application/json
 ## Data Discovery Service
 
 **Add manifest**
-Adds the given manifest to the DDS. No resource is created in the DDS.
+Adds the given manifest to the MDS. No resource is created in the MDS.
 
 ```
 REQUEST

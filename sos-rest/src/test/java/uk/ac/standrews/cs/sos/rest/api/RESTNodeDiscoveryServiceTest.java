@@ -31,7 +31,7 @@ public class RESTNodeDiscoveryServiceTest extends CommonRESTTest {
                 "        \"cms\": {" +
                 "            \"exposed\": true" +
                 "        }," +
-                "        \"dds\": {" +
+                "        \"mds\": {" +
                 "            \"exposed\": true" +
                 "        }," +
                 "        \"nds\": {" +

@@ -100,8 +100,8 @@ public class FetchManifest extends Task {
 
     private URL getManifestURL(Node node, IGUID manifestId) throws SOSURLException {
 
-        if (node.isDDS()) {
-            return SOSURL.DDS_GET_MANIFEST(node, manifestId);
+        if (node.isMDS()) {
+            return SOSURL.MDS_GET_MANIFEST(node, manifestId);
 
         } else if (node.isRMS()) {
             return SOSURL.USRO_GET_MANIFEST(node, manifestId);

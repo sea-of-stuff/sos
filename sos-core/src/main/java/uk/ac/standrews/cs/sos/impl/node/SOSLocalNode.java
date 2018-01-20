@@ -51,7 +51,7 @@ import static uk.ac.standrews.cs.sos.constants.Internals.NODE_MAINTAINER_TIME_UN
  * This class represents the SOSNode of this machine.
  *
  * A SOSLocalNode may expose multiple SOS interfaces to the caller:
- * Agent, Storage, NDS, DDS, and MCS
+ * Agent, Storage, NDS, MDS, and MCS
  *
  * A SOSLocalNode is created via a builder.
  * Example:
@@ -390,7 +390,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         nodeDiscoveryService = new SOSNodeDiscoveryService(localNode, nodesDatabase);
         SOSURLProtocol.getInstance().register(localStorage, nodeDiscoveryService);
 
-        manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nodeDiscoveryService);
+        manifestsDataService = new SOSManifestsDataService(settings.getServices().getMds(), localStorage, nodeDiscoveryService);
         nodeDiscoveryService.setMDS(manifestsDataService);
     }
 

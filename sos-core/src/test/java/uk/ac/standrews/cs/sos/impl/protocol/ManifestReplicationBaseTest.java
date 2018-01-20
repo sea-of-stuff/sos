@@ -172,7 +172,7 @@ public class ManifestReplicationBaseTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/dds/manifest")
+                                .withPath("/sos/mds/manifest")
                                 .withBody(TEST_VERSION_MANIFEST)
                 )
                 .respond(
@@ -185,7 +185,7 @@ public class ManifestReplicationBaseTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/dds/manifest")
+                                .withPath("/sos/mds/manifest")
                                 .withBody(TEST_COMPOUND_MANIFEST)
                 )
                 .respond(
@@ -198,7 +198,7 @@ public class ManifestReplicationBaseTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/dds/manifest")
+                                .withPath("/sos/mds/manifest")
                                 .withBody(TEST_ATOM_MANIFEST)
                 )
                 .respond(
@@ -224,7 +224,7 @@ public class ManifestReplicationBaseTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/dds/manifest")
+                                .withPath("/sos/mds/manifest")
                                 .withBody(TEST_BAD_MANIFEST)
                 )
                 .respond(
@@ -259,7 +259,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(true);
+        when(node.isMDS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
@@ -291,7 +291,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(true);
+        when(node.isMDS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
@@ -323,7 +323,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(true);
+        when(node.isMDS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
@@ -361,7 +361,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(false);
+        when(node.isMDS()).thenReturn(false);
         when(node.isCMS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
@@ -388,8 +388,8 @@ public class ManifestReplicationBaseTest {
         verify(manifestsDataServiceMock, times(1)).addManifestNodeMapping(anyObject(), anyObject());
     }
 
-    // Cannot replicate VERSION manifest to noDDS node
-    void cannotReplicateManifestToNoDDSNodeReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
+    // Cannot replicate VERSION manifest to noMDS node
+    void cannotReplicateManifestToNoMDSNodeReplicationTest(boolean isSequential) throws SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
         Manifest mockManifest = mock(Manifest.class);
@@ -401,7 +401,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(false);
+        when(node.isMDS()).thenReturn(false);
 
         Set<IGUID> nodes = new HashSet<>();
         nodes.add(nodeGUID);
@@ -430,7 +430,7 @@ public class ManifestReplicationBaseTest {
         Node node = mock(Node.class);
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(true);
+        when(node.isMDS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 
@@ -453,7 +453,7 @@ public class ManifestReplicationBaseTest {
         when(node.getType()).thenReturn(ManifestType.NODE);
         when(node.isValid()).thenReturn(true);
         when(node.guid()).thenReturn(nodeGUID);
-        when(node.isDDS()).thenReturn(true);
+        when(node.isMDS()).thenReturn(true);
         when(node.getIP()).thenReturn("localhost");
         when(node.getHostAddress()).thenReturn(new InetSocketAddress("localhost", MOCK_SERVER_PORT));
 

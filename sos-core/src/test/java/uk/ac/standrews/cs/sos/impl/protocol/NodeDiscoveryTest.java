@@ -93,7 +93,7 @@ public class NodeDiscoveryTest {
         SOSLocalNode.settings = settings;
         when(localNode.guid()).thenReturn(localNodeGUID);
         nds = new SOSNodeDiscoveryService(localNode, nodesDatabase);
-        ManifestsDataService manifestsDataService = new SOSManifestsDataService(settings.getServices().getDds(), localStorage, nds);
+        ManifestsDataService manifestsDataService = new SOSManifestsDataService(settings.getServices().getMds(), localStorage, nds);
         nds.setMDS(manifestsDataService);
 
         // MOCK SERVER SETUP
@@ -123,7 +123,7 @@ public class NodeDiscoveryTest {
                                                 "        \"cms\": {" +
                                                 "            \"exposed\": true" +
                                                 "        }," +
-                                                "        \"dds\": {" +
+                                                "        \"mds\": {" +
                                                 "            \"exposed\": true" +
                                                 "        }," +
                                                 "        \"nds\": {" +

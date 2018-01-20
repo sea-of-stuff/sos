@@ -88,14 +88,14 @@ public interface ManifestsDataService extends Service {
     Manifest getManifest(NodesCollection nodes, NodeType nodeTypeFilter, IGUID guid) throws ManifestNotFoundException;
 
     /**
-     * Map the GUID of a manifest with the GUID of a DDS node.
+     * Map the GUID of a manifest with the GUID of a MDS node.
      * This mapping will be used when trying to get the manifest via #getManifest(guid)
      *
      *
-     * @param manifest for which to add a DDSnode ref
-     * @param ddsNode the DDS node ref
+     * @param manifest for which to add a MDSnode ref
+     * @param mdsNode the MDS node ref
      */
-    void addManifestNodeMapping(IGUID manifest, IGUID ddsNode);
+    void addManifestNodeMapping(IGUID manifest, IGUID mdsNode);
 
     /**
      * Delete manifest from local node.

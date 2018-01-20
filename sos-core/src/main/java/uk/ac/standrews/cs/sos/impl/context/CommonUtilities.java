@@ -271,7 +271,7 @@ public class CommonUtilities {
      */
     public Data getData(IGUID guid) throws AtomNotFoundException {
 
-        // Check DDS, Storage restricting the request with the codomain
+        // Check MDS, Storage restricting the request with the codomain
         // TODO Restrict by codomain?
         return storageService.getAtomContent(guid);
     }
@@ -286,7 +286,7 @@ public class CommonUtilities {
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException, NodesCollectionException {
 
         NodesCollection domain = new NodesCollectionImpl(NodesCollectionType.LOCAL);
-        return manifestsDataService.getManifest(domain, NodeType.DDS, guid);
+        return manifestsDataService.getManifest(domain, NodeType.MDS, guid);
     }
 
     /**
@@ -299,7 +299,7 @@ public class CommonUtilities {
     // Retrieve the manifest from local node
     public Manifest getContentManifest(Version version) throws ManifestNotFoundException {
 
-        return manifestsDataService.getManifest(version.content(), NodeType.DDS);
+        return manifestsDataService.getManifest(version.content(), NodeType.MDS);
     }
 
     /**

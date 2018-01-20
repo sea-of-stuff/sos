@@ -249,7 +249,7 @@ public class SOSStorageService implements StorageService {
     public Data getAtomContent(NodesCollection nodesCollection, IGUID guid) throws AtomNotFoundException {
 
         try {
-            Manifest manifest = manifestsDataService.getManifest(nodesCollection, NodeType.DDS, guid);
+            Manifest manifest = manifestsDataService.getManifest(nodesCollection, NodeType.MDS, guid);
 
             if (manifest.getType() == ManifestType.ATOM || manifest.getType() == ManifestType.ATOM_PROTECTED) {
                 Atom atom = (Atom) manifest;

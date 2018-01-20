@@ -32,7 +32,7 @@ public class NodeSerializer extends JsonSerializer<Node> {
             jsonGenerator.writeStartObject();
             serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_STORAGE, node.isStorage());
             serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_CMS, node.isCMS());
-            serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_DDS, node.isDDS());
+            serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_MDS, node.isMDS());
             serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_NDS, node.isNDS());
             serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_RMS, node.isRMS());
             serializeService(jsonGenerator, JSONConstants.KEY_NODE_SERVICES_MMS, node.isMMS());

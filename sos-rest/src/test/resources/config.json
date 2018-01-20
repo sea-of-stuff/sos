@@ -38,7 +38,7 @@
           "period": 120
         }
       },
-      "dds": {
+      "mds": {
         "exposed": true
       },
       "rms": {

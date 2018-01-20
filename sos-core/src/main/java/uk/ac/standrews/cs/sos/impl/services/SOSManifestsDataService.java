@@ -45,7 +45,7 @@ import static uk.ac.standrews.cs.sos.model.NodesCollectionType.*;
  */
 public class SOSManifestsDataService implements ManifestsDataService {
 
-    private SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings;
+    private SettingsConfiguration.Settings.AdvanceServicesSettings.MDSSettings mdsSettings;
 
     // We have three layers for storing and getting manifests:
     // 1. memory cache
@@ -67,9 +67,9 @@ public class SOSManifestsDataService implements ManifestsDataService {
     private final IGUID localNode;
     private final NodeDiscoveryService nodeDiscoveryService;
 
-    public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
+    public SOSManifestsDataService(SettingsConfiguration.Settings.AdvanceServicesSettings.MDSSettings mdsSettings, LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService) {
 
-        this.ddsSettings = ddsSettings;
+        this.mdsSettings = mdsSettings;
 
         this.localStorage = localStorage;
 
@@ -136,7 +136,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         }
 
         if (limitReplication) {
-            replicationFactor = replicationFactor <= ddsSettings.getMaxReplication() ? replicationFactor : ddsSettings.getMaxReplication();
+            replicationFactor = replicationFactor <= mdsSettings.getMaxReplication() ? replicationFactor : mdsSettings.getMaxReplication();
         }
 
         if (replicationFactor > 0) {
@@ -147,8 +147,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void addManifestNodeMapping(IGUID manifest, IGUID node) {
-        manifestsLocationsIndex.addEntry(manifest, node);
+    public void addManifestNodeMapping(IGUID manifest, IGUID mdsNode) {
+        manifestsLocationsIndex.addEntry(manifest, mdsNode);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     @Override
     public Manifest getManifest(IGUID guid) throws ManifestNotFoundException {
 
-        return getManifest(guid, NodeType.DDS);
+        return getManifest(guid, NodeType.MDS);
     }
 
     @Override

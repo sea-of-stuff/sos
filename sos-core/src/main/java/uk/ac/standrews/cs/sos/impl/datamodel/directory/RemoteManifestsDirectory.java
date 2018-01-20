@@ -70,7 +70,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNode = nodeDiscoveryService.filterNodesCollection(new NodesCollectionImpl(NodesCollectionType.ANY), nodeType, 1);
-            boolean sequentialReplication = SOSLocalNode.settings.getServices().getDds().isSequentialReplication();
+            boolean sequentialReplication = SOSLocalNode.settings.getServices().getMds().isSequentialReplication();
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNode, 1, sequentialReplication, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
         } catch (SOSProtocolException | NodesCollectionException e) {
@@ -94,10 +94,10 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             if (nodeType == NodeType.UNKNOWN) throw new SOSProtocolException("Unable to tell what node type to talk to");
 
             NodesCollection replicationNodes = nodeDiscoveryService.filterNodesCollection(nodesCollection, nodeType, replicationFactor * REPLICATION_FACTOR_MULTIPLIER);
-            boolean sequentialReplication = SOSLocalNode.settings.getServices().getDds().isSequentialReplication();
+            boolean sequentialReplication = SOSLocalNode.settings.getServices().getMds().isSequentialReplication();
 
             long start = System.nanoTime();
-            // The replication task takes care of replicating the manifest and updating the ManifestDDSMapping if the replication is successful
+            // The replication task takes care of replicating the manifest and updating the ManifestMDSMapping if the replication is successful
             ManifestReplication replicationTask = new ManifestReplication(manifest, replicationNodes, replicationFactor, sequentialReplication, nodeDiscoveryService, manifestsDataService);
             TasksQueue.instance().performAsyncTask(replicationTask);
             long duration = System.nanoTime() - start;
@@ -114,7 +114,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
             case ATOM: case ATOM_PROTECTED:
             case COMPOUND: case COMPOUND_PROTECTED:
             case VERSION:
-                return NodeType.DDS;
+                return NodeType.MDS;
 
             case ROLE: case USER:
                 return NodeType.RMS;
@@ -137,7 +137,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
 
         try {
-            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.DDS, guid);
+            return findManifest(new NodesCollectionImpl(NodesCollectionType.ANY), NodeType.MDS, guid);
         } catch (NodesCollectionException e) {
             throw new ManifestNotFoundException();
         }
@@ -155,7 +155,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         try {
             nodesToCheck = getNodesToCheck(nodesCollection, nodeTypeFilter, guid);
         } catch (NodeNotFoundException e) {
-            throw new ManifestNotFoundException("Unable to find manifest because there are no known DDS nodes");
+            throw new ManifestNotFoundException("Unable to find manifest because there are no known MDS nodes");
         }
 
         int trial = 0;
@@ -190,7 +190,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         }
 
-        throw new ManifestNotFoundException("Unable to find manifest in other known DDS nodes");
+        throw new ManifestNotFoundException("Unable to find manifest in other known MDS nodes");
     }
 
     public Set<IGUID> getVersions(IGUID invariant) {
@@ -207,7 +207,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 
         Set<IGUID> nodesToCheck;
         try {
-            nodesToCheck = getNodesToCheck(nodesCollection, NodeType.DDS, invariant);
+            nodesToCheck = getNodesToCheck(nodesCollection, NodeType.MDS, invariant);
         } catch (NodeNotFoundException e) {
             return new LinkedHashSet<>();
         }
@@ -270,7 +270,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
 //        }
 
         if (nodesToCheck == null) {
-            throw new NodeNotFoundException("Unable to find manifest because there are no known DDS nodes");
+            throw new NodeNotFoundException("Unable to find manifest because there are no known MDS nodes");
         }
 
         return nodesToCheck;

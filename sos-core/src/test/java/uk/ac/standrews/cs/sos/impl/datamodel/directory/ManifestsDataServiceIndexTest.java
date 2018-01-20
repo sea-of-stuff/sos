@@ -83,7 +83,7 @@ public class ManifestsDataServiceIndexTest {
         ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
         manifestsLocationsIndex.addEntry(manifestGUID, nodeGUID);
 
-        IFile file = localStorage.createFile(cachesDir, "dds.index");
+        IFile file = localStorage.createFile(cachesDir, "mds.index");
         Persistence.persist(manifestsLocationsIndex, file);
 
         ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.load(file);
@@ -110,7 +110,7 @@ public class ManifestsDataServiceIndexTest {
 
         ManifestsLocationsIndex manifestsLocationsIndex = new ManifestsLocationsIndex();
 
-        IFile file = localStorage.createFile(cachesDir, "dds.index");
+        IFile file = localStorage.createFile(cachesDir, "mds.index");
         Persistence.persist(manifestsLocationsIndex, file);
 
         ManifestsLocationsIndex persistedIndex = (ManifestsLocationsIndex) Persistence.load(file);

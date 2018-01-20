@@ -32,7 +32,7 @@ public class RESTConfig extends ResourceConfig {
         register(GeneralFilter.class);
         register(StorageFilter.class);
         register(NDSFilter.class);
-        register(DDSFilter.class);
+        register(MDSFilter.class);
         register(CMSFilter.class);
         register(RMSFilter.class);
         register(MMSFilter.class);

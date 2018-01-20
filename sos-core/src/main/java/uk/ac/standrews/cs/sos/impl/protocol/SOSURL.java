@@ -41,9 +41,9 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+    public static URL MDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/manifest/guid/" + guid.toMultiHash();
+                "mds/manifest/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
@@ -76,16 +76,16 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_GET_VERSIONS(Node node, IGUID invariant) throws SOSURLException {
+    public static URL MDS_GET_VERSIONS(Node node, IGUID invariant) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/versions/invariant/" + invariant.toMultiHash();
+                "mds/versions/invariant/" + invariant.toMultiHash();
 
         return makeURL(url);
     }
 
-    public static URL DDS_POST_MANIFEST(Node node) throws SOSURLException {
+    public static URL MDS_POST_MANIFEST(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/manifest";
+                "mds/manifest";
 
         return makeURL(url);
     }
@@ -125,9 +125,9 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_DELETE_MANIFEST(Node node, IGUID guid) throws SOSURLException {
+    public static URL MDS_DELETE_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/manifest/guid/" + guid.toMultiHash() + "/delete";
+                "mds/manifest/guid/" + guid.toMultiHash() + "/delete";
 
         return makeURL(url);
     }
@@ -167,9 +167,9 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL DDS_MANIFEST_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
+    public static URL MDS_MANIFEST_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "dds/manifest/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
+                "mds/manifest/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }

@@ -81,7 +81,7 @@ public class SOSContextService implements ContextService {
 
     /**
      * Build a CMS instance.
-     * The DDS is passed as parameter and it is needed to access the manifests to be processed.
+     * The MDS is passed as parameter and it is needed to access the manifests to be processed.
      *
      * @param localStorage used to persist the internal data structures
      * @param manifestsDataService used to discover the data to process and act upon it
@@ -333,7 +333,7 @@ public class SOSContextService implements ContextService {
             Set<IGUID> invariants = new LinkedHashSet<>();
             // Iterate through previous versions of context until max-age constraint is still valid
             do {
-                Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.DDS);
+                Compound compound = (Compound) manifestsDataService.getManifest(context.content(), NodeType.MDS);
 
                 for(Content content:compound.getContents()) {
 
@@ -801,7 +801,7 @@ public class SOSContextService implements ContextService {
     private void runPolicies(Context context, IGUID guid) {
 
         try {
-            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
+            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.MDS);
 
             ContextVersionInfo content = new ContextVersionInfo();
             ContextVersionInfo prev = contextsContentsDirectory.getEntry(context.invariant(), guid);
@@ -927,7 +927,7 @@ public class SOSContextService implements ContextService {
 
             Set<Policy> policies = getPolicies(context);
             boolean allPoliciesAreSatisfied = true;
-            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.DDS);
+            Manifest manifest = manifestsDataService.getManifest(guid, NodeType.MDS);
 
             long start = System.nanoTime();
             for (Policy policy:policies) {

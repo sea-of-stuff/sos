@@ -59,7 +59,7 @@ public class BasicNode extends BasicManifest implements Node {
     }
 
     @Override
-    public boolean isDDS() {
+    public boolean isMDS() {
         return true;
     }
 

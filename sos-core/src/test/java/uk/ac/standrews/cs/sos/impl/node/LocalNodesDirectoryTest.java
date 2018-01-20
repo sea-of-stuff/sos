@@ -113,7 +113,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
         assertEquals(localNodesDirectory.getNode(guid), node);
 
         assertEquals(localNodesDirectory.getNodes(Node::isStorage, NO_LIMIT).size(), 3);
-        assertEquals(localNodesDirectory.getNodes(Node::isDDS, NO_LIMIT).size(), 2);
+        assertEquals(localNodesDirectory.getNodes(Node::isMDS, NO_LIMIT).size(), 2);
         assertEquals(localNodesDirectory.getNodes(Node::isNDS, NO_LIMIT).size(), 2);
         assertEquals(localNodesDirectory.getNodes(Node::isMMS, NO_LIMIT).size(), 2);
     }
@@ -222,14 +222,14 @@ public class LocalNodesDirectoryTest extends CommonTest {
         assertEquals(retrievedUpdatedNode.isStorage(), true);
     }
 
-    private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS, boolean isExperiment) {
+    private void addNode(IGUID guid, boolean isClient, boolean isStorage, boolean isMDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS, boolean isExperiment) {
         localNodesDirectory.addNode(new SOSNode(guid, mockSignatureCertificate,"example.com", 8080,
-                isClient, isStorage, isDDS,
+                isClient, isStorage, isMDS,
                 isNDS, isMCS, isCMS, isRMS, isExperiment));
     }
 
-    private void addNode(boolean isClient, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS, boolean isExperiment) {
+    private void addNode(boolean isClient, boolean isStorage, boolean isMDS, boolean isNDS, boolean isMCS, boolean isCMS, boolean isRMS, boolean isExperiment) {
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
-        addNode(guid, isClient, isStorage, isDDS, isNDS, isMCS, isCMS, isRMS, isExperiment);
+        addNode(guid, isClient, isStorage, isMDS, isNDS, isMCS, isCMS, isRMS, isExperiment);
     }
 }

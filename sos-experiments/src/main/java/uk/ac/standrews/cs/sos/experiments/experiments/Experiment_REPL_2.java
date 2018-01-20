@@ -101,9 +101,9 @@ public class Experiment_REPL_2 extends BaseExperiment implements Experiment {
 
             try {
                 if (parallel) {
-                    SOSLocalNode.settings.getServices().getDds().setSequentialReplication(false);
+                    SOSLocalNode.settings.getServices().getMds().setSequentialReplication(false);
                 } else {
-                    SOSLocalNode.settings.getServices().getDds().setSequentialReplication(true);
+                    SOSLocalNode.settings.getServices().getMds().setSequentialReplication(true);
                 }
 
                 addManifestsToNode(manifestsDataService, codomain, replicationFactor);

@@ -30,10 +30,10 @@
           "period": 120
         }
       },
-      "dds": {
+      "mds": {
         "exposed": false,
         "cacheFile": "manifests.cache",
-        "indexFile": "dds.index"
+        "indexFile": "mds.index"
       },
       "rms": {
         "exposed": true,

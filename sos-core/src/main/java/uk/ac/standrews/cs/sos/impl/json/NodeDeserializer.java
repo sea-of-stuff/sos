@@ -33,14 +33,14 @@ public class NodeDeserializer extends JsonDeserializer<Node> {
             int port = node.get(JSONConstants.KEY_NODE_PORT).asInt();
 
             boolean isStorage = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_STORAGE);
-            boolean isDDS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_DDS);
+            boolean isMDS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_MDS);
             boolean isNDS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_NDS);
             boolean isMMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_MMS);
             boolean isCMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_CMS);
             boolean isRMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_RMS);
             boolean isExperiment = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_EXPERIMENT);
 
-            return new SOSNode(guid, signatureCertificate, hostname, port, false, isStorage, isDDS, isNDS, isMMS, isCMS, isRMS, isExperiment);
+            return new SOSNode(guid, signatureCertificate, hostname, port, false, isStorage, isMDS, isNDS, isMMS, isCMS, isRMS, isExperiment);
 
         } catch (GUIDGenerationException | CryptoException e) {
             throw new IOException("Unable to recreate SOSNode");

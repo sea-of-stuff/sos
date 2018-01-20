@@ -33,10 +33,10 @@ public class ManifestReplicationSequentialTest extends ManifestReplicationBaseTe
         super.basicFATContextManifestReplicationTest(true);
     }
 
-    // Cannot replicate VERSION manifest to noDDS node
+    // Cannot replicate VERSION manifest to noMDS node
     @Test
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
-        super.cannotReplicateManifestToNoDDSNodeReplicationTest(true);
+    public void cannotReplicateManifestToNoMDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+        super.cannotReplicateManifestToNoMDSNodeReplicationTest(true);
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)

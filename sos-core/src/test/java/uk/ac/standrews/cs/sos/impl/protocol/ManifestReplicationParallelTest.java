@@ -33,10 +33,10 @@ public class ManifestReplicationParallelTest extends ManifestReplicationBaseTest
         super.basicFATContextManifestReplicationTest(false);
     }
 
-    // Cannot replicate VERSION manifest to noDDS node
+    // Cannot replicate VERSION manifest to noMDS node
     @Test
-    public void cannotReplicateManifestToNoDDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
-        super.cannotReplicateManifestToNoDDSNodeReplicationTest(false);
+    public void cannotReplicateManifestToNoMDSNodeReplicationTest() throws SOSProtocolException, NodeNotFoundException {
+        super.cannotReplicateManifestToNoMDSNodeReplicationTest(false);
     }
 
     @Test (expectedExceptions = SOSProtocolException.class)

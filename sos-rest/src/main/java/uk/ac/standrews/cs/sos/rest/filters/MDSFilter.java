@@ -2,7 +2,7 @@ package uk.ac.standrews.cs.sos.rest.filters;
 
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
-import uk.ac.standrews.cs.sos.rest.bindings.DDSNode;
+import uk.ac.standrews.cs.sos.rest.bindings.MDSNode;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -14,13 +14,13 @@ import javax.ws.rs.ext.Provider;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @Provider
-@DDSNode
-public class DDSFilter implements ContainerRequestFilter {
+@MDSNode
+public class MDSFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isDDS()) {
-            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a DDS node");
+        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isMDS()) {
+            Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a MDS node");
             throw new WebApplicationException(response);
         }
 

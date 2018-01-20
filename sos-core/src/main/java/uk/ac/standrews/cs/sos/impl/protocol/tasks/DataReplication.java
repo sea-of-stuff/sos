@@ -81,7 +81,7 @@ public class DataReplication extends Task {
      *
      * Construct the data replication task.
      * The data, nodes and replication factor paramters are needed to carry out the task
-     * The index, nds and dds are needed to promptly update this node about the new replicated content.
+     * The index, nds and mds are needed to promptly update this node about the new replicated content.
      */
     public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
                            StorageService storageService, NodeDiscoveryService nodeDiscoveryService,

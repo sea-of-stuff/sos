@@ -16,7 +16,7 @@ import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
-import uk.ac.standrews.cs.sos.rest.bindings.DDSNode;
+import uk.ac.standrews.cs.sos.rest.bindings.MDSNode;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -32,16 +32,16 @@ import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-@Path("/sos/dds/")
-@DDSNode
-public class RESTDDS {
+@Path("/sos/mds/")
+@MDSNode
+public class RESTMDS {
 
     @POST
     @Path("/manifest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response postManifest(String json, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) throws IOException {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/dds/manifest");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mds/manifest");
 
         Manifest manifest;
         try {
@@ -71,7 +71,7 @@ public class RESTDDS {
     @Path("/manifest/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/manifest/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -99,7 +99,7 @@ public class RESTDDS {
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getManifest(@PathParam("guid") String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/" + guid + "/challenge/" + challenge);
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/manifest/guid/" + guid + "/challenge/" + challenge);
 
         IGUID manifestGUID;
         try {
@@ -110,8 +110,8 @@ public class RESTDDS {
 
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
-        ManifestsDataService dds = RESTConfig.sos.getMDS();
-        IGUID challengeResult = dds.challenge(manifestGUID, challenge);
+        ManifestsDataService mds = RESTConfig.sos.getMDS();
+        IGUID challengeResult = mds.challenge(manifestGUID, challenge);
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
@@ -120,7 +120,7 @@ public class RESTDDS {
     @Path("/manifest/guid/{guid}/delete")
     public Response deleteManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/manifest/guid/" + guid + "/delete");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/manifest/guid/" + guid + "/delete");
 
         IGUID manifestGUID;
         try {
@@ -130,12 +130,12 @@ public class RESTDDS {
         }
 
         try {
-            ManifestsDataService dds = RESTConfig.sos.getMDS();
-            dds.delete(manifestGUID);
+            ManifestsDataService mds = RESTConfig.sos.getMDS();
+            mds.delete(manifestGUID);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
 
         } catch (ManifestNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: GET  /sos/dds/manifest/guid/{guid}/delete");
+            SOS_LOG.log(LEVEL.ERROR, "REST: GET  /sos/mds/manifest/guid/{guid}/delete");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }
@@ -154,7 +154,7 @@ public class RESTDDS {
     @Path("/versions/invariant/{invariant}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getVersions(@PathParam("invariant") String invariant, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/dds/versions/invariant/{invariant}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/versions/invariant/{invariant}");
 
 
         if (invariant == null || invariant.isEmpty()) {

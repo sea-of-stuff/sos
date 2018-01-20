@@ -49,7 +49,7 @@ public class SettingsConfigurationTest {
 
         SettingsConfiguration.Settings.AdvanceServicesSettings services = settings.getSettingsObj().getServices();
         assertTrue(services.getStorage().isExposed());
-        assertFalse(services.getDds().isExposed());
+        assertFalse(services.getMds().isExposed());
         assertFalse(services.getNds().isExposed());
         assertFalse(services.getMms().isExposed());
         assertFalse(services.getCms().isExposed());
@@ -142,12 +142,12 @@ public class SettingsConfigurationTest {
     }
 
     @Test
-    public void ddsTest() throws ConfigurationException {
+    public void mdsTest() throws ConfigurationException {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
-        SettingsConfiguration.Settings.AdvanceServicesSettings.DDSSettings ddsSettings = settings.getSettingsObj().getServices().getDds();
-        assertFalse(ddsSettings.isExposed());
+        SettingsConfiguration.Settings.AdvanceServicesSettings.MDSSettings mdsSettings = settings.getSettingsObj().getServices().getMds();
+        assertFalse(mdsSettings.isExposed());
     }
 
     @Test

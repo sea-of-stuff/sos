@@ -34,7 +34,7 @@ public class SOSNode extends BasicManifest implements Node {
     private int DB_port;
     private boolean DB_is_agent;
     private boolean DB_is_storage;
-    private boolean DB_is_dds;
+    private boolean DB_is_mds;
     private boolean DB_is_nds;
     private boolean DB_is_mms;
     private boolean DB_is_cms;
@@ -42,7 +42,7 @@ public class SOSNode extends BasicManifest implements Node {
     private boolean DB_is_experiment;
 
     public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
-                   boolean isAgent, boolean isStorage, boolean isDDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS, boolean isExperiment) {
+                   boolean isAgent, boolean isStorage, boolean isMDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS, boolean isExperiment) {
         super(ManifestType.NODE);
 
         this.nodeGUID = guid;
@@ -54,7 +54,7 @@ public class SOSNode extends BasicManifest implements Node {
         this.DB_port = port;
         this.DB_is_agent = isAgent;
         this.DB_is_storage = isStorage;
-        this.DB_is_dds = isDDS;
+        this.DB_is_mds = isMDS;
         this.DB_is_nds = isNDS;
         this.DB_is_mms = isMMS;
         this.DB_is_cms = isCMS;
@@ -76,7 +76,7 @@ public class SOSNode extends BasicManifest implements Node {
 
         this.DB_is_agent = true;
         this.DB_is_storage = settings.getServices().getStorage().isExposed();
-        this.DB_is_dds = settings.getServices().getDds().isExposed();
+        this.DB_is_mds = settings.getServices().getMds().isExposed();
         this.DB_is_nds = settings.getServices().getNds().isExposed();
         this.DB_is_mms = settings.getServices().getMms().isExposed();
         this.DB_is_cms = settings.getServices().getCms().isExposed();
@@ -89,7 +89,7 @@ public class SOSNode extends BasicManifest implements Node {
     public SOSNode(Node node) {
 
         this(node.guid(), node.getSignatureCertificate(), node.getIP(), node.getHostAddress().getPort(),
-                node.isAgent(), node.isStorage(), node.isDDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS(), node.isExperiment());
+                node.isAgent(), node.isStorage(), node.isMDS(), node.isNDS(), node.isMMS(), node.isCMS(), node.isRMS(), node.isExperiment());
     }
 
     @Override
@@ -141,8 +141,8 @@ public class SOSNode extends BasicManifest implements Node {
     }
 
     @Override
-    public boolean isDDS() {
-        return DB_is_dds;
+    public boolean isMDS() {
+        return DB_is_mds;
     }
 
     @Override
