@@ -40,7 +40,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
         AtomBuilder builder = new AtomBuilder()
                 .setData(new InputStreamData(stream))
-                .setReplicationFactor(2) // This node and the remote one
+                .setReplicationFactor(1)
                 .setReplicationNodes(nodesCollection);
         Atom manifest = agent.addAtom(builder);
 
@@ -79,7 +79,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         InputStream stream = HelperTest.StringToInputStream(TEST_DATA);
         AtomBuilder builder = new AtomBuilder()
                 .setData(new InputStreamData(stream))
-                .setReplicationFactor(2) // This node and the remote one
+                .setReplicationFactor(1)
                 .setReplicationNodes(nodesCollection);
         Atom manifest = agent.addAtom(builder);
 

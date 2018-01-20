@@ -136,7 +136,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
         }
 
         if (limitReplication) {
-            replicationFactor = (replicationFactor - 1) <= ddsSettings.getMaxReplication() ? (replicationFactor - 1) : ddsSettings.getMaxReplication();
+            replicationFactor = replicationFactor <= ddsSettings.getMaxReplication() ? replicationFactor : ddsSettings.getMaxReplication();
         }
 
         if (replicationFactor > 0) {

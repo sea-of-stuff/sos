@@ -405,6 +405,7 @@ public class SettingsConfiguration {
                 private int maxReplication = 1; // A value of 1 results in no replication, since this storage service itself will count as replication-1
 
                 private boolean sequentialReplication = true;
+                private int replicationThreads = 3;
 
                 public StorageSettings() {}
 
@@ -426,6 +427,14 @@ public class SettingsConfiguration {
 
                 public void setSequentialReplication(boolean sequentialReplication) {
                     this.sequentialReplication = sequentialReplication;
+                }
+
+                public int getReplicationThreads() {
+                    return replicationThreads;
+                }
+
+                public void setReplicationThreads(int replicationThreads) {
+                    this.replicationThreads = replicationThreads;
                 }
             }
 
@@ -473,6 +482,7 @@ public class SettingsConfiguration {
                 private int maxReplication = 1; // A value of 1 results in no replication, since this dds service itself will count as replication-1
 
                 private boolean sequentialReplication = true;
+                private int replicationThreads = 3;
 
                 public DDSSettings() {}
 
@@ -490,6 +500,14 @@ public class SettingsConfiguration {
 
                 public void setSequentialReplication(boolean sequentialReplication) {
                     this.sequentialReplication = sequentialReplication;
+                }
+
+                public int getReplicationThreads() {
+                    return replicationThreads;
+                }
+
+                public void setReplicationThreads(int replicationThreads) {
+                    this.replicationThreads = replicationThreads;
                 }
             }
 

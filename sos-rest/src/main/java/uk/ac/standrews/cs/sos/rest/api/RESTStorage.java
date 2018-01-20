@@ -131,7 +131,7 @@ public class RESTStorage {
 
                 builder = builder.setReplicationNodes(metadata.getReplicationNodes().getNodesCollection())
                         .setReplicationFactor(replicationFactor)
-                        .setDelegateReplication(true); // This will be ignored anyway if replicas == 1
+                        .setDelegateReplication(false);
 
 
                 if (metadata.isProtectedData()) {

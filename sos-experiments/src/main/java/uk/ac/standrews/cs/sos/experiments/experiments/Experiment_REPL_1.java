@@ -161,7 +161,7 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
                     AtomBuilder atomBuilder = new AtomBuilder()
                             .setLocation(new URILocation(file.toUri().toString()))
                             .setReplicationNodes(codomain)
-                            .setReplicationFactor(replicationFactor + 1) // Since we are not storing the data locally
+                            .setReplicationFactor(replicationFactor)
                             .setDoNotStoreDataLocally(true)
                             .setDoNotStoreManifestLocally(true);
 

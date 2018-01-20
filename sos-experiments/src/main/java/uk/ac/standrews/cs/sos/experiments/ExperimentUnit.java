@@ -501,7 +501,7 @@ public interface ExperimentUnit {
             AtomBuilder atomBuilder = new AtomBuilder()
                     .setDoNotStoreDataLocally(true)
                     .setDoNotStoreManifestLocally(true)
-                    .setReplicationFactor(2) // This node will be ignored because of params above
+                    .setReplicationFactor(1)
                     .setReplicationNodes(remoteNode)
                     .setLocation(dataLocation);
 
@@ -509,7 +509,7 @@ public interface ExperimentUnit {
 
             IGUID invariant = GUIDFactory.generateGUID(atom.guid().toMultiHash());
             Version version = ManifestFactory.createVersionManifest(atom.guid(), invariant, null, null, null);
-            node.getMDS().addManifest(version, remoteNode, 2, false, false);
+            node.getMDS().addManifest(version, remoteNode, 1, false, false);
 
             return version.guid();
 

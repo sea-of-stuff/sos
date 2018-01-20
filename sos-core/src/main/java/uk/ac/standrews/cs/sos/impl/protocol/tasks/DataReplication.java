@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.datamodel.AtomManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
@@ -70,8 +71,6 @@ public class DataReplication extends Task {
 
     private StorageService storageService;
     private NodeDiscoveryService nodeDiscoveryService;
-
-    private static final int REPLICA_THREADS = 4;
 
     /**
      * Replicates the data at least n times within the specified nodes collection.
@@ -146,7 +145,8 @@ public class DataReplication extends Task {
         try (final InputStream inputStream = data.getInputStream();
              final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
 
-            Executor executor = Executors.newFixedThreadPool(REPLICA_THREADS);
+            int poolSize = SOSLocalNode.settings.getServices().getStorage().getReplicationThreads();
+            Executor executor = Executors.newFixedThreadPool(poolSize);
             CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
 
             for (IGUID guid : nodesCollection.nodesRefs()) {
@@ -257,7 +257,7 @@ public class DataReplication extends Task {
 
             DataPackage.Metadata metadata = new DataPackage.Metadata();
             if (delegateReplication) {
-                metadata.setReplicationFactor(replicationFactor);
+                metadata.setReplicationFactor(replicationFactor -1);
 
                 DataPackage.Metadata.ReplicationNodes replicationNodes = new DataPackage.Metadata.ReplicationNodes();
                 replicationNodes.setType(nodesCollection.type());

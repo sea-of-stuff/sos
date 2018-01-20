@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
@@ -42,8 +43,6 @@ public class ManifestReplication extends Task {
 
     private NodeDiscoveryService nodeDiscoveryService;
     private ManifestsDataService manifestsDataService;
-
-    private static final int REPLICA_THREADS = 4;
 
     // TODO - replication by delegation. See DataReplication!
     public ManifestReplication(Manifest manifest, NodesCollection nodesCollection, int replicationFactor, boolean sequential,
@@ -103,7 +102,8 @@ public class ManifestReplication extends Task {
     private void parallelManifestReplication(final Manifest manifest) {
 
         try {
-            Executor executor = Executors.newFixedThreadPool(REPLICA_THREADS);
+            int poolSize = SOSLocalNode.settings.getServices().getDds().getReplicationThreads();
+            Executor executor = Executors.newFixedThreadPool(poolSize);
             CompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
 
             for (IGUID guid : nodesCollection.nodesRefs()) {

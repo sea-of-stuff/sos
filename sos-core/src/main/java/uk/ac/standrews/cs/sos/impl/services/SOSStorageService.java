@@ -129,7 +129,7 @@ public class SOSStorageService implements StorageService {
         }
 
         // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
-        int replicationFactor = (atomBuilder.getReplicationFactor() - 1) <= storageSettings.getMaxReplication() ? (atomBuilder.getReplicationFactor() - 1) : storageSettings.getMaxReplication();
+        int replicationFactor = atomBuilder.getReplicationFactor() <= storageSettings.getMaxReplication() ? atomBuilder.getReplicationFactor() : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
             try (Data data = atomBuilder.getData()){

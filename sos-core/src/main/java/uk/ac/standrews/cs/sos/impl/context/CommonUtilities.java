@@ -80,7 +80,7 @@ public class CommonUtilities {
     public void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
-            manifestsDataService.addManifest(manifest, codomain, replicationFactor + 1 /* We increment the replication factory by one, because we want the manifest to leave this node */, true, false);
+            manifestsDataService.addManifest(manifest, codomain, replicationFactor, true, false);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }
@@ -102,7 +102,7 @@ public class CommonUtilities {
             AtomBuilder atomBuilder = (AtomBuilder) new AtomBuilder()
                     .setData(data)
                     .setReplicationNodes(codomain)
-                    .setReplicationFactor(replicationFactor + 1 /* We increment the replication factory by one, because we want the data to leave this node */)
+                    .setReplicationFactor(replicationFactor)
                     .setAlreadyProtected(dataIsAlreadyProtected);
 
             storageService.addAtom(atomBuilder);
