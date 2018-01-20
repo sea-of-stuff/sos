@@ -28,23 +28,23 @@ public class CompoundManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_CONTENTS =
             "{\"type\":\"Compound\"," +
-                    "\"GUID\":\"SHA256_16_964dab35b9136a610687d31b56fd346bdda027be0a66e6761e0fd1238262cd9f\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Compound_Type\":\"DATA\"," +
-                    "\"Contents\":" +
+                    "\"guid\":\"SHA256_16_95cdd566156fd9891cd849a582abbc4ed37b0e5c64a099dbf0093b8a3d2d6a79\"," +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"compound_type\":\"DATA\"," +
+                    "\"contents\":" +
                     "[{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"label\":\"cat\"," +
+                    "\"guid\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
                             "}]}";
 
     private static final String EXPECTED_JSON_NO_CONTENTS =
             "{\"type\":\"Compound\"," +
-                    "\"GUID\":\"SHA256_16_c3dbaa4197ea2aa8012e70fd805d9cc6c450cc78e454b2a6a643f935a3454c76\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Compound_Type\":\"DATA\"," +
-                    "\"Contents\":" +
+                    "\"guid\":\"SHA256_16_c3dbaa4197ea2aa8012e70fd805d9cc6c450cc78e454b2a6a643f935a3454c76\"," +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"compound_type\":\"DATA\"," +
+                    "\"contents\":" +
                     "[]}";
 
     @Test

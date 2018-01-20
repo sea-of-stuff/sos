@@ -19,9 +19,9 @@ public class RESTGeneralTest extends CommonRESTTest {
 
     private static final String TEST_NODE_INFO = "" +
             "{\n"+
-                    /* "  \"GUID\" : \"SHA256_16_c96706034e6edca2c7dd5e5f625b33ed40b9f70978499be892db22ccac4bccd6\",\n"+ */
+                    /* "  \"guid\" : \"SHA256_16_c96706034e6edca2c7dd5e5f625b33ed40b9f70978499be892db22ccac4bccd6\",\n"+ */
                     "  \"type\" : \"Node\",\n"+
-                    /*"  \"signCert\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ+g1RiPTeaFIiw1LZwogFCwa3Cd4ECVMNKzG9lVxI0yonvj8mRyH4Z1/3WaoQTjuZ/lUGU43L24zpsmlxOcUkUCAwEAAQ==\",\n"+*/
+                    /*"  \"certificate\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ+g1RiPTeaFIiw1LZwogFCwa3Cd4ECVMNKzG9lVxI0yonvj8mRyH4Z1/3WaoQTjuZ/lUGU43L24zpsmlxOcUkUCAwEAAQ==\",\n"+*/
                     /*"  \"hostname\" : \"138.251.195.151\",\n"+ */
                     "  \"port\" : 8080,\n"+
                     "  \"services\" : {\n"+

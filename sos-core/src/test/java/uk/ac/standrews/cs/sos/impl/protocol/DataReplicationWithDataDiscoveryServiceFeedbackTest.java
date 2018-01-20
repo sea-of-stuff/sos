@@ -81,8 +81,8 @@
 //                                        "    \"" + SOSConstants.MANIFEST + "\" : \n" +
 //                                        "    {\n" +
 //                                        "        \"type\" : \"Atom\",\n" +
-//                                        "        \"GUID\" : \"" + testGUID + "\",\n" +
-//                                        "        \"Locations\" : \n" +
+//                                        "        \"guid\" : \"" + testGUID + "\",\n" +
+//                                        "        \"locations\" : \n" +
 //                                        "        [\n" +
 //                                        "              {\n" +
 //                                        "                \"type\" : \"persistent\",\n" +

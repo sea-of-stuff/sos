@@ -110,8 +110,8 @@ public class DataReplicationBaseTest extends ProtocolTest {
                                 .withBody(
                                         "    {\n" +
                                                 "        \"type\" : \"Atom\",\n" +
-                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
-                                                "        \"Locations\" : \n" +
+                                                "        \"guid\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"type\" : \"persistent\",\n" +
@@ -155,8 +155,8 @@ public class DataReplicationBaseTest extends ProtocolTest {
                                 .withBody(
                                         "    {\n" +
                                                 "        \"type\" : \"Atom\",\n" +
-                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
-                                                "        \"Locations\" : \n" +
+                                                "        \"guid\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"type\" : \"persistent\",\n" +

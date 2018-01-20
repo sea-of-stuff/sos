@@ -33,7 +33,7 @@ public class PolicySerializerTest {
 
         String expected = "{\n" +
                 "  \"type\" : \"Policy\",\n" +
-                "  \"GUID\" : \"SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb\",\n" +
+                "  \"guid\" : \"SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb\",\n" +
                 "  \"dependencies\" : [ ],\n" +
                 "  \"apply\" : \"\",\n" +
                 "  \"satisfied\" : \"return true;\",\n" +

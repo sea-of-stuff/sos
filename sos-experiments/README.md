@@ -239,16 +239,16 @@ The generate info is stored at the path: `sos-experiments/src/main/resources/gen
   "settings": {
     "bootstrapNodes": [
           {
-            "GUID" : "SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
+            "guid" : "SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
             "hostname" : "192.168.1.2",
             "port" : 8080,
-            "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALifpBJBNiW9dzEMsm5maYC12C6UP6tKcJr0nB4UJwXj6+elfyye7KErjyXzbP9WoDDNPWNDQKBA/T4hiZgUl7sCAwEAAQ=="
+            "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALifpBJBNiW9dzEMsm5maYC12C6UP6tKcJr0nB4UJwXj6+elfyye7KErjyXzbP9WoDDNPWNDQKBA/T4hiZgUl7sCAwEAAQ=="
           },
           {
-            "GUID" : "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
+            "guid" : "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4",
             "hostname" : "192.168.1.3",
             "port" : 8080,
-            "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK3GdXcbp3jOdc+LSgqj6MMDcz7GdmS4ROUM2qjKksrUFEevqcUlPN4D9oyxvd41pchSyGgvrk2eOQnO+NC+NhcCAwEAAQ=="
+            "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK3GdXcbp3jOdc+LSgqj6MMDcz7GdmS4ROUM2qjKksrUFEevqcUlPN4D9oyxvd41pchSyGgvrk2eOQnO+NC+NhcCAwEAAQ=="
           }
         ]
   }

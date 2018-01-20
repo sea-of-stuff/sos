@@ -21,12 +21,12 @@ import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
  */
 public class ContentImplTest extends CommonTest {
 
-    private static final String EXPECTED_JSON_CONTENT_GUID = "{\"GUID\":\""+
+    private static final String EXPECTED_JSON_CONTENT_GUID = "{\"guid\":\""+
             Hashes.TEST_STRING_HASHED+"\"}";
     private static final String EXPECTED_JSON_CONTENT_TYPE_VAL =
             "{" +
-                    "\"Label\":\"cat\"," +
-                    "\"GUID\":\""+Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"label\":\"cat\"," +
+                    "\"guid\":\""+Hashes.TEST_STRING_HASHED+"\"" +
                     "}";
 
     @Test

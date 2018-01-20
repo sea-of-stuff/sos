@@ -39,7 +39,7 @@ public class FetchMetadataTest extends ProtocolTest {
     private static final String GUID_METADATA = "SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4";
     private static final String TEST_METADATA =
             "{\n" +
-                    "    \"GUID\": \"SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
+                    "    \"guid\": \"SHA256_16_aaaaa025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4\",\n" +
                     "    \"type\":\"Metadata\"," +
                     "    \"properties\": [\n" +
                     "        {\n" +

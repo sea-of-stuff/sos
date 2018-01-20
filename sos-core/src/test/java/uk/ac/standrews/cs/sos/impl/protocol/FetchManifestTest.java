@@ -42,12 +42,12 @@ public class FetchManifestTest extends ProtocolTest {
     private static final String TEST_VERSION_MANIFEST = "" +
             "{" +
             "  \"type\":\"Version\"," +
-            "  \"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-            "  \"GUID\":\""+ GUID_VERSION+"\"," +
-            "  \"Signature\":\"AAAB\"," +
-            "  \"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-            "  \"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-            "  \"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+            "  \"invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"guid\":\""+ GUID_VERSION+"\"," +
+            "  \"signature\":\"AAAB\"," +
+            "  \"metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+            "  \"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
     @BeforeMethod

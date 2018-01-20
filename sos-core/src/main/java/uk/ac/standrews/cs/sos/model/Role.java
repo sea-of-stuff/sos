@@ -13,12 +13,12 @@ import java.security.PublicKey;
 /**
  *
  * {
- *      "GUID": "a243",
- *      "Name": "Simone's work",
- *      "User": "2321aaa3",
+ *      "guid": "a243",
+ *      "name": "Simone's work",
+ *      "user": "2321aaa3",
  *      "Signature_PubKey": "1342242234",
  *      "Data_PubKey" : "13442421",
- *      "Signature": "MQ17983827se=" // Generated using User's keys
+ *      "signature": "MQ17983827se=" // Generated using User's keys
  * }
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

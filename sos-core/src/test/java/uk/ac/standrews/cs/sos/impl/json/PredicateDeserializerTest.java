@@ -21,7 +21,7 @@ public class PredicateDeserializerTest extends SetUpTest {
 
         String predicateJSON = "{\n" +
                 "  \"type\" : \"Predicate\",\n" +
-                "  \"GUID\" : \"SHA256_16_054ae7aafe6d9e1fedab97f9952f7da4698604eabe3426397b8742362bd7f464\",\n" +
+                "  \"guid\" : \"SHA256_16_054ae7aafe6d9e1fedab97f9952f7da4698604eabe3426397b8742362bd7f464\",\n" +
                 "  \"dependencies\" : [ \"java.util.Set\", \"java.util.Iterator\" ],\n" +
                 "  \"predicate\" : \"true;\"\n" +
                 "}";

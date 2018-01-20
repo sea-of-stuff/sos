@@ -12,27 +12,28 @@ public class JSONConstants {
     // Suppresses default constructor, ensuring non-instantiability.
     private JSONConstants() {}
 
-    // Manifest keys
+    // Manifest General keys
     public static final String KEY_TYPE = "type";
-    public static final String KEY_GUID = "GUID";
-    public static final String KEY_SIGNER = "Signer";
-    public static final String KEY_SIGNATURE = "Signature";
-    public static final String KEY_LOCATIONS = "Locations";
-    public static final String KEY_COMPOUND_TYPE = "Compound_Type";
-    public static final String KEY_CONTENT = "Content";
-    public static final String KEY_CONTENTS = "Contents";
-    public static final String KEY_INVARIANT = "Invariant";
-    public static final String KEY_PREVIOUS_GUID = "Previous";
-    public static final String KEY_METADATA_GUID = "Metadata";
+    public static final String KEY_GUID = "guid";
+    public static final String KEY_SIGNER = "signer";
+    public static final String KEY_SIGNATURE = "signature";
+    public static final String KEY_SIGNATURE_CERTIFICATE = "certificate";
+    public static final String KEY_LOCATIONS = "locations";
+    public static final String KEY_COMPOUND_TYPE = "compound_type";
+    public static final String KEY_CONTENT = "content";
+    public static final String KEY_CONTENTS = "contents";
+    public static final String KEY_INVARIANT = "invariant";
+    public static final String KEY_PREVIOUS_GUID = "previous";
+    public static final String KEY_METADATA_GUID = "metadata";
 
     // Secure Manifest keys
-    public static final String KEYS_PROTECTION = "Keys";
-    public static final String KEYS_PROTECTION_KEY = "Key";
-    public static final String KEYS_PROTECTION_ROLE = "Role";
+    public static final String KEYS_PROTECTION = "keys";
+    public static final String KEYS_PROTECTION_KEY = "key";
+    public static final String KEYS_PROTECTION_ROLE = "role";
 
     // Content keys
-    public static final String CONTENT_KEY_GUID = "GUID";
-    public static final String CONTENT_KEY_LABEL = "Label";
+    public static final String CONTENT_KEY_GUID = "guid";
+    public static final String CONTENT_KEY_LABEL = "label";
 
     // Location bundle keys
     public static final String BUNDLE_TYPE = "type";
@@ -45,13 +46,11 @@ public class JSONConstants {
     public static final String KEY_META_VALUE = "value";
 
     // User/Role
-    public static final String KEY_USER = "User";
-    public static final String KEY_NAME = "Name";
-    public static final String KEY_SIGNATURE_CERTIFICATE = "Certificate";
-    public static final String KEY_PUBLIC_KEY = "PublicKey";
+    public static final String KEY_USER = "user";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_PUBLIC_KEY = "public_key";
 
     // Node
-    public static final String KEY_NODE_SIGNATURE_CERTIFICATE = "signCert";
     public static final String KEY_NODE_HOSTNAME = "hostname";
     public static final String KEY_NODE_PORT = "port";
     public static final String KEY_NODE_SERVICES = "services";

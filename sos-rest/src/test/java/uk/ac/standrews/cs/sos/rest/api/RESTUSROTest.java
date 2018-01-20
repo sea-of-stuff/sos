@@ -23,9 +23,9 @@ public class RESTUSROTest extends CommonRESTTest {
 
         String userJSON = "" +
                 "{\n" +
-                "  \"GUID\" : \"SHA256_16_16eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\",\n" +
-                "  \"Name\" : \"testUser\",\n" +
-                "  \"Certificate\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL1PuDAdgVaND5DN31SXXEtxQLx1nZ5WeM5uvC8+S0A1bKBqAUyiQALUEapYGYzzXt5XomPFVJLu/aUIuxg4nbcCAwEAAQ==\"\n" +
+                "  \"guid\" : \"SHA256_16_16eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\",\n" +
+                "  \"name\" : \"testUser\",\n" +
+                "  \"certificate\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL1PuDAdgVaND5DN31SXXEtxQLx1nZ5WeM5uvC8+S0A1bKBqAUyiQALUEapYGYzzXt5XomPFVJLu/aUIuxg4nbcCAwEAAQ==\"\n" +
                 "}";
 
         Response response = target("/sos/usro/user")
@@ -40,12 +40,12 @@ public class RESTUSROTest extends CommonRESTTest {
 
         String roleJSON = "" +
                 "{\n" +
-                "  \"Certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
-                "  \"GUID\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
-                "  \"Name\": \"testRole\",\n" +
-                "  \"PublicKey\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
-                "  \"Signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
-                "  \"User\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
+                "  \"certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
+                "  \"guid\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
+                "  \"name\": \"testRole\",\n" +
+                "  \"public_key\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
+                "  \"signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
+                "  \"user\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
                 "}";
 
         Response response = target("/sos/usro/role")
@@ -60,10 +60,10 @@ public class RESTUSROTest extends CommonRESTTest {
 
         String userJSON = "" +
                 "{\n" +
-                "  \"GUID\" : \"SHA256_16_16eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\",\n" +
+                "  \"guid\" : \"SHA256_16_16eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\",\n" +
                 "  \"type\" : \"User\",\n" +
-                "  \"Name\" : \"testUser\",\n" +
-                "  \"Certificate\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL1PuDAdgVaND5DN31SXXEtxQLx1nZ5WeM5uvC8+S0A1bKBqAUyiQALUEapYGYzzXt5XomPFVJLu/aUIuxg4nbcCAwEAAQ==\"\n" +
+                "  \"name\" : \"testUser\",\n" +
+                "  \"certificate\" : \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL1PuDAdgVaND5DN31SXXEtxQLx1nZ5WeM5uvC8+S0A1bKBqAUyiQALUEapYGYzzXt5XomPFVJLu/aUIuxg4nbcCAwEAAQ==\"\n" +
                 "}";
 
         target("/sos/usro/user")
@@ -81,13 +81,13 @@ public class RESTUSROTest extends CommonRESTTest {
 
         String roleJSON = "" +
                 "{\n" +
-                "  \"Certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
-                "  \"GUID\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
+                "  \"certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
+                "  \"guid\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
                 "  \"type\" : \"Role\",\n" +
-                "  \"Name\": \"testRole\",\n" +
-                "  \"PublicKey\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
-                "  \"Signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
-                "  \"User\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
+                "  \"name\": \"testRole\",\n" +
+                "  \"public_key\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
+                "  \"signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
+                "  \"user\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
                 "}";
 
         target("/sos/usro/role")
@@ -105,24 +105,24 @@ public class RESTUSROTest extends CommonRESTTest {
 
         String role_1_JSON = "" +
                 "{\n" +
-                "  \"Certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
-                "  \"GUID\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
+                "  \"certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
+                "  \"guid\": \"SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
                 "  \"type\" : \"Role\",\n" +
-                "  \"Name\": \"testRole1\",\n" +
-                "  \"PublicKey\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
-                "  \"Signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
-                "  \"User\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
+                "  \"name\": \"testRole1\",\n" +
+                "  \"public_key\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
+                "  \"signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
+                "  \"user\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
                 "}";
 
         String role_2_JSON = "" +
                 "{\n" +
-                "  \"Certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
-                "  \"GUID\": \"SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
+                "  \"certificate\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALTzc5FqmUeROVsjPDlFx5scqxXwasTg9E3Is+G6qPGtx5viUrk2djs2eAqYuGaAoQxDzaIz3jIwOZxwwhphWwMCAwEAAQ==\",\n" +
+                "  \"guid\": \"SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28\",\n" +
                 "  \"type\" : \"Role\",\n" +
-                "  \"Name\": \"testRole2\",\n" +
-                "  \"PublicKey\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
-                "  \"Signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
-                "  \"User\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
+                "  \"name\": \"testRole2\",\n" +
+                "  \"public_key\": \"MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMjM62sn4y46oTZfvANoYbRuxioZHPTNuRCO6NhVSSGFt/c7fl7ud/yxDu4TZMyQ1ACxTmcJeTpnhSX778RV9FkCAwEAAQ==\",\n" +
+                "  \"signature\": \"dCeoR22d9SgMClNLsrjngWhGehQ5u6JsCBCOqzYOT/XSVUg4WyPnapDoukhXl5rBnpq0KDcx2Iv3IA+5MZ7haA==\",\n" +
+                "  \"user\": \"SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002\"\n" +
                 "}";
 
         target("/sos/usro/role")
@@ -143,15 +143,15 @@ public class RESTUSROTest extends CommonRESTTest {
         JsonNode role_1 = node.get(0);
         JsonNode role_2 = node.get(1);
 
-        assertEquals(role_1.get("User").asText(), "SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002");
-        assertEquals(role_2.get("User").asText(), "SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002");
+        assertEquals(role_1.get("user").asText(), "SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002");
+        assertEquals(role_2.get("user").asText(), "SHA256_16_06eec56d4a34310e3026b1c949f6ee9954e515d1a5dd734a1675eb21f8655002");
 
-        assertTrue(role_1.get("GUID").asText().equals("SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28") ||
-                role_1.get("GUID").asText().equals("SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28"));
+        assertTrue(role_1.get("guid").asText().equals("SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28") ||
+                role_1.get("guid").asText().equals("SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28"));
 
-        assertTrue(role_2.get("GUID").asText().equals("SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28") ||
-                role_2.get("GUID").asText().equals("SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28"));
+        assertTrue(role_2.get("guid").asText().equals("SHA256_16_4dce632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28") ||
+                role_2.get("guid").asText().equals("SHA256_16_222e632041a51e6c16f784dc6da9be05c1d511ebec9c49f30debb53d4751ab28"));
 
-        assertNotEquals(role_1.get("GUID").asText(), role_2.get("GUID").asText());
+        assertNotEquals(role_1.get("guid").asText(), role_2.get("guid").asText());
     }
 }

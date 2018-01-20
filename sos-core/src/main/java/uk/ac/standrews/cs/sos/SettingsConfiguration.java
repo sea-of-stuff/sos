@@ -187,7 +187,7 @@ public class SettingsConfiguration {
             private String guid;
             private String hostname; // or ip
             private int port = 8080;
-            private String signCert;
+            private String certificate;
 
             protected SimpleNode() {
                 super(ManifestType.NODE);
@@ -228,11 +228,11 @@ public class SettingsConfiguration {
             }
 
             public String getSignCert() {
-                return signCert;
+                return certificate;
             }
 
-            public void setSignCert(String signCert) {
-                this.signCert = signCert;
+            public void setSignCert(String certificate) {
+                this.certificate = certificate;
             }
 
             @JsonIgnore

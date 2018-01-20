@@ -25,8 +25,8 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     private static final String TEST_NODE_INFO =
             "{\n" +
                     "  \"type\": \"Atom\",\n" +
-                    "  \"GUID\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
-                    "  \"Locations\": [\n" +
+                    "  \"guid\": \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
+                    "  \"locations\": [\n" +
                     "    {\n" +
                     "      \"type\": \"persistent\"\n" +
                     /*"      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\"\n" +*/
@@ -37,8 +37,8 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     private static final String TEST_EMPTY_ATOM_MANIFEST =
             "{\n" +
                     "  \"type\": \"Atom\",\n" +
-                    "  \"GUID\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
-                    "  \"Locations\": [\n" +
+                    "  \"guid\": \"SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n" +
+                    "  \"locations\": [\n" +
                     "    {\n" +
                     "      \"type\": \"persistent\"\n" +
                     /*"      \"location\": \"sos://SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/SHA256_16_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"\n" +*/

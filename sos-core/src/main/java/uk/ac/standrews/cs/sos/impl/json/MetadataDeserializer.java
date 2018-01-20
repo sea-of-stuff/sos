@@ -79,7 +79,7 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
                 return new MetaProperty(key, element.asLong());
             case "STRING":
                 return new MetaProperty(key, element.asText());
-            case "GUID":
+            case "guid":
                 try {
                     return new MetaProperty(key, GUIDFactory.recreateGUID(element.asText()));
                 } catch (GUIDGenerationException e) {

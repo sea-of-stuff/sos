@@ -87,10 +87,10 @@
     },
     "bootstrapNodes": [
       {
-        "GUID" : "SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2",
+        "guid" : "SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2",
         "hostname" : "192.168.2.2",
         "port" : 8080,
-        "signCert" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALqaEl0k56tgcJKx0f4m01OS+IGFueQjeDt0mC/yUB926G59XEUNuwcKlplOboRaAYcs+MFFXDksGeKFfVkFxN8CAwEAAQ=="
+        "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALqaEl0k56tgcJKx0f4m01OS+IGFueQjeDt0mC/yUB926G59XEUNuwcKlplOboRaAYcs+MFFXDksGeKFfVkFxN8CAwEAAQ=="
       }
     ]
   }

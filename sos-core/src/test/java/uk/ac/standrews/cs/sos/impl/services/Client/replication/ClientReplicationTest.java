@@ -100,8 +100,8 @@ public class ClientReplicationTest extends SetUpTest {
                                 .withBody(
                                         "    {\n" +
                                                 "        \"type\" : \"Atom\",\n" +
-                                                "        \"GUID\" : \"" + testGUID.toMultiHash() + "\",\n" +
-                                                "        \"Locations\" : \n" +
+                                                "        \"guid\" : \"" + testGUID.toMultiHash() + "\",\n" +
+                                                "        \"locations\" : \n" +
                                                 "        [\n" +
                                                 "              {\n" +
                                                 "                \"type\" : \"persistent\",\n" +

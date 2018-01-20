@@ -29,36 +29,36 @@ public class VersionManifestTest extends CommonTest {
 
     private static final String EXPECTED_JSON_BASIC_VERSION =
             "{\"type\":\"Version\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_VERSION =
             "{\"type\":\"Version\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_PREVIOUS_VERSION =
             "{\"type\":\"Version\"," +
-                    "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+                    "\"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     private static final String EXPECTED_JSON_METADATA_AND_PREVIOUS_VERSION =
             "{\"type\":\"Version\"," +
-                    "\"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Signature\":\"AAAB\"," +
-                    "\"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-                    "\"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-                    "\"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+                    "\"invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"signature\":\"AAAB\"," +
+                    "\"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+                    "\"previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+                    "\"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
                     "}}";
 
     @Test

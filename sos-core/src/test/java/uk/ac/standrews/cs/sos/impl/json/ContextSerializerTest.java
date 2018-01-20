@@ -30,7 +30,7 @@ public class ContextSerializerTest extends SetUpTest {
         String expectedContextJSON = "" +
                 "{\n" +
                 "  \"type\": \"Context\",\n" +
-                "  \"GUID\": \"SHA256_16_0625be63a694d0ab00978f978a1bc76e82b10b2406a394711f1cbc2169eb4e02\",\n" +
+                "  \"guid\": \"SHA256_16_0625be63a694d0ab00978f978a1bc76e82b10b2406a394711f1cbc2169eb4e02\",\n" +
                 "  \"name\": \"TEST\",\n" +
                 "  \"invariant\": \"SHA256_16_1901b1089f2af1d8c994edb0d3c26ec736544a47214dbe61fd5476a82f8ae1b4\",\n" +
                 "  \"content\": \"SHA256_16_e85f9770df500fb74794d429dd8d32238340c845fdac48bb17fb6a87bde86547\",\n" +

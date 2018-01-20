@@ -14,19 +14,19 @@ import java.util.Set;
  *
  * {
  *  "Type" : "Compound",
- *  "Compound_Type" : "COLLECTION",
- *  "GUID" : "cba74f828335fa96298f5efb3b2bf669ddc91031",
- *  "Content" : [
+ *  "compound_type" : "COLLECTION",
+ *  "guid" : "cba74f828335fa96298f5efb3b2bf669ddc91031",
+ *  "contents" : [
  *      {
- *          "Label" : "folder",
- *          "GUID" : "606c92e9707fd89d288c198b28f6cf3079be63bd"
+ *          "label" : "folder",
+ *          "guid" : "606c92e9707fd89d288c198b28f6cf3079be63bd"
  *      },
  *      {
- *          "Label" : "file.txt",
- *          "GUID" : "3ee75808c94ab7f53188e91a71cfa2bdfbcd1ebc"
+ *          "label" : "file.txt",
+ *          "guid" : "3ee75808c94ab7f53188e91a71cfa2bdfbcd1ebc"
  *      }
  *  ],
- *  "Signature" : "MCwCFHE36niavy6cRQjEk6dd8oBlGkXXAhQQus9CIRZWCEoGDKydiuA6N/51Eg=="
+ *  "signature" : "MCwCFHE36niavy6cRQjEk6dd8oBlGkXXAhQQus9CIRZWCEoGDKydiuA6N/51Eg=="
  * }
  *
  *

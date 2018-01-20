@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.sos.impl.metadata;
  */
 public enum MetaType {
 
-    LONG("LONG"), STRING("STRING"), GUID("GUID");
+    LONG("LONG"), STRING("STRING"), GUID("guid");
 
     private final String type;
     MetaType(String type) {

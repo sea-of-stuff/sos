@@ -59,7 +59,7 @@ HTTP/1.1 200 OK
 Content-type: application/json
 
 {
-  "guid": "GUID",
+  "guid": "guid",
   "hostname": "ip address",
   "port": 8080,
   "services": {
@@ -358,8 +358,8 @@ POST /coordinator/manifest
 
 {
   "Type": "Atom",
-  "GUID": "42b3edd482b3dfdbc5adc683840c21db06f00b78",
-  "Locations": [
+  "guid": "42b3edd482b3dfdbc5adc683840c21db06f00b78",
+  "locations": [
     {
     "Type" : "external",
     "Location" : "http://example.com/bear.jpeg"

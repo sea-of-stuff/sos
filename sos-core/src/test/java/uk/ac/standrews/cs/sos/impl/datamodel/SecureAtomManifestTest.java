@@ -107,14 +107,14 @@ public class SecureAtomManifestTest extends CommonTest {
         String testSecureAtomJson = "" +
                 "{\n" +
                 "  \"type\" : \"AtomP\",\n" +
-                "  \"GUID\" : \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
-                "  \"Locations\" : [ {\n" +
+                "  \"guid\" : \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
+                "  \"locations\" : [ {\n" +
                 "    \"type\" : \"external\",\n" +
                 "    \"location\" : \"http://httpbin.org/range/10\"\n" +
                 "  } ],\n" +
-                "  \"Keys\" : [ {\n" +
-                "    \"Role\" : \"SHA256_16_4f168a2da5be0120d896630b10cf111cec6f6a5e58fa683321d5ef08c6612a88\",\n" +
-                "    \"Key\" : \"ENCRYPTED_KEY\"\n" +
+                "  \"keys\" : [ {\n" +
+                "    \"role\" : \"SHA256_16_4f168a2da5be0120d896630b10cf111cec6f6a5e58fa683321d5ef08c6612a88\",\n" +
+                "    \"key\" : \"ENCRYPTED_KEY\"\n" +
                 "  } ]\n" +
                 "}";
 

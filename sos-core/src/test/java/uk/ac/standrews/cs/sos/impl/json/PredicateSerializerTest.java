@@ -27,7 +27,7 @@ public class PredicateSerializerTest {
 
         String expected = "{\n" +
                 "  \"type\" : \"Predicate\",\n" +
-                "  \"GUID\" : \"SHA256_16_90cf94ec60bab7127adf5c9646ae9e23fe32276f66f2393d7c6f21744713e369\",\n" +
+                "  \"guid\" : \"SHA256_16_90cf94ec60bab7127adf5c9646ae9e23fe32276f66f2393d7c6f21744713e369\",\n" +
                 "  \"predicate\" : \"true;\",\n" +
                 "  \"dependencies\" : [ \"EXAMPLE\", \"HELLO\" ]\n" +
                 "}";

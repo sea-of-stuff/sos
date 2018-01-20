@@ -28,7 +28,7 @@ public class NodeDeserializer extends JsonDeserializer<Node> {
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
-            PublicKey signatureCertificate = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_NODE_SIGNATURE_CERTIFICATE).asText());
+            PublicKey signatureCertificate = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_SIGNATURE_CERTIFICATE).asText());
             String hostname = node.get(JSONConstants.KEY_NODE_HOSTNAME).asText();
             int port = node.get(JSONConstants.KEY_NODE_PORT).asInt();
 

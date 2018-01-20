@@ -49,26 +49,26 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_VERSION_MANIFEST = "" +
             "{" +
             "  \"type\":\"Version\"," +
-            "  \"Invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-            "  \"GUID\":\""+ GUID_VERSION+"\"," +
-            "  \"Signature\":\"AAAB\"," +
-            "  \"Metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
-            "  \"Previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
-            "  \"Content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
+            "  \"invariant\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"guid\":\""+ GUID_VERSION+"\"," +
+            "  \"signature\":\"AAAB\"," +
+            "  \"metadata\":\""+ Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"previous\":[\""+ Hashes.TEST_STRING_HASHED+"\"]," +
+            "  \"content\": \""+ Hashes.TEST_STRING_HASHED+"\"" +
             "}";
 
     private static final String GUID_COMPOUND = "SHA256_16_964dab35b9136a610687d31b56fd346bdda027be0a66e6761e0fd1238262cd9f";
     private static final String TEST_COMPOUND_MANIFEST = "" +
             "{" +
             "  \"type\":\"Compound\"," +
-            "  \"GUID\":\"" + GUID_COMPOUND + "\"," +
-            "  \"Signature\":\"AAAB\"," +
-            "  \"Signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
-            "  \"Compound_Type\":\"DATA\"," +
-            "  \"Contents\":" +
+            "  \"guid\":\"" + GUID_COMPOUND + "\"," +
+            "  \"signature\":\"AAAB\"," +
+            "  \"signer\": \"" + Hashes.TEST_STRING_HASHED+"\"," +
+            "  \"compound_type\":\"DATA\"," +
+            "  \"contents\":" +
             "  [{" +
-            "    \"Label\":\"cat\"," +
-            "    \"GUID\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
+            "    \"label\":\"cat\"," +
+            "    \"guid\":\""+ Hashes.TEST_STRING_HASHED+"\"" +
             "  }]" +
             "}";
 
@@ -78,8 +78,8 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_ATOM_MANIFEST = "" +
             "{\n" +
             "    \"type\" : \"Atom\",\n" +
-            "    \"GUID\" : \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
-            "    \"Locations\" : \n" +
+            "    \"guid\" : \"SHA256_16_3a6eb0790f39ac87c94f3856b2dd2c5d110e6811602261a9a923d3bb23adc8b7\",\n" +
+            "    \"locations\" : \n" +
             "    [\n" +
             "          {\n" +
             "            \"type\" : \"persistent\",\n" +
@@ -118,7 +118,7 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_THIN_CONTEXT_MANIFEST = "" +
             "{\n" +
             "  \"type\" : \"Context\",\n" +
-            "  \"GUID\" : \"SHA256_16_e9561e61c65158f11fcf3d553ba0045a882f340ba6461480c2aab7feef4c672e\",\n" +
+            "  \"guid\" : \"SHA256_16_e9561e61c65158f11fcf3d553ba0045a882f340ba6461480c2aab7feef4c672e\",\n" +
             "  \"name\" : \"All\",\n" +
             "  \"invariant\" : \"SHA256_16_76ad2bb7f12f9cc8ecf515931b374f3533527a206ebd909d015a5744c812e57e\",\n" +
             "  \"content\" : \"SHA256_16_95a44980ed66c2f36eb647520aaaf10cbf891ec1ce448ef0c3ce387634be118f\",\n" +
@@ -138,7 +138,7 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_PREDICATE_MANIFEST = "" +
             "{\n" +
             "  \"type\" : \"Predicate\",\n" +
-            "  \"GUID\" : \"SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e\",\n" +
+            "  \"guid\" : \"SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e\",\n" +
             "  \"dependencies\" : [ ],\n" +
             "  \"predicate\" : \"true;\"\n" +
             "}";
@@ -146,7 +146,7 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_POLICY_MANIFEST = "" +
             "{\n" +
             "  \"type\" : \"Policy\",\n" +
-            "  \"GUID\" : \"SHA256_16_0c094bb01ae9803b22b2c9dd4b350b3456c168eca5173002cdd01c7cd1f09905\",\n" +
+            "  \"guid\" : \"SHA256_16_0c094bb01ae9803b22b2c9dd4b350b3456c168eca5173002cdd01c7cd1f09905\",\n" +
             "  \"dependencies\" : [ ],\n" +
             "  \"apply\" : \"\",\n" +
             "  \"satisfied\" : \"return true;\",\n" +

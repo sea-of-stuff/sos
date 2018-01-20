@@ -13,8 +13,8 @@ import uk.ac.standrews.cs.sos.impl.json.SecureAtomManifestSerializer;
  *
  * {
  *  "Type" : "Atom",
- *  "GUID" : "da39a3ee5e6b4b0d3255bfef95601890afd80709",
- *  "Locations" : [
+ *  "guid" : "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+ *  "locations" : [
  *      {
  *      "type" : "cache",
  *      "location" : "sos://3c9bfd93ab9a6e2ed501fc583685088cca66bac2/da39a3ee5e6b4b0d3255bfef95601890afd80709"

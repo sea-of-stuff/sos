@@ -20,7 +20,7 @@ public class MetadataManifestTest {
 
         String testMetadata =
                 "{\n" +
-                        "    \"GUID\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
+                        "    \"guid\": \"SHA256_16_72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0\",\n" +
                         "    \"type\":\"Metadata\"," +
                         "    \"properties\": [\n" +
                         "        {\n" +

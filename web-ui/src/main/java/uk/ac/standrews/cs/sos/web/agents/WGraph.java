@@ -148,7 +148,7 @@ public class WGraph {
                 Set<IGUID> prevs = version.previous();
                 if (prevs != null && !prevs.isEmpty()) {
                     for (IGUID prev : prevs) {
-                        ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
+                        ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "previous");
                         arrayNode.add(prevNode);
                     }
                 }
@@ -271,7 +271,7 @@ public class WGraph {
             Set<IGUID> prevs = version.previous();
             if (prevs != null && !prevs.isEmpty()) {
                 for (IGUID prev : prevs) {
-                    ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "Previous");
+                    ObjectNode prevNode = MakeEdge(version.guid(), prev, "", "previous");
                     arrayNode.add(prevNode);
                 }
             }

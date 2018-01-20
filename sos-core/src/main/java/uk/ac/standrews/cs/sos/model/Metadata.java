@@ -11,26 +11,26 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
  * Example:
  *
  * {
- *  "GUID" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
- *  "Type" : "Metadata",
+ *  "guid" : "3f845edc76b7e892ddca1f6e290750fe805e7f00",
+ *  "Type" : "metadata",
  *  "Properties" : [
  *      {
- *          "Key" : "Owner",
- *          "Type" : "GUID",
+ *          "key" : "Owner",
+ *          "Type" : "guid",
  *          "Value" : "abb134200a"
  *      },
  *      {
- *          "Key" : "Size",
+ *          "key" : "Size",
  *          "Type" : "LONG",
  *          "Value" : 105
  *      },
  *      {
- *          "Key" : "Timestamp",
+ *          "key" : "Timestamp",
  *          "Type" : "LONG",
  *          "Value" : 1487606187
  *      },
  *      {
- *          "Key" : "Content-Type",
+ *          "key" : "Content-Type",
  *          "Type" : "STRING",
  *          "Value" : "application/octet-stream"
  *      }
