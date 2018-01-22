@@ -4,7 +4,8 @@
     "services": {
       "storage": {
         "exposed": true,
-        "maxReplication": 10
+        "maxReplication": 10,
+        "replicationThreads": 10
       },
       "cms": {
         "exposed": false,

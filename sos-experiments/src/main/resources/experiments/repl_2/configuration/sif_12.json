@@ -34,7 +34,8 @@
         }
       },
       "mds": {
-        "exposed": false
+        "exposed": false,
+        "replicationThreads": 10
       },
       "rms": {
         "exposed": false
