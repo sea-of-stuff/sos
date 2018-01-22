@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments;
+package uk.ac.standrews.cs.sos.experiments.utilities;
 
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.SymmetricEncryption;

@@ -14,9 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import static uk.ac.standrews.cs.sos.experiments.KeyGenerator.pass;
 import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.CONFIGURATION_FOLDER;
 import static uk.ac.standrews.cs.sos.experiments.experiments.BaseExperiment.USRO_FOLDER;
+import static uk.ac.standrews.cs.sos.experiments.utilities.KeyGenerator.pass;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"

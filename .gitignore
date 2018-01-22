@@ -179,6 +179,7 @@ velocity.log*
 # Experiments
 test_file
 .key
+third-party/.*
 experiments/plots
 experiments/processed
 experiments/output

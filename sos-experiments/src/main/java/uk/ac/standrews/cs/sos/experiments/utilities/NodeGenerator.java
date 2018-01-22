@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.experiments;
+package uk.ac.standrews.cs.sos.experiments.utilities;
 
 import org.bouncycastle.util.encoders.Base64;
 import uk.ac.standrews.cs.guid.GUIDFactory;
