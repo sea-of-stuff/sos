@@ -31,8 +31,8 @@ public class USROGenerator {
 
         System.out.println("USRO Generator. Options: user, role");
         Scanner in = new Scanner(System.in);
-        String option = in.nextLine();
-        switch(option.toLowerCase()) {
+        String option = in.nextLine().toLowerCase();
+        switch(option) {
             case "user":
                 System.out.println("Type name of the user:");
                 String username = in.next();
@@ -40,6 +40,7 @@ public class USROGenerator {
                 System.out.println(user.toString());
                 stringToFile("experiments/usro/" + user.guid().toMultiHash() + ".json", user.toString());
                 break;
+
             case "role":
                 System.out.println("Available users/roles in experiments/usro:");
 
@@ -60,6 +61,10 @@ public class USROGenerator {
                 Role role = new RoleImpl(retrievedUsed, rolename);
                 System.out.println(role.toString());
                 stringToFile("experiments/usro/" + role.guid().toMultiHash() + ".json", role.toString());
+                break;
+
+            default:
+                System.err.println("Unknown option: " + option);
         }
 
 
