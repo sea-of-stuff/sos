@@ -113,7 +113,7 @@ public class SOSAddAtomTest extends AgentTest {
         assertEquals(ManifestType.ATOM, retrievedManifest.getType());
     }
 
-    @Test (timeOut = TEST_TIMEOUT)
+    @Test (timeOut = 2 * TEST_TIMEOUT)
     public void testAddAtomFromURLHttpsPdf() throws Exception {
         Location location = new URILocation("https://www.adobe.com/be_en/active-use/pdf/Alice_in_Wonderland.pdf");
         AtomBuilder builder = new AtomBuilder().setLocation(location);
