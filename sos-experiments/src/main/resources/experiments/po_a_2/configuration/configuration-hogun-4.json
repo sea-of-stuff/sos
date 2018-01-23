@@ -27,7 +27,7 @@
       "configurationfile" : "hogun_4.json",
       "certificatefile" : "hogun_4.crt",
       "keyfile" : "hogun_1.key",
-      "dataset" : "text_100kb",
+      "dataset" : "text_100kb_1",
       "sendUSRO" : true,
       "behaviour": {
         "start": 0,

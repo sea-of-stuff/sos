@@ -37,7 +37,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_6"};
-    private static String[] subdatasets = new String[] { "1kb", "100kb", "1mb" }; // NOTE - 1mb dataset has less than 100 files
+    private static String[] subdatasets = new String[] { "text_1kb_1", "text_100kb_1", "text_1mb_1" }; // NOTE - 1mb dataset has less than 100 files
 
     private final String masterDataset;
 

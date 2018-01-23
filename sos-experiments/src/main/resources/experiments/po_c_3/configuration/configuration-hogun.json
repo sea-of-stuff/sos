@@ -52,7 +52,7 @@
       "configurationfile" : "hogun_1.json",
       "certificatefile" : "hogun_1.crt",
       "keyfile" : "hogun_1.key",
-      "dataset" : "text_100kb",
+      "dataset" : "text_100kb_1",
       "behaviour": {
         "start": 0,
         "stop": -1,
