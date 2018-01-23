@@ -13,10 +13,11 @@ public class TextDatasetGenerator {
 
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Dataset configuration name (setting file must be located under 'sos-experiments/src/main/resources/synthetic_datasets/':");
+        System.out.println("Dataset configuration name (setting file must be located under: ");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/");
         String settingFilename = in.nextLine();
 
-        Scanner datasetDefinition = new Scanner(new File("sos-experiments/src/main/resources/synthetic_datasets/" + settingFilename));
+        Scanner datasetDefinition = new Scanner(new File(settingFilename));
         String datasetPath = datasetDefinition.next();
         int numberOfFiles = datasetDefinition.nextInt();
         String[] fileSizeRange = datasetDefinition.next().split("-");
