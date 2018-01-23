@@ -1,4 +1,4 @@
-do <- function(datafile, titlePlot="NO TITLE", showSummary=FALSE, yMax, isNumeric=FALSE) {
+do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FALSE, yMax, isNumeric=FALSE) {
   
   library(ggplot2)
   source("r_scripts/utils_stats.r")
@@ -29,7 +29,7 @@ do <- function(datafile, titlePlot="NO TITLE", showSummary=FALSE, yMax, isNumeri
             axis.text=element_text(size=14),
             axis.title=element_text(size=16,face="bold")) +
       ylim(0, yMax) +
-      labs(title=titlePlot, x="Predicate", y="Time (s)")
+      labs(title=titlePlot, x=xLabel, y="Time (s)")
   }
   
 }
