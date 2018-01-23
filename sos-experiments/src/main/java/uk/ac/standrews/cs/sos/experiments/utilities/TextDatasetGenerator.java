@@ -1,9 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.utilities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -12,20 +9,14 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class TextDatasetGenerator {
 
-    /*
-     * Params:
-     * - number of files
-     * - min-max file size
-     * - words in file with frequency
-     */
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void main(String[] args) throws IOException {
 
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Dataset name:");
-        String name = in.nextLine();
+        System.out.println("Dataset configuration name (setting file must be located under 'sos-experiments/src/main/resources/synthetic_datasets/':");
+        String settingFilename = in.nextLine();
 
-        Scanner datasetDefinition = new Scanner(new File("sos-experiments/src/main/resources/synthetic_datasets/" + name));
+        Scanner datasetDefinition = new Scanner(new File("sos-experiments/src/main/resources/synthetic_datasets/" + settingFilename));
         String datasetPath = datasetDefinition.next();
         int numberOfFiles = datasetDefinition.nextInt();
         String[] fileSizeRange = datasetDefinition.next().split("-");
@@ -36,7 +27,7 @@ public class TextDatasetGenerator {
         while(datasetDefinition.hasNext()) {
 
             String[] wordFreq = datasetDefinition.next().split("-");
-            String word = wordFreq[0].trim().toLowerCase();
+            String word = wordFreq[0].trim();
             int freq = Integer.parseInt(wordFreq[1].trim());
 
             wordsAndFrequency.put(word, freq);
@@ -45,17 +36,23 @@ public class TextDatasetGenerator {
         createDataset(datasetPath, numberOfFiles, minFileSize, maxFileSize, wordsAndFrequency);
     }
 
-    private static void createDataset(String datasetPath, int numberOfFiles, int minFileSize, int maxFileSize, HashMap<String, Integer> words) throws FileNotFoundException, UnsupportedEncodingException {
+    private static void createDataset(String datasetPath, int numberOfFiles, int minFileSize, int maxFileSize, HashMap<String, Integer> words) throws IOException {
+
+        File datasetFolder = new File(datasetPath);
+        if (datasetFolder.exists()) {
+            throw new IOException("Dataset exists already. Remove it manually if you want to recreate it");
+        } else {
+            datasetFolder.mkdirs();
+        }
 
         ArrayList<String> dictionary = loadDictionary();
         dictionary.removeAll(words.keySet()); // Make sure that the sets are not intersecting
-        new File(datasetPath).mkdirs();
         for(int i = 0; i < numberOfFiles; i++) {
-            createFile(datasetPath + "/file_" + i, minFileSize, maxFileSize, dictionary, words);
+            createFile(i,datasetPath + "/file_" + i, minFileSize, maxFileSize, dictionary, words);
         }
     }
 
-    private static void createFile(String filepath, int minFileSize, int maxFileSize, ArrayList<String> dictionary, HashMap<String, Integer> words) throws FileNotFoundException, UnsupportedEncodingException {
+    private static void createFile(int index, String filepath, int minFileSize, int maxFileSize, ArrayList<String> dictionary, HashMap<String, Integer> words) throws FileNotFoundException, UnsupportedEncodingException {
 
         int numberOfWords = 0;
         int currentSize = 0;
@@ -83,7 +80,7 @@ public class TextDatasetGenerator {
             }
         }
 
-        System.out.println("Created file: " + filepath + " || Size (bytes): " + currentSize + " || No. words: " + numberOfWords) ;
+        System.out.println("[" + index + " ] -- Created file: " + filepath + " || Size (bytes): " + currentSize + " || No. words: " + numberOfWords) ;
     }
 
     private static String pickWord(ArrayList<String> dictionary, HashMap<String, Integer> words) {
