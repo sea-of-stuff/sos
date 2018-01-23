@@ -36,7 +36,7 @@ public class TextDatasetGenerator {
         while(datasetDefinition.hasNext()) {
 
             String[] wordFreq = datasetDefinition.next().split("-");
-            String word = wordFreq[0].trim();
+            String word = wordFreq[0].trim().toLowerCase();
             int freq = Integer.parseInt(wordFreq[1].trim());
 
             wordsAndFrequency.put(word, freq);
@@ -48,6 +48,7 @@ public class TextDatasetGenerator {
     private static void createDataset(String datasetPath, int numberOfFiles, int minFileSize, int maxFileSize, HashMap<String, Integer> words) throws FileNotFoundException, UnsupportedEncodingException {
 
         ArrayList<String> dictionary = loadDictionary();
+        dictionary.removeAll(words.keySet()); // Make sure that the sets are not intersecting
         new File(datasetPath).mkdirs();
         for(int i = 0; i < numberOfFiles; i++) {
             createFile(datasetPath + "/file_" + i, minFileSize, maxFileSize, dictionary, words);
