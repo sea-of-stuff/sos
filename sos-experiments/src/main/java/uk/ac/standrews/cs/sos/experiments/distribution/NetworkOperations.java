@@ -147,6 +147,8 @@ public class NetworkOperations implements Closeable {
                 System.out.println("Send sub-directory: " + file.getName());
                 sendDirectory(file.getAbsolutePath(), rDirectory + "/" + file.getName(), checkRemoteFiles);
             } else {
+                if (file.getName().startsWith(".")) continue; // Do not transfer hidden files
+
                 sendFile(file.getAbsolutePath(), rDirectory + "/" + file.getName(), checkRemoteFiles);
             }
         }
