@@ -81,6 +81,36 @@ public class CommonPredicatesTest extends SetUpTest {
     }
 
     @Test
+    public void searchTextPass4() throws ServiceException {
+
+        String stringData = "preword anotherTESTword";
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setData(new StringData(stringData));
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.SearchText(version.guid(), "TEST");
+        assertTrue(result);
+    }
+
+    @Test
+    public void searchTextPass5() throws ServiceException {
+
+        String stringData = "preword anotherTESTword";
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setData(new StringData(stringData));
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.SearchText(version.guid(), " TEST "); // spaces before and after word
+        assertFalse(result);
+    }
+
+    @Test
     public void searchTextIgnoreCase() throws ServiceException {
 
         String stringData = "TEST";
