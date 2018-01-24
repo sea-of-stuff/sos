@@ -79,9 +79,6 @@ public class JSONConstants {
     public static final String KEY_CONTEXT_MAX_AGE = "max_age";
     public static final String KEY_CONTEXT_POLICIES = "policies";
 
-    // Computational units
-    public static final String KEY_COMPUTATIONAL_DEPENDENCIES = "dependencies";
-
     // Predicate
     public static final String KEY_PREDICATE = "predicate";
 

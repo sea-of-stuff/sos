@@ -21,7 +21,6 @@ public class PolicyClassBuilderTest {
                         "  \"type\": \"Policy\",\n" +
                         "  \"apply\": \"\",\n" +
                         "  \"satisfied\": \"return true;\",\n" +
-                        "  \"dependencies\": [],\n" +
                         "  \"fields\": [{\n" +
                         "    \"type\": \"int\",\n" +
                         "    \"name\": \"factor\",\n" +
@@ -58,11 +57,11 @@ public class PolicyClassBuilderTest {
                         "import com.fasterxml.jackson.databind.JsonNode;\n" +
                         "import java.io.IOException;\n" +
                         "\n" +
-                        "public class SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb extends BasePolicy {\n" +
+                        "public class SHA256_16_8910463e9de02413720c413e6dcf569cc4de73b32f03bc88571f455199558844 extends BasePolicy {\n" +
                         "\n" +
                         "private int factor = 2;\n" +
                         "\n" +
-                        "public SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb (JsonNode policyManifest) throws Exception {  \n" +
+                        "public SHA256_16_8910463e9de02413720c413e6dcf569cc4de73b32f03bc88571f455199558844 (JsonNode policyManifest) throws Exception {  \n" +
                         "super(policyManifest);\n" +
                         "}\n" +
                         "\n" +
@@ -87,7 +86,6 @@ public class PolicyClassBuilderTest {
         String JSON_POLICY =
                 "{\n" +
                         "  \"type\" : \"Policy\",\n" +
-                        "  \"dependencies\" : [ ],\n" +
                         "  \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
                         "  \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
                         "  \"fields\" : [ {\n" +

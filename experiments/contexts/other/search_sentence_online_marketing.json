@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"online marketing\");",
-    "dependencies": []
+    "predicate": "CommonPredicates.SearchText(guid, \"online marketing\");"
   },
   "max_age": 0,
   "policies": []

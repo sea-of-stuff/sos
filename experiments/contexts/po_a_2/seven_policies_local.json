@@ -13,15 +13,13 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
-    "dependencies": []
+    "predicate": "CommonPredicates.AcceptAll();"
   },
   "policies": [
     {
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -39,7 +37,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -57,7 +54,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -75,7 +71,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -93,7 +88,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -111,7 +105,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",
@@ -129,7 +122,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.grantAccess(codomain, utilities, manifest, granter, grantee);",
       "satisfied" : "return CommonPolicies.checkManifestIsProtected(codomain, utilities, manifest, granter, grantee);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "IGUID",

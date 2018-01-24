@@ -98,13 +98,6 @@ public class PolicyClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
 
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.io.IOException"));
-
-        if (jsonNode.has(KEY_COMPUTATIONAL_DEPENDENCIES)) {
-            JsonNode dependencies = jsonNode.get(KEY_COMPUTATIONAL_DEPENDENCIES);
-            for (JsonNode dependency : dependencies) {
-                clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
-            }
-        }
         clazz.append(NEW_LINE);
 
         /////////////////////////////////

@@ -61,11 +61,6 @@ public abstract class BasePredicate extends BasicManifest implements Predicate {
     }
 
     @Override
-    public JsonNode dependencies() {
-        return predicateManifest.get(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
-    }
-
-    @Override
     public JsonNode predicate() {
         return predicateManifest.get(JSONConstants.KEY_PREDICATE);
     }

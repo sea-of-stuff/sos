@@ -23,7 +23,6 @@ public class PolicyDeserializerTest extends SetUpTest {
         String policyJSON = "{\n" +
                 "  \"type\" : \"Policy\",\n" +
                 "  \"guid\" : \"SHA256_16_bfb31cfd5fbfd1bdf7e85cd4f12d557bcd21afb9f8bfd95b877bb4674a4d6c8d\",\n" +
-                "  \"dependencies\" : [ ],\n" +
                 "  \"apply\" : \"\",\n" +
                 "  \"satisfied\" : \"return true;\",\n" +
                 "  \"fields\" : [ {\n" +
@@ -39,7 +38,6 @@ public class PolicyDeserializerTest extends SetUpTest {
         assertNotNull(policy.fields());
         assertNotNull(policy.apply());
         assertNotNull(policy.satisfied());
-        assertNotNull(policy.dependencies());
 
         Iterator<JsonNode> fields_n = policy.fields().iterator();
         assertTrue(fields_n.hasNext());

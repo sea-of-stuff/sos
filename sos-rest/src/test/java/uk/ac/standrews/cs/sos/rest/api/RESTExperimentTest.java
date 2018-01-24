@@ -32,8 +32,7 @@ public class RESTExperimentTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": []\n" +
                 "}";

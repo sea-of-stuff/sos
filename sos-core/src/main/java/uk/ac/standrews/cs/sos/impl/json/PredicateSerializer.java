@@ -23,9 +23,6 @@ public class PredicateSerializer extends JsonSerializer<Predicate> {
 
         jsonGenerator.writeStringField(JSONConstants.KEY_PREDICATE, predicate.predicate().asText());
 
-        jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
-        jsonGenerator.writeTree(predicate.dependencies());
-
         jsonGenerator.writeEndObject();
     }
 }

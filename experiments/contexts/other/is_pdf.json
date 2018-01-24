@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/pdf\"));",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\"application/pdf\"));"
   },
   "max_age": 0,
   "policies": []

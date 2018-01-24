@@ -13,8 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain; charset=UTF-8\", \"text/plain; charset=windows-1252\")) && CommonPredicates.TextOccurrencesIgnoreCase(guid, \"grain\") == 1;",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain; charset=UTF-8\", \"text/plain; charset=windows-1252\")) && CommonPredicates.TextOccurrencesIgnoreCase(guid, \"grain\") == 1;"
   },
   "policies": []
 }

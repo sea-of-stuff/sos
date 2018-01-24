@@ -13,8 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain; charset=UTF-8\", \"text/plain; charset=windows-1252\")) && CommonPredicates.MetadataPropertyPredicate(guid, \"X-Parsed-By\", Collections.singletonList(\"org.apache.tika.parser.DefaultParser\"));",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"text/plain; charset=UTF-8\", \"text/plain; charset=windows-1252\")) && CommonPredicates.MetadataPropertyPredicate(guid, \"X-Parsed-By\", Collections.singletonList(\"org.apache.tika.parser.DefaultParser\"));"
   },
   "policies": []
 }

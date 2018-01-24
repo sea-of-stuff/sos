@@ -37,8 +37,7 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
             "\t},\n" +
             "\t\"predicate\": {\n" +
             "\t\t\"type\": \"Predicate\",\n" +
-            "\t\t\"predicate\": \"true;\",\n" +
-            "\t\t\"dependencies\": []\n" +
+            "\t\t\"predicate\": \"true;\"\n" +
             "\t},\n" +
             "\t\"policies\": []\n" +
             "}";
@@ -59,8 +58,7 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
             "\t},\n" +
             "\t\"predicate\": {\n" +
             "\t\t\"type\": \"Predicate\",\n" +
-            "\t\t\"predicate\": \"true;\",\n" +
-            "\t\t\"dependencies\": []\n" +
+            "\t\t\"predicate\": \"true;\"\n" +
             "\t},\n" +
             "\t\"policies\": []\n" +
             "}";
@@ -80,15 +78,13 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
             "  },\n" +
             "  \"predicate\": {\n" +
             "    \"type\": \"Predicate\",\n" +
-            "    \"predicate\": \"CommonPredicates.AcceptAll();\",\n" +
-            "    \"dependencies\": []\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
             "  },\n" +
             "  \"policies\": [\n" +
             "    {\n" +
             "      \"type\" : \"Policy\",\n" +
             "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
             "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
-            "      \"dependencies\" : [],\n" +
             "      \"fields\" : [\n" +
             "        {\n" +
             "          \"type\" : \"int\",\n" +
@@ -116,15 +112,13 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
             "  },\n" +
             "  \"predicate\": {\n" +
             "    \"type\": \"Predicate\",\n" +
-            "    \"predicate\": \"CommonPredicates.AcceptAll();\",\n" +
-            "    \"dependencies\": []\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
             "  },\n" +
             "  \"policies\": [\n" +
             "    {\n" +
             "      \"type\" : \"Policy\",\n" +
             "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
             "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
-            "      \"dependencies\" : [],\n" +
             "      \"fields\" : [\n" +
             "        {\n" +
             "          \"type\" : \"int\",\n" +

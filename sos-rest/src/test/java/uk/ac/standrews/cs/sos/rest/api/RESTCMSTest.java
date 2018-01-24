@@ -40,15 +40,13 @@ public class RESTCMSTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"max_age\": 0,\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -58,7 +56,7 @@ public class RESTCMSTest extends CommonRESTTest {
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class)).get(KEY_GUID).asText();
-        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_f2285b2bcc5e2148aee7171af6e5d12a758b7c42fe59627ad9e2ce5c155ab087"));
+        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_9f103cdeefcff6affbb75b79b8b41bbe0965186b99ae20c81a5f0abeb8448b05"));
     }
 
     @Test
@@ -79,7 +77,6 @@ public class RESTCMSTest extends CommonRESTTest {
                 "  },\n" +
                 "  \"predicate\" : {\n" +
                 "    \"type\" : \"Predicate\",\n" +
-                "    \"dependencies\" : [ ],\n" +
                 "    \"predicate\" : \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\"\n" +
                 "  },\n" +
                 "  \"policies\" : [ ]\n" +
@@ -91,7 +88,7 @@ public class RESTCMSTest extends CommonRESTTest {
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class)).get(KEY_GUID).asText();
-        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_bec9495e774f4bb23c5ada78a3c79409f5adf48d9a7d37ad858066ea9c0b58e7"));
+        assertEquals(GUIDFactory.recreateGUID(guidS), GUIDFactory.recreateGUID("SHA256_16_66128d7bebd52f9d711c90e883c5de3ef831bf84a245dc9d0e3671965c0a3195"));
     }
 
     @Test
@@ -111,15 +108,13 @@ public class RESTCMSTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"max_age\": 0,\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -156,15 +151,13 @@ public class RESTCMSTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"max_age\": 0,\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -200,14 +193,12 @@ public class RESTCMSTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -218,7 +209,7 @@ public class RESTCMSTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class)).get(KEY_GUID).asText();
         // See ContextBuilderTest - addFATContext
-        assertEquals(guidS, "SHA256_16_f2285b2bcc5e2148aee7171af6e5d12a758b7c42fe59627ad9e2ce5c155ab087");
+        assertEquals(guidS, "SHA256_16_9f103cdeefcff6affbb75b79b8b41bbe0965186b99ae20c81a5f0abeb8448b05");
     }
 
     @Test
@@ -239,8 +230,7 @@ public class RESTCMSTest extends CommonRESTTest {
                 "  },\n" +
                 "  \"predicate\": {\n" +
                 "    \"type\": \"Predicate\",\n" +
-                "    \"predicate\": \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\",\n" +
-                "    \"dependencies\": []\n" +
+                "    \"predicate\": \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\"\n" +
                 "  },\n" +
                 "  \"policies\": []\n" +
                 "}\n";
@@ -251,7 +241,7 @@ public class RESTCMSTest extends CommonRESTTest {
 
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         String guidS = JSONHelper.jsonObjMapper().readTree(response.readEntity(String.class)).get(KEY_GUID).asText();
-        assertEquals(guidS, "SHA256_16_988398f62ba42fb294a73a35f6d0e62f4218d37dde8a4240bb4c4241aa25f7da");
+        assertEquals(guidS, "SHA256_16_66128d7bebd52f9d711c90e883c5de3ef831bf84a245dc9d0e3671965c0a3195");
     }
 
     @Test
@@ -272,8 +262,7 @@ public class RESTCMSTest extends CommonRESTTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": []\n" +
                 "}";

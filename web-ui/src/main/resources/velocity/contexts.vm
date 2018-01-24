@@ -93,8 +93,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
-    "dependencies": []
+    "predicate": "CommonPredicates.AcceptAll();"
   },
   "max_age": 0,
   "policies": []

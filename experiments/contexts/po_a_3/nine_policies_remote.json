@@ -13,15 +13,13 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
-    "dependencies": []
+    "predicate": "CommonPredicates.AcceptAll();"
   },
   "policies": [
     {
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -34,7 +32,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_two);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_two);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -47,7 +44,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_three);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_three);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -60,7 +56,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_four);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_four);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -73,7 +68,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_five);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_five);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -86,7 +80,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_six);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_six);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -99,7 +92,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_seven);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_seven);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -112,7 +104,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_eight);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_eight);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -125,7 +116,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_nine);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_nine);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",

@@ -37,11 +37,6 @@ public abstract class BasePolicy extends BasicManifest implements Policy {
     }
 
     @Override
-    public JsonNode dependencies() {
-        return policyManifest.get(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
-    }
-
-    @Override
     public JsonNode apply() {
         return policyManifest.get(JSONConstants.KEY_POLICY_APPLY);
     }

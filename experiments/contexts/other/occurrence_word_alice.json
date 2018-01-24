@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"alice\") > 100;",
-    "dependencies": []
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"alice\") > 100;"
   },
   "max_age": 0,
   "policies": []

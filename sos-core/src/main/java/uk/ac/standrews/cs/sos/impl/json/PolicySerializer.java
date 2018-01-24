@@ -21,9 +21,6 @@ public class PolicySerializer extends JsonSerializer<Policy> {
         jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, policy.getType().toString());
         jsonGenerator.writeStringField(JSONConstants.KEY_GUID, policy.guid().toMultiHash());
 
-        jsonGenerator.writeFieldName(JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES);
-        jsonGenerator.writeTree(policy.dependencies());
-
         jsonGenerator.writeStringField(JSONConstants.KEY_POLICY_APPLY, policy.apply().asText());
         jsonGenerator.writeStringField(JSONConstants.KEY_POLICY_SATISFIED, policy.satisfied().asText());
 

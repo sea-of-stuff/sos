@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import java.io.IOException;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
-import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_COMPUTATIONAL_DEPENDENCIES;
 import static uk.ac.standrews.cs.sos.constants.JSONConstants.KEY_PREDICATE;
 
 /**
@@ -72,13 +71,6 @@ public class PredicateClassBuilder implements ClassBuilder {
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Collections"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "java.util.Arrays"));
         clazz.append(IMPORT.replace(IMPORTEE_TAG, "com.fasterxml.jackson.databind.JsonNode"));
-
-        if (jsonNode.has(KEY_COMPUTATIONAL_DEPENDENCIES)) {
-            JsonNode dependencies = jsonNode.get(KEY_COMPUTATIONAL_DEPENDENCIES);
-            for (JsonNode dependency : dependencies) {
-                clazz.append(IMPORT.replace(IMPORTEE_TAG, dependency.asText()));
-            }
-        }
         clazz.append(NEW_LINE);
 
         //////////////////////////

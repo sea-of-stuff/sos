@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.SearchText(guid, \"white rabbit\");",
-    "dependencies": []
+    "predicate": "CommonPredicates.SearchText(guid, \"white rabbit\");"
   },
   "max_age": 0,
   "policies": []

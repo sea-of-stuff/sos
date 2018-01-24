@@ -13,8 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentIsProtected(guid);",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentIsProtected(guid);"
   },
   "policies": []
 }

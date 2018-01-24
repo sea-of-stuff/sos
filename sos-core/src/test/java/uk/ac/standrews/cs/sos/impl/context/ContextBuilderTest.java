@@ -40,14 +40,12 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -109,7 +107,6 @@ public class ContextBuilderTest extends SetUpTest {
                 "  },\n" +
                 "  \"predicate\" : {\n" +
                 "    \"type\" : \"Predicate\",\n" +
-                "    \"dependencies\" : [ ],\n" +
                 "    \"predicate\" : \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\"\n" +
                 "  },\n" +
                 "  \"policies\" : [ ]\n" +
@@ -162,14 +159,12 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -215,14 +210,12 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -270,14 +263,12 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
@@ -326,20 +317,18 @@ public class ContextBuilderTest extends SetUpTest {
                 "\t},\n" +
                 "\t\"predicate\": {\n" +
                 "\t\t\"type\": \"Predicate\",\n" +
-                "\t\t\"predicate\": \"true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"predicate\": \"true;\"\n" +
                 "\t},\n" +
                 "\t\"policies\": [{\n" +
                 "\t\t\"type\": \"Policy\",\n" +
                 "\t\t\"apply\": \"\",\n" +
-                "\t\t\"satisfied\": \"return true;\",\n" +
-                "\t\t\"dependencies\": []\n" +
+                "\t\t\"satisfied\": \"return true;\"\n" +
                 "\t}]\n" +
                 "}";
 
         IGUID contextGUID = localSOSNode.getCMS().addContext(FATContext);
         assertNotNull(contextGUID);
         assertFalse(contextGUID.isInvalid());
-        assertEquals(contextGUID.toMultiHash(), "SHA256_16_f2285b2bcc5e2148aee7171af6e5d12a758b7c42fe59627ad9e2ce5c155ab087");
+        assertEquals(contextGUID.toMultiHash(), "SHA256_16_9f103cdeefcff6affbb75b79b8b41bbe0965186b99ae20c81a5f0abeb8448b05");
     }
 }

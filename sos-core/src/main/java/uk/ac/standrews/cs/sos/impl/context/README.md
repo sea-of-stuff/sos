@@ -84,7 +84,6 @@ This is a list of policies that can be used:
 {
 	"name": "Test",
 	"guid": "6a7d6e5c875ab6ed01665e6aef853b7ce3b74cff"
-	"dependencies": [ "uk.ac.standrews.cs.IGUID" ]
 }
 ```
 

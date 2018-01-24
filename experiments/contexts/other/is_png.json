@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/png\"));",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentTypePredicate(guid, Arrays.asList(\"image/png\"));"
   },
   "max_age": 0,
   "policies": []

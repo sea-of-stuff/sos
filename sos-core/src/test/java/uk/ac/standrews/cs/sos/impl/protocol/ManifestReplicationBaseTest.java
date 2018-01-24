@@ -103,15 +103,13 @@ public class ManifestReplicationBaseTest {
             "  },\n" +
             "  \"predicate\": {\n" +
             "    \"type\": \"Predicate\",\n" +
-            "    \"predicate\": \"true;\",\n" +
-            "    \"dependencies\": []\n" +
+            "    \"predicate\": \"true;\"\n" +
             "  },\n" +
             "  \"max_age\": 0,\n" +
             "  \"policies\": [{\n" +
             "    \"type\": \"Policy\",\n" +
             "    \"apply\": \"\",\n" +
-            "    \"satisfied\": \"return true;\",\n" +
-            "    \"dependencies\": []\n" +
+            "    \"satisfied\": \"return true;\"\n" +
             "  }]\n" +
             "}";
 
@@ -139,7 +137,6 @@ public class ManifestReplicationBaseTest {
             "{\n" +
             "  \"type\" : \"Predicate\",\n" +
             "  \"guid\" : \"SHA256_16_44ba2183cb1f84c827a103bad4635dd555d5cd585623aa98aacf8195a56b064e\",\n" +
-            "  \"dependencies\" : [ ],\n" +
             "  \"predicate\" : \"true;\"\n" +
             "}";
 
@@ -147,7 +144,6 @@ public class ManifestReplicationBaseTest {
             "{\n" +
             "  \"type\" : \"Policy\",\n" +
             "  \"guid\" : \"SHA256_16_0c094bb01ae9803b22b2c9dd4b350b3456c168eca5173002cdd01c7cd1f09905\",\n" +
-            "  \"dependencies\" : [ ],\n" +
             "  \"apply\" : \"\",\n" +
             "  \"satisfied\" : \"return true;\",\n" +
             "  \"fields\" : [ ]\n" +

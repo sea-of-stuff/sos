@@ -16,8 +16,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;",
-    "dependencies": []
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;"
   },
   "policies": []
 }

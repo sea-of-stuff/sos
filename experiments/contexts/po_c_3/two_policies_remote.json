@@ -13,15 +13,13 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
-    "dependencies": []
+    "predicate": "CommonPredicates.AcceptAll();"
   },
   "policies": [
     {
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",
@@ -34,7 +32,6 @@
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor_two);",
       "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_two);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",

@@ -13,15 +13,13 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.AcceptAll();",
-    "dependencies": []
+    "predicate": "CommonPredicates.AcceptAll();"
   },
   "policies": [
     {
       "type" : "Policy",
       "apply" : "CommonPolicies.replicateManifest(codomain, utilities, manifest, factor);",
       "satisfied" : "return CommonPolicies.manifestIsReplicated(codomain, utilities, manifest, factor);",
-      "dependencies" : [],
       "fields" : [
         {
           "type" : "int",

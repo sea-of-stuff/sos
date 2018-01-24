@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.ContentIsNotProtected(guid);",
-    "dependencies": []
+    "predicate": "CommonPredicates.ContentIsNotProtected(guid);"
   },
   "max_age": 0,
   "policies": []

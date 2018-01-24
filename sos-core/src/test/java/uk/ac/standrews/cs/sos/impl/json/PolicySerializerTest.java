@@ -22,7 +22,6 @@ public class PolicySerializerTest {
             "  \"type\": \"Policy\",\n" +
                     "  \"apply\": \"\",\n" +
                     "  \"satisfied\": \"return true;\",\n" +
-                    "  \"dependencies\": [],\n" +
                     "  \"fields\": [{\n" +
                     "    \"type\": \"int\",\n" +
                     "    \"name\": \"factor\",\n" +
@@ -33,8 +32,7 @@ public class PolicySerializerTest {
 
         String expected = "{\n" +
                 "  \"type\" : \"Policy\",\n" +
-                "  \"guid\" : \"SHA256_16_05a19b97697b3e9cf8f537d914da417abf0b252f9e376cfe344882404cb5adfb\",\n" +
-                "  \"dependencies\" : [ ],\n" +
+                "  \"guid\" : \"SHA256_16_8910463e9de02413720c413e6dcf569cc4de73b32f03bc88571f455199558844\",\n" +
                 "  \"apply\" : \"\",\n" +
                 "  \"satisfied\" : \"return true;\",\n" +
                 "  \"fields\" : [ {\n" +

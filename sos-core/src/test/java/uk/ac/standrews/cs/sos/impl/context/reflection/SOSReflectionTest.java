@@ -8,10 +8,8 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.context.PolicyException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
-import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
@@ -54,8 +52,7 @@ public class SOSReflectionTest extends SetUpTest {
         String JSON_PREDICATE =
                 "{\n" +
                         "\t\"type\": \"Predicate\",\n" +
-                        "\t\"predicate\": \"true;\",\n" +
-                        "\t\"dependencies\": []\n" +
+                        "\t\"predicate\": \"true;\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
@@ -68,13 +65,12 @@ public class SOSReflectionTest extends SetUpTest {
     }
 
     @Test
-    public void loadNonTrivialPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, ManifestPersistException, RoleNotFoundException, MetadataPersistException, ServiceException {
+    public void loadNonTrivialPredicate() throws IOException, ClassLoaderException, ManifestNotMadeException, MetadataPersistException, ServiceException {
 
         String JSON_PREDICATE =
                 "{\n" +
                         "\t\"type\": \"Predicate\",\n" +
-                        "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\",\n" +
-                        "\t\"dependencies\": []\n" +
+                        "\t\"predicate\": \"CommonPredicates.ContentTypePredicate(guid, Collections.singletonList(\\\"image/jpeg\\\"));\"\n" +
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
@@ -120,7 +116,6 @@ public class SOSReflectionTest extends SetUpTest {
                         "  \"type\": \"Policy\",\n" +
                         "  \"apply\": \"\",\n" +
                         "  \"satisfied\": \"return true;\",\n" +
-                        "  \"dependencies\": [],\n" +
                         "  \"fields\": [{\n" +
                         "    \"type\": \"int\",\n" +
                         "    \"name\": \"factor\",\n" +
@@ -145,7 +140,6 @@ public class SOSReflectionTest extends SetUpTest {
                         "  \"type\": \"Policy\",\n" +
                         "  \"apply\": \"\",\n" +
                         "  \"satisfied\": \"return false;\",\n" +
-                        "  \"dependencies\": [],\n" +
                         "  \"fields\": [{\n" +
                         "    \"type\": \"int\",\n" +
                         "    \"name\": \"factor\",\n" +

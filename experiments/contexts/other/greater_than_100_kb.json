@@ -12,8 +12,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.MetadataIntGreaterPropertyPredicate(guid, \"Content-Length\", 100000);",
-    "dependencies": []
+    "predicate": "CommonPredicates.MetadataIntGreaterPropertyPredicate(guid, \"Content-Length\", 100000);"
   },
   "max_age": 0,
   "policies": []
