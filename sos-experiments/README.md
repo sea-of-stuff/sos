@@ -293,6 +293,15 @@ The ExperimentalFramework is to be used to run all the experiments where SOS nod
 `for pid in $(ps -ef | grep "sos.jar" | awk '{print $2}'); do kill -9 $pid; done`
 
 
+**Copy TextDatasetGenerator jar file to sif node**
+
+- Build the TextDatasetGenerator jar first (`mvn package -DskipTests)
+- Then run: `scp sos-experiments/target/text-dataset-generator.jar sif-12.cluster:~/`
+- Create missing path for dictionary: `ssh sif-12.cluster 'mkdir -p ~/third-party/english-words'`
+- Then run the following to transfer the dictionary: `scp third-party/english-words/words.txt sif-12.cluster:~/third-party/english-words/`
+
+The hostname `sif-12.cluster` can be substituted with any other hostname of your choice.
+
 
 ## JVM Monitoring notes
 
