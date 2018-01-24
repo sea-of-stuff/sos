@@ -14,7 +14,7 @@ import static uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration.*;
  */
 public class SOSDistribution {
 
-    private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/experiments-1.0-SNAPSHOT-jar-with-dependencies.jar";
+    private static final String LOCAL_EXPERIMENT_JAR_PATH = "sos-experiments/target/sos-experiment.jar";
     private static final String REMOTE_SOS_JAR_PATH =  "sos.jar";
     private static final String REMOTE_SOS_CONFIGURATION_PATH = "config.json";
     private static final String REMOTE_SOS_CERTIFICATE_PATH = "id_rsa.crt";

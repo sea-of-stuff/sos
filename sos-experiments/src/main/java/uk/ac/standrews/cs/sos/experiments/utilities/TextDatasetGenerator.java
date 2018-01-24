@@ -13,8 +13,13 @@ public class TextDatasetGenerator {
 
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Dataset configuration name (setting file must be located under: ");
-        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/");
+        System.out.println("Enter dataset configuration pathname.");
+        System.out.println("Examples of path: ");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/dataset_1");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/dataset_2");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/dataset_3");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/dataset_4");
+        System.out.println("\tsos-experiments/src/main/resources/synthetic_datasets/dataset_5");
         String settingFilename = in.nextLine();
 
         Scanner datasetDefinition = new Scanner(new File(settingFilename));
