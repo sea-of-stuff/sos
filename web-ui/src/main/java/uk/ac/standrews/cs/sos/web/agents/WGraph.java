@@ -29,6 +29,7 @@ public class WGraph {
     public static String RenderPartial(Request req, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = req.params("id");
+        if (guidParam.contains("-")) guidParam = guidParam.split("-")[1];
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         // We assume that the manifest is of type version
@@ -47,6 +48,7 @@ public class WGraph {
     public static String RenderAsset(Request req, SOSLocalNode sos) throws GUIDGenerationException {
 
         String guidParam = req.params("versionid");
+        if (guidParam.contains("-")) guidParam = guidParam.split("-")[1];
         IGUID guid = GUIDFactory.recreateGUID(guidParam);
 
         try {
@@ -237,7 +239,8 @@ public class WGraph {
 
                 try {
                     Manifest contentManifest = agent.getManifest(new NodesCollectionImpl(NodesCollectionType.LOCAL), content.getGUID());
-                    ObjectNode contentNode = ManifestNode(contentManifest);
+                    String label = content.getLabel() != null ? content.getLabel() : "";
+                    ObjectNode contentNode = ManifestNode(label, contentManifest);
                     arrayNode.add(contentNode);
                 } catch (NodesCollectionException | ServiceException e) {
 
@@ -287,11 +290,12 @@ public class WGraph {
             Compound compound = (Compound) manifest;
             Set<Content> contents = compound.getContents();
             for(Content content:contents) {
-                ObjectNode objectNode = MakeEdge(manifest.guid(), content.getGUID());
+                String label = content.getLabel() != null ? content.getLabel() : "";
+                ObjectNode objectNode = MakeEdge(manifest.guid(), content.getGUID(), label);
                 arrayNode.add(objectNode);
             }
         } else { // ATOM
-            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.guid(), "DATA-");
+            ObjectNode objectNode = MakeEdge(manifest.guid(), manifest.guid(), "DATA");
             arrayNode.add(objectNode);
         }
 
@@ -299,10 +303,16 @@ public class WGraph {
     }
 
     private static ObjectNode ManifestNode(Manifest manifest) {
+        return ManifestNode("", manifest);
+    }
+
+    private static ObjectNode ManifestNode(String label, Manifest manifest) {
         ObjectMapper mapper = JSONHelper.jsonObjMapper();
 
+        if (!label.isEmpty()) label += "-";
+
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", manifest.guid().toMultiHash());
+        objectNode.put("id", label + manifest.guid().toMultiHash());
         objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 15));
         objectNode.put("group", manifest.getType().toString());
         objectNode.put("shape", "box");
@@ -380,6 +390,8 @@ public class WGraph {
 
     private static ObjectNode MakeEdge(IGUID from, IGUID to, String toPrefix, String label) {
         ObjectMapper mapper = JSONHelper.jsonObjMapper();
+
+        if (!toPrefix.isEmpty()) toPrefix += "-";
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("from", from.toMultiHash());
