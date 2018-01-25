@@ -48,7 +48,7 @@ public class TikaMetadataEngine implements MetadataEngine {
 
             return makeMetadataManifest(metamap, metadataBuilder.getRole(), metadataBuilder.isProtect());
 
-        } catch (IOException | TikaException | SAXException | NoSuchMethodError e) {
+        } catch (IOException | TikaException | SAXException e) {
             throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);
         } catch (ManifestNotMadeException e) {
             throw new MetadataException("TikaMetadataEngine - unable to generate metadata manifest", e);
