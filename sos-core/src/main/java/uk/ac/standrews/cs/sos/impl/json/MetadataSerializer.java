@@ -39,7 +39,7 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
             MetaProperty metaProperty = metadata.getProperty(property);
 
             jsonGenerator.writeStringField(JSONConstants.KEY_META_KEY, metaProperty.getKey());
-            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, metaProperty.getMetaType().name());
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, metaProperty.getMetaType().toString());
             writeValue(jsonGenerator, metaProperty);
 
             jsonGenerator.writeEndObject();
@@ -54,8 +54,17 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         } else {
 
             switch (metaProperty.getMetaType()) {
+                case ANY:
+                    jsonGenerator.writeNullField(JSONConstants.KEY_META_VALUE);
+                    break;
                 case LONG:
                     jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_l());
+                    break;
+                case DOUBLE:
+                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_d());
+                    break;
+                case BOOLEAN:
+                    jsonGenerator.writeBooleanField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_b());
                     break;
                 case STRING:
                     jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());

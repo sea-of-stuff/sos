@@ -7,21 +7,29 @@ import java.util.Random;
  */
 public class Misc {
 
-    // http://stackoverflow.com/a/5439547/2467938
-    public static boolean isNumber(String s) {
-        return isNumber(s,10);
+    public static boolean isIntegerNumber(String s) {
+
+        try {
+            long v = Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException ignored) {}
+
+        return false;
     }
 
-    private static boolean isNumber(String s, int radix) {
-        if(s.isEmpty()) return false;
-        for(int i = 0; i < s.length(); i++) {
-            if(i == 0 && s.charAt(i) == '-') {
-                if(s.length() == 1) return false;
-                else continue;
-            }
-            if(Character.digit(s.charAt(i),radix) < 0) return false;
-        }
-        return true;
+    public static boolean isRealNumber(String s) {
+
+        try {
+            double v = Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException ignored) {}
+
+        return false;
+    }
+
+    public static boolean isBoolean(String s) {
+
+        return s.toLowerCase().equals("true") || s.toLowerCase().equals("false");
     }
 
     // https://stackoverflow.com/a/1520212/2467938

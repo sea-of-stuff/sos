@@ -63,11 +63,19 @@ public class TikaMetadataEngine implements MetadataEngine {
             MetaProperty metaProperty;
 
             String value = metadata.get(key);
-            if (Misc.isNumber(value)) {
+            if (value == null) {
+                metaProperty = new MetaProperty(key);
+            } else if (Misc.isIntegerNumber(value)) {
                 metaProperty = new MetaProperty(key, Long.parseLong(value));
+            } else if (Misc.isRealNumber(value)) {
+                metaProperty = new MetaProperty(key, Double.parseDouble(value));
+            } else if (Misc.isBoolean(value)) {
+                metaProperty = new MetaProperty(key, Boolean.parseBoolean(value));
             } else {
                 metaProperty = new MetaProperty(key, value);
             }
+
+            // Handle -- double, boolean
 
             metamap.put(key, metaProperty);
         }

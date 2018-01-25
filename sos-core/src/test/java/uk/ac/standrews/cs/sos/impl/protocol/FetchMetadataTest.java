@@ -44,27 +44,27 @@ public class FetchMetadataTest extends ProtocolTest {
                     "    \"properties\": [\n" +
                     "        {\n" +
                     "            \"key\": \"X-Parsed-By\",\n" +
-                    "            \"type\": \"String\",\n" +
+                    "            \"type\": \"string\",\n" +
                     "            \"value\": \"org.apache.tika.parser.DefaultParser\"\n" +
                     "        },\n" +
                     "        {\n" +
                     "            \"key\": \"Content-Encoding\",\n" +
-                    "            \"type\": \"String\",\n" +
+                    "            \"type\": \"any\",\n" +
                     "            \"value\": \"null\"\n" +
                     "        },\n" +
                     "        {\n" +
                     "            \"key\": \"Size\",\n" +
-                    "            \"type\": \"int\",\n" +
+                    "            \"type\": \"long\",\n" +
                     "            \"value\": 26\n" +
                     "        },\n" +
                     "        {\n" +
                     "            \"key\": \"Timestamp\",\n" +
-                    "            \"type\": \"int\",\n" +
+                    "            \"type\": \"long\",\n" +
                     "            \"value\": 1484736105\n" +
                     "        },\n" +
                     "        {\n" +
                     "            \"key\": \"Content-Type\",\n" +
-                    "            \"type\": \"String\",\n" +
+                    "            \"type\": \"string\",\n" +
                     "            \"value\": \"text/plain; charset=ISO-8859-1\"\n" +
                     "        }\n" +
                     "    ]\n" +

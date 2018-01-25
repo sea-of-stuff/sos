@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.sos.impl.metadata;
  */
 public enum MetaType {
 
-    LONG("LONG"), STRING("STRING"), GUID("guid");
+    LONG("long"), DOUBLE("double"), BOOLEAN("boolean"), STRING("string"), GUID("guid"), ANY("any");
 
     private final String type;
     MetaType(String type) {
@@ -16,5 +16,10 @@ public enum MetaType {
         for(MetaType v : values())
             if(v.toString().equalsIgnoreCase(value)) return v;
         throw new IllegalArgumentException();
+    }
+
+    @Override
+    public String toString() {
+        return type;
     }
 }

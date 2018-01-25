@@ -13,6 +13,8 @@ public class MetaProperty {
     private String key;
     private String value_s;
     private long value_l;
+    private double value_d;
+    private boolean value_b;
     private IGUID value_g;
     private boolean encrypted = false;
 
@@ -36,10 +38,27 @@ public class MetaProperty {
         this.value_l = value;
     }
 
+    public MetaProperty(String key, double value) {
+        this.metaType = MetaType.DOUBLE;
+        this.key = key;
+        this.value_d = value;
+    }
+
+    public MetaProperty(String key, boolean value) {
+        this.metaType = MetaType.BOOLEAN;
+        this.key = key;
+        this.value_b = value;
+    }
+
     public MetaProperty(String key, IGUID value) {
         this.metaType = MetaType.GUID;
         this.key = key;
         this.value_g = value;
+    }
+
+    public MetaProperty(String key) {
+        this.metaType = MetaType.ANY;
+        this.key = key;
     }
 
     public MetaType getMetaType() {
@@ -58,6 +77,14 @@ public class MetaProperty {
         return value_l;
     }
 
+    public double getValue_d() {
+        return value_d;
+    }
+
+    public boolean getValue_b() {
+        return value_b;
+    }
+
     public IGUID getValue_g() {
         return value_g;
     }
@@ -69,10 +96,10 @@ public class MetaProperty {
     @Override
     public String toString() {
 
-        String retval = metaType.name();
-        retval += "::";
+        String retval = metaType.toString();
+        retval += "_";
         retval += key;
-        retval += "=";
+        retval += "_";
 
         if (encrypted) {
             retval += value_s;
@@ -83,11 +110,19 @@ public class MetaProperty {
                 case LONG:
                     retval += value_l;
                     break;
+                case DOUBLE:
+                    retval += value_d;
+                    break;
+                case BOOLEAN:
+                    retval += value_b;
+                    break;
                 case STRING:
                     retval += value_s;
                     break;
                 case GUID:
                     retval += value_g.toMultiHash();
+                    break;
+                case ANY:
                     break;
             }
         }

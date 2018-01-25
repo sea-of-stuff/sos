@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.SecureMetadata;
@@ -99,14 +100,14 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
             String encryptedKey = signer.encrypt(key);
             rolesToKeys.put(signer.guid(), encryptedKey);
 
-        } catch (CryptoException e) {
+        } catch (CryptoException | MetadataException e) {
             throw new ProtectionException(e);
         }
 
         return encryptedMetadata;
     }
 
-    private String getValue(MetaProperty metaProperty) {
+    private String getValue(MetaProperty metaProperty) throws MetadataException {
 
         switch(metaProperty.getMetaType()) {
             case STRING:
@@ -115,8 +116,12 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
                 return metaProperty.getValue_g().toMultiHash();
             case LONG:
                 return Long.toString(metaProperty.getValue_l());
+            case DOUBLE:
+                return Double.toString(metaProperty.getValue_d());
+            case BOOLEAN:
+                return Boolean.toString(metaProperty.getValue_b());
         }
 
-        return "INVALID";
+        throw new MetadataException("Value type " + metaProperty.getMetaType().toString() + " is unknown");
     }
 }

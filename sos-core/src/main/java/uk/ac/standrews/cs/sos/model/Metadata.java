@@ -21,17 +21,17 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
  *      },
  *      {
  *          "key" : "Size",
- *          "Type" : "LONG",
+ *          "Type" : "long",
  *          "Value" : 105
  *      },
  *      {
  *          "key" : "Timestamp",
- *          "Type" : "LONG",
+ *          "Type" : "long",
  *          "Value" : 1487606187
  *      },
  *      {
  *          "key" : "Content-Type",
- *          "Type" : "STRING",
+ *          "Type" : "string",
  *          "Value" : "application/octet-stream"
  *      }
  *   ]
