@@ -115,16 +115,6 @@
             <artifactId>javaparser-core</artifactId>
             <version>3.3.3</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-schemas -->
-        <!-- To void the following exception:
-            java.lang.NoSuchMethodException: org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPictureBaseImpl.<init>(org.apache.xmlbeans.SchemaType, boolean)
-            -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml-schemas</artifactId>
-            <version>3.17</version>
-        </dependency>
-
         <!-- http://maxmind.github.io/GeoIP2-java/ -->
         <!-- see commented code in uk.ac.standrews.cs.sos.impl.context.IPGeoUtils.java -->
         <!--<dependency>-->
