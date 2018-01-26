@@ -1,10 +1,10 @@
 library(ggplot2)
 library(scales)
 
+setwd("/Users/sic2/git/sos/experiments")
 source("r_scripts/utils_stats.r")
 
-setwd("/Users/sic2/git/sos/experiments")
-dataFile <- "output/io_2_run_2.tsv"
+dataFile <- "output/io_2_run_3.tsv"
 d <- read.csv(dataFile, header=TRUE, sep="\t", stringsAsFactors=F) 
 
 d$StatsTYPE <- as.character(d$StatsTYPE)
