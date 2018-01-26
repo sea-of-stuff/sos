@@ -15,6 +15,8 @@ d <- d[d$StatsTYPE == 'io',]
 # Exclude
 d <- d[d$Subtype != 'replicate_atom',]
 d <- d[d$Subtype != 'replicate_manifest',]
+d <- d[d$Subtype != 'add_manifest',]
+d <- d[d$Subtype != 'read_manifest',]
 
 # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
 d$Subtype<-factor(d$Subtype, levels=c("fs_write_file", "fs_read_file",
@@ -33,7 +35,7 @@ if (ratio) {
   yLabel = "MB/s"
 } else {
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds  
-  yLabel = "s"
+  yLabel = "Time (s)"
 }
 
 # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
@@ -52,6 +54,6 @@ if (showSummary) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
-    labs(title="Add Atom", x="Data size", y=yLabel) +
+    labs(title="IO Operations", x="Data size", y=yLabel) +
     scale_color_discrete(name='Operation Types')
 }
