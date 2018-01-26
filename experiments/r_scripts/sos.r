@@ -34,15 +34,10 @@ cpu("remote/co_a_test25_os.tsv")
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
 io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
 
-# Number of iterations: 10
-io_1("output/test_io_1_on_1000x1mb_2.tsv", "IO performance. Dataset: 1000 files of 1mb each.")
+io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance. Dataset: 1000 files of 100kb each.")
+io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance per file. Dataset: 1000 files of 100kb each.", ratio=FALSE)
 
-# Number of iterations: 10
-io_1("output/io_1_on_20x50mb_10its.tsv", "IO performance. Dataset: 20 files of 50mb each.")
-
-
-io_1("output/io_1_on_text100k_10its_1.tsv", "IO performance. Dataset: 20 files of 50mb each.")
-io_1("output/io_1_on_text100k_10its_1.tsv", "IO performance. Dataset: 20 files of 50mb each.", ratio=FALSE)
+io_1("output/io_1_on_text1mb_10its_1.tsv", "IO performance. Dataset: 1000 files of 1mb each.")
 
 
 guid_data("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)

@@ -30,10 +30,6 @@ import java.util.List;
  */
 public class Experiment_IO_1 extends BaseExperiment implements Experiment {
 
-    public Experiment_IO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
-        super(experimentConfiguration);
-    }
-
     public Experiment_IO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
     }
@@ -50,8 +46,6 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
-
             List<IGUID> atoms;
 
             String datasetPath = experiment.getExperimentNode().getDatasetPath();
@@ -122,12 +116,6 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             long duration = System.nanoTime() - start;
             InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.fs_read_file, Integer.toString(size), duration);
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new IOException();
-            }
-
             // WRITE FILE
             start = System.nanoTime();
             try(FileOutputStream out = new FileOutputStream("test_file")) {
@@ -147,7 +135,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "io_1_on_text100k_10its_1");
+        Experiment_IO_1 experiment_io_1 = new Experiment_IO_1(experimentConfiguration, "io_1_on_text1mb_10its_1");
         experiment_io_1.process();
     }
 }

@@ -79,7 +79,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {

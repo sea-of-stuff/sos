@@ -14,10 +14,14 @@ io_1 <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
   d$StatsTYPE[d$Subtype == "guid_data"] <- "io"
   d <- d[d$StatsTYPE == 'io',]
   
+  # Exclude
+  d <- d[d$Subtype != 'replicate_atom',]
+  d <- d[d$Subtype != 'replicate_manifest',]
+  
   # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
   d$Subtype<-factor(d$Subtype, levels=c("fs_write_file", "fs_read_file",
                                         "add_atom", "guid_data", "add_manifest",
-                                        "read_atom", "read_manifest"
+                                        "read_atom", "read_manifest", "replicate_atom", "replicate_manifest"
   ))
   
   yLabel = "N/A"

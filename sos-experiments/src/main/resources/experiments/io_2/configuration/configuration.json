@@ -1,8 +1,8 @@
 {
   "experiment": {
-    "name": "io_1",
-    "experimentClass": "Experiment_IO_1",
-    "description": "The experiment IO 1 investigates the performance of ...",
+    "name": "io_2",
+    "experimentClass": "Experiment_IO_2",
+    "description": "The experiment IO 2 investigates the performance of ...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 1
@@ -13,7 +13,7 @@
       "name" : "local",
       "remote": false,
       "configurationfile": "node_0.json",
-      "dataset" : "text_1mb_1"
+      "dataset" : "io_multiple"
     },
     "stats": {
       "io": true,
