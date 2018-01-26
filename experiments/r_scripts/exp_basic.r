@@ -5,8 +5,6 @@ io_1 <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
   
   source("r_scripts/utils_stats.r")
   
-  setwd("/Users/sic2/git/sos/experiments")
-  dataFile <- "output/io_1_on_text100k_10its_1.tsv"
   d <- read.csv(datafile, header=TRUE, sep="\t", stringsAsFactors=F) 
   
   d$StatsTYPE <- as.character(d$StatsTYPE)

@@ -21,8 +21,8 @@ mem("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
 cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv")
 cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 
-mem("remote/co_a_test25_os.tsv")
-cpu("remote/co_a_test25_os.tsv")
+mem("output/io_1_on_text1mb_10its_1_os.tsv")
+cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 
 ############
 # IO_1
@@ -38,7 +38,6 @@ io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance. Dataset: 1000 files
 io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance per file. Dataset: 1000 files of 100kb each.", ratio=FALSE)
 
 io_1("output/io_1_on_text1mb_10its_1.tsv", "IO performance. Dataset: 1000 files of 1mb each.")
-
 
 guid_data("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
 guid_manifest("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)

@@ -66,8 +66,9 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() throws ExperimentException {
-            List<IGUID> atoms;
+            System.out.println("Processing subset: " + subset.getAbsolutePath());
 
+            List<IGUID> atoms;
             try {
                 atoms = addFolderContentToNodeAsAtoms(node, subset);
 
@@ -85,7 +86,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_2") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "io_2_run_1");
+        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "io_2_run_2");
         experiment_io_2.process();
     }
 }
