@@ -147,7 +147,8 @@ public class SOSStorageService implements StorageService {
                 InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_atom, Long.toString(atomBuilder.getData().getSize()), Boolean.toString(sequentialReplication), duration, replicationFactor);
 
             } catch (IOException | SOSProtocolException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid + " to other storage nodes");
+                SOS_LOG.log(LEVEL.ERROR, "Error occurred while attempting to replicate atom " + guid.toShortString() + " to other storage nodes");
+                throw new DataStorageException("Error occurred while attempting to replicate atom " + guid.toShortString() + " to other storage nodes");
             }
         }
 

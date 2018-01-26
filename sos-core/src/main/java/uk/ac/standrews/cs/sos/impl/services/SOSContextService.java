@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.context.ContextBuilder;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
+import uk.ac.standrews.cs.sos.impl.context.ContextStats;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
@@ -72,12 +73,9 @@ public class SOSContextService implements ContextService {
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
     private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
-    private long pred_time_prep;
-    private long pred_time_to_check_if_predicate_has_to_be_run;
-    private long pred_time_to_run_predicate_on_current_dataset;
-    private long pred_time_to_update_context;
-    private long policy_time_to_run_apply_on_current_dataset;
-    private long policy_time_to_run_check_on_current_dataset;
+    // [ (Timestamp, Number of policies valid for all assets) ]
+    // TODO - do not record this if not specified in the settings
+    private Deque<Pair<Long, Integer>> validPoliciesOverTime;
 
     /**
      * Build a CMS instance.
@@ -112,6 +110,8 @@ public class SOSContextService implements ContextService {
             } else {
                 service = new ScheduledThreadPoolExecutor(1); // ThreadPool for triggered requests only
             }
+
+            validPoliciesOverTime = new LinkedList<>();
 
         } catch (ContextException e) {
             throw new ServiceException(ServiceException.SERVICE.CONTEXT, e);
@@ -490,7 +490,7 @@ public class SOSContextService implements ContextService {
         long start = System.currentTimeMillis();
 
         try {
-            counter = runPredicate(context);
+            counter = runPredicate(context, new ContextStats.Predicate());
         } catch (ContextException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
         }
@@ -538,17 +538,14 @@ public class SOSContextService implements ContextService {
             SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
             try {
 
-                pred_time_prep = 0;
-                pred_time_to_check_if_predicate_has_to_be_run = 0;
-                pred_time_to_run_predicate_on_current_dataset = 0;
-                pred_time_to_update_context = 0;
+                ContextStats.Predicate predicateStats = new ContextStats.Predicate();
 
-                counter += runPredicate(context);
+                counter += runPredicate(context, predicateStats);
 
-                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_prep, context.getName(), pred_time_prep);
-                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_check, context.getName(), pred_time_to_check_if_predicate_has_to_be_run);
-                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, context.getName(), pred_time_to_run_predicate_on_current_dataset);
-                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_update_context, context.getName(), pred_time_to_update_context);
+                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_prep, context.getName(), predicateStats.getPred_time_prep().get());
+                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_check, context.getName(), predicateStats.getPred_time_to_check_if_predicate_has_to_be_run().get());
+                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, context.getName(), predicateStats.getPred_time_to_run_predicate_on_current_dataset().get());
+                InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_update_context, context.getName(), predicateStats.getPred_time_to_update_context().get());
 
             } catch (ContextException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
@@ -559,7 +556,7 @@ public class SOSContextService implements ContextService {
         return counter;
     }
 
-    private int runPredicate(Context context) throws ContextException {
+    private int runPredicate(Context context, ContextStats.Predicate predicateStats) throws ContextException {
 
         long start = System.nanoTime();
         int counter = 0;
@@ -568,13 +565,13 @@ public class SOSContextService implements ContextService {
         Set<Pair<IGUID, ContextVersionInfo>> tempResults = new LinkedHashSet<>();
         Set<IGUID> assetInvariants = manifestsDataService.getManifests(ManifestType.VERSION);
 
-        pred_time_prep = System.nanoTime() - start; // Time before running the context on each asset
+        predicateStats.getPred_time_prep().set(System.nanoTime() - start); // Time before running the context on each asset
 
         for (IGUID assetInvariant:assetInvariants) {
 
             try {
                 IGUID head = manifestsDataService.getHead(assetInvariant);
-                boolean predicateResult = runPredicate(context, assetInvariant, head);
+                boolean predicateResult = runPredicate(context, assetInvariant, head, predicateStats);
 
                 if (predicateResult) {
                     Content content = new ContentImpl(head);
@@ -612,7 +609,7 @@ public class SOSContextService implements ContextService {
             throw new ContextException("Unable to update context version properly");
         }
 
-        pred_time_to_update_context = System.nanoTime() - start; // Time after predicate is run and used to process the results
+        predicateStats.getPred_time_to_update_context().set(System.nanoTime() - start); // Time after predicate is run and used to process the results
 
         return counter;
     }
@@ -630,7 +627,7 @@ public class SOSContextService implements ContextService {
      * @param versionGUID to evaluate
      * @return true if the predicate was run and it was true. This is not indicative of the result of the predicate.
      */
-    private boolean runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID) {
+    private boolean runPredicate(Context context, IGUID assetInvariant, IGUID versionGUID, ContextStats.Predicate predicateStats) {
 
         long start = System.nanoTime();
         boolean predicateResult = false;
@@ -646,7 +643,7 @@ public class SOSContextService implements ContextService {
         }
 
         long duration = System.nanoTime() - start;
-        pred_time_to_check_if_predicate_has_to_be_run += duration;
+        predicateStats.getPred_time_to_check_if_predicate_has_to_be_run().addAndGet(duration);
 
         if (!alreadyRun || maxAgeExpired) {
 
@@ -655,7 +652,7 @@ public class SOSContextService implements ContextService {
             start = System.nanoTime();
             predicateResult = predicate.test(versionGUID);
             duration = System.nanoTime() - start;
-            pred_time_to_run_predicate_on_current_dataset += duration;
+            predicateStats.getPred_time_to_run_predicate_on_current_dataset().addAndGet(duration);
 
             evictEntriesForInvariant(contextInvariant, assetInvariant, versionGUID);
         }
@@ -732,7 +729,7 @@ public class SOSContextService implements ContextService {
         SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies for context " + context.getName());
 
         long start = System.currentTimeMillis();
-        runPolicies(context);
+        runPolicies(context, new ContextStats.PolicyApply());
         long end = System.currentTimeMillis();
         applyPolicyThreadSessionStatistics.add(new Pair<>(start, end));
     }
@@ -770,23 +767,25 @@ public class SOSContextService implements ContextService {
         for (Context context : contexts) {
             SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
 
-            policy_time_to_run_apply_on_current_dataset = 0;
-            runPolicies(context);
-            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policy_time_to_run_apply_on_current_dataset);
+            ContextStats.PolicyApply policyApplyStats = new ContextStats.PolicyApply();
+            runPolicies(context, policyApplyStats);
+            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policyApplyStats.getPolicy_time_to_run_apply_on_current_dataset().get());
 
             SOS_LOG.log(LEVEL.INFO, "Finished running policies for context " + context.getUniqueName());
         }
 
     }
 
-    private void runPolicies(Context context) {
+    private void runPolicies(Context context, ContextStats.PolicyApply policyApplyStats) {
 
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
+        ContextStats.PolicyCheck dummyStats = new ContextStats.PolicyCheck();
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
-                runPolicies(context, guid);
+                runPolicies(context, guid, policyApplyStats);
+                runCheckPolicies(context, guid, dummyStats, true);
             }
 
         });
@@ -798,7 +797,7 @@ public class SOSContextService implements ContextService {
      * @param context for which policies have to run
      * @param guid of the entity
      */
-    private void runPolicies(Context context, IGUID guid) {
+    private void runPolicies(Context context, IGUID guid, ContextStats.PolicyApply policyApplyStats) {
 
         try {
             Manifest manifest = manifestsDataService.getManifest(guid, NodeType.MDS);
@@ -817,7 +816,7 @@ public class SOSContextService implements ContextService {
                 policy.apply(context.codomain(), commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
-            policy_time_to_run_apply_on_current_dataset += duration;
+            policyApplyStats.getPolicy_time_to_run_apply_on_current_dataset().addAndGet(duration);
 
             contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
 
@@ -864,7 +863,7 @@ public class SOSContextService implements ContextService {
         SOS_LOG.log(LEVEL.INFO, "Running ACTIVELY policies check for context " + context.getName());
 
         long start = System.currentTimeMillis();
-        runCheckPolicies(context);
+        runCheckPolicies(context, new ContextStats.PolicyCheck());
         long end = System.currentTimeMillis();
         checkPolicyThreadSessionStatistics.add(new Pair<>(start, end));
     }
@@ -890,16 +889,14 @@ public class SOSContextService implements ContextService {
 
         for (Context context : getContexts()) {
 
-            // Set the dataset stat to zero. This field is then increased by runCheckPolicies
-            policy_time_to_run_check_on_current_dataset = 0;
+            ContextStats.PolicyCheck policyCheckStats = new ContextStats.PolicyCheck();
+            runCheckPolicies(context, policyCheckStats);
 
-            runCheckPolicies(context);
-
-            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policy_time_to_run_check_on_current_dataset);
+            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().get());
         }
     }
 
-    private void runCheckPolicies(Context context) {
+    private void runCheckPolicies(Context context, ContextStats.PolicyCheck policyCheckStats) {
 
         long start = System.nanoTime();
 
@@ -907,7 +904,7 @@ public class SOSContextService implements ContextService {
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
-                runCheckPolicies(context, guid);
+                runCheckPolicies(context, guid, policyCheckStats, false);
             }
         });
 
@@ -915,7 +912,7 @@ public class SOSContextService implements ContextService {
         InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.checkPolicies, context.getName(), duration);
     }
 
-    private void runCheckPolicies(Context context, IGUID guid) {
+    private void runCheckPolicies(Context context, IGUID guid, ContextStats.PolicyCheck policyCheckStats, boolean isAfterApply) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -934,7 +931,24 @@ public class SOSContextService implements ContextService {
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
-            policy_time_to_run_check_on_current_dataset += duration;
+            policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().addAndGet(duration);
+
+            // Keep track of how many assets have a valid policy
+            long now = System.nanoTime();
+            int count = 0;
+            if (validPoliciesOverTime.isEmpty()) {
+                count = 0;
+            } else {
+                count += validPoliciesOverTime.getLast().Y();
+                if (allPoliciesAreSatisfied && isAfterApply) {
+                    count += 1;
+                }
+
+                if (!allPoliciesAreSatisfied && !isAfterApply) {
+                    count -= 1;
+                }
+            }
+            validPoliciesOverTime.add(new Pair<>(now, count));
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
