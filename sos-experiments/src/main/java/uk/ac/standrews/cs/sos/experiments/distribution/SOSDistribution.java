@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Scanner;
 
 import static uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration.*;
 
@@ -158,9 +159,15 @@ public class SOSDistribution {
             }
 
             if (experimentNode.hasDataset()) {
-                scp.makePath(path + experimentNode.getDatasetPath());
-                String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
-                scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
+                System.out.println("Do you want to send the dataset with path: " + experimentNode.getDatasetPath() +
+                        " to main experiment node? (y/Y to confirm)");
+                Scanner in = new Scanner(System.in);
+                String answer = in.nextLine();
+                if (answer.toLowerCase().equals("y")) {
+                    scp.makePath(path + experimentNode.getDatasetPath());
+                    String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
+                    scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
+                }
             }
 
             // Copy contexts over
