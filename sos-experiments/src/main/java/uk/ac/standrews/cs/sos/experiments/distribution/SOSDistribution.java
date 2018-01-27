@@ -167,6 +167,8 @@ public class SOSDistribution {
                     scp.makePath(path + experimentNode.getDatasetPath());
                     String lDirectoryDataset = REPO_DATASETS_PATH + experimentNode.getDataset();
                     scp.sendDirectory(lDirectoryDataset, path + experimentNode.getDatasetPath(), false);
+                } else {
+                    System.out.println("Dataset will not be transferred. Make sure that dataset is already in remote experiment node");
                 }
             }
 
