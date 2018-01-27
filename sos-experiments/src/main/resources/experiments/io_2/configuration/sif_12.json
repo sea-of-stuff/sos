@@ -42,7 +42,7 @@
       "nds": {
         "exposed": false,
         "startupRegistration" : false,
-        "bootstrap": true
+        "bootstrap": false
       },
       "mms": {
         "exposed": false
@@ -85,13 +85,6 @@
         }
       }
     },
-    "bootstrapNodes": [
-      {
-        "guid" : "SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
-        "hostname" : "192.168.1.2",
-        "port" : 8080,
-        "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALifpBJBNiW9dzEMsm5maYC12C6UP6tKcJr0nB4UJwXj6+elfyye7KErjyXzbP9WoDDNPWNDQKBA/T4hiZgUl7sCAwEAAQ=="
-      }
-    ]
+    "bootstrapNodes": []
   }
 }
