@@ -119,9 +119,9 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
             SimpleFileVisitor<Path> fv = new FileVisitor<>();
 
             long start = System.nanoTime();
-            System.out.println("Files added: ");
+            System.out.println("[FS] Files added: ");
             Files.walkFileTree(folder.toPath(), fv);
-            System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+            System.out.println("\n[FS] Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
         }
 
         class FileVisitor<T extends Path> extends SimpleFileVisitor<T> {

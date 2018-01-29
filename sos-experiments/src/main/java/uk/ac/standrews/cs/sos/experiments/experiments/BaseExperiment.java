@@ -154,7 +154,7 @@ public abstract class BaseExperiment implements Experiment {
 
         end = System.nanoTime();
         long timeToFinish = end - start;
-        System.out.println("Experiment iteration {" + (iteration + 1) + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
+        System.out.println("Experiment iteration {" + (iteration + 1) + "/" + numberOfTotalIterations() + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     @Override

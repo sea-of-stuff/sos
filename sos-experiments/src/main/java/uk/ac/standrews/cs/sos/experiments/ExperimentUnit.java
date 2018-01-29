@@ -149,9 +149,9 @@ public interface ExperimentUnit {
         ProtectedFileVisitor<Path> fv = new ProtectedFileVisitor<>(node, role);
 
         long start = System.nanoTime();
-        System.out.println("Files added: ");
+        System.out.println("[Atom+Version] Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
-        System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        System.out.println("\n[Atom+Version] Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
 
         return fv.getVersions();
     }
@@ -253,9 +253,9 @@ public interface ExperimentUnit {
         FileVisitor<Path> fv = new FileVisitor<>(node);
 
         long start = System.nanoTime();
-        System.out.println("Files added: ");
+        System.out.println("[Atom] Files added: ");
         Files.walkFileTree(folder.toPath(), fv);
-        System.out.println("\nTime to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
+        System.out.println("\n[Atom] Time to add all contents: " + (System.nanoTime() - start) / 1000000000.0 + " seconds");
 
         return fv.getVersions();
     }
