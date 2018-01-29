@@ -125,9 +125,7 @@ public class ExperimentalFramework {
 
         // Run nodes and experiment
         chicShock.shock();
-        
-//        int sleepBeforeExp = 5000 * experimentConfiguration.getExperimentObj().getNodes().size();
-//        System.out.println("Going to sleep for " + (sleepBeforeExp / 1000) + " seconds before starting the experiment in the remote node");
+
         Thread.sleep(2000); // Wait a bit before starting the experiment
         chicShock.shockExperiment(statsBaseName);
 

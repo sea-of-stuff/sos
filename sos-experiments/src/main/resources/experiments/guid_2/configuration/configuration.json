@@ -1,0 +1,28 @@
+{
+  "experiment": {
+    "name": "guid_2",
+    "experimentClass": "Experiment_GUID_2",
+    "description": "The experiment GUID 2 investigates the performance of ...",
+    "setup": {
+      "app": "sos-app/target/sos-app.jar",
+      "iterations": 10
+    },
+    "nodes": [],
+    "experimentnode": {
+      "id": 0,
+      "name" : "local",
+      "remote": false,
+      "configurationfile": "node_0.json",
+      "dataset" : "io_multiple"
+    },
+    "stats": {
+      "io": false,
+      "guid_data": true,
+      "guid_manifest": true,
+      "experiment": false,
+      "predicate": false,
+      "policies": false,
+      "checkPolicies": false
+    }
+  }
+}

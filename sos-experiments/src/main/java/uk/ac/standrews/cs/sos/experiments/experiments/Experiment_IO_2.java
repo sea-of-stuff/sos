@@ -73,8 +73,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         }
 
         @Override
-        public void setup() {
-        }
+        public void setup() {}
 
         @Override
         public void run() throws ExperimentException {

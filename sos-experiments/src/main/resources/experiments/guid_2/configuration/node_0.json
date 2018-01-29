@@ -1,0 +1,88 @@
+{
+  "settings": {
+    "guid": "SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4",
+    "services": {
+      "agent": {
+        "exposed": true
+      },
+      "storage": {
+        "exposed": false
+      },
+      "cms": {
+        "exposed": false,
+        "automatic": false,
+        "predicateOnNewContext" : false,
+        "predicateThread": {
+          "initialDelay": 30,
+          "period": 60
+        },
+        "policiesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "checkPoliciesThread": {
+          "initialDelay": 45,
+          "period": 60
+        },
+        "getdataThread": {
+          "initialDelay": 60,
+          "period": 60
+        },
+        "spawnThread": {
+          "initialDelay": 90,
+          "period": 120
+        }
+      },
+      "mds": {
+        "exposed": false
+      },
+      "rms": {
+        "exposed": true
+      },
+      "nds": {
+        "exposed": false,
+        "startupRegistration" : true
+      },
+      "mms": {
+        "exposed": false
+      }
+    },
+    "database": {
+      "filename": "dump.db"
+    },
+    "rest": {
+      "port": 8080
+    },
+    "webDAV": {
+      "port": 8081
+    },
+    "webAPP": {
+      "port": 8082
+    },
+    "keys": {
+      "location": "~/sos/keys/"
+    },
+    "store": {
+      "type": "local",
+      "location": "~/sos/"
+    },
+    "global": {
+      "ssl_trust_store" : "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/lib/security/cacerts",
+      "tasks": {
+        "thread": {
+          "ps": 4
+        }
+      },
+      "nodeMaintainer": {
+        "enabled" : false,
+        "maxSize": 1048576,
+        "thread": {
+          "ps": 1,
+          "initialDelay": 0,
+          "period": 600
+        }
+      }
+    },
+    "bootstrapNodes": []
+  }
+}
