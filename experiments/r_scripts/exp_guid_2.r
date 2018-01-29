@@ -3,9 +3,9 @@ library(scales)
 
 source("r_scripts/utils_stats.r")
 
-datafile <- "output/guid_2_run_1.tsv"
+datafile <- "output/guid_2_run_2.tsv"
 d <- read.csv(datafile, header=TRUE, sep="\t") 
-d <- d[d$StatsTYPE == statsType,]
+d <- d[d$StatsTYPE == 'guid_data',]
 
 d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
 
