@@ -24,6 +24,10 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 mem("output/io_1_on_text1mb_10its_1_os.tsv")
 cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 
+mem("remote/io_2_run_1_os.tsv")
+cpu("remote/io_2_run_1_os.tsv")
+
+
 ############
 # IO_1
 ############
