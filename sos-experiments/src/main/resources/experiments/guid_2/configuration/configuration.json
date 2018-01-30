@@ -5,7 +5,7 @@
     "description": "The experiment GUID 2 investigates the performance of ...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 20
     },
     "nodes": [],
     "experimentnode": {

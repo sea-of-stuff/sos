@@ -27,13 +27,8 @@ public abstract class BaseExperiment implements Experiment {
 
     // Resource locations and output paths
     public static final String CONFIGURATION_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/configuration/";
-    public static final String CONTEXTS_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/contexts/";
     public static final String USRO_FOLDER = "sos-experiments/src/main/resources/experiments/{experiment}/usro/";
     public static final String OUTPUT_FOLDER = "experiments/output/";
-
-    // Experiment timing
-    private long start;
-    private long end;
 
     // Node and experiment objects
     protected SOSLocalNode node;
@@ -146,15 +141,9 @@ public abstract class BaseExperiment implements Experiment {
 
     @Override
     public void runIteration() throws ExperimentException {
-        start = System.nanoTime();
-
         BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.experiment;
         currentExperimentUnit.run();
         BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.non_experiment;
-
-        end = System.nanoTime();
-        long timeToFinish = end - start;
-        System.out.println("Experiment iteration {" + (iteration + 1) + "/" + numberOfTotalIterations() + "} finished in " + nanoToSeconds(timeToFinish) + " seconds");
     }
 
     @Override
@@ -189,14 +178,24 @@ public abstract class BaseExperiment implements Experiment {
         for(iteration = 0; iteration < numberOfTotalIterations(); iteration++) {
 
             setupIteration();
-            runIteration();
-            finishIteration();
 
+            long startIteration = System.nanoTime();
+            {
+                runIteration();
+            }
+            long endIteration = System.nanoTime();
+            long timeToFinishIteration = endIteration - startIteration;
+            long partialExperimentTime = endIteration - start;
+            String output = String.format("\nExperiment iteration {%d/%d} - Time to finish iteration %.2f seconds - Total running time %.2f seconds",
+                    (iteration + 1), numberOfTotalIterations(), nanoToSeconds(timeToFinishIteration), nanoToSeconds(partialExperimentTime));
+            System.out.println(output);
+
+            finishIteration();
             cleanup(); // NOTE - idea: apply to remote nodes too, which will need to be stopped and restarted
 
             try {
                 System.out.println("Going to sleep for 5 seconds before the next iteration");
-                System.out.println("*******************************************************");
+                System.out.println("*******************************************************\n");
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 throw new ExperimentException();

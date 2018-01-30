@@ -87,6 +87,39 @@ public class Experiment_GUID_2 extends BaseExperiment implements Experiment {
                 throw new ExperimentException();
             }
 
+            rest_a_bit();
+
+            Internals.GUID_ALGORITHM = ALGORITHM.SHA384;
+            try {
+                addFolderContentToNodeAsAtoms(node, subset);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ExperimentException();
+            }
+
+            rest_a_bit();
+
+            Internals.GUID_ALGORITHM = ALGORITHM.SHA512;
+            try {
+                addFolderContentToNodeAsAtoms(node, subset);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ExperimentException();
+            }
+
+            rest_a_bit();
+
+            Internals.GUID_ALGORITHM = ALGORITHM.MD5;
+            try {
+                addFolderContentToNodeAsAtoms(node, subset);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ExperimentException();
+            }
+
         }
     }
 
