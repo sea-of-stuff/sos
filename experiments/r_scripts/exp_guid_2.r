@@ -36,6 +36,6 @@ if (showSummary) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     expand_limits(x = 0, y = 0) +
-    labs(title="SHA Algorithms performance", x="Data size (MB)", y=yLabel) +
-    scale_color_discrete(name='SHA Algorithm')
+    labs(title="Hash Algorithms Performance. Data: from 0 to 100mb.", x="Data size (MB)", y=yLabel) +
+    scale_color_discrete(name='Hash Algorithms')
 }
