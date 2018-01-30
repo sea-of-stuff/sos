@@ -54,6 +54,6 @@ if (showSummary) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
-    labs(title="IO Operations", x="Data size", y=yLabel) +
+    labs(title="IO Operations", x="Data size (MB)", y=yLabel) +
     scale_color_discrete(name='Operation Types')
 }

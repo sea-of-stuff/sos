@@ -8,7 +8,15 @@ datafile <- "remote/guid_2_run_3.tsv"
 d <- read.csv(datafile, header=TRUE, sep="\t") 
 d <- d[d$StatsTYPE == 'guid_data',]
 
-d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+yLabel = "N/A"
+if (ratio) {
+  d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+  yLabel = "MB/s"
+} else {
+  d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds  
+  yLabel = "Time (s)"
+}
+
 
 d$Size <- (d$Message / 1000000) # size in mb
 
@@ -28,6 +36,6 @@ if (showSummary) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     expand_limits(x = 0, y = 0) +
-    labs(title="SHA Algorithms performance", x="Data size (MB)", y="Throughput (MB/s)") +
+    labs(title="SHA Algorithms performance", x="Data size (MB)", y=yLabel) +
     scale_color_discrete(name='SHA Algorithm')
 }
