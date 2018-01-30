@@ -1,9 +1,10 @@
 library(ggplot2)
 library(scales)
 
+setwd("/Users/sic2/git/sos/experiments")
 source("r_scripts/utils_stats.r")
 
-datafile <- "output/guid_2_run_2.tsv"
+datafile <- "remote/guid_2_run_3.tsv"
 d <- read.csv(datafile, header=TRUE, sep="\t") 
 d <- d[d$StatsTYPE == 'guid_data',]
 
@@ -27,6 +28,6 @@ if (showSummary) {
           axis.title=element_text(size=16,face="bold")) +
     scale_y_continuous(labels = comma) + 
     expand_limits(x = 0, y = 0) +
-    labs(title="SHA Algorithms performance", x="Operation", y="MB/s") +
+    labs(title="SHA Algorithms performance", x="Data size (MB)", y="Throughput (MB/s)") +
     scale_color_discrete(name='SHA Algorithm')
 }

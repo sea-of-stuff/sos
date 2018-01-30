@@ -14,7 +14,7 @@ public enum StatsTYPE {
     ping,
 
     guid_data, guid_manifest, // Time to generate GUIDs for data or manifest
-    sha1, sha256,
+    sha1, sha256, sha384, sha512, md5,
 
     io, // Time to write/read data, manifests, metadata, etc...
     add_atom, read_atom, replicate_atom,
@@ -45,6 +45,12 @@ public enum StatsTYPE {
                 return sha1;
             case SHA256:
                 return sha256;
+            case SHA384:
+                return sha384;
+            case SHA512:
+                return sha512;
+            case MD5:
+                return md5;
             default:
                 return error;
         }
