@@ -4,7 +4,7 @@ library(scales)
 setwd("/Users/sic2/git/sos/experiments")
 source("r_scripts/utils_stats.r")
 
-dataFile <- "remote/io_2_run_1.tsv"
+dataFile <- "remote/io_2_run_3.tsv"
 d <- read.csv(dataFile, header=TRUE, sep="\t", stringsAsFactors=F) 
 
 d$StatsTYPE <- as.character(d$StatsTYPE)
