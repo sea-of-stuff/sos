@@ -28,13 +28,14 @@ d$Message <- as.numeric(d$Message)
 d$User.Measure <- as.numeric(d$User.Measure)
 
 d$Size <- (d$Message / 1000000) # size in mb
+d$Time <- d$User.Measure / 1000000000.0; # in seconds
 
 yLabel = "N/A"
 if (ratio) {
-  d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+  d$Measures <- d$Size / d$Time; # calculate IO in terms of MB/s
   yLabel = "MB/s"
 } else {
-  d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds  
+  d$Measures <- d$Time; # Nanoseconds to seconds  
   yLabel = "Time (s)"
 }
 

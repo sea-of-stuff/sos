@@ -67,6 +67,8 @@ public class Experiment_GUID_2 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() throws ExperimentException {
+            System.out.println("Processing subset: " + subset.getAbsolutePath());
+
             Internals.GUID_ALGORITHM = ALGORITHM.SHA256;
             try {
                 addFolderContentToNodeAsAtoms(node, subset);
