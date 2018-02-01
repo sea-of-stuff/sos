@@ -24,46 +24,33 @@ cpu("output/io_1__2017_11_13T17_09_13_062Z_os.tsv", barplot = FALSE)
 mem("output/io_1_on_text1mb_10its_1_os.tsv")
 cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 
-mem("remote/io_2_run_1_os.tsv")
-cpu("remote/io_2_run_1_os.tsv")
-
 
 ############
-# IO_1
+# IO
 ############
 
 # Read the CVS file
 # Dataset: text_100kb
 # Iterations: 10
-io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
-io_1("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
+io("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
+io("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
 
-io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance. Dataset: 1000 files of 100kb each.")
-io_1("output/io_1_on_text100k_10its_3.tsv", "IO performance per file. Dataset: 1000 files of 100kb each.", ratio=FALSE)
+# TODO - with and without cache invalidation
+io("remote/io_2_run_3.tsv", "IO performance.", ratio=FALSE)
+io("remote/io_2_run_3.tsv", "IO performance.", ratio=TRUE)
 
-io_1("output/io_1_on_text1mb_10its_1.tsv", "IO performance. Dataset: 1000 files of 1mb each.")
-
-guid_data("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
-guid_manifest("output/io_1_on_text100k_10its_1.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
+mem("remote/io_2_run_3_os.tsv")
+cpu("remote/io_2_run_3_os.tsv")
 
 ############
-# GUID_1
+# GUID
 ############
 
-guid_data("output/test_guid_6.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
+guid_data("remote/guid_2_run_3.tsv", "Hash Algorithms Performance. Data: from 0 to 100mb.", showSummary = FALSE, ratio=FALSE)
+guid_data("remote/guid_2_run_3.tsv", "Hash Algorithms Performance. Data: from 0 to 100mb.", showSummary = FALSE, ratio=TRUE)
 
-guid_manifest("output/test_guid_6.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = FALSE)
-
-## OLD STUFF
-
-# 10 iterations on the text_100kb dataset
-guid_1("output/test_guid_5.tsv", "Performance test on GUID functions. \nDataset: 100 files of 100kb each.")
-guid_1("output/test_guid_5.tsv", "Performance test on GUID functions. Dataset: 100 files of 100kb each.", showSummary = TRUE)
-
-# 10 iterations on the random_50mb dataset
-guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. \nDataset: 20 files of 50mb each.", showSummary = FALSE)
-guid_1("output/test_guid_4.tsv", "Performance test on GUID functions. Dataset: 20 files of 50mb each.", showSummary = TRUE)
-
+mem("remote/guid_2_run_3.tsv")
+cpu("remote/guid_2_run_3.tsv")
 
 ##############
 # NB_x

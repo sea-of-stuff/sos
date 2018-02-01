@@ -26,14 +26,17 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
     # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
     dd <- summarySE(dd, measurevar="Measures", groupvars =c("ContextName", "StatsTYPE"))
     
-    ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + 
-      geom_point() +
+    ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, color=dd$ContextName)) + 
+      geom_point(size=1, stroke=1) +
+      scale_shape_manual(values=seq(0,15)) +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
-      theme(axis.text.x=element_text(angle=90,hjust=1), 
+      theme(axis.text.x=element_blank(),
             axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold")) +
-      labs(title=titlePlot, x="Predicate", y="Time (s)")
+            axis.title=element_text(size=16,face="bold"),
+            legend.position="right") +
+      labs(title=titlePlot, x="Predicate", y="Time (s)") +
+      scale_color_discrete(name='Predicate Functions')
   } else {
     
     # PLOT TIME TO RUN PREDICATE, PRE-PHASE, POST-PRED-PHASE ETC OVER DATASET
