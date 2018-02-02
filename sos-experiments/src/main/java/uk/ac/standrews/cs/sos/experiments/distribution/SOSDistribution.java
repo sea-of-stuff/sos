@@ -30,6 +30,7 @@ public class SOSDistribution {
         String experimentName = configuration.getExperimentObj().getName();
         String appPath = configuration.getExperimentObj().getSetup().getApp();
         System.out.println("Distributing the app at the following path: " + appPath);
+        System.out.println("Number of remote nodes (excluding the main experiment one): " + configuration.getExperimentObj().getNodes().size());
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
@@ -227,7 +228,7 @@ public class SOSDistribution {
 
             //scp.deleteFile(path + REMOTE_SOS_OUT_FILE);
             //scp.deleteFile(path + REMOTE_SOS_PID_FILE);
-            //scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
+            scp.deleteFolder(path + "sos"); // ASSUMING THAT THE NODE USES A SOS FOLDER for the SOS INTERNAL STORAGE
 
         } catch (IOException e) {
             throw new NetworkException();

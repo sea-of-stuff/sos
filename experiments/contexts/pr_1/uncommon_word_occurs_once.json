@@ -13,7 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"grain\") == 1;"
+    "predicate": "CommonPredicates.SearchTextIgnoreCase(guid, \"bibliopole\");"
   },
   "policies": []
 }

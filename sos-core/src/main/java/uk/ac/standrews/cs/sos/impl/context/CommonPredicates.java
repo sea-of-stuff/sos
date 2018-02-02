@@ -5,7 +5,6 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import org.apache.commons.lang3.StringUtils;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
@@ -192,12 +191,29 @@ public class CommonPredicates {
 
     public static boolean SearchText(IGUID guid, String textToSearch) {
 
-        return TextOccurrences(guid, textToSearch) == 1;
+        SOSAgent agent = SOSAgent.instance();
+
+        try (Data data = agent.getData(guid)){
+
+            return stringUtilsWithLimits(data.toString(), textToSearch, 1) == 1;
+
+        } catch (ServiceException | IOException e) {
+            return false;
+        }
     }
 
     public static boolean SearchTextIgnoreCase(IGUID guid, String textToSearch) {
 
-        return TextOccurrencesIgnoreCase(guid, textToSearch) == 1;
+        SOSAgent agent = SOSAgent.instance();
+
+        try (Data data = agent.getData(guid)){
+
+            return stringUtilsWithLimits(data.toString().toLowerCase(), textToSearch.toLowerCase(), 1) == 1;
+
+        } catch (ServiceException | IOException e) {
+            return false;
+        }
+
     }
 
     public static int TextOccurrences(IGUID guid, String textToSearch) {
@@ -206,7 +222,7 @@ public class CommonPredicates {
 
         try (Data data = agent.getData(guid)){
 
-            return StringUtils.countMatches(data.toString(), textToSearch);
+            return stringUtilsWithLimits(data.toString(), textToSearch, -1);
 
         } catch (ServiceException | IOException e) {
             return 0;
@@ -220,12 +236,32 @@ public class CommonPredicates {
 
         try (Data data = agent.getData(guid)){
 
-            return StringUtils.countMatches(data.toString().toLowerCase(), textToSearch.toLowerCase());
+            return stringUtilsWithLimits(data.toString().toLowerCase(), textToSearch.toLowerCase(), -1);
 
         } catch (ServiceException | IOException e) {
             return 0;
         }
 
+    }
+
+    // Improvement over method StringUtils.countMatches from commons.lang3
+    private static int stringUtilsWithLimits(String str, String sub, int limit) {
+
+        if (isEmpty(str) || isEmpty(sub)) {
+            return 0;
+        }
+        int count = 0;
+        int idx = 0;
+        while ((idx = str.indexOf(sub, idx)) != -1) {
+            count++;
+            if (limit != -1 && count == limit) break;
+            idx += sub.length();
+        }
+        return count;
+    }
+
+    private static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.length() == 0;
     }
 
     public static boolean JavaFileHasMethod(IGUID guid, String method) {

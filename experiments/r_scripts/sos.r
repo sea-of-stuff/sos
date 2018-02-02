@@ -70,11 +70,13 @@ repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot
 # PR_1
 ############
 
-# Number of iterations: 100.
-pr_1("remote/text_100kb_100its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
+pr_1("remote/pr_1_run_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
 
-# Number of iterations: 20.
-pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset")
+pr_1("remote/pr_1_run_5.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
+
+pr_1("output/test_pr_1_11.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
+pr_1("output/test_pr_1_12.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
+pr_1("output/test_pr_1_13.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
 
 ##############
 # PO_A_1

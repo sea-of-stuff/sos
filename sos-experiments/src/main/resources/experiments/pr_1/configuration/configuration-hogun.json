@@ -2,7 +2,7 @@
   "experiment" : {
     "name" : "pr_1",
     "experimentClass": "Experiment_PR_1",
-    "description" : "PR_1 experiment - on hogun.",
+    "description" : "PR_1 experiment - on hogun-2.",
     "setup" : {
       "app" : "sos-app/target/sos-app.jar",
       "iterations" : 20
@@ -10,21 +10,21 @@
     "nodes" : [ ],
     "experimentnode" : {
       "id" : 0,
-      "name" : "hogun1",
+      "name" : "hogun2",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "hogun-1.cluster",
+        "host" : "hogun-2.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "hogun_1.json",
-      "dataset" : "text_100kb_1",
+      "configurationfile" : "hogun_2.json",
+      "dataset" : "text_100kb",
       "behaviour": {
         "start": 0,
         "stop": -1,

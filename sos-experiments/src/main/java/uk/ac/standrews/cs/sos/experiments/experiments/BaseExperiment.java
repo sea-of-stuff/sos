@@ -107,6 +107,12 @@ public abstract class BaseExperiment implements Experiment {
 
         currentExperimentUnit = getExperimentUnit();
         currentExperimentUnit.setup();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void waitForSlaveNodesToBeRunning() throws ExperimentException {

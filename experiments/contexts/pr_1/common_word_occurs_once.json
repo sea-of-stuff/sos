@@ -13,7 +13,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;"
+    "predicate": "CommonPredicates.SearchTextIgnoreCase(guid, \"the\");"
   },
   "policies": []
 }
