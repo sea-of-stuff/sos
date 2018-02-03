@@ -8,6 +8,7 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 import uk.ac.standrews.cs.castore.data.Data;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
@@ -17,6 +18,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.utils.Misc;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,13 +51,21 @@ public class TikaMetadataEngine implements MetadataEngine {
             return makeMetadataManifest(metamap, metadataBuilder.getRole(), metadataBuilder.isProtect());
 
         } catch (IOException | TikaException | SAXException e) {
-            throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);
+            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - bad error. Metadata could not be generated properly");
         } catch (ManifestNotMadeException e) {
-            throw new MetadataException("TikaMetadataEngine - unable to generate metadata manifest", e);
+            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - unable to generate metadata manifest");
         } catch (Error e) {
-            throw new MetadataException("TikaMetadataEngine - very bad error. Metadata could not be generated properly", e);
+            SOS_LOG.log(LEVEL.ERROR, "TikaMetadataEngine - very bad error. Metadata could not be generated properly");
         }
 
+        try {
+            HashMap<String, MetaProperty> metamap = new HashMap<>();
+            sizeProperty(metamap, metadataBuilder.getData());
+            timestampProperty(metamap);
+            return makeMetadataManifest(metamap, metadataBuilder.getRole(), metadataBuilder.isProtect());
+        } catch (ManifestNotMadeException e) {
+            throw new MetadataException("TikaMetadataEngine - bad error. Metadata could not be generated properly", e);
+        }
     }
 
     private void processTikaProperties(HashMap<String, MetaProperty> metamap, Metadata metadata) {
@@ -65,7 +75,7 @@ public class TikaMetadataEngine implements MetadataEngine {
             String value = metadata.get(key);
             if (value == null) {
                 metaProperty = new MetaProperty(key);
-            } else if (Misc.isIntegerNumber(value)) {
+            } else if (Misc.isIntegerNumber(value)) { // check integer numbers always before real numbers
                 metaProperty = new MetaProperty(key, Long.parseLong(value));
             } else if (Misc.isRealNumber(value)) {
                 metaProperty = new MetaProperty(key, Double.parseDouble(value));
@@ -74,8 +84,6 @@ public class TikaMetadataEngine implements MetadataEngine {
             } else {
                 metaProperty = new MetaProperty(key, value);
             }
-
-            // Handle -- double, boolean
 
             metamap.put(key, metaProperty);
         }
