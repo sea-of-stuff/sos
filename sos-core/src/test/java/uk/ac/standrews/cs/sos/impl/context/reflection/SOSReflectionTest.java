@@ -12,8 +12,8 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataPersistException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
 import uk.ac.standrews.cs.sos.impl.context.CommonUtilities;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.Predicate;
@@ -80,8 +80,8 @@ public class SOSReflectionTest extends SetUpTest {
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
 
-        HashMap<String, MetaProperty> metadata = new HashMap<>();
-        metadata.put("Content-Type", new MetaProperty("Content-Type", "image/jpeg"));
+        HashMap<String, Property> metadata = new HashMap<>();
+        metadata.put("Content-Type", new Property("Content-Type", "image/jpeg"));
         MetadataManifest meta = new MetadataManifest(metadata, null);
         this.localSOSNode.getMMS().addMetadata(meta);
 
@@ -94,8 +94,8 @@ public class SOSReflectionTest extends SetUpTest {
         assertTrue(predicateResult);
 
         // Predicate.test fails for non jpeg content
-        HashMap<String, MetaProperty> metadataNonImage = new HashMap<>();
-        metadataNonImage.put("Content-Type", new MetaProperty("Content-Type", "WHATEVER"));
+        HashMap<String, Property> metadataNonImage = new HashMap<>();
+        metadataNonImage.put("Content-Type", new Property("Content-Type", "WHATEVER"));
         MetadataManifest metaNonImage = new MetadataManifest(metadataNonImage, null);
         this.localSOSNode.getMMS().addMetadata(metaNonImage);
 

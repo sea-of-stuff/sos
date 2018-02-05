@@ -7,9 +7,9 @@ import uk.ac.standrews.cs.guid.IGUID;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class MetaProperty {
+public class Property {
 
-    private MetaType metaType;
+    private MetaType type;
     private String key;
     private String value_s;
     private long value_l;
@@ -19,50 +19,50 @@ public class MetaProperty {
     private boolean encrypted = false;
 
     // Should be used only for encrypted meta properties!
-    public MetaProperty(MetaType metaType, String key, String value) {
-        this.metaType = metaType;
+    public Property(MetaType type, String key, String value) {
+        this.type = type;
         this.key = key;
         this.value_s = value;
         this.encrypted = true;
     }
 
-    public MetaProperty(String key, String value) {
-        this.metaType = MetaType.STRING;
+    public Property(String key, String value) {
+        this.type = MetaType.STRING;
         this.key = key;
         this.value_s = value;
     }
 
-    public MetaProperty(String key, long value) {
-        this.metaType = MetaType.LONG;
+    public Property(String key, long value) {
+        this.type = MetaType.LONG;
         this.key = key;
         this.value_l = value;
     }
 
-    public MetaProperty(String key, double value) {
-        this.metaType = MetaType.DOUBLE;
+    public Property(String key, double value) {
+        this.type = MetaType.DOUBLE;
         this.key = key;
         this.value_d = value;
     }
 
-    public MetaProperty(String key, boolean value) {
-        this.metaType = MetaType.BOOLEAN;
+    public Property(String key, boolean value) {
+        this.type = MetaType.BOOLEAN;
         this.key = key;
         this.value_b = value;
     }
 
-    public MetaProperty(String key, IGUID value) {
-        this.metaType = MetaType.GUID;
+    public Property(String key, IGUID value) {
+        this.type = MetaType.GUID;
         this.key = key;
         this.value_g = value;
     }
 
-    public MetaProperty(String key) {
-        this.metaType = MetaType.ANY;
+    public Property(String key) {
+        this.type = MetaType.ANY;
         this.key = key;
     }
 
-    public MetaType getMetaType() {
-        return metaType;
+    public MetaType getType() {
+        return type;
     }
 
     public String getKey() {
@@ -96,7 +96,7 @@ public class MetaProperty {
     @Override
     public String toString() {
 
-        String retval = metaType.toString();
+        String retval = type.toString();
         retval += "_";
         retval += key;
         retval += "_";
@@ -106,7 +106,7 @@ public class MetaProperty {
 
         } else {
 
-            switch (metaType) {
+            switch (type) {
                 case LONG:
                     retval += value_l;
                     break;

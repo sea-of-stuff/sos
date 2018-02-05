@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class MetadataManifest extends AbstractSignedManifest implements Metadata {
 
-    protected HashMap<String, MetaProperty> metadata;
+    protected HashMap<String, Property> metadata;
 
     MetadataManifest(ManifestType manifestType, Role signer) {
         super(manifestType, signer);
@@ -32,7 +32,7 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
         super(manifestType, signerRef);
     }
 
-    public MetadataManifest(HashMap<String, MetaProperty> metadata, Role signer) throws ManifestNotMadeException {
+    public MetadataManifest(HashMap<String, Property> metadata, Role signer) throws ManifestNotMadeException {
         this(ManifestType.METADATA, signer);
 
         this.metadata = metadata;
@@ -50,7 +50,7 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
 
     }
 
-    public MetadataManifest(IGUID guid, HashMap<String, MetaProperty> metadata, Role signer, String signature) {
+    public MetadataManifest(IGUID guid, HashMap<String, Property> metadata, Role signer, String signature) {
         this(ManifestType.METADATA, signer);
 
         this.guid = guid;
@@ -58,7 +58,7 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
         this.signature = signature;
     }
 
-    public MetadataManifest(IGUID guid, HashMap<String, MetaProperty> metadata, IGUID signerRef, String signature) {
+    public MetadataManifest(IGUID guid, HashMap<String, Property> metadata, IGUID signerRef, String signature) {
         this(ManifestType.METADATA, signerRef);
 
         this.guid = guid;
@@ -67,7 +67,7 @@ public class MetadataManifest extends AbstractSignedManifest implements Metadata
     }
 
     @Override
-    public MetaProperty getProperty(String propertyName) {
+    public Property getProperty(String propertyName) {
 
         return metadata.get(propertyName);
     }

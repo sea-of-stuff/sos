@@ -16,8 +16,8 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
@@ -237,7 +237,7 @@ public class SOSAgent implements Agent {
     }
 
     @Override
-    public MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException {
+    public Property getMetaProperty(IGUID guid, String property) throws ServiceException {
 
         Version version = (Version) getManifest(guid);
 

@@ -11,9 +11,9 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 import uk.ac.standrews.cs.sos.interfaces.metadata.MetadataEngine;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -42,7 +42,7 @@ public class TikaMetadataEngine implements MetadataEngine {
         try (InputStream stream = metadataBuilder.getData().getInputStream()) {
             parser.parse(stream, handler, metadata, context);
 
-            HashMap<String, MetaProperty> metamap = new HashMap<>();
+            HashMap<String, Property> metamap = new HashMap<>();
 
             processTikaProperties(metamap, metadata);
             sizeProperty(metamap, metadataBuilder.getData());
@@ -59,7 +59,7 @@ public class TikaMetadataEngine implements MetadataEngine {
         }
 
         try {
-            HashMap<String, MetaProperty> metamap = new HashMap<>();
+            HashMap<String, Property> metamap = new HashMap<>();
             sizeProperty(metamap, metadataBuilder.getData());
             timestampProperty(metamap);
             return makeMetadataManifest(metamap, metadataBuilder.getRole(), metadataBuilder.isProtect());
@@ -68,39 +68,39 @@ public class TikaMetadataEngine implements MetadataEngine {
         }
     }
 
-    private void processTikaProperties(HashMap<String, MetaProperty> metamap, Metadata metadata) {
+    private void processTikaProperties(HashMap<String, Property> metamap, Metadata metadata) {
         for(String key:metadata.names()) {
-            MetaProperty metaProperty;
+            Property property;
 
             String value = metadata.get(key);
             if (value == null) {
-                metaProperty = new MetaProperty(key);
+                property = new Property(key);
             } else if (Misc.isIntegerNumber(value)) { // check integer numbers always before real numbers
-                metaProperty = new MetaProperty(key, Long.parseLong(value));
+                property = new Property(key, Long.parseLong(value));
             } else if (Misc.isRealNumber(value)) {
-                metaProperty = new MetaProperty(key, Double.parseDouble(value));
+                property = new Property(key, Double.parseDouble(value));
             } else if (Misc.isBoolean(value)) {
-                metaProperty = new MetaProperty(key, Boolean.parseBoolean(value));
+                property = new Property(key, Boolean.parseBoolean(value));
             } else {
-                metaProperty = new MetaProperty(key, value);
+                property = new Property(key, value);
             }
 
-            metamap.put(key, metaProperty);
+            metamap.put(key, property);
         }
     }
 
-    private void sizeProperty(HashMap<String, MetaProperty> metamap, Data data) {
-        MetaProperty sizeMetaProperty = new MetaProperty("Size", data.getSize());
-        metamap.put(sizeMetaProperty.getKey(), sizeMetaProperty);
+    private void sizeProperty(HashMap<String, Property> metamap, Data data) {
+        Property sizeProperty = new Property("Size", data.getSize());
+        metamap.put(sizeProperty.getKey(), sizeProperty);
     }
 
-    private void timestampProperty(HashMap<String, MetaProperty> metamap) {
+    private void timestampProperty(HashMap<String, Property> metamap) {
         Instant instant = Instant.now();
-        MetaProperty timestampMetaProperty = new MetaProperty("Timestamp", instant.toEpochMilli());
-        metamap.put(timestampMetaProperty.getKey(), timestampMetaProperty);
+        Property timestampProperty = new Property("Timestamp", instant.toEpochMilli());
+        metamap.put(timestampProperty.getKey(), timestampProperty);
     }
 
-    private uk.ac.standrews.cs.sos.model.Metadata makeMetadataManifest(HashMap<String, MetaProperty> metamap, Role role, boolean encrypt) throws ManifestNotMadeException {
+    private uk.ac.standrews.cs.sos.model.Metadata makeMetadataManifest(HashMap<String, Property> metamap, Role role, boolean encrypt) throws ManifestNotMadeException {
         if (encrypt && role != null) {
             return new SecureMetadataManifest(metamap, role);
         } else {

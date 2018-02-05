@@ -70,6 +70,17 @@ repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot
 # PR_1
 ############
 
+
+# NOTES:
+# dataset of all texts
+# dataset of mixed content (important to test the value of meta check optimisation on predicate)
+
+
+pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
+
+
+# NEW EXPS
+
 pr_1("remote/pr_1_run_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
 
 pr_1("remote/pr_1_run_5.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
@@ -77,6 +88,8 @@ pr_1("remote/pr_1_run_5.tsv", predicateOnly=TRUE, titlePlot="Time to run a predi
 pr_1("output/test_pr_1_11.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
 pr_1("output/test_pr_1_12.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
 pr_1("output/test_pr_1_13.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
+pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
+pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
 
 ##############
 # PO_A_1

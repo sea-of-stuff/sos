@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.model.*;
 
 /**
@@ -149,7 +149,7 @@ public interface Agent extends Service {
      * @return the metadata (type, key, value) property
      * @throws ServiceException if not found
      */
-    MetaProperty getMetaProperty(IGUID guid, String property) throws ServiceException;
+    Property getMetaProperty(IGUID guid, String property) throws ServiceException;
 
     /**
      * Get the role matching the guid.

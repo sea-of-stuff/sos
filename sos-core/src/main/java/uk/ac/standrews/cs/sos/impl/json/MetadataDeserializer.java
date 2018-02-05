@@ -9,9 +9,9 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaType;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataManifest;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.Role;
 
@@ -33,7 +33,7 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
-            HashMap<String, MetaProperty> metadata = getMetadata(node, false);
+            HashMap<String, Property> metadata = getMetadata(node, false);
 
             String signature = getSignature(node);
             IGUID signerRef = getSignerRef(node);
@@ -50,8 +50,8 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
         }
     }
 
-    protected HashMap<String, MetaProperty> getMetadata(JsonNode node, boolean encrypted) {
-        HashMap<String, MetaProperty> metadata = new HashMap<>();
+    protected HashMap<String, Property> getMetadata(JsonNode node, boolean encrypted) {
+        HashMap<String, Property> metadata = new HashMap<>();
 
         JsonNode properties = node.get(JSONConstants.KEY_META_PROPERTIES);
         Iterator<JsonNode> it = properties.elements();
@@ -61,36 +61,36 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
             String key = n.get(JSONConstants.KEY_META_KEY).asText();
             String type = n.get(JSONConstants.KEY_META_TYPE).asText();
 
-            MetaProperty metaProperty = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key, encrypted);
-            metadata.put(key, metaProperty);
+            Property property = getObject(n.get(JSONConstants.KEY_META_VALUE), type, key, encrypted);
+            metadata.put(key, property);
         }
 
         return metadata;
     }
 
-    private MetaProperty getObject(JsonNode element, String type, String key, boolean encrypted) {
+    private Property getObject(JsonNode element, String type, String key, boolean encrypted) {
 
         if (encrypted) {
-            return new MetaProperty(MetaType.get(type), key, element.asText());
+            return new Property(MetaType.get(type), key, element.asText());
         }
 
         MetaType metaType = MetaType.get(type);
         switch(metaType) {
             case ANY:
-                return new MetaProperty(key);
+                return new Property(key);
             case LONG:
-                return new MetaProperty(key, element.asLong());
+                return new Property(key, element.asLong());
             case DOUBLE:
-                return new MetaProperty(key, element.asDouble());
+                return new Property(key, element.asDouble());
             case BOOLEAN:
-                return new MetaProperty(key, element.asBoolean());
+                return new Property(key, element.asBoolean());
             case STRING:
-                return new MetaProperty(key, element.asText());
+                return new Property(key, element.asText());
             case GUID:
                 try {
-                    return new MetaProperty(key, GUIDFactory.recreateGUID(element.asText()));
+                    return new Property(key, GUIDFactory.recreateGUID(element.asText()));
                 } catch (GUIDGenerationException e) {
-                    return new MetaProperty(key, new InvalidID());
+                    return new Property(key, new InvalidID());
                 }
         }
 

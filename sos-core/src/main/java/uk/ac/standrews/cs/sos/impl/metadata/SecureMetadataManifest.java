@@ -24,7 +24,7 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
 
     private HashMap<IGUID, String> rolesToKeys;
 
-    public SecureMetadataManifest(HashMap<String, MetaProperty> metadata, Role signer) throws ManifestNotMadeException {
+    public SecureMetadataManifest(HashMap<String, Property> metadata, Role signer) throws ManifestNotMadeException {
         super(ManifestType.METADATA_PROTECTED, signer);
 
         this.rolesToKeys = new LinkedHashMap<>();
@@ -44,7 +44,7 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
         }
     }
 
-    public SecureMetadataManifest(IGUID guid, HashMap<String, MetaProperty> encryptedMetadata, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) {
+    public SecureMetadataManifest(IGUID guid, HashMap<String, Property> encryptedMetadata, Role signer, String signature, HashMap<IGUID, String> rolesToKeys) {
         super(ManifestType.METADATA_PROTECTED, signer);
 
         this.guid = guid;
@@ -53,7 +53,7 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
         this.rolesToKeys = rolesToKeys;
     }
 
-    public SecureMetadataManifest(IGUID guid, HashMap<String, MetaProperty> encryptedMetadata, IGUID signerRef, String signature, HashMap<IGUID, String> rolesToKeys) {
+    public SecureMetadataManifest(IGUID guid, HashMap<String, Property> encryptedMetadata, IGUID signerRef, String signature, HashMap<IGUID, String> rolesToKeys) {
         super(ManifestType.METADATA_PROTECTED, signerRef);
 
         this.guid = guid;
@@ -79,22 +79,22 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
         this.rolesToKeys.put(role, encryptedKey);
     }
 
-    private HashMap<String, MetaProperty> encryptMetadata(HashMap<String, MetaProperty> metadata) throws ProtectionException {
+    private HashMap<String, Property> encryptMetadata(HashMap<String, Property> metadata) throws ProtectionException {
 
-        HashMap<String, MetaProperty> encryptedMetadata = new LinkedHashMap<>();
+        HashMap<String, Property> encryptedMetadata = new LinkedHashMap<>();
 
         try {
             SecretKey key = SymmetricEncryption.generateRandomKey();
 
-            for(Map.Entry<String, MetaProperty> tuple:metadata.entrySet()) {
-                MetaProperty metaProperty = tuple.getValue();
-                String value = getValue(metaProperty);
+            for(Map.Entry<String, Property> tuple:metadata.entrySet()) {
+                Property property = tuple.getValue();
+                String value = getValue(property);
 
                 String encryptedKey = SymmetricEncryption.encrypt(key, tuple.getKey());
                 String encryptedValue = SymmetricEncryption.encrypt(key, value);
 
-                MetaProperty encryptedMetaProperty = new MetaProperty(metaProperty.getMetaType(), encryptedKey, encryptedValue);
-                encryptedMetadata.put(encryptedKey, encryptedMetaProperty);
+                Property encryptedProperty = new Property(property.getType(), encryptedKey, encryptedValue);
+                encryptedMetadata.put(encryptedKey, encryptedProperty);
             }
 
             String encryptedKey = signer.encrypt(key);
@@ -107,21 +107,21 @@ public class SecureMetadataManifest extends MetadataManifest implements SecureMe
         return encryptedMetadata;
     }
 
-    private String getValue(MetaProperty metaProperty) throws MetadataException {
+    private String getValue(Property property) throws MetadataException {
 
-        switch(metaProperty.getMetaType()) {
+        switch(property.getType()) {
             case STRING:
-                return metaProperty.getValue_s();
+                return property.getValue_s();
             case GUID:
-                return metaProperty.getValue_g().toMultiHash();
+                return property.getValue_g().toMultiHash();
             case LONG:
-                return Long.toString(metaProperty.getValue_l());
+                return Long.toString(property.getValue_l());
             case DOUBLE:
-                return Double.toString(metaProperty.getValue_d());
+                return Double.toString(property.getValue_d());
             case BOOLEAN:
-                return Boolean.toString(metaProperty.getValue_b());
+                return Boolean.toString(property.getValue_b());
         }
 
-        throw new MetadataException("Value type " + metaProperty.getMetaType().toString() + " is unknown");
+        throw new MetadataException("Value type " + property.getType().toString() + " is unknown");
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.model.Metadata;
 
 import java.io.IOException;
@@ -36,41 +36,41 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         for(String property:properties) {
             jsonGenerator.writeStartObject();
 
-            MetaProperty metaProperty = metadata.getProperty(property);
+            Property metaProperty = metadata.getProperty(property);
 
             jsonGenerator.writeStringField(JSONConstants.KEY_META_KEY, metaProperty.getKey());
-            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, metaProperty.getMetaType().toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_TYPE, metaProperty.getType().toString());
             writeValue(jsonGenerator, metaProperty);
 
             jsonGenerator.writeEndObject();
         }
     }
 
-    private void writeValue(JsonGenerator jsonGenerator, MetaProperty metaProperty) throws IOException {
+    private void writeValue(JsonGenerator jsonGenerator, Property property) throws IOException {
 
-        if (metaProperty.isEncrypted()) {
-            jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
+        if (property.isEncrypted()) {
+            jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, property.getValue_s());
 
         } else {
 
-            switch (metaProperty.getMetaType()) {
+            switch (property.getType()) {
                 case ANY:
                     jsonGenerator.writeNullField(JSONConstants.KEY_META_VALUE);
                     break;
                 case LONG:
-                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_l());
+                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, property.getValue_l());
                     break;
                 case DOUBLE:
-                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_d());
+                    jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, property.getValue_d());
                     break;
                 case BOOLEAN:
-                    jsonGenerator.writeBooleanField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_b());
+                    jsonGenerator.writeBooleanField(JSONConstants.KEY_META_VALUE, property.getValue_b());
                     break;
                 case STRING:
-                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_s());
+                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, property.getValue_s());
                     break;
                 case GUID:
-                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, metaProperty.getValue_g().toMultiHash());
+                    jsonGenerator.writeStringField(JSONConstants.KEY_META_VALUE, property.getValue_g().toMultiHash());
                     break;
             }
         }

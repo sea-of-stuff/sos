@@ -94,7 +94,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "pr_1") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1_13");
+        Experiment_PR_1 experiment_pr_1 = new Experiment_PR_1(experimentConfiguration, "test_pr_1_16");
         experiment_pr_1.process();
     }
 

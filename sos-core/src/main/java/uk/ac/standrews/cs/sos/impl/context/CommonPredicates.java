@@ -9,9 +9,9 @@ import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaType;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataConstants;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.impl.services.SOSAgent;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.SecureManifest;
@@ -54,8 +54,8 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
-            if (metaProperty.getMetaType() == MetaType.STRING) {
+            Property metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getType() == MetaType.STRING) {
 
                 String contentType = metaProperty.getValue_s();
                 return matchingContentTypes.contains(contentType);
@@ -80,8 +80,8 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
-            if (metaProperty.getMetaType() == MetaType.LONG) {
+            Property metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getType() == MetaType.LONG) {
 
                 Long value = metaProperty.getValue_l();
                 return value.intValue() == matchingValue;
@@ -101,8 +101,8 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
-            if (metaProperty.getMetaType() == MetaType.LONG) {
+            Property metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getType() == MetaType.LONG) {
 
                 Long value = metaProperty.getValue_l();
                 return value.intValue() > matchingValue;
@@ -122,8 +122,8 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            MetaProperty metaProperty = agent.getMetaProperty(guid, property);
-            if (metaProperty.getMetaType() == MetaType.LONG) {
+            Property metaProperty = agent.getMetaProperty(guid, property);
+            if (metaProperty.getType() == MetaType.LONG) {
 
                 Long value = metaProperty.getValue_l();
                 return value.intValue() < matchingValue;
@@ -149,10 +149,10 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            MetaProperty metaProperty = agent.getMetaProperty(guid, "signer");
-            if (metaProperty.getMetaType() == MetaType.GUID) {
+            Property property = agent.getMetaProperty(guid, "signer");
+            if (property.getType() == MetaType.GUID) {
 
-                IGUID signerFound = metaProperty.getValue_g();
+                IGUID signerFound = property.getValue_g();
                 return signerFound.equals(signer);
             }
 

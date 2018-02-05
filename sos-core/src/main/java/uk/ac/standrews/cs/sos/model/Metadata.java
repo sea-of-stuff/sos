@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import uk.ac.standrews.cs.sos.impl.json.MetadataDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.MetadataSerializer;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 
 /**
  *
@@ -45,7 +45,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 @JsonSerialize(using = MetadataSerializer.class)
 public interface Metadata extends SignedManifest {
 
-    MetaProperty getProperty(String propertyName);
+    Property getProperty(String propertyName);
 
     boolean hasProperty(String propertyName);
 

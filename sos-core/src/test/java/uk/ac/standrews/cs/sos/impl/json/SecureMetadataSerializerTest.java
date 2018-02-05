@@ -6,8 +6,8 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
 import uk.ac.standrews.cs.sos.impl.metadata.MetaType;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
@@ -36,9 +36,9 @@ public class SecureMetadataSerializerTest extends SetUpTest {
     @Test
     public void basicSerializationAndDeserialization() throws ProtectionException, SignatureException, ManifestNotMadeException, IOException, CryptoException {
 
-        HashMap<String, MetaProperty> metadata = new LinkedHashMap<>();
-        metadata.put("String", new MetaProperty("String", "image/jpeg"));
-        metadata.put("Number", new MetaProperty("Number", 1));
+        HashMap<String, Property> metadata = new LinkedHashMap<>();
+        metadata.put("String", new Property("String", "image/jpeg"));
+        metadata.put("Number", new Property("Number", 1));
 
         User user = new UserImpl("TEST");
         Role role = new RoleImpl(user, "ROLE_TEST");
@@ -60,8 +60,8 @@ public class SecureMetadataSerializerTest extends SetUpTest {
     @Test
     public void basicSerializationAndDeserializationWithEncryptionTested() throws ProtectionException, SignatureException, ManifestNotMadeException, IOException, CryptoException {
 
-        HashMap<String, MetaProperty> metadata = new LinkedHashMap<>();
-        metadata.put("String", new MetaProperty("String", "image/jpeg"));
+        HashMap<String, Property> metadata = new LinkedHashMap<>();
+        metadata.put("String", new Property("String", "image/jpeg"));
 
         User user = new UserImpl("TEST");
         Role role = new RoleImpl(user, "ROLE_TEST");
@@ -73,10 +73,10 @@ public class SecureMetadataSerializerTest extends SetUpTest {
         Map.Entry<IGUID, String> keyRole = parsedSecureMetadata.keysRoles().entrySet().iterator().next();
         SecretKey secretKey = role.decrypt(keyRole.getValue());
 
-        MetaProperty metaProperty = parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[0]);
-        String clearKey = SymmetricEncryption.decrypt(secretKey, metaProperty.getKey());
-        String clearValue = SymmetricEncryption.decrypt(secretKey, metaProperty.getValue_s());
-        assertEquals(metaProperty.getMetaType(), MetaType.STRING);
+        Property property = parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[0]);
+        String clearKey = SymmetricEncryption.decrypt(secretKey, property.getKey());
+        String clearValue = SymmetricEncryption.decrypt(secretKey, property.getValue_s());
+        assertEquals(property.getType(), MetaType.STRING);
         assertEquals(clearKey, "String");
         assertEquals(clearValue, "image/jpeg");
     }
@@ -84,8 +84,8 @@ public class SecureMetadataSerializerTest extends SetUpTest {
     @Test
     public void basicSerializationAndDeserializationWithEncryptionOnNumberTested() throws ProtectionException, SignatureException, ManifestNotMadeException, IOException, CryptoException {
 
-        HashMap<String, MetaProperty> metadata = new LinkedHashMap<>();
-        metadata.put("Number", new MetaProperty("Number", 1));
+        HashMap<String, Property> metadata = new LinkedHashMap<>();
+        metadata.put("Number", new Property("Number", 1));
 
         User user = new UserImpl("TEST");
         Role role = new RoleImpl(user, "ROLE_TEST");
@@ -97,10 +97,10 @@ public class SecureMetadataSerializerTest extends SetUpTest {
         Map.Entry<IGUID, String> keyRole = parsedSecureMetadata.keysRoles().entrySet().iterator().next();
         SecretKey secretKey = role.decrypt(keyRole.getValue());
 
-        MetaProperty metaProperty = parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[0]);
-        String clearKey = SymmetricEncryption.decrypt(secretKey, metaProperty.getKey());
-        String clearValue = SymmetricEncryption.decrypt(secretKey, metaProperty.getValue_s());
-        assertEquals(metaProperty.getMetaType(), MetaType.LONG);
+        Property property = parsedSecureMetadata.getProperty(parsedSecureMetadata.getAllPropertyNames()[0]);
+        String clearKey = SymmetricEncryption.decrypt(secretKey, property.getKey());
+        String clearValue = SymmetricEncryption.decrypt(secretKey, property.getValue_s());
+        assertEquals(property.getType(), MetaType.LONG);
         assertEquals(clearKey, "Number");
         assertEquals(clearValue, "1");
         assertEquals(Long.parseLong(clearValue), 1);

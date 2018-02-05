@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
-import uk.ac.standrews.cs.sos.impl.metadata.MetaProperty;
+import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.impl.metadata.SecureMetadataManifest;
 import uk.ac.standrews.cs.sos.model.Role;
 
@@ -28,7 +28,7 @@ public class SecureMetadataDeserializer extends MetadataDeserializer {
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
-            HashMap<String, MetaProperty> metadata = getMetadata(node, true);
+            HashMap<String, Property> metadata = getMetadata(node, true);
             HashMap<IGUID, String> rolesToKeys = getRolesToKeys(node);
 
             String signature = getSignature(node);
