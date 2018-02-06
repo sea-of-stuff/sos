@@ -62,7 +62,6 @@ public class Experiment_Failure_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Start experiment", 0);
             System.out.println("Running Policies");
             cms.runPolicies();
             cms.runCheckPolicies();
@@ -72,15 +71,14 @@ public class Experiment_Failure_1 extends BaseExperiment implements Experiment {
             Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
             ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
             TasksQueue.instance().performSyncTask(toggleRESTAPITask);
-            System.out.println("ToggleRESTAPI: " + toggleRESTAPITask.getState());
-            // TODO - instrument time when node was disabled
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
 
             if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
                 throw new ExperimentException("Disable REST request was not successful");
             }
 
             // The check policy thread runs every 30 seconds.
-            rest_a_bit(120 * 1000); // 2 minutes
+            rest_a_bit(90 * 1000); // 1.5 minutes
 
             writePolicyCheckStats();
         }

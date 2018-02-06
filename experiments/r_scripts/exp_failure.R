@@ -4,19 +4,23 @@ source("r_scripts/exp_basic.r")
 
 library(ggplot2)
 
-d <- read.csv("remote/failure_1_run_9.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_1_run_11.tsv", header=TRUE, sep="\t")
+
+toggleAPI <- d[d$StatsTYPE == 'experiment' & d$Subtype == 'ping',]$User.Measure / 1000000000.0
+vlines <- data.frame(xint = c(toggleAPI))
+
 d <- d[d$StatsTYPE != 'experiment',]
 d <- d[d$Subtype == 'no_valid_policies',]
 
 t <- d$User.Measure / 1000000000.0; 
 mi <- min(t)
 t <- t - mi
-plot(d$User.Measure_2~t)
-
+vlines$xint <- vlines$xint - mi 
 
 ggplot(data=d, aes(x=t, y=d$User.Measure_2)) + 
   geom_point() +
   geom_line() +
+  geom_vline(data=vlines, aes(xintercept=xint, colour="Red"), linetype="longdash") +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
@@ -24,6 +28,7 @@ ggplot(data=d, aes(x=t, y=d$User.Measure_2)) +
   expand_limits(x = 0, y = 0) +
   labs(title="Number of valid policies over time", x="Time (s)", y="Number of valid policies")
   
+
 
 # TODO
 # - Display vertical line for time when node goes off

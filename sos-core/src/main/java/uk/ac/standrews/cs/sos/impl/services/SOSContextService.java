@@ -784,6 +784,13 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context, ContextStats.PolicyApply policyApplyStats) {
 
+        if (trackPolicies) {
+            // Re-add last datapoint
+            long now = System.nanoTime();
+            int count = validPoliciesOverTime.isEmpty() ? 0 : validPoliciesOverTime.getLast().Y();
+            validPoliciesOverTime.add(new Pair<>(now, count));
+        }
+
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         ContextStats.PolicyCheck dummyStats = new ContextStats.PolicyCheck();
@@ -908,7 +915,7 @@ public class SOSContextService implements ContextService {
         if (trackPolicies) {
             // Re-add last datapoint
             long now = System.nanoTime();
-            int count = validPoliciesOverTime.getLast().Y();
+            int count = validPoliciesOverTime.isEmpty() ? 0 : validPoliciesOverTime.getLast().Y();
             validPoliciesOverTime.add(new Pair<>(now, count));
         }
 
