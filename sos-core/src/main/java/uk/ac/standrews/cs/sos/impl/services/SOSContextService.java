@@ -74,8 +74,8 @@ public class SOSContextService implements ContextService {
     private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
     // [ (Timestamp, Number of policies valid for all assets) ]
-    // TODO - do not record this if not specified in the settings
     private Deque<Pair<Long, Integer>> validPoliciesOverTime;
+    private boolean trackPolicies;
 
     /**
      * Build a CMS instance.
@@ -112,6 +112,7 @@ public class SOSContextService implements ContextService {
             }
 
             validPoliciesOverTime = new LinkedList<>();
+            trackPolicies = SOSLocalNode.settings.getServices().getCms().isTrackPolicies();
 
         } catch (ContextException e) {
             throw new ServiceException(ServiceException.SERVICE.CONTEXT, e);
@@ -452,6 +453,11 @@ public class SOSContextService implements ContextService {
     public Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics() {
 
         return checkPolicyThreadSessionStatistics;
+    }
+
+    @Override
+    public Deque<Pair<Long, Integer>> getValidPoliciesOverTime() {
+        return validPoliciesOverTime;
     }
 
     ////////////////////////////////////////////////////////////
@@ -894,11 +900,10 @@ public class SOSContextService implements ContextService {
 
             InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().get());
         }
+
     }
 
     private void runCheckPolicies(Context context, ContextStats.PolicyCheck policyCheckStats) {
-
-        long start = System.nanoTime();
 
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
@@ -908,8 +913,6 @@ public class SOSContextService implements ContextService {
             }
         });
 
-        long duration = System.nanoTime() - start;
-        InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.checkPolicies, context.getName(), duration);
     }
 
     private void runCheckPolicies(Context context, IGUID guid, ContextStats.PolicyCheck policyCheckStats, boolean isAfterApply) {
@@ -933,22 +936,10 @@ public class SOSContextService implements ContextService {
             long duration = System.nanoTime() - start;
             policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().addAndGet(duration);
 
-            // Keep track of how many assets have a valid policy
-            long now = System.nanoTime();
-            int count = 0;
-            if (validPoliciesOverTime.isEmpty()) {
-                count = 0;
-            } else {
-                count += validPoliciesOverTime.getLast().Y();
-                if (allPoliciesAreSatisfied && isAfterApply) {
-                    count += 1;
-                }
-
-                if (!allPoliciesAreSatisfied && !isAfterApply) {
-                    count -= 1;
-                }
+            if (trackPolicies) {
+                // Keep track of how many assets have a valid policy
+                trackNumberOfValidPolicies(allPoliciesAreSatisfied, isAfterApply);
             }
-            validPoliciesOverTime.add(new Pair<>(now, count));
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
@@ -956,6 +947,25 @@ public class SOSContextService implements ContextService {
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
         }
+    }
+
+    private void trackNumberOfValidPolicies(boolean allPoliciesAreSatisfied, boolean isAfterApply) {
+
+        long now = System.nanoTime();
+        int count = 0;
+        if (validPoliciesOverTime.isEmpty()) {
+            count = 0;
+        } else {
+            count += validPoliciesOverTime.getLast().Y();
+            if (allPoliciesAreSatisfied && isAfterApply) {
+                count += 1;
+            }
+
+            if (!allPoliciesAreSatisfied && !isAfterApply) {
+                count -= 1;
+            }
+        }
+        validPoliciesOverTime.add(new Pair<>(now, count));
     }
 
     /////////////////////////////////////////////////////////////////

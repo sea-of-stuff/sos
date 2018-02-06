@@ -6,8 +6,6 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -39,7 +37,6 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
@@ -55,29 +52,16 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
                 System.out.println("Running Predicates");
                 cms.runPredicates();
             } catch (ContextException | IOException e) {
-                throw new ExperimentException();
+                throw new ExperimentException(e);
             }
         }
 
         @Override
         public void run() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
-
             System.out.println("Running Policies");
             cms.runPolicies();
 
             rest_a_bit();
-
-            // FIXME - Have proper SCP data transfer?
-//            System.out.println("Running SCP data replication");
-//            scpExperiment();
-        }
-
-        private void scpExperiment() throws ExperimentException {
-            ExperimentConfiguration.Experiment.Node slaveNode = getExperiment().getNodes().iterator().next();
-            String lDataPath = experiment.getExperimentNode().getDatasetPath();
-            String rDataPath = "temp_data/";
-            sendFilesViaSSH(slaveNode, lDataPath, rDataPath);
         }
 
         private void addContexts() throws ContextException {

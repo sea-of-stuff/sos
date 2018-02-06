@@ -13,8 +13,6 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
-import uk.ac.standrews.cs.sos.experiments.distribution.NetworkException;
-import uk.ac.standrews.cs.sos.experiments.distribution.NetworkOperations;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
@@ -299,68 +297,13 @@ public interface ExperimentUnit {
         return context;
     }
 
-    default void sendFiles(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
-
-        System.out.println("Sending files via SCP to node: " + node.toString());
-        try (NetworkOperations scp = new NetworkOperations()){
-            scp.setSsh(node.getSsh());
-            scp.connect();
-
-            String path = node.getPath() + node.getSsh().getUser() + "/";
-            File[] listOfFiles = new File(lDirectoryPath).listFiles();
-            assert listOfFiles != null;
-            for (File file : listOfFiles) {
-
-                long start = System.nanoTime();
-                scp.sendFile(file.getAbsolutePath(), path + rDirectoryPath + file.getName(), false);
-                long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.scp, Long.toString(file.length()), duration);
-
-            }
-
-        } catch (IOException | NetworkException e) {
-            throw new ExperimentException();
-        }
-    }
-
-    default void sendFilesViaSSH(ExperimentConfiguration.Experiment.Node node, String lDirectoryPath, String rDirectoryPath) throws ExperimentException {
-
-        System.out.println("Sending files via SCP to node: " + node.toString());
-
-        try {
-            String path = node.getPath() + node.getSsh().getUser() + "/";
-
-            // Create folder at remote node
-            Runtime rt = Runtime.getRuntime();
-            System.out.println("Creating remote path for SCP");
-            Process process = rt.exec("ssh " + node.getSsh().getHost() + " 'mkdir -p " + path + rDirectoryPath + "'");
-            int exitVal = process.waitFor();
-            System.out.println("Remote path for SCP created. Error code: " + exitVal);
-
-            File[] listOfFiles = new File(lDirectoryPath).listFiles();
-            assert listOfFiles != null;
-            Misc.shuffleArray(listOfFiles);
-            long start = System.nanoTime();
-            for (File file : listOfFiles) {
-
-                process = rt.exec("scp " + file.getAbsolutePath() + " " + node.getSsh().getHost() + ":" + path + rDirectoryPath + file.getName());
-                exitVal = process.waitFor();
-                if (exitVal != 0) {
-                    throw new ExperimentException("Exception for SCP operation");
-                }
-            }
-            long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, StatsTYPE.scp.name(), duration);
-
-        } catch (IOException | InterruptedException e) {
-            throw new ExperimentException();
-        }
-
-    }
-
     default void rest_a_bit() throws ExperimentException {
+        rest_a_bit(1000);
+    }
+
+    default void rest_a_bit(long milliseconds) throws ExperimentException {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             throw new ExperimentException();
         }

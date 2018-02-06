@@ -530,6 +530,9 @@ public class SettingsConfiguration {
                 private ThreadSettings getdataThread = new ThreadSettings();
                 private ThreadSettings spawnThread = new ThreadSettings();
 
+                // Needed to collect stats about policies being valid or not
+                private boolean trackPolicies = false;
+
                 public CMSSettings() {}
 
                 public boolean isAutomatic() {
@@ -594,6 +597,14 @@ public class SettingsConfiguration {
 
                 public void setPredicateOnNewContext(boolean predicateOnNewContext) {
                     this.predicateOnNewContext = predicateOnNewContext;
+                }
+
+                public boolean isTrackPolicies() {
+                    return trackPolicies;
+                }
+
+                public void setTrackPolicies(boolean trackPolicies) {
+                    this.trackPolicies = trackPolicies;
                 }
             }
 

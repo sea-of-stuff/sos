@@ -1,13 +1,13 @@
-package uk.ac.standrews.cs.sos.impl.protocol.tasks;
+package uk.ac.standrews.cs.sos.experiments.protocol;
 
-import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
-import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.*;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,41 +15,45 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class TriggerPredicate extends Task {
+public class ToggleRESTAPI extends Task {
 
-    private Node node;
-    private IGUID context;
+    private final Node node;
+    private final boolean disable;
 
-    public TriggerPredicate(Node node, IGUID context) {
+    public ToggleRESTAPI(Node node, boolean disable) {
+        super();
+
         this.node = node;
-        this.context = context;
+        this.disable = disable;
     }
 
     @Override
     protected void performAction() {
+        SOS_LOG.log(LEVEL.INFO, "Disabling REST for node: " + node.guid().toMultiHash());
 
         try {
-            URL url = SOSURL.EXPERIMENT_TRIGGER_PREDICATE(node, context);
-
+            URL url = disable ? ExperimentURL.DISABLE_REST(node) : ExperimentURL.ENABLE_REST(node);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
+
             Response response = RequestsManager.getInstance().playSyncRequest(request);
-            if (response instanceof ErrorResponseImpl) {
-                setState(TaskState.ERROR);
-                throw new IOException();
-            }
 
-            String numberOfAssets = response.getStringBody();
-            System.out.println("Remote predicate run over " + numberOfAssets + " assets");
-            response.consumeResponse();
+            if (!(response instanceof ErrorResponseImpl)) {
 
-            if (response.getCode() == HTTPStatus.OK) {
-                setState(TaskState.SUCCESSFUL);
+                response.consumeResponse();
+
+                if (response.getCode() == HTTPStatus.OK) {
+                    setState(TaskState.SUCCESSFUL);
+                } else {
+                    setState(TaskState.UNSUCCESSFUL);
+                }
+
             } else {
                 setState(TaskState.UNSUCCESSFUL);
             }
 
-        } catch (IOException | SOSURLException e) {
+        } catch (SOSURLException | IOException e) {
             setState(TaskState.ERROR);
+            SOS_LOG.log(LEVEL.ERROR, "Unable to disable REST for node " + node.guid().toMultiHash());
         }
     }
 

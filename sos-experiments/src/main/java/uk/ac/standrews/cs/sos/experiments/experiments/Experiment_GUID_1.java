@@ -7,8 +7,6 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,13 +35,10 @@ public class Experiment_GUID_1 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_GUID_1 implements ExperimentUnit {
 
         @Override
-        public void setup() {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
-        }
+        public void setup() {}
 
         @Override
         public void run() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "RUNNING EXPERIMENT");
 
             Internals.GUID_ALGORITHM = ALGORITHM.SHA256;
             try {

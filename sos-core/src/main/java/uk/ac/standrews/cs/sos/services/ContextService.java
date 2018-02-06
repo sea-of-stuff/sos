@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
+import java.util.Deque;
 import java.util.Queue;
 import java.util.Set;
 
@@ -176,7 +177,11 @@ public interface ContextService extends Service {
      */
     void runCheckPolicies();
 
-    // TODO - make sure that this call is correctly here
+    /**
+     * Replicates (spawn) the given context over its domain
+     * @param context to replicate
+     * @throws ManifestPersistException if the context could not be replicated properly
+     */
     void spawnContext(Context context) throws ManifestPersistException;
 
     /**
@@ -196,6 +201,9 @@ public interface ContextService extends Service {
      * @return queue of <timestamp, duration> pairs
      */
     Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
+
+    // NOTE: needed for experiments only
+    Deque<Pair<Long, Integer>> getValidPoliciesOverTime();
 
     /**
      * Get the info about the pair context-version
