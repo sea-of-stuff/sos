@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.rest.bindings.MMSNode;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -15,11 +14,13 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @MMSNode
-public class MMSFilter implements ContainerRequestFilter {
+public class MMSFilter extends CommonFilter {
 
- @Override
+    @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isMMS()) {
+        super.filter(requestContext);
+
+        if (!RESTConfig.sos.isMMS()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a MMS node");
             throw new WebApplicationException(response);
         }

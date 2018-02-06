@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.rest.bindings.NDSNode;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -15,11 +14,13 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @NDSNode
-public class NDSFilter implements ContainerRequestFilter {
+public class NDSFilter extends CommonFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isNDS()) {
+        super.filter(requestContext);
+
+        if (!RESTConfig.sos.isNDS()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not an NDS node");
             throw new WebApplicationException(response);
         }

@@ -905,6 +905,13 @@ public class SOSContextService implements ContextService {
 
     private void runCheckPolicies(Context context, ContextStats.PolicyCheck policyCheckStats) {
 
+        if (trackPolicies) {
+            // Re-add last datapoint
+            long now = System.nanoTime();
+            int count = validPoliciesOverTime.getLast().Y();
+            validPoliciesOverTime.add(new Pair<>(now, count));
+        }
+
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         contentsToProcess.forEach((guid, row) -> {
@@ -952,19 +959,22 @@ public class SOSContextService implements ContextService {
     private void trackNumberOfValidPolicies(boolean allPoliciesAreSatisfied, boolean isAfterApply) {
 
         long now = System.nanoTime();
-        int count = 0;
+        int count;
         if (validPoliciesOverTime.isEmpty()) {
-            count = 0;
+            count = (allPoliciesAreSatisfied && isAfterApply) ? 1 : 0;
         } else {
-            count += validPoliciesOverTime.getLast().Y();
+            count = validPoliciesOverTime.getLast().Y();
             if (allPoliciesAreSatisfied && isAfterApply) {
+                // The afterApply boolean ensures that the count is increased only after the policy has been properly applied
+                // A policy is not applied if it is known to be valid already.
                 count += 1;
             }
 
-            if (!allPoliciesAreSatisfied && !isAfterApply) {
+            if (!allPoliciesAreSatisfied && !isAfterApply && count > 0) {
                 count -= 1;
             }
         }
+
         validPoliciesOverTime.add(new Pair<>(now, count));
     }
 

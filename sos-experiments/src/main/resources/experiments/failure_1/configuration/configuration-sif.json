@@ -1,11 +1,11 @@
 {
   "experiment" : {
-    "name": "ping_2",
-    "experimentClass": "Experiment_PING_2",
-    "description": "The experiment PING_2 investigates...",
+    "name": "failure_1",
+    "experimentClass": "Experiment_Failure_1",
+    "description": "The experiment Failure_1 investigates...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 1
     },
     "nodes" : [
       {
@@ -62,6 +62,7 @@
       }
     },
     "stats": {
+      "experiment": true,
       "checkPolicies": true
     }
   }

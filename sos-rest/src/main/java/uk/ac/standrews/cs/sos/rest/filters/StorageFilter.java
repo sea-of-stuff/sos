@@ -6,7 +6,6 @@ import uk.ac.standrews.cs.sos.rest.bindings.StorageNode;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -16,11 +15,13 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @StorageNode
-public class StorageFilter implements ContainerRequestFilter {
+public class StorageFilter extends CommonFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        if (RESTConfig.sos.isRestEnabled() && !RESTConfig.sos.isStorage()) {
+        super.filter(requestContext);
+
+        if (!RESTConfig.sos.isStorage()) {
             Response response = HTTPResponses.BAD_REQUEST(RESTConfig.sos, null, "I am not a storage node");
             throw new WebApplicationException(response);
         }
