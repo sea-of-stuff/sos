@@ -4,7 +4,7 @@ source("r_scripts/exp_basic.r")
 
 library(ggplot2)
 
-d <- read.csv("remote/failure_1_run_14.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_1_run_11.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
 d$StartTime <- 0
@@ -37,6 +37,7 @@ d$User.Measure <- (d$User.Measure - d$StartTime) / 1000000000.0;
 
 ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3, group=d$User.Measure_3)) + 
   scale_colour_continuous(guide = FALSE) +
+  scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
   geom_point(size=.5) +
   geom_line() +
   theme_bw() +
@@ -47,8 +48,9 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
   labs(title="Number of valid policies over time", x="Time (s)", y="Number of valid policies")
 
 
-
-
+########################
+#### OLD CODE ##########
+########################
 
 toggleAPI <- d[d$StatsTYPE == 'experiment' & d$Subtype == 'ping',]$User.Measure / 1000000000.0
 vlines <- data.frame(xint = c(toggleAPI))
@@ -61,10 +63,10 @@ mi <- min(t)
 t <- t - mi
 vlines$xint <- vlines$xint - mi 
 
-ggplot(data=d, aes(x=t, y=d$User.Measure_2, color=d$User.Measure_3)) + 
+ggplot(data=d, aes(x=t, y=d$User.Measure_2)) + 
   geom_point() +
   geom_line() +
-  # geom_vline(data=vlines, aes(xintercept=xint, colour="Red"), linetype="longdash") +
+  geom_vline(data=vlines, aes(xintercept=xint, colour="Red"), linetype="longdash") +
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
@@ -75,5 +77,4 @@ ggplot(data=d, aes(x=t, y=d$User.Measure_2, color=d$User.Measure_3)) +
 
 
 # TODO
-# - Display vertical line for time when node goes off
 # - Display vertical lines for threads regarding policies
