@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "failure_1",
-    "experimentClass": "Experiment_Failure_1",
-    "description": "The experiment Failure_1 investigates...",
+    "name": "failure_2",
+    "experimentClass": "Experiment_Failure_2",
+    "description": "The experiment Failure_2 investigates...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
       "iterations": 1

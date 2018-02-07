@@ -18,7 +18,7 @@
 
         },
         "policiesThread": {
-          "initialDelay": 100000,
+          "initialDelay": 60,
           "period": 30
         },
         "checkPoliciesThread": {
