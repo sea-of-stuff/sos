@@ -70,7 +70,7 @@ public class Experiment_REPL_2 extends BaseExperiment implements Experiment {
         private int replicationFactor;
         private boolean parallel;
 
-        public ExperimentUnit_REPL_2(int replicationFactor, boolean parallel) {
+        ExperimentUnit_REPL_2(int replicationFactor, boolean parallel) {
             this.replicationFactor = replicationFactor;
             this.parallel = parallel;
         }

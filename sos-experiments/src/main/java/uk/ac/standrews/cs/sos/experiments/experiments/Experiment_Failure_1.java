@@ -17,6 +17,10 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Simulate failure by making remote nodes unresponsive to REST calls (except a special one that is needed to wake the node up again)
@@ -26,18 +30,33 @@ import java.io.IOException;
  */
 public class Experiment_Failure_1 extends BaseExperiment implements Experiment {
 
+    private Iterator<ExperimentUnit> experimentUnitIterator;
+
     public Experiment_Failure_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        List<ExperimentUnit> units = new LinkedList<>();
+        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
+            units.add(new ExperimentUnit_Failure_1(i));
+        }
+        Collections.shuffle(units);
+
+        experimentUnitIterator = units.iterator();
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_Failure_1();
+        return experimentUnitIterator.next();
     }
 
     private class ExperimentUnit_Failure_1 implements ExperimentUnit {
 
+        private int index;
         private ContextService cms;
+
+        ExperimentUnit_Failure_1(int index) {
+            this.index = index;
+        }
 
         @Override
         public void setup() throws ExperimentException {
@@ -62,6 +81,8 @@ public class Experiment_Failure_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void run() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.experiment, "Experiment Unit Index", System.nanoTime(), index);
+
             System.out.println("Running Policies");
             cms.runPolicies();
             cms.runCheckPolicies();
@@ -77,10 +98,24 @@ public class Experiment_Failure_1 extends BaseExperiment implements Experiment {
                 throw new ExperimentException("Disable REST request was not successful");
             }
 
-            // The check policy thread runs every 30 seconds.
+            // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
             rest_a_bit(90 * 1000); // 1.5 minutes
 
             writePolicyCheckStats();
+        }
+
+        @Override
+        public void finish() throws ExperimentException {
+
+            // Re-enable REST API on remote node
+            ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
+            Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
+            ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, false);
+            TasksQueue.instance().performSyncTask(toggleRESTAPITask);
+
+            if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
+                throw new ExperimentException("Enable REST request was not successful");
+            }
         }
 
         private void addContexts() throws ContextException {

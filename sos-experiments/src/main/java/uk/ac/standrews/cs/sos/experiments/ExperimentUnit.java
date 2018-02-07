@@ -66,7 +66,7 @@ public interface ExperimentUnit {
      * @throws ExperimentException
      */
     default void finish() throws ExperimentException {
-        // do nothnig
+        // do nothing
     }
 
     /**

@@ -5,7 +5,7 @@
     "description": "The experiment Failure_1 investigates...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 1
+      "iterations": 10
     },
     "nodes" : [
       {
