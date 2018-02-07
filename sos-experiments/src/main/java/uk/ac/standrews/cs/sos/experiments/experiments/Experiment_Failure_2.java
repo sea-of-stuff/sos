@@ -22,23 +22,23 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_Failure_1 extends Experiment_Failure implements Experiment {
+public class Experiment_Failure_2 extends Experiment_Failure implements Experiment {
 
-    public Experiment_Failure_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_Failure_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_Failure_1(i));
+            units.add(new ExperimentUnit_Failure_2(i));
         }
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
     }
 
-    private class ExperimentUnit_Failure_1 extends ExperimentUnit_Failure {
+    private class ExperimentUnit_Failure_2 extends ExperimentUnit_Failure {
 
-        ExperimentUnit_Failure_1(int index) {
+        ExperimentUnit_Failure_2(int index) {
             super(index);
         }
 
@@ -50,7 +50,7 @@ public class Experiment_Failure_1 extends Experiment_Failure implements Experime
             cms.runPolicies();
             cms.runCheckPolicies();
 
-            // Disable REST API on remote node
+            // Disable REST API on one of the remote nodes
             ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
             Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
             ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);

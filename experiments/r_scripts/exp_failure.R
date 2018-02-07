@@ -4,7 +4,7 @@ source("r_scripts/exp_basic.r")
 
 library(ggplot2)
 
-d <- read.csv("remote/failure_1_run_11.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_1_run_16.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
 d$StartTime <- 0
@@ -37,7 +37,7 @@ d$User.Measure <- (d$User.Measure - d$StartTime) / 1000000000.0;
 
 ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3, group=d$User.Measure_3)) + 
   scale_colour_continuous(guide = FALSE) +
-  scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
+  # scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
   geom_point(size=.5) +
   geom_line() +
   theme_bw() +

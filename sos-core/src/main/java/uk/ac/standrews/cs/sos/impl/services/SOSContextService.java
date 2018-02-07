@@ -826,7 +826,8 @@ public class SOSContextService implements ContextService {
 
             long start = System.nanoTime();
             for (Policy policy:policies) {
-                policy.apply(context.codomain(), commonUtilities, manifest);
+                NodesCollection codomain = context.codomain(); // Keep this line of code inside the loop because of the shuffling it does inside
+                policy.apply(codomain, commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
             policyApplyStats.getPolicy_time_to_run_apply_on_current_dataset().addAndGet(duration);
@@ -945,7 +946,8 @@ public class SOSContextService implements ContextService {
 
             long start = System.nanoTime();
             for (Policy policy:policies) {
-                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(context.codomain(), commonUtilities, manifest);
+                NodesCollection codomain = context.codomain(); // Keep this line of code inside the loop because of the shuffling it does inside
+                allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(codomain, commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
             policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().addAndGet(duration);
@@ -1009,8 +1011,8 @@ public class SOSContextService implements ContextService {
 
             for (Context context : getContexts()) {
 
-                NodesCollection nodesCollection = context.domain();
-                if (nodesCollection.type() == NodesCollectionType.SPECIFIED) {
+                NodesCollection domain = context.domain();
+                if (domain.type() == NodesCollectionType.SPECIFIED) {
 
                     try {
                         spawnContext(context);
