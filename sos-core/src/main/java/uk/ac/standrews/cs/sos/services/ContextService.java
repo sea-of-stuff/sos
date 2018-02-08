@@ -11,9 +11,7 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
-import java.util.Deque;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Context Management Service
@@ -203,7 +201,7 @@ public interface ContextService extends Service {
     Queue<Pair<Long, Long>> getCheckPolicyThreadSessionStatistics();
 
     // NOTE: needed for experiments only
-    Deque<Pair<Long, Integer>> getValidPoliciesOverTime();
+    HashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > getValidPoliciesOverTime();
 
     /**
      * Get the info about the pair context-version

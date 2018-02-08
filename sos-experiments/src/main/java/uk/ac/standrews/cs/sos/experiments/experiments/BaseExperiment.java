@@ -220,6 +220,8 @@ public abstract class BaseExperiment implements Experiment {
         } catch (InterruptedException e) {
             throw new ExperimentException();
         }
+
+        System.out.println("Finished. You can now collect your data.");
     }
 
     public int numberOfTotalIterations() {

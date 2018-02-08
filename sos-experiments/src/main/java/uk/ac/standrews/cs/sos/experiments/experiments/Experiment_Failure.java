@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
@@ -17,7 +18,10 @@ import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Basic skeleton for ExperimentFailure experiments
@@ -90,10 +94,13 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
         protected void writePolicyCheckStats() {
 
-            for(Pair<Long, Integer> pair:cms.getValidPoliciesOverTime()) {
+            for(Map.Entry<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > entry : cms.getValidPoliciesOverTime().entrySet()) {
+                for(Pair<Long, ArrayList<Integer>> pair:entry.getValue()) {
 
-                InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.no_valid_policies, "---", pair.X(), pair.Y());
+                    InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.no_valid_policies, "---", pair.X(), pair.Y().size());
+                }
             }
+
         }
     }
 }

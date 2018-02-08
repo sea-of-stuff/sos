@@ -73,9 +73,15 @@ public class SOSContextService implements ContextService {
     private Queue<Pair<Long, Long>> applyPolicyThreadSessionStatistics;
     private Queue<Pair<Long, Long>> checkPolicyThreadSessionStatistics;
 
-    // [ (Timestamp, Number of policies valid for all assets) ]
-    private Deque<Pair<Long, Integer>> validPoliciesOverTime;
+    /////////////////////////////////////////////////////////////////////////////
+    // Data structures used solely for statistical purposes
     private boolean trackPolicies;
+
+    // List of all the heads processed by policies.
+    private ArrayList<IGUID> versionsProcessed;
+    // ( context -> [ timestamp, [indices of contents] ] )
+    private HashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > validPoliciesPerContext;
+    /////////////////////////////////////////////////////////////////////////////
 
     /**
      * Build a CMS instance.
@@ -111,8 +117,11 @@ public class SOSContextService implements ContextService {
                 service = new ScheduledThreadPoolExecutor(1); // ThreadPool for triggered requests only
             }
 
-            validPoliciesOverTime = new LinkedList<>();
             trackPolicies = SOSLocalNode.settings.getServices().getCms().isTrackPolicies();
+            if (trackPolicies) {
+                versionsProcessed = new ArrayList<>();
+                validPoliciesPerContext = new LinkedHashMap<>();
+            }
 
         } catch (ContextException e) {
             throw new ServiceException(ServiceException.SERVICE.CONTEXT, e);
@@ -456,8 +465,8 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Deque<Pair<Long, Integer>> getValidPoliciesOverTime() {
-        return validPoliciesOverTime;
+    public HashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > getValidPoliciesOverTime() {
+        return validPoliciesPerContext;
     }
 
     ////////////////////////////////////////////////////////////
@@ -587,6 +596,12 @@ public class SOSContextService implements ContextService {
                     contentInfo.predicateResult = true;
                     contentInfo.timestamp = Instant.now();
                     tempResults.add(new Pair<>(head, contentInfo));
+
+                    if (trackPolicies) {
+                        if (!versionsProcessed.contains(head)) { // Avoid duplicates
+                            versionsProcessed.add(head);
+                        }
+                    }
                 }
 
                 counter++;
@@ -784,12 +799,7 @@ public class SOSContextService implements ContextService {
 
     private void runPolicies(Context context, ContextStats.PolicyApply policyApplyStats) {
 
-        if (trackPolicies) {
-            // Re-add last datapoint
-            long now = System.nanoTime();
-            int count = validPoliciesOverTime.isEmpty() ? 0 : validPoliciesOverTime.getLast().Y();
-            validPoliciesOverTime.add(new Pair<>(now, count));
-        }
+        copyPreviousCountOnNumberOfValidPoliciesPerContext(context);
 
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
@@ -802,6 +812,29 @@ public class SOSContextService implements ContextService {
             }
 
         });
+    }
+
+    private void copyPreviousCountOnNumberOfValidPoliciesPerContext(Context context) {
+
+        if (trackPolicies) {
+            IGUID contextInvariant = context.invariant();
+            if (validPoliciesPerContext.containsKey(contextInvariant)) {
+
+                // Deque<Pair<Long, ArrayList<Integer>>> validPolicies = new LinkedList<>();
+                Deque<Pair<Long, ArrayList<Integer>>> prev = validPoliciesPerContext.get(contextInvariant);
+                long now = System.nanoTime();
+                ArrayList<Integer> newList = new ArrayList<>(prev.getLast().Y());
+                prev.add(new Pair<>(now, newList));
+                // validPoliciesPerContext.put(contextInvariant, validPolicies);
+
+            } else {
+
+                Deque<Pair<Long, ArrayList<Integer>>> validPolicies = new LinkedList<>();
+                long now = System.nanoTime();
+                validPolicies.add(new Pair<>(now, new ArrayList<>()));
+                validPoliciesPerContext.put(contextInvariant, validPolicies);
+            }
+        }
     }
 
     /**
@@ -913,12 +946,7 @@ public class SOSContextService implements ContextService {
 
     private void runCheckPolicies(Context context, ContextStats.PolicyCheck policyCheckStats) {
 
-        if (trackPolicies) {
-            // Re-add last datapoint
-            long now = System.nanoTime();
-            int count = validPoliciesOverTime.isEmpty() ? 0 : validPoliciesOverTime.getLast().Y();
-            validPoliciesOverTime.add(new Pair<>(now, count));
-        }
+        copyPreviousCountOnNumberOfValidPoliciesPerContext(context);
 
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
@@ -946,7 +974,7 @@ public class SOSContextService implements ContextService {
 
             long start = System.nanoTime();
             for (Policy policy:policies) {
-                NodesCollection codomain = context.codomain(); // Keep this line of code inside the loop because of the shuffling it does inside
+                NodesCollection codomain = context.codomain();
                 allPoliciesAreSatisfied = allPoliciesAreSatisfied && policy.satisfied(codomain, commonUtilities, manifest);
             }
             long duration = System.nanoTime() - start;
@@ -954,7 +982,7 @@ public class SOSContextService implements ContextService {
 
             if (trackPolicies) {
                 // Keep track of how many assets have a valid policy
-                trackNumberOfValidPolicies(allPoliciesAreSatisfied, isAfterApply);
+                trackNumberOfValidPolicies(context.invariant(), guid, allPoliciesAreSatisfied, isAfterApply);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
@@ -965,26 +993,28 @@ public class SOSContextService implements ContextService {
         }
     }
 
-    private void trackNumberOfValidPolicies(boolean allPoliciesAreSatisfied, boolean isAfterApply) {
+    private void trackNumberOfValidPolicies(IGUID contextInvariant, IGUID head, boolean allPoliciesAreSatisfied, boolean isAfterApply) {
 
+        int headIndex = versionsProcessed.indexOf(head);
         long now = System.nanoTime();
-        int count;
-        if (validPoliciesOverTime.isEmpty()) {
-            count = (allPoliciesAreSatisfied && isAfterApply) ? 1 : 0;
-        } else {
-            count = validPoliciesOverTime.getLast().Y();
-            if (allPoliciesAreSatisfied && isAfterApply) {
-                // The afterApply boolean ensures that the count is increased only after the policy has been properly applied
-                // A policy is not applied if it is known to be valid already.
-                count += 1;
-            }
 
-            if (!allPoliciesAreSatisfied && !isAfterApply && count > 0) {
-                count -= 1;
+        Deque<Pair<Long, ArrayList<Integer> > > queue = validPoliciesPerContext.get(contextInvariant);
+        ArrayList<Integer> prevListOfHeads = queue.isEmpty() ? new ArrayList<>() : queue.getLast().Y();
+
+        ArrayList<Integer> newListOfHeads = new ArrayList<>(prevListOfHeads);
+        if (allPoliciesAreSatisfied && isAfterApply) {
+            if (!newListOfHeads.contains(headIndex)) {
+                newListOfHeads.add(headIndex);
             }
         }
 
-        validPoliciesOverTime.add(new Pair<>(now, count));
+        if (!allPoliciesAreSatisfied && !isAfterApply && !newListOfHeads.isEmpty()) {
+            newListOfHeads.remove(new Integer(headIndex)); // NOTE: Must create a new integer to avoid to use the overload remove method by index
+        }
+
+        Pair<Long, ArrayList<Integer>> newPair = new Pair<>(now, newListOfHeads);
+        queue.add(newPair);
+
     }
 
     /////////////////////////////////////////////////////////////////

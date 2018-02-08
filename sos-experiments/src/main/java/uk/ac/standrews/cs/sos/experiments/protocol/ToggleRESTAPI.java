@@ -29,7 +29,7 @@ public class ToggleRESTAPI extends Task {
 
     @Override
     protected void performAction() {
-        SOS_LOG.log(LEVEL.INFO, "Disabling REST for node: " + node.guid().toMultiHash());
+        SOS_LOG.log(LEVEL.INFO, "Enable/Disable REST for node: " + node.guid().toMultiHash());
 
         try {
             URL url = disable ? ExperimentURL.DISABLE_REST(node) : ExperimentURL.ENABLE_REST(node);

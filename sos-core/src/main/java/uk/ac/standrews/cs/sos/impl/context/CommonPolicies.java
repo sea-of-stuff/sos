@@ -62,7 +62,7 @@ public class CommonPolicies {
                     boolean dataIsAlreadyProtected = (manifestType == ManifestType.ATOM_PROTECTED);
                     try (Data data = ((Atom) contentManifest).getData()) {
 
-                        NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.MDS);
+                        NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.STORAGE);
                         commonUtilities.replicateData(data, nodes, factor, dataIsAlreadyProtected);
                     } catch (IOException e) {
                         throw new PolicyException("Policy was unable to replicate atom with GUID " + manifest.guid());

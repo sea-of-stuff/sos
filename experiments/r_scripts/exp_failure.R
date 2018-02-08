@@ -5,7 +5,9 @@ source("r_scripts/exp_basic.r")
 library(ggplot2)
 
 d <- read.csv("remote/failure_1_run_16.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_2_run_1.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_2_run_3.tsv", header=TRUE, sep="\t")
+
+d <- read.csv("remote/failure_1_run_21.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
 d$StartTime <- 0
