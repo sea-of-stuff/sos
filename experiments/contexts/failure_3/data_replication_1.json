@@ -1,0 +1,33 @@
+{
+  "context": {
+    "name": "data_replication_1",
+    "domain": {
+      "type": "LOCAL",
+      "nodes": []
+    },
+    "codomain": {
+      "type": "SPECIFIED",
+      "nodes": ["SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef",
+                "SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4"]
+    },
+    "max_age": 0
+  },
+  "predicate": {
+    "type": "Predicate",
+    "predicate": "CommonPredicates.AcceptAll();"
+  },
+  "policies": [
+    {
+      "type" : "Policy",
+      "apply" : "CommonPolicies.replicateData(codomain, utilities, manifest, factor);",
+      "satisfied" : "return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);",
+      "fields" : [
+        {
+          "type" : "int",
+          "name" : "factor",
+          "value" : "1"
+        }
+      ]
+    }
+  ]
+}
