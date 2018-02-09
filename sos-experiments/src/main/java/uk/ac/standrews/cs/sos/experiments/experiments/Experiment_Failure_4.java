@@ -53,7 +53,7 @@ public class Experiment_Failure_4 extends Experiment_Failure implements Experime
             // Disable REST API on remote nodes at regular interval
             Runnable task = () -> {
                 try {
-                    disableAllNodes(10);
+                    disableAllNodes(15);
                 } catch (ExperimentException e) {
                     e.printStackTrace();
                 }
@@ -64,18 +64,18 @@ public class Experiment_Failure_4 extends Experiment_Failure implements Experime
 
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
-            rest_a_bit(90 * 1000); // 1.5 minutes
+            rest_a_bit(180 * 1000); // 4 minutes
 
             writePolicyCheckStats();
         }
 
         private void disableAllNodes(int intervalInSeconds) throws ExperimentException {
 
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
             for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {
                 Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
                 ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
                 TasksQueue.instance().performSyncTask(toggleRESTAPITask);
-                InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
 
                 if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
                     throw new ExperimentException("Disable REST request was not successful");
