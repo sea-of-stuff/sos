@@ -61,11 +61,11 @@ public class Experiment_Failure_3 extends Experiment_Failure implements Experime
 
         private void disableAllNodes() throws ExperimentException {
 
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
             for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {
                 Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
                 ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
                 TasksQueue.instance().performSyncTask(toggleRESTAPITask);
-                InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
 
                 if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
                     throw new ExperimentException("Disable REST request was not successful");

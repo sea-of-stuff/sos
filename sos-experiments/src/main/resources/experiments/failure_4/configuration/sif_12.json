@@ -9,7 +9,7 @@
       "cms": {
         "exposed": false,
         "loadedPath": "sos/java/contexts/",
-        "automatic": false,
+        "automatic": true,
         "predicateOnNewContext" : false,
         "trackPolicies": true,
         "predicateThread": {
@@ -22,7 +22,7 @@
           "period": 60
         },
         "checkPoliciesThread": {
-          "initialDelay": 45,
+          "initialDelay": 30,
           "period": 60
         },
         "getdataThread": {

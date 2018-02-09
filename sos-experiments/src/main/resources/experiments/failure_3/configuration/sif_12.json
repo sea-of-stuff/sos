@@ -9,7 +9,7 @@
       "cms": {
         "exposed": false,
         "loadedPath": "sos/java/contexts/",
-        "automatic": false,
+        "automatic": true,
         "predicateOnNewContext" : false,
         "trackPolicies": true,
         "predicateThread": {
@@ -22,7 +22,7 @@
           "period": 60
         },
         "checkPoliciesThread": {
-          "initialDelay": 45,
+          "initialDelay": 30,
           "period": 60
         },
         "getdataThread": {
@@ -122,12 +122,6 @@
         "hostname" : "192.168.1.7",
         "port" : 8080,
         "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKhx6Z/6f0j7OWyBPTJeR2QJDg5/7B8SUWozga4lo8cWstxYGaFG/1MeK8eK36X/AAvtx3udw0WNOk2bOcWkKLUCAwEAAQ=="
-      },
-      {
-        "guid" : "SHA256_16_e56ed40c6857d2aba85d9e06a2044d845c851b5456772d60402a6d8049f80086",
-        "hostname" : "192.168.1.8",
-        "port" : 8080,
-        "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJqrKs2NDoGiC3OV/wiLG1DrK32rUB1PTdIcdOXbzQe4BkUXDlkIfCNwbK8B7N94zb0RYOpqcPsJdGfHJEYGVrkCAwEAAQ=="
       },
       {
         "guid" : "SHA256_16_6462c57359b1f4a4c96b6e4ef00469ee9c566763a212a7144d2ff76ad5b1c439",

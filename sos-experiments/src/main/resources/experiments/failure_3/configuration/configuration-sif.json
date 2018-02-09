@@ -5,7 +5,7 @@
     "description": "The experiment Failure_3 investigates the failure of multiple nodes",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 1
     },
     "nodes" : [
       {
@@ -151,31 +151,6 @@
         "configurationfile" : "sif_7.json",
         "certificatefile" : "sif_7.crt",
         "keyfile" : "sif_7.key",
-        "behaviour": {
-          "start": 0,
-          "stop": -1,
-          "pause": [],
-          "operations": [ "WIP" ]
-        }
-      },
-      {
-        "id" : 8,
-        "name" : "sif8",
-        "path" : "/cs/scratch/",
-        "remote" : true,
-        "java" : "/usr/local/jdk/bin/java",
-        "ssh" : {
-          "type" : 1,
-          "host" : "sif-8.cluster",
-          "user" : "sic2",
-          "known_hosts": "/Users/sic2/.ssh/known_hosts",
-          "config": "/Users/sic2/.ssh/config",
-          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
-          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
-        },
-        "configurationfile" : "sif_8.json",
-        "certificatefile" : "sif_8.crt",
-        "keyfile" : "sif_8.key",
         "behaviour": {
           "start": 0,
           "stop": -1,
