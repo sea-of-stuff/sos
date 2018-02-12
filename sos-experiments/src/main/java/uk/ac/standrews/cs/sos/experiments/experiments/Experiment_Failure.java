@@ -103,12 +103,12 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
         }
 
-        protected void disableAllNodes(int intervalInSeconds) throws ExperimentException {
+        protected void changeRESTAPIonAllNodes(int intervalInSeconds, boolean disable) throws ExperimentException {
 
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
             for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {
                 Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
-                ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
+                ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, disable);
                 TasksQueue.instance().performSyncTask(toggleRESTAPITask);
 
                 if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {

@@ -48,7 +48,7 @@ public class Experiment_Failure_4 extends Experiment_Failure implements Experime
             // Disable REST API on remote nodes at regular interval
             Runnable task = () -> {
                 try {
-                    disableAllNodes(15);
+                    changeRESTAPIonAllNodes(15, true);
                 } catch (ExperimentException e) {
                     e.printStackTrace();
                 }

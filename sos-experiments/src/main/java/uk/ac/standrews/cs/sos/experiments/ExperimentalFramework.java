@@ -74,6 +74,7 @@ public class ExperimentalFramework {
         System.out.println("\tfailure_3/configuration/configuration-sif.json");
         System.out.println("\tfailure_4/configuration/configuration-sif.json");
         System.out.println("\tfailure_5/configuration/configuration-sif.json");
+        System.out.println("\tfailure_6/configuration/configuration-sif.json");
 
         switch(option.toLowerCase()) {
 

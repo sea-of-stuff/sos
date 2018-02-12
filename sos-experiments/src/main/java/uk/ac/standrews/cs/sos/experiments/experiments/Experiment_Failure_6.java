@@ -17,23 +17,23 @@ import java.util.List;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_Failure_3 extends Experiment_Failure implements Experiment {
+public class Experiment_Failure_6 extends Experiment_Failure implements Experiment {
 
-    public Experiment_Failure_3(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_Failure_6(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_Failure_3(i));
+            units.add(new ExperimentUnit_Failure_5(i));
         }
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
     }
 
-    private class ExperimentUnit_Failure_3 extends ExperimentUnit_Failure {
+    private class ExperimentUnit_Failure_5 extends ExperimentUnit_Failure {
 
-        ExperimentUnit_Failure_3(int index) {
+        ExperimentUnit_Failure_5(int index) {
             super(index);
         }
 
@@ -46,7 +46,32 @@ public class Experiment_Failure_3 extends Experiment_Failure implements Experime
             cms.runCheckPolicies();
 
             // Disable REST API on remote nodes
-            changeRESTAPIonAllNodes(0, true);
+            Runnable task = () -> {
+                try {
+                    changeRESTAPIonAllNodes(0, true);
+                } catch (ExperimentException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            Thread thread = new Thread(task);
+            thread.start();
+
+
+            // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
+            rest_a_bit(90 * 1000); // 1.5 minutes
+
+            // Re-Disable REST API on remote nodes
+            task = () -> {
+                try {
+                    changeRESTAPIonAllNodes(0, false);
+                } catch (ExperimentException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            thread = new Thread(task);
+            thread.start();
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
             rest_a_bit(90 * 1000); // 1.5 minutes
