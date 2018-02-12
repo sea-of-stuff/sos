@@ -162,6 +162,9 @@ fabric.properties
 # SOS Specific
 scripts/logs*
 
+# git-to-sos app
+git-to-sos/src/main/resources/test-git/*
+
 *.iml
 .idea/inspectionProfiles/
 .idea/dataSources/
@@ -175,6 +178,7 @@ velocity.log*
 
 # MaxMind GeoIP DB
 *.mmdb
+
 
 # Experiments
 test_file

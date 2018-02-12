@@ -21,14 +21,18 @@ import static org.eclipse.jgit.lib.Constants.OBJ_BLOB;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ConvertGitDAG {
+public class GitToSOS {
 
-    private static DAG dag;
-    private static HashMap<String, Commit> commits = new LinkedHashMap<>();
+    private DAG dag;
+    private HashMap<String, Commit> commits = new LinkedHashMap<>();
 
     public static void main(String[] args) throws IOException, GitAPIException {
 
-        String path = "src/main/resources/test-git";
+        GitToSOS gitToSOS = new GitToSOS("git-to-sos/src/main/resources/test-git");
+    }
+
+    public GitToSOS(String path) throws IOException, GitAPIException {
+
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try (Repository repository = builder.setGitDir(new File(path + "/.git"))
                 .readEnvironment()  // scan environment GIT_* variables
@@ -47,7 +51,11 @@ public class ConvertGitDAG {
 
     }
 
-    private static void walkBranch(Repository repository, Ref branchRef) throws IOException {
+    public DAG getDAG() {
+        return dag;
+    }
+
+    private void walkBranch(Repository repository, Ref branchRef) throws IOException {
 
         System.out.println("-------------------------------------");
         System.out.println("-------------------------------------");
@@ -83,7 +91,7 @@ public class ConvertGitDAG {
         }
     }
 
-    private static void processPreviousCommits(RevCommit rev, Commit commit) {
+    private void processPreviousCommits(RevCommit rev, Commit commit) {
 
         List<Commit> parents = new LinkedList<>();
         for(RevCommit prev:rev.getParents()) {
@@ -94,8 +102,9 @@ public class ConvertGitDAG {
         commit.addPrevious(parents);
     }
 
-    private static void getFilesInCommit(Repository repository, RevCommit commit) throws IOException {
+    private void getFilesInCommit(Repository repository, RevCommit commit) throws IOException {
         System.out.println("Commit: " + commit);
+        System.out.println("\t" + commit.getShortMessage());
 
         RevTree tree = commit.getTree();
         System.out.println("Tree: " + tree);
@@ -124,7 +133,7 @@ public class ConvertGitDAG {
         System.out.println(); // print empty line
     }
 
-    private static void readBlob(Repository repository, AnyObjectId id) throws IOException {
+    private void readBlob(Repository repository, AnyObjectId id) throws IOException {
 
         ObjectLoader loader = repository.open(id);
         System.out.print("Blob: ");
