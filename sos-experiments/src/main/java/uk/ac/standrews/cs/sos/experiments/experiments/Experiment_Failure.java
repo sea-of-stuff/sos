@@ -102,5 +102,21 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
             }
 
         }
+
+        protected void disableAllNodes(int intervalInSeconds) throws ExperimentException {
+
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
+            for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {
+                Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
+                ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
+                TasksQueue.instance().performSyncTask(toggleRESTAPITask);
+
+                if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
+                    throw new ExperimentException("Disable REST request was not successful");
+                }
+
+                rest_a_bit(intervalInSeconds * 1000);
+            }
+        }
     }
 }

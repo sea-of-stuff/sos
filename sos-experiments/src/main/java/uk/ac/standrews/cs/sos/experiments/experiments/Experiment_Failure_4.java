@@ -4,13 +4,8 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.experiments.protocol.ToggleRESTAPI;
-import uk.ac.standrews.cs.sos.impl.node.BasicNode;
-import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
-import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -64,25 +59,9 @@ public class Experiment_Failure_4 extends Experiment_Failure implements Experime
 
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
-            rest_a_bit(180 * 1000); // 4 minutes
+            rest_a_bit(180 * 1000); // 3 minutes
 
             writePolicyCheckStats();
-        }
-
-        private void disableAllNodes(int intervalInSeconds) throws ExperimentException {
-
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
-            for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {
-                Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
-                ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, true);
-                TasksQueue.instance().performSyncTask(toggleRESTAPITask);
-
-                if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
-                    throw new ExperimentException("Disable REST request was not successful");
-                }
-
-                rest_a_bit(intervalInSeconds * 1000);
-            }
         }
 
     }
