@@ -1,4 +1,7 @@
-package uk.ac.standrews.cs.sos.git_to_sos;
+package uk.ac.standrews.cs.sos.git_to_sos.impl;
+
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Commit;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Tree;
 
 import java.util.LinkedList;
 import java.util.List;

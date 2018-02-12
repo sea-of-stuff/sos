@@ -8,6 +8,14 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import uk.ac.standrews.cs.sos.git_to_sos.impl.BlobImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.impl.CommitImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.impl.DAGImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.impl.TreeImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Blob;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Commit;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.DAG;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Tree;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +33,8 @@ public class GitToSOS {
 
     private DAG dag;
     private HashMap<String, Commit> commits = new LinkedHashMap<>();
+    private HashMap<String, Tree> trees = new LinkedHashMap<>();
+    private HashMap<String, Blob> blobs = new LinkedHashMap<>();
 
     public static void main(String[] args) throws IOException, GitAPIException {
 
@@ -104,7 +114,7 @@ public class GitToSOS {
 
     private void getFilesInCommit(Repository repository, RevCommit commit) throws IOException {
         System.out.println("Commit: " + commit);
-        System.out.println("\t" + commit.getShortMessage());
+        System.out.println("\tMessage: " + commit.getShortMessage());
 
         RevTree tree = commit.getTree();
         System.out.println("Tree: " + tree);
@@ -113,18 +123,29 @@ public class GitToSOS {
         // you can set Filters to narrow down the results if needed
         try (TreeWalk treeWalk = new TreeWalk(repository)) {
             treeWalk.addTree(tree);
-            treeWalk.setRecursive(true);
+            treeWalk.setRecursive(false);
             int idx = 0;
             while (treeWalk.next()) {
                 ObjectId objId = treeWalk.getObjectId(0);
-                System.out.println("[ " + idx + " ] Blob path: " + treeWalk.getPathString() + " - SHA1: " + objId.getName());
+                String objSHA1 = objId.getName();
+                System.out.println("[ " + idx + " ] Entity path: " + treeWalk.getPathString() + " - SHA1: " + objSHA1);
 
                 ObjectLoader objectLoader = repository.getObjectDatabase().open(objId);
                 if (objectLoader.getType() == OBJ_BLOB) {
                     readBlob(repository, treeWalk.getObjectId(0));
                 } else {
-                    System.out.println("Object is not a blob");
+                    if (treeWalk.isSubtree()) {
+
+                        if (!trees.containsKey(objSHA1)) {
+                            Tree subtree = new TreeImpl(objSHA1);
+                            trees.put(objSHA1, subtree);
+                        }
+
+                        System.out.println(">> Subtree");
+                        treeWalk.enterSubtree();
+                    }
                 }
+
                 idx++;
             }
 
@@ -138,6 +159,13 @@ public class GitToSOS {
         ObjectLoader loader = repository.open(id);
         System.out.print("Blob: ");
         loader.copyTo(System.out);
+
+        String blobSHA = id.getName();
+        if (!blobs.containsKey(blobSHA)) {
+            Blob blob = new BlobImpl(blobSHA, loader.openStream());
+            blobs.put(blobSHA, blob);
+        }
+
     }
 
 }

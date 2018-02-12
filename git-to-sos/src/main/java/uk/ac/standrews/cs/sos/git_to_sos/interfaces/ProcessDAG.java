@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.git_to_sos;
+package uk.ac.standrews.cs.sos.git_to_sos.interfaces;
 
 import java.io.InputStream;
 
