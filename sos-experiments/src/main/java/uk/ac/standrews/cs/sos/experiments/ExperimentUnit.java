@@ -298,12 +298,16 @@ public interface ExperimentUnit {
     }
 
     default void rest_a_bit() throws ExperimentException {
-        rest_a_bit(1000);
+        rest_a_bit("", 1000);
     }
 
     default void rest_a_bit(long milliseconds) throws ExperimentException {
+        rest_a_bit("", milliseconds);
+    }
+
+    default void rest_a_bit(String message, long milliseconds) throws ExperimentException {
         try {
-            System.out.println("--- Going to sleep for " + (milliseconds / 1000) + " seconds ---");
+            System.out.println(message + " --- Going to sleep for " + (milliseconds / 1000) + " seconds ---");
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             throw new ExperimentException();

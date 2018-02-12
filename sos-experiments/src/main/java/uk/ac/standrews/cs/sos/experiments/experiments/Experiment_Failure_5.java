@@ -74,16 +74,15 @@ public class Experiment_Failure_5 extends Experiment_Failure implements Experime
             Thread thread = new Thread(task);
             thread.start();
 
-
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
-            rest_a_bit(120 * 1000); // 2 minutes
+            rest_a_bit(180 * 1000); // 2 minutes
 
             writePolicyCheckStats();
         }
 
         private void reEnableNode(ExperimentConfiguration.Experiment.Node node, int intervalInSeconds) throws ExperimentException {
 
-            rest_a_bit(intervalInSeconds * 1000);
+            rest_a_bit("ReEnabling nodes", intervalInSeconds * 1000);
 
             Node remoteNode = new BasicNode(node.getSsh().getHost(), 8080);
             ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, false);
@@ -92,7 +91,6 @@ public class Experiment_Failure_5 extends Experiment_Failure implements Experime
             if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
                 throw new ExperimentException("Re-Enable REST request was not successful");
             }
-
 
         }
 
