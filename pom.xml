@@ -19,6 +19,7 @@
         <module>sos-web-archive</module>
         <module>sos-experiments</module>
         <module>sos-instrument</module>
+        <module>git-to-sos</module>
     </modules>
 
     <properties>

@@ -10,6 +10,7 @@
         <module name="core" />
         <module name="experiments" />
         <module name="filesystem" />
+        <module name="git-to-sos" />
         <module name="instrument" />
         <module name="rest" />
         <module name="sos-rest-jetty" />
@@ -22,6 +23,7 @@
       <module name="core" target="1.8" />
       <module name="experiments" target="1.8" />
       <module name="filesystem" target="1.8" />
+      <module name="git-to-sos" target="1.8" />
       <module name="instrument" target="1.8" />
       <module name="rest" target="1.8" />
       <module name="sos" target="1.8" />
