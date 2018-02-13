@@ -1002,13 +1002,14 @@ public class SOSContextService implements ContextService {
         ArrayList<Integer> prevListOfHeads = queue.isEmpty() ? new ArrayList<>() : queue.getLast().Y();
 
         ArrayList<Integer> newListOfHeads = new ArrayList<>(prevListOfHeads);
-        if (allPoliciesAreSatisfied && isAfterApply) {
+        if (allPoliciesAreSatisfied) {
             if (!newListOfHeads.contains(headIndex)) {
                 newListOfHeads.add(headIndex);
             }
         }
 
-        if (!allPoliciesAreSatisfied && !isAfterApply && !newListOfHeads.isEmpty()) {
+        // TODO - remove the isAfterApply check (needs to be tested)
+        if (!allPoliciesAreSatisfied && !isAfterApply) {
             newListOfHeads.remove(new Integer(headIndex)); // NOTE: Must create a new integer to avoid to use the overload remove method by index
         }
 
