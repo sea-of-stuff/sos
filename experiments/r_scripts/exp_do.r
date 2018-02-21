@@ -1,4 +1,4 @@
-do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FALSE, yMax, isNumeric=FALSE) {
+do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FALSE, yMax, isNumeric=FALSE, extractDomainSize=TRUE) {
   
   library(ggplot2)
   source("r_scripts/utils_stats.r")
@@ -8,7 +8,11 @@ do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FA
   if (!isTRUE(isNumeric)) {
     d$Message <- droplevels(d$Message)
   }
-  d$ContextName <- d$Message
+  if (extractDomainSize) {
+    d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 2)
+  } else {
+    d$ContextName <- d$Message
+  }
   
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
   

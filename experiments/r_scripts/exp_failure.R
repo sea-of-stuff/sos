@@ -12,7 +12,7 @@ d <- read.csv("remote/failure_4_run_1.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_5_run_2.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_5_run_3.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_6_run_6.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_6_run_8.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_7_run_1.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
@@ -54,7 +54,7 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
         axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
   expand_limits(x = 0, y = 0) +
-  labs(title="Number of valid policies over time", x="Time (s)", y="Number of valid policies")
+  labs(title="Number of replicas in codomain over time", x="Time (s)", y="Number of replicas")
 
 
 ########################
