@@ -212,7 +212,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     public InputStream contentToHash() {
 
         String contentToHash = getType() +
-                getName() +
+                "N" + getName() +
                 "I" + invariant().toMultiHash();
 
         if (previous != null && !previous.isInvalid()) {
@@ -297,7 +297,6 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     private IGUID makeInvariantGUID() {
 
         String contentToHash = getType() +
-                "N" + getName() +
                 "PR" + predicate().toMultiHash();
 
         Set<IGUID> policies = policies();
