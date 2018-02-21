@@ -32,7 +32,7 @@ public class DataDeletion extends Task {
 
         try {
             URL url = SOSURL.STORAGE_DELETE_DATA(node, guid);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.JSON);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.DELETE, url, ResponseType.JSON);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {

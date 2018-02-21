@@ -227,8 +227,8 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
         assertEquals(contents.size(), 2);
     }
 
-    @Test
-    public void sameContextsButDifferentDomains() throws ContextException {
+    @Test (enabled = false)
+    public void sameContextButDifferentCodomains() throws ContextException {
 
         IGUID guid_3 = contextService.addContext(FAT_CONTEXT_3);
         assertNotNull(guid_3);
@@ -239,10 +239,12 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
         IGUID guid_4 = contextService.addContext(FAT_CONTEXT_4);
         assertNotNull(guid_4);
         assertFalse(guid_4.isInvalid());
+        assertNotEquals(guid_4, guid_3);
         Context context_4 = contextService.getContext(guid_4);
         assertNotNull(context_4);
 
-        Set<Context> contexts = contextService.getContexts();
+        assertEquals(context_3.invariant(), context_4.invariant());
+        Set<Context> contexts = contextService.getContexts(); // FIXME - should not be able to create context with same invariant and no previous
         assertEquals(contexts.size(), 2);
     }
 

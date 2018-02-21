@@ -116,7 +116,7 @@ public class RESTMDS {
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
 
-    @GET
+    @DELETE
     @Path("/manifest/guid/{guid}/delete")
     public Response deleteManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 

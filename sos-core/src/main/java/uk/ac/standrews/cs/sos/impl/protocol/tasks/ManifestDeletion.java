@@ -69,7 +69,7 @@ public class ManifestDeletion extends Task {
 
         try {
             URL url = getManifestURL(node, manifest);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.DELETE, url, ResponseType.TEXT);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {

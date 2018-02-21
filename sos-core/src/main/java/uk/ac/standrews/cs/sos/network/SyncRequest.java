@@ -57,6 +57,7 @@ public class SyncRequest extends Request {
             case GET: return get();
             case POST: return managePOST();
             case PUT: return managePUT();
+            case DELETE: return delete();
             default:
                 SOS_LOG.log(LEVEL.ERROR, "Unknown Request method while playing a request");
                 throw new IOException("Unknown Request method");
@@ -94,6 +95,14 @@ public class SyncRequest extends Request {
 
         GetRequest req = Unirest.get(url.toString());
         req = (GetRequest) setChallenge(req);
+
+        return makeRequest(req);
+    }
+
+    protected Response delete() {
+
+        HttpRequestWithBody req = Unirest.delete(url.toString());
+        req = (HttpRequestWithBody) setChallenge(req);
 
         return makeRequest(req);
     }

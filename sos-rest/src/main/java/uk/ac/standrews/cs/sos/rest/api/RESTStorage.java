@@ -172,7 +172,7 @@ public class RESTStorage {
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
     }
 
-    @GET
+    @DELETE
     @Path("/data/guid/{guid}/delete")
     public Response deleteData(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 

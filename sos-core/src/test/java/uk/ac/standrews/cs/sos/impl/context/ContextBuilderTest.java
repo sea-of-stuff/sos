@@ -329,6 +329,6 @@ public class ContextBuilderTest extends SetUpTest {
         IGUID contextGUID = localSOSNode.getCMS().addContext(FATContext);
         assertNotNull(contextGUID);
         assertFalse(contextGUID.isInvalid());
-        assertEquals(contextGUID.toMultiHash(), "SHA256_16_9f103cdeefcff6affbb75b79b8b41bbe0965186b99ae20c81a5f0abeb8448b05");
+        assertEquals(contextGUID.toMultiHash(), "SHA256_16_ff12eb06010992c83a41ffc0dc3be958cb68e481bdf58a3bcead675ad88a8c14");
     }
 }

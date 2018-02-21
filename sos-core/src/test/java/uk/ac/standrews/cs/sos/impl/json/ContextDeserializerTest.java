@@ -41,8 +41,8 @@ public class ContextDeserializerTest extends SetUpTest {
 
         Context context = JSONHelper.jsonObjMapper().readValue(contextJSON, Context.class);
         assertNotNull(context);
-        assertEquals(context.guid().toMultiHash(), "SHA256_16_ebe6cc0147e8cf26d154c852b2a58faa7063b5a75e908b4574ac5e4ae278b0f9");
-        assertEquals(context.invariant().toMultiHash(), "SHA256_16_1b94e313eecb5c13a2a3a33bb6cae3145703dd1aeb0f5c1d461decb32684564b");
+        assertEquals(context.guid().toMultiHash(), "SHA256_16_04e49bff82183ac923c9c694f33660a52a90083cb03d249bc6e3eb9ce692cebb");
+        assertEquals(context.invariant().toMultiHash(), "SHA256_16_df5262037451b55a907d370823c6f5caedd59fadfdfc2df670cf52e195262ef2");
         assertEquals(context.getName(), "TEST");
         assertEquals(context.predicate().toMultiHash(), "SHA256_16_57daa6858e8bdcc0e2e1ab93a1a782f2cd566186aff620fe0e7d1a545d681cab");
         assertTrue(context.policies().contains(GUIDFactory.recreateGUID("SHA256_16_d9e4b085724893ff91d4666cd0fc63dbf98fd38b1e05952dc7b836ece28d2a84")));
