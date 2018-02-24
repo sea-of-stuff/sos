@@ -20,6 +20,7 @@ This is a prototype of a distributed autonomic personal data storage system.
 
 ```
 |-- sos
+    |-- docs                // Webpage for this project
     |-- sos-core            // The core of the SOS
     |-- sos-rest            // REST interface for the SOS
     |-- sos-rest-jetty      // Jetty server
@@ -27,6 +28,7 @@ This is a prototype of a distributed autonomic personal data storage system.
     |-- web-ui              // Web UI for the SOS
     |-- sos-app             // Basic application to run a SOS node (with webui and WebDAV)
     |-- sos-web-archive     // Example of an application using the SOS
+    |-- git-to-sos          // Utility that converts a git repository into SOS content
     |-- sos-experiments     // Code with configurations files for the experiments
     |-- experiments         // Scripts to analyse experiments results
                             // + datasets and contexts used for the experiments
@@ -119,18 +121,27 @@ The WebDAV server exposes the sos-fs to the OS as well as to any other applicati
 
 ## Applications
 
-### Webdav
+### WebDAV
 
-This is a WebDAV server running on top of the SOS.
+This is a WebDAV server running on top of the SOS. The content provided by the WebDAV uses the structure defined by the *sos-filesystem*.
 
 ### Web archive
 
-This is a very very simple web crawler that added web content to the SOS.
+This is a very very simple web crawler that added web content to the SOS. 
+Plus this application includes a tiny server that mocks "the internet" and provides what is crawled through the browser.
 
 ### web-ui
 
 The web-ui exposes the sos-filesystem, similarly to the WebDAV server.
 However, here we are not constrained by the WebDAV protocol, thus we are able to demonstrate additional features of the SOS.
+
+### git-to-sos
+
+WIP
+
+###  DNS over SOS
+
+WIP
 
 ## Running a SOS node via the SOS-APP
 
