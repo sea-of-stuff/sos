@@ -99,7 +99,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/storage/stream")
+                                .withPath("/sos/storage/atom")
                                 .withBody(BASIC_REQUEST
                                         .replace("{DATA}", Base64.encode(TEST_DATA))
                                         .replace("{DATA_HASH}", TEST_DATA_HASH))
@@ -127,7 +127,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/storage/stream")
+                                .withPath("/sos/storage/atom")
                                 .withBody(BASIC_REQUEST
                                         .replace("{DATA}", Base64.encode(TEST_DATA_TIMEOUT))
                                         .replace("{DATA_HASH}", TEST_DATA_TIMEOUT_HASH))
@@ -144,7 +144,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/storage/stream")
+                                .withPath("/sos/storage/atom")
                                 .withBody(BASIC_REQUEST
                                         .replace("{DATA}", Base64.encode(TEST_DATA))
                                         .replace("{DATA_HASH}", TEST_DATA_HASH))

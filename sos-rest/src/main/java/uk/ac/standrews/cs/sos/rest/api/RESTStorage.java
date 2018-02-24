@@ -67,10 +67,10 @@ public class RESTStorage {
      * @return a response with a body containing a stream of bytes
      */
     @GET
-    @Path("/data/guid/{guid}")
+    @Path("/atom/guid/{guid}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/atom/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -101,11 +101,11 @@ public class RESTStorage {
      * @return the Response to the http request
      */
     @POST
-    @Path("/stream")
+    @Path("/atom")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/stream");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/atom");
 
         try (InputStream data = dataPackage.getDataObj().getInputStream()){
             IGUID guidOfReceivedData = GUIDFactory.generateGUID(GUID_ALGORITHM, data);
@@ -144,18 +144,18 @@ public class RESTStorage {
             return HTTPResponses.CREATED(RESTConfig.sos, node_challenge, atom.toString());
 
         } catch (DataStorageException | ManifestPersistException | NodesCollectionException | GUIDGenerationException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Error in REST call /sos/storage/stream");
+            SOS_LOG.log(LEVEL.ERROR, "Error in REST call /sos/storage/atom");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 
     }
 
     @GET
-    @Path("/data/guid/{guid}/challenge/{challenge: .*}")
+    @Path("/data/atom/{guid}/challenge/{challenge: .*}")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response getData(@PathParam("guid") final String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/" + guid + "/challenge/" + challenge);
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/atom/guid/" + guid + "/challenge/" + challenge);
 
         IGUID atomGUID;
         try {
@@ -173,10 +173,10 @@ public class RESTStorage {
     }
 
     @DELETE
-    @Path("/data/guid/{guid}/delete")
+    @Path("/atom/guid/{guid}")
     public Response deleteData(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/storage/data/guid/" + guid + "/delete");
+        SOS_LOG.log(LEVEL.INFO, "REST: DELETE /sos/storage/atom/guid/" + guid);
 
         IGUID atomGUID;
         try {
@@ -191,7 +191,7 @@ public class RESTStorage {
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
 
         } catch (AtomNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/storage/data/guid/{guid}/delete");
+            SOS_LOG.log(LEVEL.ERROR, "REST: DELETE /sos/storage/atom/guid/{guid}");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
 

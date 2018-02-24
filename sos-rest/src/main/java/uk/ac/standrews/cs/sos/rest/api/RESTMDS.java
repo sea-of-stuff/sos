@@ -117,10 +117,10 @@ public class RESTMDS {
     }
 
     @DELETE
-    @Path("/manifest/guid/{guid}/delete")
+    @Path("/manifest/guid/{guid}")
     public Response deleteManifest(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
 
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/manifest/guid/" + guid + "/delete");
+        SOS_LOG.log(LEVEL.INFO, "REST: DELETE /sos/mds/manifest/guid/" + guid);
 
         IGUID manifestGUID;
         try {
@@ -135,7 +135,7 @@ public class RESTMDS {
             return HTTPResponses.OK(RESTConfig.sos, node_challenge);
 
         } catch (ManifestNotFoundException e) {
-            SOS_LOG.log(LEVEL.ERROR, "REST: GET  /sos/mds/manifest/guid/{guid}/delete");
+            SOS_LOG.log(LEVEL.ERROR, "REST: DELETE  /sos/mds/manifest/guid/{guid}");
             return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, node_challenge);
         }
     }

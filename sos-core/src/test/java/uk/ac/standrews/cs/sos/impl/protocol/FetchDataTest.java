@@ -59,7 +59,7 @@ public class FetchDataTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/sos/storage/data/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/storage/atom/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

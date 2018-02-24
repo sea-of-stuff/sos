@@ -127,7 +127,7 @@ public class RESTCMSTest extends CommonRESTTest {
         IGUID contextGUID = GUIDFactory.recreateGUID(guidS);
         assertFalse(contextGUID.isInvalid());
 
-        Response response2 = target("/sos/cms/guid/" + contextGUID.toMultiHash()).request().get();
+        Response response2 = target("/sos/cms/context/guid/" + contextGUID.toMultiHash()).request().get();
         assertEquals(response2.getStatus(), HTTPStatus.OK);
         String contextStringFormat = response2.readEntity(String.class);
         Context context = JSONHelper.jsonObjMapper().readValue(contextStringFormat, Context.class);
@@ -270,7 +270,7 @@ public class RESTCMSTest extends CommonRESTTest {
         IGUID guidContext = state.sos.getCMS().addContext(contextJSON);
         Context context = state.sos.getCMS().getContext(guidContext);
 
-        Response response = target("/sos/cms/invariant/" + context.invariant().toMultiHash() + "/delete").request().get();
+        Response response = target("/sos/cms/context/invariant/" + context.invariant().toMultiHash()).request().delete();
         assertEquals(response.getStatus(), HTTPStatus.OK);
 
         try {

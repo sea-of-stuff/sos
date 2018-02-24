@@ -70,7 +70,7 @@
 //                .when(
 //                        request()
 //                                .withMethod("POST")
-//                                .withPath("/sos/storage/stream")
+//                                .withPath("/sos/storage/atom")
 //                                .withBody(TEST_DATA)
 //                )
 //                .respond(

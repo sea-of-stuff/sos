@@ -85,7 +85,7 @@ public class FetchMetadataTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/sos/mms/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/mms/metadata/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

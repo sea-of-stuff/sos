@@ -55,10 +55,10 @@ public class RESTMMS {
     }
 
     @GET
-    @Path("/guid/{guid}")
+    @Path("/metadata/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response getMetadata(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mms/metadata/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -81,11 +81,11 @@ public class RESTMMS {
     }
 
     @POST
-    @Path("/process")
+    @Path("/metadata/process")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response processMetadata(final InputStream inputStream, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/process");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/mms/metadata/process");
 
         MetadataService MetadataService = RESTConfig.sos.getMMS();
 
@@ -101,5 +101,7 @@ public class RESTMMS {
 
 
     }
+
+    // FIXME - delete
 
 }

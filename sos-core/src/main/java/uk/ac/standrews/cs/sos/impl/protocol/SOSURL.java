@@ -50,7 +50,7 @@ public class SOSURL {
 
     public static URL MMS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "mms/guid/" + guid.toMultiHash();
+                "mms/metadata/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
@@ -64,7 +64,7 @@ public class SOSURL {
 
     public static URL CMS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "cms/guid/" + guid.toMultiHash();
+                "cms/context/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
@@ -127,42 +127,42 @@ public class SOSURL {
 
     public static URL MDS_DELETE_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "mds/manifest/guid/" + guid.toMultiHash() + "/delete";
+                "mds/manifest/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL CMS_DELETE_CONTEXT_VERSIONS(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "cms/invariant/" + guid.toMultiHash() + "/delete";
+                "cms/context/invariant/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "storage/data/guid/" + guid.toMultiHash();
+                "storage/atom/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
     public static URL STORAGE_POST_DATA(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
-                "storage/stream";
+                "storage/atom";
 
         return makeURL(url);
     }
 
     public static URL STORAGE_DATA_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "storage/data/guid/" + guid.toMultiHash() + "/challenge/" + challenge;
+                "storage/atom/atom/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }
 
     public static URL STORAGE_DELETE_DATA(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "storage/data/guid/" + guid.toMultiHash() + "/delete";
+                "storage/atom/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }

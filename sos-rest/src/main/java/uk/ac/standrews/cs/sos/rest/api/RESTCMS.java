@@ -78,10 +78,10 @@ public class RESTCMS {
     }
 
     @GET
-    @Path("/guid/{guid}")
+    @Path("/context/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/context/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
@@ -135,10 +135,10 @@ public class RESTCMS {
         }
     }
 
-    @GET
-    @Path("/invariant/{guid}/delete")
+    @DELETE
+    @Path("/context/invariant/{guid}")
     public Response deleteContextVersions(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/cms/invariant/{guid}/delete");
+        SOS_LOG.log(LEVEL.INFO, "REST: DELETE /sos/cms/context/invariant/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");

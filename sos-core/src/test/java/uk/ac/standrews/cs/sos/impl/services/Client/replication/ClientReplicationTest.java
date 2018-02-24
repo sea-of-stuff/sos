@@ -91,7 +91,7 @@ public class ClientReplicationTest extends SetUpTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/storage/stream")
+                                .withPath("/sos/storage/atom")
                                 .withBody(BASIC_REQUEST.replace("{DATA}", Base64.encode(TEST_DATA)))
                 )
                 .respond(
@@ -116,7 +116,7 @@ public class ClientReplicationTest extends SetUpTest {
                 .when(
                         request()
                                 .withMethod("GET")
-                                .withPath("/sos/storage/data/guid/" + testGUID.toMultiHash())
+                                .withPath("/sos/storage/atom/guid/" + testGUID.toMultiHash())
                 )
                 .respond(
                         response()

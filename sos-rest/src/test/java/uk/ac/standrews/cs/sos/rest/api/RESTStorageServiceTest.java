@@ -120,7 +120,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void testStoreInputStream() throws Exception {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(
                         BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
@@ -141,7 +141,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void testStoreEmptyInputStream() throws Exception {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(
                         BASIC_REQUEST.replace("{DATA}", "")
@@ -162,7 +162,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test (expectedExceptions = NullPointerException.class)
     public void testStoreNullInputStream() {
 
-        target("/sos/storage/stream")
+        target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(null));
     }
@@ -170,7 +170,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void replicasStream() {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(REQUEST_WITH_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
@@ -180,7 +180,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void negativeReplicasStream() {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(REQUEST_WITH_NEGATIVE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
@@ -190,7 +190,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void zeroReplicasStream() {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(REQUEST_WITH_ZERO_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
@@ -200,7 +200,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void oneReplicasStream() {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(REQUEST_WITH_ONE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
@@ -210,7 +210,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void excessiveReplicasStream() {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(REQUEST_WITH_EXCESSIVE_REPLICA_INFO.replace("{DATA}", IO.toBase64("HELLO TEST DATA"))));
 
@@ -220,7 +220,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void challengeForNoAtomFails() throws GUIDGenerationException {
 
-        Response response = target("/sos/storage/data/guid/SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/challenge/NOT_IMPORTANT")
+        Response response = target("/sos/storage/atom/guid/SHA256_16_0000a025d7d3b2cf782da0ef24423181fdd4096091bd8cc18b18c3aab9cb00a4/challenge/NOT_IMPORTANT")
                 .request().get();
 
         assertEquals(response.getStatus(), HTTPStatus.OK);
@@ -231,7 +231,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void challengeForAtomWorks() throws IOException {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(
                         BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
@@ -241,7 +241,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
-        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/THIS_IS_MY_CHALLENGE")
+        Response challengeResponse = target("/sos/storage/atom/guid/" + atomManifest.guid().toMultiHash() + "/challenge/THIS_IS_MY_CHALLENGE")
                 .request().get();
 
         assertEquals(challengeResponse.getStatus(), HTTPStatus.OK);
@@ -251,7 +251,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void noChallengeForAtomDoesNotWork() throws IOException {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(
                         BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
@@ -261,7 +261,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
-        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/")
+        Response challengeResponse = target("/sos/storage/atom/guid/" + atomManifest.guid().toMultiHash() + "/challenge/")
                 .request().get();
 
         assertEquals(challengeResponse.getStatus(), HTTPStatus.BAD_REQUEST);
@@ -270,7 +270,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
     @Test
     public void spaceChallengeForAtomDoesNotWork() throws IOException {
 
-        Response response = target("/sos/storage/stream")
+        Response response = target("/sos/storage/atom")
                 .request()
                 .post(Entity.json(
                         BASIC_REQUEST.replace("{DATA}", IO.toBase64("data"))
@@ -280,7 +280,7 @@ public class RESTStorageServiceTest extends CommonRESTTest {
         assertEquals(response.getStatus(), HTTPStatus.CREATED);
         AtomManifest atomManifest = JSONHelper.jsonObjMapper().readValue(response.readEntity(String.class), AtomManifest.class);
 
-        Response challengeResponse = target("/sos/storage/data/guid/" + atomManifest.guid().toMultiHash() + "/challenge/ ")
+        Response challengeResponse = target("/sos/storage/atom/guid/" + atomManifest.guid().toMultiHash() + "/challenge/ ")
                 .request().get();
 
         assertEquals(challengeResponse.getStatus(), HTTPStatus.BAD_REQUEST);

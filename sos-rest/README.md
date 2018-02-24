@@ -106,7 +106,7 @@ The store node is used solely to store data. The stored data is accessible to ot
 **Get data of a given atom manifest**
 ```
 REQUEST
-GET /sos/storage/data/guid/<ATOM-GUID>
+GET /sos/storage/atom/guid/<ATOM-GUID>
 
 SUCCESSFUL RESPONSE
 HTTP/1.1 200 OK
@@ -207,7 +207,7 @@ Content-type: application/json
 **Add data by stream**
 ```
 REQUEST
-POST /sos/storage/stream
+POST /sos/storage/atom
 
 This is some data in the body...
 
