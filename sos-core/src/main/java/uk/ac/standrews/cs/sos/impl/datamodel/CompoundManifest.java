@@ -107,12 +107,26 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
 
     @Override
     public Content getContent(String label) {
-        return null;
+
+        for(Content content:contents) {
+            if (content.getLabel().equals(label)) {
+                return content;
+            }
+        }
+
+        return null; // TODO - throw exception
     }
 
     @Override
     public Content getContent(IGUID guid) {
-        return null;
+
+        for(Content content:contents) {
+            if (content.getGUID().equals(guid)) {
+                return content;
+            }
+        }
+
+        return null; // TODO - throw exception
     }
 
     @Override
