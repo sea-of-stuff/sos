@@ -68,6 +68,14 @@ public interface ManifestsDataService extends Service {
     Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException;
 
     /**
+     * Resolve the path to a manifest
+     * @param path of the form guid/guid/guid or guid/label/labe or a mix
+     * @return manifest
+     * @throws ManifestNotFoundException if manifest could not be found
+     */
+    Manifest resolvePath(String path) throws ManifestNotFoundException;
+
+    /**
      * Challenge manifest matching the GUID with the given string challenge
      *
      * @param guid of the manifest to be challenged

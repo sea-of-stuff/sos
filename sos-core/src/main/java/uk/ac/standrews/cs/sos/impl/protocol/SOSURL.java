@@ -71,7 +71,7 @@ public class SOSURL {
 
     public static URL NDS_GET_MANIFEST(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
-                "nds/guid/" + guid.toMultiHash();
+                "nds/node/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }

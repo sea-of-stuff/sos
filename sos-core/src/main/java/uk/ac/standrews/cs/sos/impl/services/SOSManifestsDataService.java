@@ -207,6 +207,36 @@ public class SOSManifestsDataService implements ManifestsDataService {
         return manifest;
     }
 
+    // TODO - implement method
+    @Override
+    public Manifest resolvePath(String path) throws ManifestNotFoundException {
+
+        String[] parts = path.split("/");
+
+        // First part must be a GUID
+        try {
+            IGUID firstPart = GUIDFactory.recreateGUID(parts[0]);
+
+            Manifest manifest = getManifest(firstPart);
+
+            switch(manifest.getType()) {
+                case VERSION:
+                    // skip to its contents
+                    break;
+                case COMPOUND:
+                    // check by label or guid
+                    break;
+                default:
+                    System.err.println("Work in progress");
+            }
+
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        }
+
+        throw new ManifestNotFoundException("ResolvePath Method not implemented yet");
+    }
+
     @Override
     public IGUID challenge(IGUID guid, String challenge) {
 

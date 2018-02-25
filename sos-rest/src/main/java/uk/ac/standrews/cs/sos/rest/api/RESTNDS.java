@@ -55,10 +55,10 @@ public class RESTNDS {
     }
 
     @GET
-    @Path("/guid/{guid}")
+    @Path("/node/guid/{guid}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response findByGUID(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/guid/{guid}");
+        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/node/guid/{guid}");
 
         if (guid == null || guid.isEmpty()) {
             return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Bad input");
