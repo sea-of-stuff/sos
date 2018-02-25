@@ -207,34 +207,72 @@ public class SOSManifestsDataService implements ManifestsDataService {
         return manifest;
     }
 
-    // TODO - implement method
+    /**
+     *
+     * Examples:
+     *
+     * guid-version/guid-atom
+     * guid-version/guid-compound
+     * guid-version/guid-compound/guid-atom
+     * guid-version/guid-compound/label-atom
+     * guid-version/guid-compound/label-compound
+     * guid-compound/label-atom
+     * guid-compound/label-compound
+     * guid-compound/label-version
+     * guid-version/guid-compound/label-compound/label-compound/label-atom
+     *
+     * TODO - have way to skip version to its content directly
+     * TODO - similar method for protected entities?
+     * TODO - write tests
+     *
+     * @param path of the form guid/guid/guid or guid/label/label or a mix
+     * @return manifest matching the path
+     * @throws ManifestNotFoundException if manifest could not be found
+     */
     @Override
     public Manifest resolvePath(String path) throws ManifestNotFoundException {
 
+        Manifest current = null;
         String[] parts = path.split("/");
+        for(String part:parts) {
 
-        // First part must be a GUID
-        try {
-            IGUID firstPart = GUIDFactory.recreateGUID(parts[0]);
+            try {
+                IGUID manifestGUID = GUIDFactory.recreateGUID(part);
+                if (current == null) {
+                    current = getManifest(manifestGUID);
+                } else {
 
-            Manifest manifest = getManifest(firstPart);
+                    if (current.getType() == ManifestType.COMPOUND) {
+                        Compound compound = (Compound) current;
 
-            switch(manifest.getType()) {
-                case VERSION:
-                    // skip to its contents
-                    break;
-                case COMPOUND:
-                    // check by label or guid
-                    break;
-                default:
-                    System.err.println("Work in progress");
+                        IGUID contentGUID = compound.getContent(manifestGUID).getGUID();
+                        current = getManifest(contentGUID);
+                    }
+
+                }
+            } catch (GUIDGenerationException e) {
+
+                if (current != null) {
+
+                    if (current.getType() == ManifestType.COMPOUND) {
+                        Compound compound = (Compound) current;
+
+                        IGUID contentGUID = compound.getContent(part).getGUID();
+                        current = getManifest(contentGUID);
+                    }
+
+                } else {
+                    throw new ManifestNotFoundException("Unable to resolve path: " + path);
+                }
             }
 
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
         }
 
-        throw new ManifestNotFoundException("ResolvePath Method not implemented yet");
+        if (current == null) {
+            throw new ManifestNotFoundException("Unable to resolve path: " + path);
+        }
+
+        return current;
     }
 
     @Override

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.impl.json.CompoundManifestDeserializer;
 import uk.ac.standrews.cs.sos.impl.json.CompoundManifestSerializer;
 
@@ -42,6 +43,10 @@ public interface Compound extends SignedManifest {
      * @return the contents of this compound
      */
     Set<Content> getContents();
+
+    Content getContent(String label);
+
+    Content getContent(IGUID guid);
 
     /**
      * Get the type of compound.

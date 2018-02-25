@@ -69,7 +69,7 @@ public interface ManifestsDataService extends Service {
 
     /**
      * Resolve the path to a manifest
-     * @param path of the form guid/guid/guid or guid/label/labe or a mix
+     * @param path of the form guid/guid/guid or guid/label/label or a mix
      * @return manifest
      * @throws ManifestNotFoundException if manifest could not be found
      */

@@ -106,6 +106,16 @@ public class CompoundManifest extends AbstractSignedManifest implements Compound
     }
 
     @Override
+    public Content getContent(String label) {
+        return null;
+    }
+
+    @Override
+    public Content getContent(IGUID guid) {
+        return null;
+    }
+
+    @Override
     public CompoundType getCompoundType() {
         return type;
     }
