@@ -44,6 +44,14 @@ public class NodesCollectionImpl implements NodesCollection {
     }
 
     @Override
+    public void addNodeRef(IGUID nodeRef) {
+
+        if (type == NodesCollectionType.SPECIFIED) {
+            nodesRefs.add(nodeRef);
+        }
+    }
+
+    @Override
     public int size() {
         return nodesRefs.size();
     }

@@ -289,8 +289,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
             this.nodeGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, content);
             this.setDB_NODEID(nodeGUID.toMultiHash());
-
             settings.setGuid(nodeGUID.toMultiHash());
+            
         } catch (GUIDGenerationException | IOException e) {
             throw new SOSException("Unable to generate GUID for SOSLocalNode");
         }
@@ -431,6 +431,15 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         }
     }
 
+    public boolean isRestEnabled() {
+        return restEnabled;
+    }
+
+    public void setRestEnabled(boolean restEnabled) {
+        this.restEnabled = restEnabled;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -446,13 +455,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         return Objects.hash(super.hashCode(), signaturePrivateKey);
     }
 
-    public boolean isRestEnabled() {
-        return restEnabled;
-    }
-
-    public void setRestEnabled(boolean restEnabled) {
-        this.restEnabled = restEnabled;
-    }
 
     /**
      * This is the builder for the SOSLocalNode.

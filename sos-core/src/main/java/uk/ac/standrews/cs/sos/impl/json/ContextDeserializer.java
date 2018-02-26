@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.context.ContextManifest;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -37,6 +38,7 @@ public class ContextDeserializer extends JsonDeserializer<Context> {
             String name = node.get(JSONConstants.KEY_CONTEXT_NAME).asText();
 
             NodesCollection domain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_DOMAIN);
+            domain.addNodeRef(SOSLocalNode.settings.guid()); // Ensure that local node is part of the domain
             NodesCollection codomain = getNodesCollection(node, JSONConstants.KEY_CONTEXT_CODOMAIN);
 
             long maxage = node.has(JSONConstants.KEY_CONTEXT_MAX_AGE) ? node.get(JSONConstants.KEY_CONTEXT_MAX_AGE).asLong() : PREDICATE_ALWAYS_TO_COMPUTE;

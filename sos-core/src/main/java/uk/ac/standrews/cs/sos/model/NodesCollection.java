@@ -34,6 +34,13 @@ public interface NodesCollection {
     Set<IGUID> nodesRefs();
 
     /**
+     * Add node ref to collection (collection must be of type SPECIFIED)
+     *
+     * @param nodeRef to add
+     */
+    void addNodeRef(IGUID nodeRef);
+
+    /**
      * Return the size of this nodes collection
      * @return size of this nodes collection
      */

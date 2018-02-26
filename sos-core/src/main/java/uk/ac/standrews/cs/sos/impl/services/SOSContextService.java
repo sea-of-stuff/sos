@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -1086,8 +1087,16 @@ public class SOSContextService implements ContextService {
     public void spawnContext(Context context) throws ManifestPersistException {
 
         NodesCollection domain = context.domain();
-        int replication = domain.nodesRefs().size();
-        manifestsDataService.addManifest(context, domain, replication, false, false);
+
+        // Remove local node from domain where the context has to be replicated.
+        // The context, however, still has this node in its domain.
+        IGUID localNodeGUID = SOSLocalNode.settings.guid();
+        Set<IGUID> nodeRefsWithoutLocalNode = new LinkedHashSet<>(domain.nodesRefs());
+        nodeRefsWithoutLocalNode.remove(localNodeGUID);
+        NodesCollection domainWithoutLocalNode = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
+
+        int replication = domainWithoutLocalNode.nodesRefs().size();
+        manifestsDataService.addManifest(context, domainWithoutLocalNode, replication, false, false);
     }
 
 }
