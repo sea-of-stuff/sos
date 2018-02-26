@@ -37,7 +37,7 @@ public class WVerify {
         }
     }
 
-    public static String VerifyIntegrity(Request request, SOSLocalNode sos) throws GUIDGenerationException, ServiceException, RoleNotFoundException {
+    public static String VerifyIntegrity(Request request, SOSLocalNode sos) throws GUIDGenerationException, ServiceException {
 
         Agent agent = sos.getAgent();
 
