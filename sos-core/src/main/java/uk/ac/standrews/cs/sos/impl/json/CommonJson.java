@@ -119,10 +119,13 @@ public class CommonJson {
         if (signerRef.isInvalid()) return null;
 
         try {
-            return SOSAgent.instance().getRole(signerRef);
-        } catch (RoleNotFoundException e) {
-            return null;
-        }
+            if (SOSAgent.instance() != null) {
+                return SOSAgent.instance().getRole(signerRef);
+            }
+
+        } catch (RoleNotFoundException ignored) { }
+
+        return null;
     }
 
 }
