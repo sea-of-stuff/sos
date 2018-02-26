@@ -221,9 +221,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
      * guid-compound/label-version
      * guid-version/guid-compound/label-compound/label-compound/label-atom
      *
-     * TODO - have way to skip version to its content directly
      * TODO - similar method for protected entities?
-     * TODO - write tests
      *
      * @param path of the form guid/guid/guid or guid/label/label or a mix
      * @return manifest matching the path
@@ -234,7 +232,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
         Manifest current = null;
         String[] parts = path.split("/");
-        for(String part:parts) {
+        for(int i = 0; i < parts.length; i++) {
+            String part = parts[i];
 
             try {
                 IGUID manifestGUID = GUIDFactory.recreateGUID(part);
@@ -245,11 +244,24 @@ public class SOSManifestsDataService implements ManifestsDataService {
                     if (current.getType() == ManifestType.COMPOUND) {
                         Compound compound = (Compound) current;
 
-                        IGUID contentGUID = compound.getContent(manifestGUID).getGUID();
-                        current = getManifest(contentGUID);
+                        Content content = compound.getContent(manifestGUID);
+                        if (content != null) {
+                            IGUID contentGUID = content.getGUID();
+                            current = getManifest(contentGUID);
+                        } // else skip
+
+                    } else if (current.getType() == ManifestType.VERSION) {
+                        Version version = (Version) current;
+                        if (!manifestGUID.equals(version.content())) {
+                            manifestGUID = version.content();
+                            i--;
+                        }
+
+                        current = getManifest(manifestGUID);
                     }
 
                 }
+
             } catch (GUIDGenerationException e) {
 
                 if (current != null) {
@@ -259,6 +271,11 @@ public class SOSManifestsDataService implements ManifestsDataService {
 
                         IGUID contentGUID = compound.getContent(part).getGUID();
                         current = getManifest(contentGUID);
+                    } else if (current.getType() == ManifestType.VERSION) {
+
+                        Version version = (Version) current;
+                        current = getManifest(version.content());
+                        i--;
                     }
 
                 } else {
