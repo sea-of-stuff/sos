@@ -312,7 +312,7 @@ public class WGraph {
         if (!label.isEmpty()) label += "-";
 
         ObjectNode objectNode = mapper.createObjectNode();
-        objectNode.put("id", label + manifest.guid().toMultiHash());
+        objectNode.put("id", manifest.guid().toMultiHash());
         objectNode.put("label", "Type: " + manifest.getType() + "\nGUID: " + manifest.guid().toMultiHash().substring(0, 15));
         objectNode.put("group", manifest.getType().toString());
         objectNode.put("shape", "box");
@@ -395,7 +395,7 @@ public class WGraph {
 
         ObjectNode objectNode = mapper.createObjectNode();
         objectNode.put("from", from.toMultiHash());
-        objectNode.put("to", toPrefix + to.toMultiHash());
+        objectNode.put("to", to.toMultiHash());
         objectNode.put("label", label);
         objectNode.put("arrows", "to");
         // objectNode.put("physics", "false");

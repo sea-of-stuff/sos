@@ -178,10 +178,11 @@
             return;
         }
 
+        console.log(manifestJSON);
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForSignatureVerification option:selected").val();
 
-        $.get("verifySignature/" + obj.GUID + "/role/" + roleid, function (data) {
+        $.get("verifySignature/" + obj.guid + "/role/" + roleid, function (data) {
             $("#signatureResult").html(data);
         });
     });
@@ -196,7 +197,7 @@
 
         var obj = JSON.parse(manifestJSON);
 
-        $.get("verifyIntegrity/" + obj.GUID, function (data) {
+        $.get("verifyIntegrity/" + obj.guid, function (data) {
             $("#integrityResult").html(data);
         });
     });
@@ -211,7 +212,7 @@
 
         var obj = JSON.parse(manifestJSON);
 
-        $.get("/data/" + obj.GUID, function (data) {
+        $.get("/data/" + obj.guid, function (data) {
             $("#data").html(data);
         });
     });
@@ -226,7 +227,7 @@
 
         var obj = JSON.parse(manifestJSON);
 
-        window.location="/data/" + obj.GUID + "/download";
+        window.location="/data/" + obj.guid + "/download";
     });
 
     $("#showProtectedData").click(function() {
@@ -240,7 +241,7 @@
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForProtectedData option:selected").val();
 
-        $.get("/data/" + obj.GUID + "/role/" + roleid, function (data) {
+        $.get("/data/" + obj.guid + "/role/" + roleid, function (data) {
             $("#data").html(data);
         });
     });
@@ -256,7 +257,7 @@
         var obj = JSON.parse(manifestJSON);
         var roleid = $("#roleForProtectedData option:selected").val();
 
-        window.location="/data/" + obj.GUID + "/role/" + roleid + "/download";
+        window.location="/data/" + obj.guid + "/role/" + roleid + "/download";
     });
 
     $('#grantAccessToData').click(function() {
@@ -271,7 +272,7 @@
         var granter = $("#granterRole option:selected").val();
         var grantee = $("#granteeRole option:selected").val();
 
-        $.get("/data/" + obj.GUID + "/grant/" + granter + "/" + grantee, function (data) {
+        $.get("/data/" + obj.guid + "/grant/" + granter + "/" + grantee, function (data) {
             $('#grantAccessResult').html(data);
         });
     });

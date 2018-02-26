@@ -209,14 +209,28 @@ public class WData {
         try {
             Manifest manifest = sos.getAgent().getManifest(guid);
 
-            if (manifest.getType().equals(ManifestType.VERSION)) {
+            ManifestType manifestType = manifest.getType();
+            if (manifestType.equals(ManifestType.VERSION)) {
                 Version version = (Version) manifest;
                 Manifest contentManifest = sos.getMDS().getManifest(version.content());
                 if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
                     return GetData(sos, version, LARGE_DATA_LIMIT, false);
                 }
+            } else if (manifestType.equals(ManifestType.ATOM)) {
+
+                // Get as raw
+                Data data;
+                try {
+                    data = sos.getStorageService().getAtomContent(manifest.guid());
+                } catch (AtomNotFoundException e) {
+                    return "Unable to get data";
+                }
+
+                String type = "Raw";
+                return GetData(type, data, LARGE_DATA_LIMIT);
             }
+
         } catch (ServiceException | ManifestNotFoundException e) {
             return "Unable to find manifest/data for GUID: " + guid.toMultiHash();
         }
