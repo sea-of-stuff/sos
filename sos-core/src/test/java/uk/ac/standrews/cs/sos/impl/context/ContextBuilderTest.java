@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 
@@ -97,7 +98,7 @@ public class ContextBuilderTest extends SetUpTest {
                 "    \"name\" : \"predicate_2\",\n" +
                 "    \"domain\" : {\n" +
                 "      \"type\" : \"SPECIFIED\",\n" +
-                "      \"nodes\" : [ \"SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef\" ]\n" +
+                "      \"nodes\" : [ \"SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef\" %_LOCAL_NODE_% ]\n" +
                 "    },\n" +
                 "    \"codomain\" : {\n" +
                 "      \"type\" : \"LOCAL\",\n" +
@@ -112,7 +113,7 @@ public class ContextBuilderTest extends SetUpTest {
                 "  \"policies\" : [ ]\n" +
                 "}";
 
-        JsonNode node = JSONHelper.jsonObjMapper().readTree(FATContext);
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(FATContext.replace("%_LOCAL_NODE_%", "")); // local node is implicit
         ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
 
         assertNotNull(contextBuilder.predicate());
@@ -138,7 +139,63 @@ public class ContextBuilderTest extends SetUpTest {
         assertNotNull(context.guid());
 
         String reFATContext = context.toFATString(predicate, policies);
-        JSONAssert.assertEquals(reFATContext, FATContext, true);
+        IGUID localNodeGUID = SOSLocalNode.settings.guid();
+        String contextToExpect = FATContext.replace("%_LOCAL_NODE_%", ", \"" + localNodeGUID.toMultiHash() + "\"");
+        JSONAssert.assertEquals(contextToExpect, reFATContext, false);
+    }
+
+    @Test
+    public void fatToContextV3() throws IOException, ContextBuilderException {
+
+        String FATContext = "{\n" +
+                "  \"context\" : {\n" +
+                "    \"name\" : \"predicate_2\",\n" +
+                "    \"domain\" : {\n" +
+                "      \"type\" : \"SPECIFIED\",\n" +
+                "      \"nodes\" : [ \"SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef\" %_LOCAL_NODE_% ]\n" +
+                "    },\n" +
+                "    \"codomain\" : {\n" +
+                "      \"type\" : \"LOCAL\",\n" +
+                "      \"nodes\" : [ ]\n" +
+                "    },\n" +
+                "    \"max_age\" : 0\n" +
+                "  },\n" +
+                "  \"predicate\" : {\n" +
+                "    \"type\" : \"Predicate\",\n" +
+                "    \"predicate\" : \"CommonPredicates.TextOccurrencesIgnoreCase(guid, \\\"the\\\") == 1;\"\n" +
+                "  },\n" +
+                "  \"policies\" : [ ]\n" +
+                "}";
+
+        IGUID localNodeGUID = SOSLocalNode.settings.guid();
+        String contextToExpect = FATContext.replace("%_LOCAL_NODE_%", ", \"" + localNodeGUID.toMultiHash() + "\""); // local node is explicit
+        JsonNode node = JSONHelper.jsonObjMapper().readTree(contextToExpect);
+        ContextBuilder contextBuilder = new ContextBuilder(node, ContextBuilder.ContextBuilderType.FAT);
+
+        assertNotNull(contextBuilder.predicate());
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(contextBuilder.predicate(), Predicate.class);
+        assertNotNull(predicate);
+
+        assertNotNull(contextBuilder.policies());
+        Set<Policy> policies = new LinkedHashSet<>();
+        JsonNode policies_n = contextBuilder.policies();
+        for (JsonNode policy_n : policies_n) {
+            Policy policy = JSONHelper.jsonObjMapper().convertValue(policy_n, Policy.class);
+            policies.add(policy);
+        }
+        assertEquals(policies.size(), 0);
+
+        Set<IGUID> policiesRefs = policies.stream()
+                .map(Manifest::guid)
+                .collect(Collectors.toSet());
+
+        JsonNode context_n = contextBuilder.context(predicate.guid(), policiesRefs);
+        Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
+        assertNotNull(context);
+        assertNotNull(context.guid());
+
+        String reFATContext = context.toFATString(predicate, policies);
+        JSONAssert.assertEquals(contextToExpect, reFATContext, false);
     }
 
     @Test
