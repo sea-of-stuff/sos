@@ -227,8 +227,8 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
         assertEquals(contents.size(), 2);
     }
 
-    @Test (enabled = false)
-    public void sameContextButDifferentCodomains() throws ContextException {
+    @Test (expectedExceptions = ContextException.class)
+    public void unableToCreateConflictingContexts() throws ContextException {
 
         IGUID guid_3 = contextService.addContext(FAT_CONTEXT_3);
         assertNotNull(guid_3);
@@ -236,16 +236,7 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
         Context context_3 = contextService.getContext(guid_3);
         assertNotNull(context_3);
 
-        IGUID guid_4 = contextService.addContext(FAT_CONTEXT_4);
-        assertNotNull(guid_4);
-        assertFalse(guid_4.isInvalid());
-        assertNotEquals(guid_4, guid_3);
-        Context context_4 = contextService.getContext(guid_4);
-        assertNotNull(context_4);
-
-        assertEquals(context_3.invariant(), context_4.invariant());
-        Set<Context> contexts = contextService.getContexts(); // FIXME - should not be able to create context with same invariant and no previous
-        assertEquals(contexts.size(), 2);
+        contextService.addContext(FAT_CONTEXT_4);
     }
 
     // TODO - test max age property and getting contents from multiple contexts (w previous) WITH EXPIRATION

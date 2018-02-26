@@ -23,7 +23,6 @@ import java.util.Set;
  *          "guid" : "606c92e9707fd89d288c198b28f6cf3079be63bd"
  *      },
  *      {
- *          "label" : "file.txt",
  *          "guid" : "3ee75808c94ab7f53188e91a71cfa2bdfbcd1ebc"
  *      }
  *  ],
@@ -44,8 +43,20 @@ public interface Compound extends SignedManifest {
      */
     Set<Content> getContents();
 
+    /**
+     * Get the content of the compound matching this label
+     *
+     * @param label of the content to get
+     * @return content. Null if not found
+     */
     Content getContent(String label);
 
+    /**
+     * Get the content of the compound matching this guid
+     *
+     * @param guid of the content to get
+     * @return content. Null if not found
+     */
     Content getContent(IGUID guid);
 
     /**

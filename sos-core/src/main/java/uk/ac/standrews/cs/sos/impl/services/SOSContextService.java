@@ -177,6 +177,7 @@ public class SOSContextService implements ContextService {
     public IGUID addContext(Context context) throws ContextException {
 
         try {
+            checkContext(context);
             manifestsDataService.addManifest(context);
 
             // Trigger context's predicate just after adding the context to the node based on the node settings
@@ -205,6 +206,7 @@ public class SOSContextService implements ContextService {
 
             JsonNode context_n = contextBuilder.context(predicate, policies);
             Context context = JSONHelper.jsonObjMapper().convertValue(context_n, Context.class);
+            checkContext(context);
 
             manifestsDataService.addManifest(contextBuilder.getCompoundManifest());
             addContext(context);
@@ -213,22 +215,6 @@ public class SOSContextService implements ContextService {
         } catch (ManifestPersistException e) {
             throw new ContextException("Unable to add context to SOS node");
         }
-    }
-
-    private IGUID addPredicate(JsonNode jsonNode) throws ManifestPersistException {
-
-        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(jsonNode, Predicate.class);
-        manifestsDataService.addManifest(predicate);
-
-        return predicate.guid();
-    }
-
-    private IGUID addPolicy(JsonNode jsonNode) throws ManifestPersistException {
-
-        Policy policy = JSONHelper.jsonObjMapper().convertValue(jsonNode, Policy.class);
-        manifestsDataService.addManifest(policy);
-
-        return policy.guid();
     }
 
     @Override
@@ -290,6 +276,41 @@ public class SOSContextService implements ContextService {
         return previous.guid();
     }
 
+    private void checkContext(Context context) throws ContextException {
+
+        try {
+            IGUID invariant = context.invariant();
+            Set<IGUID> versions = manifestsDataService.getVersions(invariant);
+            if (versions.isEmpty() && context.previous().isEmpty()) return;
+
+            if (!versions.isEmpty()) {
+                IGUID tip = manifestsDataService.getTips(invariant).iterator().next();
+                if (context.previous().equals(tip)) return;
+            }
+
+
+        } catch (TIPNotFoundException ignored) {}
+
+        throw new ContextException("Context " + context.getUniqueName() + " cannot be added to this node");
+    }
+
+    private IGUID addPredicate(JsonNode jsonNode) throws ManifestPersistException {
+
+        Predicate predicate = JSONHelper.jsonObjMapper().convertValue(jsonNode, Predicate.class);
+        manifestsDataService.addManifest(predicate);
+
+        return predicate.guid();
+    }
+
+    private IGUID addPolicy(JsonNode jsonNode) throws ManifestPersistException {
+
+        Policy policy = JSONHelper.jsonObjMapper().convertValue(jsonNode, Policy.class);
+        manifestsDataService.addManifest(policy);
+
+        return policy.guid();
+    }
+
+    @Override
     public Context getContext(IGUID contextGUID) throws ContextNotFoundException {
 
         try {
