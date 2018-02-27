@@ -174,14 +174,12 @@ dump.db
 *.log
 *.log.*
 sos-core/src/test/resources/*.conf
-velocity.log*
+logs/*
 
 # MaxMind GeoIP DB
 *.mmdb
 
-
 # Experiments
-test_file
 .key
 third-party/*
 experiments/plots

@@ -11,7 +11,6 @@ import spark.TemplateEngine;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -20,42 +19,20 @@ import java.util.Properties;
 public class VelocityCustomEngine extends TemplateEngine {
 
         private final VelocityEngine velocityEngine;
-        private String encoding;
 
         /**
          * Constructor
          */
-        public VelocityCustomEngine() {
+        VelocityCustomEngine() {
             Properties properties = new Properties();
             properties.setProperty("resource.loader", "class");
             properties.setProperty(
                     "class.resource.loader.class",
                     "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
             properties.setProperty(RuntimeConstants.EVENTHANDLER_INCLUDE, IncludeRelativePath.class.getName());
+            properties.setProperty("runtime.log", "logs/velocity.log");
 
-            this.velocityEngine = new org.apache.velocity.app.VelocityEngine(properties);
-        }
-
-        /**
-         * Constructor
-         *
-         * @param encoding The encoding to use
-         */
-        public VelocityCustomEngine(String encoding) {
-            this();
-            this.encoding = encoding;
-        }
-
-        /**
-         * Constructor
-         *
-         * @param velocityEngine The velocity engine, must not be null.
-         */
-        public VelocityCustomEngine(VelocityEngine velocityEngine) {
-            if (velocityEngine == null) {
-                throw new IllegalArgumentException("velocityEngine must not be null");
-            }
-            this.velocityEngine = velocityEngine;
+            this.velocityEngine = new VelocityEngine(properties);
         }
 
         /**
@@ -63,7 +40,7 @@ public class VelocityCustomEngine extends TemplateEngine {
          */
         @Override
         public String render(ModelAndView modelAndView) {
-            String templateEncoding = Optional.ofNullable(this.encoding).orElse(StandardCharsets.UTF_8.name());
+            String templateEncoding = StandardCharsets.UTF_8.name();
             Template template = velocityEngine.getTemplate(modelAndView.getViewName(), templateEncoding);
             Object model = modelAndView.getModel();
             if (model instanceof Map) {
