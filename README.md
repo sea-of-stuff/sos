@@ -243,7 +243,7 @@ The configuration of a SOS node is specified using a simple JSON structure.
       }
     },
     "database": {
-      "filename": "dump.db"
+      "filename": "node.db"
     },
     "rest": {
       "port": 8080

@@ -170,7 +170,7 @@ git-to-sos/src/main/resources/test-git/*
 .idea/dataSources/
 .idea/snapshots/
 Dockerfile
-dump.db
+node.db
 *.log
 *.log.*
 sos-core/src/test/resources/*.conf

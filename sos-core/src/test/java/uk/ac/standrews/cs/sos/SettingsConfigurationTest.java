@@ -62,7 +62,7 @@ public class SettingsConfigurationTest {
         SettingsConfiguration settings = new SettingsConfiguration(configFile);
 
         SettingsConfiguration.Settings.DatabaseSettings databaseSettings = settings.getSettingsObj().getDatabase();
-        assertEquals(databaseSettings.getFilename(), "dump.db");
+        assertEquals(databaseSettings.getFilename(), "node.db");
     }
 
     @Test

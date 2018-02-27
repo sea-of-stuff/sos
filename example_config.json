@@ -52,7 +52,7 @@
       }
     },
     "database": {
-      "filename": "dump.db"
+      "filename": "node.db"
     },
     "rest": {
       "port": 8080

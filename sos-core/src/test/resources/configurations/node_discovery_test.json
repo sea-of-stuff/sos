@@ -6,7 +6,7 @@
       }
     },
     "database": {
-      "filename": "dump.db"
+      "filename": "node.db"
     },
     "store": {
       "type": "local",
