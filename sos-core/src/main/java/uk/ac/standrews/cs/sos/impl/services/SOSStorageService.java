@@ -128,18 +128,16 @@ public class SOSStorageService implements StorageService {
             manifestsDataService.addManifest(atom);
         }
 
-        // We subtract 1 from the builder replication factor, because the atom was already added to this node (which makes one of the replicas)
         int replicationFactor = atomBuilder.getReplicationFactor() <= storageSettings.getMaxReplication() ? atomBuilder.getReplicationFactor() : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
 
             try (Data data = atomBuilder.getData()){
 
-                IGUID dataGUID = atom.guid();
                 NodesCollection codomain = atomBuilder.getReplicationNodes();
                 boolean sequentialReplication = storageSettings.isSequentialReplication();
 
                 long start = System.nanoTime();
-                DataReplication dataReplication = new DataReplication(dataGUID, data, codomain, replicationFactor,
+                DataReplication dataReplication = new DataReplication(guid, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
                         atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), sequentialReplication);
                 TasksQueue.instance().performAsyncTask(dataReplication);

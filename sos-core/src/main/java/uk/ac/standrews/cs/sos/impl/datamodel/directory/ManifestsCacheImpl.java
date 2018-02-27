@@ -149,7 +149,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
 
     private static Manifest loadManifest(LocalStorage storage, IDirectory manifestsDir, IGUID guid) {
         try {
-            IFile fileRef = FileUtils.CreateFile(storage, manifestsDir, guid.toMultiHash(), FileUtils.JSON_EXTENSION);
+            IFile fileRef = FileUtils.CreateFile(storage, manifestsDir, guid.toMultiHash());
             return FileUtils.ManifestFromFile(fileRef);
         } catch (DataStorageException | ManifestNotFoundException e) {
             return null;

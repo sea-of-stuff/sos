@@ -76,7 +76,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
      *
      * @param guid of the manifest to be found
      * @return Manifest
-     * @throws ManifestNotFoundException
+     * @throws ManifestNotFoundException if manifest could not be found
      */
     @Override
     public Manifest findManifest(IGUID guid) throws ManifestNotFoundException {
@@ -92,7 +92,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
 
         try {
             IDirectory manifestsDir = localStorage.getManifestsDirectory();
-            manifestsDir.remove(guid.toMultiHash() + FileUtils.JSON_EXTENSION);
+            manifestsDir.remove(guid.toMultiHash());
         } catch (DataStorageException | BindingAbsentException e) {
             throw new ManifestNotFoundException("Manifest with GUID "  + guid.toMultiHash() + " was not found and could not be deleted.");
         }
@@ -239,7 +239,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
                 manifestTempFile.setData(manifestData);
                 manifestTempFile.persist();
 
-                manifestTempFile.rename(manifestGUID + FileUtils.JSON_EXTENSION);
+                manifestTempFile.rename(manifestGUID);
             } catch (DataException | IOException | RenameException e) {
                 throw new PersistenceException("Unabel to persist renamed manifest", e);
             }
@@ -260,7 +260,7 @@ public class LocalManifestsDirectory extends AbstractManifestsDirectory {
     private IFile getManifestFile(String guid) throws DataStorageException {
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
-        return FileUtils.CreateFile(localStorage, manifestsDir, guid, FileUtils.JSON_EXTENSION);
+        return FileUtils.CreateFile(localStorage, manifestsDir, guid);
     }
 
     private IFile getManifestTempFile(String guid) throws DataStorageException {

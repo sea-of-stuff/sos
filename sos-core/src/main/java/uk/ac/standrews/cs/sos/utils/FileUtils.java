@@ -34,8 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class FileUtils {
 
-    public static final String JSON_EXTENSION = ".json";
-
     public static Manifest ManifestFromFile(IFile file) throws ManifestNotFoundException {
 
         try {
@@ -231,28 +229,14 @@ public class FileUtils {
      * Create a file object.
      * The file object must be persisted by the caller.
      *
-     * @param storage
-     * @param directory
-     * @param filename
-     * @return
-     * @throws DataStorageException
+     * @param storage used to store the file
+     * @param directory where the file is stored
+     * @param filename of the file
+     * @return file
+     * @throws DataStorageException if the file could not be created
      */
     public static IFile CreateFile(LocalStorage storage, IDirectory directory, String filename) throws DataStorageException {
         return storage.createFile(directory, filename);
-    }
-
-    /**
-     * Create a file object.
-     * The file object must be persisted by the caller.
-     *
-     * @param storage
-     * @param directory
-     * @param filename
-     * @return
-     * @throws DataStorageException
-     */
-    public static IFile CreateFile(LocalStorage storage, IDirectory directory, String filename, String extension) throws DataStorageException {
-        return CreateFile(storage, directory, filename + extension);
     }
 
     /**
