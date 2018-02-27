@@ -182,12 +182,7 @@ logs/*
 # Experiments
 .key
 third-party/*
-experiments/plots
-experiments/processed
-experiments/output
-experiments/remote
-experiments/.*
-!experiments/datasets/README.md
-!experiments/datasets/*.py
-experiments/datasets/
+experiments/*
+# !experiments/datasets/README.md
+# !experiments/datasets/*.py
 scripts/sos_who.log
