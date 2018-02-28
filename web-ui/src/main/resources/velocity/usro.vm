@@ -23,8 +23,12 @@
 
     <h1>List of users</h1>
     #foreach($user in $users)
-        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$user.toString()</code></pre>
-        <br>
+        <div id="$user.guid().toMultiHash()">
+            <button id="delete_$user.guid().toMultiHash()" type="button" class="btn btn btn-danger">Delete</button>
+            <br>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$user.toString()</code></pre>
+            <br>
+        </div>
     #end
 
     <hr>
@@ -42,7 +46,12 @@
 
     <h1>List of Roles</h1>
     #foreach($role in $roles)
-        <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$role.toString()</code></pre>
+        <div id="$role.guid().toMultiHash()">
+            <button id="delete_$role.guid().toMultiHash()" type="button" class="btn btn btn-danger">Delete</button>
+            <br>
+            <pre style="white-space: pre-wrap; word-wrap: break-word;"><code class="json">$role.toString()</code></pre>
+            <br>
+        </div>
     #end
 
 </div>
@@ -50,5 +59,19 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.1/umd/popper.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script>
+    $('button[id^="delete_"').click(function() {
+        id = $(this).attr("id").split("delete_")[1];
+
+        $.ajax({
+            url: "/usro/" + id,
+            type: 'DELETE',
+            success: function(data) {
+                console.log("remove user/role from view");
+                $('#' + id).remove()
+            }
+        });
+    });
+</script>
 </body>
 </html>

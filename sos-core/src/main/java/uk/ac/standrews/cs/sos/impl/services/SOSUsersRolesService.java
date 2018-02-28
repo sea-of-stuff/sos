@@ -19,6 +19,7 @@ import uk.ac.standrews.cs.sos.impl.usro.RoleImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UserImpl;
 import uk.ac.standrews.cs.sos.impl.usro.UsersRolesIndex;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
@@ -167,6 +168,33 @@ public class SOSUsersRolesService implements UsersRolesService {
         }
 
         return roles;
+    }
+
+    @Override
+    public void delete(IGUID guid) throws UserNotFoundException, RoleNotFoundException {
+
+        boolean isUser = true;
+        try {
+            Manifest manifest = manifestsDataService.getManifest(guid);
+            if (manifest.getType() == ManifestType.USER) {
+                isUser = true;
+            } else if (manifest.getType() == ManifestType.ROLE) {
+                isUser = false;
+            } else {
+                throw new ManifestNotFoundException();
+            }
+
+            index.delete(guid);
+            manifestsDataService.delete(guid);
+        } catch (ManifestNotFoundException e) {
+
+            if (isUser) {
+                throw new UserNotFoundException();
+            } else {
+                throw new RoleNotFoundException();
+            }
+        }
+
     }
 
     @Override

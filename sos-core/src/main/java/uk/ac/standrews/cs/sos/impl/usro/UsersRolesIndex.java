@@ -52,6 +52,30 @@ public class UsersRolesIndex implements Serializable {
         return usersToRoles.get(userGUID);
     }
 
+    public void delete(IGUID guid) {
+
+        if (usersToRoles.containsKey(guid)) {
+            usersToRoles.remove(guid);
+        } else {
+
+            for(Map.Entry<IGUID, Set<IGUID>> entry:usersToRoles.entrySet()) {
+
+                if (entry.getValue().contains(guid)) {
+                    entry.getValue().remove(guid);
+                    break;
+                }
+            }
+        }
+
+        if (activeUser.guid().equals(guid)) {
+            activeUser = null;
+        }
+
+        if (activeRole.guid().equals(guid)) {
+            activeRole = null;
+        }
+    }
+
     public Role activeRole() throws RoleNotFoundException {
 
         if (activeRole == null) throw new RoleNotFoundException();

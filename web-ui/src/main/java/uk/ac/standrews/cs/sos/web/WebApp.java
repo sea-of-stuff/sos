@@ -83,6 +83,7 @@ public class WebApp {
 
         post("/usro/user", (req, res) -> WUsersRoles.CreateUser(req, res, sos));
         post("/usro/role", (req, res) -> WUsersRoles.CreateRole(req, res, sos));
+        delete("usro/:id", (req, res) -> WUsersRoles.Delete(req, res, sos));
 
         get("/graph/:id", (req, res) -> WGraph.RenderPartial(req, sos));
         get("/graph/asset/:versionid", (req, res) -> WGraph.RenderAsset(req, sos));

@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -64,6 +65,23 @@ public class WUsersRoles {
             return "";
 
         } catch (SignatureException | UserRolePersistException | UserNotFoundException | GUIDGenerationException | ProtectionException e) {
+            e.printStackTrace();
+            response.redirect("/usro");
+            return "";
+        }
+    }
+
+    public static String Delete(Request request, Response response, SOSLocalNode sos) {
+
+        try {
+            IGUID guid = GUIDFactory.recreateGUID(request.params("id"));
+            sos.getUSRO().delete(guid);
+
+            response.redirect("/usro");
+            return "";
+
+        } catch (GUIDGenerationException | UserNotFoundException | RoleNotFoundException e) {
+
             e.printStackTrace();
             response.redirect("/usro");
             return "";

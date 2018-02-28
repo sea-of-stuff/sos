@@ -85,6 +85,15 @@ public interface UsersRolesService extends Service {
     Set<Role> getRoles(IGUID userGUID) throws RoleNotFoundException;
 
     /**
+     * Delete the user/role having the given guid
+     *
+     * @param guid of user/role to delete
+     *
+     * TODO - delete roles with user + check if user/role are replicated elsewhere
+     */
+    void delete(IGUID guid) throws UserNotFoundException, RoleNotFoundException;
+
+    /**
      * Returns the active role for this node
      *
      * @return the active role
