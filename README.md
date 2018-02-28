@@ -58,7 +58,7 @@ The SOS model consists of the following parts:
 
 All the elements of the SOS model can be represented as manifests and they are identied by a unique ID (GUID).
 
-![SOS Model](docs/res/SOS-model.png)
+![SOS Model](docs/images/SOS-model.png)
 
 Example of contexts in JSON formats can be found [here](sos-core/src/main/java/uk/ac/standrews/cs/sos/impl/context/README.md).
 
