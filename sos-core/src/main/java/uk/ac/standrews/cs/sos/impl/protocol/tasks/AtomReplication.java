@@ -34,12 +34,12 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 
 /**
- * The DataReplication task, as the name suggests, replicates data to other nodes.
+ * The AtomReplication task, as the name suggests, replicates data to other nodes.
  * The data can be replicated only to Storage nodes.
  * In doing the replication the caller MUST also specify a wished replication factor for the data.
  *
  *
- * Input for the DataReplication task:
+ * Input for the AtomReplication task:
  * - data to be replicated
  * - list of nodes where the data CAN be replicated
  * - replication factor to satisfy
@@ -59,7 +59,7 @@ import java.util.concurrent.*;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplication extends Task {
+public class AtomReplication extends Task {
 
     private IGUID guid;
     private Data data;
@@ -83,7 +83,7 @@ public class DataReplication extends Task {
      * The data, nodes and replication factor paramters are needed to carry out the task
      * The index, nds and mds are needed to promptly update this node about the new replicated content.
      */
-    public DataReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
+    public AtomReplication(IGUID guid, Data data, NodesCollection nodesCollection, int replicationFactor,
                            StorageService storageService, NodeDiscoveryService nodeDiscoveryService,
                            boolean delegateReplication, boolean dataIsAlreadyProtected, boolean sequential) throws SOSProtocolException {
         super();
@@ -247,7 +247,7 @@ public class DataReplication extends Task {
     private Atom transferDataRequest(InputStream data, Node node) throws SOSProtocolException {
 
         try {
-            URL url = SOSURL.STORAGE_POST_DATA(node);
+            URL url = SOSURL.STORAGE_POST_ATOM(node);
             SOS_LOG.log(LEVEL.INFO, "Replicating data to " + url.toString());
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.JSON);
 
@@ -302,6 +302,6 @@ public class DataReplication extends Task {
 
     @Override
     public String toString() {
-        return "DataReplication. ReplicationFactor: " + replicationFactor;
+        return "AtomReplication. ReplicationFactor: " + replicationFactor;
     }
 }

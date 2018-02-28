@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.AtomReplication;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
@@ -49,7 +49,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationBaseTest extends ProtocolTest {
+public class AtomReplicationBaseTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private ClientAndServer mockServerTwin;
@@ -197,7 +197,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 1, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.SUCCESSFUL);
@@ -226,7 +226,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 1, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
@@ -257,7 +257,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 2, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
@@ -300,7 +300,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 3, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 3, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.UNSUCCESSFUL);
@@ -338,7 +338,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 2, storageService,
                 mockNodeDiscoveryService, false, false, isSequential); // TODO - test for rep factor 1
         TasksQueue.instance().performSyncTask(replicationTask);
 
@@ -374,7 +374,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
         Data data = new StringData(TEST_DATA);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 2, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 2, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
         assertEquals(replicationTask.getState(), TaskState.SUCCESSFUL);
@@ -407,7 +407,7 @@ public class DataReplicationBaseTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA_TIMEOUT);
         Data data = new StringData(TEST_DATA_TIMEOUT);
-        DataReplication replicationTask = new DataReplication(testGUID, data, nodesCollection, 1, storageService,
+        AtomReplication replicationTask = new AtomReplication(testGUID, data, nodesCollection, 1, storageService,
                 mockNodeDiscoveryService, false, false, isSequential);
         TasksQueue.instance().performSyncTask(replicationTask);
 

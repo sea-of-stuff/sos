@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSNode;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchData;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchAtom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -35,7 +35,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @PrepareForTest(DigitalSignature.class)
-public class FetchDataTest extends ProtocolTest {
+public class FetchAtomTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10005;
@@ -84,9 +84,9 @@ public class FetchDataTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
-        FetchData fetchData = new FetchData(node, testGUID);
-        TasksQueue.instance().performSyncTask(fetchData);
-        InputStream fetchedData = fetchData.getBody();
+        FetchAtom fetchAtom = new FetchAtom(node, testGUID);
+        TasksQueue.instance().performSyncTask(fetchAtom);
+        InputStream fetchedData = fetchAtom.getBody();
 
         String fetchedDataString = IO.InputStreamToString(fetchedData);
         assertEquals(fetchedDataString, TEST_DATA);
@@ -103,7 +103,7 @@ public class FetchDataTest extends ProtocolTest {
 
         IGUID testGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, TEST_DATA);
 
-        FetchData fetchData = new FetchData(node, testGUID);
+        FetchAtom fetchAtom = new FetchAtom(node, testGUID);
     }
 
     @Test (expectedExceptions = IOException.class)
@@ -113,6 +113,6 @@ public class FetchDataTest extends ProtocolTest {
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
 
-        FetchData fetchData = new FetchData(node, null);
+        FetchAtom fetchAtom = new FetchAtom(node, null);
     }
 }

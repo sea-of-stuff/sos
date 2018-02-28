@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataReplicationParallelTest extends DataReplicationBaseTest {
+public class AtomReplicationParallelTest extends AtomReplicationBaseTest {
 
     @Test
     public void basicMockServerTest() throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {

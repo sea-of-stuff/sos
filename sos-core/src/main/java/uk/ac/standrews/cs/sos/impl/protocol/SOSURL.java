@@ -139,28 +139,28 @@ public class SOSURL {
         return makeURL(url);
     }
 
-    public static URL STORAGE_GET_DATA(Node node, IGUID guid) throws SOSURLException {
+    public static URL STORAGE_GET_ATOM(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/atom/guid/" + guid.toMultiHash();
 
         return makeURL(url);
     }
 
-    public static URL STORAGE_POST_DATA(Node node) throws SOSURLException {
+    public static URL STORAGE_POST_ATOM(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/atom";
 
         return makeURL(url);
     }
 
-    public static URL STORAGE_DATA_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
+    public static URL STORAGE_ATOM_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/atom/atom/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }
 
-    public static URL STORAGE_DELETE_DATA(Node node, IGUID guid) throws SOSURLException {
+    public static URL STORAGE_DELETE_ATOM(Node node, IGUID guid) throws SOSURLException {
         String url = buildURLBase(node) +
                 "storage/atom/guid/" + guid.toMultiHash();
 

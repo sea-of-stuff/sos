@@ -21,13 +21,13 @@ import java.net.URL;
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class FetchData extends Task {
+public class FetchAtom extends Task {
 
     private Node node;
     private IGUID entityId;
     private InputStream body;
 
-    public FetchData(Node node, IGUID entityId) throws IOException {
+    public FetchAtom(Node node, IGUID entityId) throws IOException {
         super();
 
         if (!node.isStorage()) {
@@ -51,7 +51,7 @@ public class FetchData extends Task {
         SOS_LOG.log(LEVEL.INFO, "Data will be fetched from node " + node.guid());
 
         try {
-            URL url = SOSURL.STORAGE_GET_DATA(node, entityId);
+            URL url = SOSURL.STORAGE_GET_ATOM(node, entityId);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
             if (response instanceof ErrorResponseImpl) {
@@ -90,6 +90,6 @@ public class FetchData extends Task {
 
     @Override
     public String toString() {
-        return "FetchData for guid " + entityId + " from node " + node.guid();
+        return "FetchAtom for guid " + entityId + " from node " + node.guid();
     }
 }

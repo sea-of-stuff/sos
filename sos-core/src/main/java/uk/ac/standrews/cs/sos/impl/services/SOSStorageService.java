@@ -33,7 +33,7 @@ import uk.ac.standrews.cs.sos.impl.manifest.ManifestFactory;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.DataReplication;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.AtomReplication;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
@@ -137,10 +137,10 @@ public class SOSStorageService implements StorageService {
                 boolean sequentialReplication = storageSettings.isSequentialReplication();
 
                 long start = System.nanoTime();
-                DataReplication dataReplication = new DataReplication(guid, data, codomain, replicationFactor,
+                AtomReplication atomReplication = new AtomReplication(guid, data, codomain, replicationFactor,
                         this, nodeDiscoveryService,
                         atomBuilder.isDelegateReplication(), atomBuilder.isAlreadyProtected(), sequentialReplication);
-                TasksQueue.instance().performAsyncTask(dataReplication);
+                TasksQueue.instance().performAsyncTask(atomReplication);
                 long duration = System.nanoTime() - start;
                 InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.replicate_atom, Long.toString(atomBuilder.getData().getSize()), Boolean.toString(sequentialReplication), duration, replicationFactor);
 

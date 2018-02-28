@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchData;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchAtom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 
@@ -73,10 +73,10 @@ public class SOSURLConnection extends URLConnection {
 
                 Node nodeToContact = nodeDiscoveryService.getNode(nodeGUID);
 
-                FetchData fetchData = new FetchData(nodeToContact, entityGUID);
-                TasksQueue.instance().performSyncTask(fetchData);
-                if (fetchData.getState() == TaskState.SUCCESSFUL) {
-                    inputStream = fetchData.getBody();
+                FetchAtom fetchAtom = new FetchAtom(nodeToContact, entityGUID);
+                TasksQueue.instance().performSyncTask(fetchAtom);
+                if (fetchAtom.getState() == TaskState.SUCCESSFUL) {
+                    inputStream = fetchAtom.getBody();
                 } else {
                     throw new IOException("(1) Unable to get data from the node: " + nodeGUID.toMultiHash());
                 }

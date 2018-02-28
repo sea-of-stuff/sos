@@ -17,12 +17,12 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class DataDeletion extends Task {
+public class AtomDeletion extends Task {
 
     private Node node;
     private IGUID guid;
 
-    public DataDeletion(Node node, IGUID guid) {
+    public AtomDeletion(Node node, IGUID guid) {
         this.node = node;
         this.guid = guid;
     }
@@ -31,7 +31,7 @@ public class DataDeletion extends Task {
     protected void performAction() {
 
         try {
-            URL url = SOSURL.STORAGE_DELETE_DATA(node, guid);
+            URL url = SOSURL.STORAGE_DELETE_ATOM(node, guid);
             SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.DELETE, url, ResponseType.JSON);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
