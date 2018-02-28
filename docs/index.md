@@ -1,5 +1,7 @@
 # SOS - Sea of Stuff
 
+<img src="res/icon.png" height="100" alt="SOS Model">
+
 This is a prototype of a distributed autonomic personal data storage system.
 
 ```
