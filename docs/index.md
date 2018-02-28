@@ -1,6 +1,6 @@
 # SOS - Sea of Stuff
 
-<img src="images/icon.png" height="100" alt="SOS Model">
+<img src="images/icon.png" height="150" alt="SOS Icon" class="center">
 
 This is a prototype of a distributed autonomic personal data storage system.
 
@@ -21,7 +21,7 @@ This is a prototype of a distributed autonomic personal data storage system.
 
 ## SOS Model
 
-<img src="images/SOS-model.png" height="500" alt="SOS Model">
+<img src="images/SOS-model.png" height="700" alt="SOS Model">
 
 
 ## SOS Architecture
