@@ -27,3 +27,7 @@ This is a prototype of a distributed autonomic personal data storage system.
 ## SOS Architecture
 
 WIP
+
+## Comparison with similar systems
+
+See [comparison table](comparison.htm)
