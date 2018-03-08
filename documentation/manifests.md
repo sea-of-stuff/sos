@@ -1,8 +1,9 @@
 # Manifests
 
+
 ## Basic Structure
 
-```json
+```
 {
   "type" : <Manifest Type>,
   "guid" : hash(<Content to Hash>),
@@ -10,9 +11,10 @@
 }
 ```
 
+
 ## Basic Signed Structure
 
-```json
+```
 {
   "type" : <Manifest Type>,
   "guid" : hash(<Content to Hash>),
@@ -22,9 +24,10 @@
 }
 ```
 
+
 ## Basic Protected Entity Structure
 
-```json
+```
 {
   "type" : Protected Manifest Type,
   "guid" : hash(contents of manifest),
@@ -39,10 +42,10 @@
 }
 ```
 
+
 ## Node
 
-
-```json
+```
 {
   "type" : "Node",
   "guid" : hash(certificate),
@@ -72,9 +75,10 @@
 }
 ```
 
+
 ## Atom
 
-```json
+```
 {
     "type" : "Atom",
     "guid" : hash(data),
@@ -88,10 +92,10 @@
 }
 ```
 
+
 ## Compound
 
-
-```json
+```
 {
     "type" : "Compound",
     "guid" : hash(type, compound_type, contents),
@@ -109,10 +113,10 @@
 }
 ```
 
+
 ## Version
 
-
-```json
+```
 {
   "type" : "Version",
   "guid" : hash(invariant, content, *previous), # Identifies uniquely this version.
@@ -122,9 +126,10 @@
 }
 ```
 
+
 ## Metadata
 
-```json
+```
 {
   "type" : "Metadata",
   "guid" : hash(properties),
@@ -138,9 +143,10 @@
 }
 ```
 
+
 ## User
 
-```json
+```
 {
   "type" : "User",
   "guid" : hash(type, name, certificate),
@@ -149,9 +155,10 @@
 }
 ```
 
+
 ## Role
 
-```json
+```
 {
   "type" : "Role",
   "guid" : hash(type, user, name, signature, certificate, public key),
@@ -163,9 +170,10 @@
 }
 ```
 
+
 ## Context
 
-```json
+```
 {
     "type": "Context",
     "guid": hash(type, name, invariant, *previous, *content, 
@@ -189,9 +197,10 @@
 }
 ```
 
+
 ## Predicate
 
-```json
+```
 {
   "type" : "Predicate",
   "guid" : hash(predicate),
@@ -199,9 +208,10 @@
 }
 ```
 
+
 ## Policy
 
-```json
+```
 {
   "type" : "Policy",
   "guid" : hash(policy),
