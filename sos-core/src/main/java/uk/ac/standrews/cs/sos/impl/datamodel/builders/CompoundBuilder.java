@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.datamodel.builders;
 import uk.ac.standrews.cs.sos.model.CompoundType;
 import uk.ac.standrews.cs.sos.model.Content;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -12,6 +13,11 @@ public class CompoundBuilder extends ManifestBuilder {
 
     private CompoundType type;
     private Set<Content> contents;
+
+    public CompoundBuilder() {
+        type = CompoundType.COLLECTION;
+        contents = new LinkedHashSet<>();
+    }
 
     public CompoundType getType() {
         return type;
