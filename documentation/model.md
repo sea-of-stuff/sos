@@ -13,4 +13,7 @@ All the elements of the SOS model can be represented as manifests and they are i
 
 ![SOS Model](../docs/images/SOS-model.png)
 
+
+---
+
 Example of contexts in JSON formats can be found [here](../sos-core/src/main/java/uk/ac/standrews/cs/sos/impl/context/README.md).

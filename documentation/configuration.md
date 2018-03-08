@@ -2,6 +2,8 @@
 
 The configuration of a SOS node is specified using a simple JSON structure.
 
+See also the [example_config.json](../example_config.json)
+
 ### Example
 
 ```json
@@ -53,6 +55,9 @@ The configuration of a SOS node is specified using a simple JSON structure.
       },
       "mms": {
         "exposed": false
+      },
+      "experiment": {
+        "exposed": false
       }
     },
     "database": {
@@ -75,7 +80,6 @@ The configuration of a SOS node is specified using a simple JSON structure.
       "location": "~/sos/"
     },
     "global": {
-      "ssl_trust_store" : "PATH TO THE JAVA SECURITY CACERTS",
       "tasks": {
         "thread": {
           "ps": 4

@@ -56,7 +56,6 @@ The sos-core module contains the code to manage a SOS node and with it:
 - manage the SOS services (agent, storage, nodeDiscoveryService, dataDiscoveryService, metadataService, etc...)
 
 
-
 ## SOS Modules
 
 In this section we provide a brief insight to some of the modules of the SOS project.
@@ -127,7 +126,6 @@ with the `-j` option enabling the Jetty REST server.
 The code for the experiments is found under `sos-experiments/`. Read the relevant [README](sos-experiments/README.md) for more info.
 
 The experiments results are located under `experiments/output`.
-
 
 
 
