@@ -8,12 +8,13 @@ import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.utils.InternetProtocol;
+import uk.ac.standrews.cs.utilities.archive.NetworkUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.security.PublicKey;
 import java.util.Objects;
 
@@ -65,8 +66,13 @@ public class SOSNode extends BasicManifest implements Node {
     protected SOSNode(SettingsConfiguration.Settings settings) {
         super(ManifestType.NODE);
 
-        InetAddress address = InternetProtocol.findLocalAddress();
-        assert(address != null);
+        InetAddress address = null;
+        try {
+            address = NetworkUtil.getLocalIPv4Address();
+            assert(address != null);
+        } catch (UnknownHostException e) {
+            assert(false); // Brutally interrupt execution - TODO - it can be improved with proper exception
+        }
 
         int port = settings.getRest().getPort();
         this.hostAddress = new InetSocketAddress(address, port);
