@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
@@ -23,9 +24,10 @@ import java.util.Objects;
  */
 public class SOSNode extends BasicManifest implements Node {
 
-    protected PublicKey signatureCertificate;
     protected IGUID nodeGUID; // derived by signature certificate.
-    protected InetSocketAddress hostAddress;
+
+    PublicKey signatureCertificate;
+    InetSocketAddress hostAddress;
 
     /******************
      * DB fields *
@@ -63,17 +65,10 @@ public class SOSNode extends BasicManifest implements Node {
         this.DB_is_experiment = isExperiment;
     }
 
-    protected SOSNode(SettingsConfiguration.Settings settings) {
+    protected SOSNode(SettingsConfiguration.Settings settings) throws SOSException {
         super(ManifestType.NODE);
 
-        InetAddress address = null;
-        try {
-            address = NetworkUtil.getLocalIPv4Address();
-            assert(address != null);
-        } catch (UnknownHostException e) {
-            assert(false); // Brutally interrupt execution - TODO - it can be improved with proper exception
-        }
-
+        InetAddress address = getLocalAddress();
         int port = settings.getRest().getPort();
         this.hostAddress = new InetSocketAddress(address, port);
 
@@ -89,7 +84,6 @@ public class SOSNode extends BasicManifest implements Node {
         this.DB_is_rms = settings.getServices().getRms().isExposed();
         this.DB_is_experiment = settings.getServices().getExperiment().isExposed();
     }
-
 
     // Cloning constructor
     public SOSNode(Node node) {
@@ -193,6 +187,19 @@ public class SOSNode extends BasicManifest implements Node {
     @Override
     public int hashCode() {
         return Objects.hash(guid());
+    }
+
+    private InetAddress getLocalAddress() throws SOSException {
+
+        try {
+            InetAddress address = NetworkUtil.getLocalIPv4Address();
+            assert(address != null);
+
+            return address;
+
+        } catch (UnknownHostException e) {
+            throw new SOSException("Unable to establish IP address for node");
+        }
     }
 
 }

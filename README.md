@@ -29,7 +29,6 @@ This is a prototype of a distributed autonomic personal data storage system buil
 ```
 |-- sos
     |-- docs                // Webpage for this project
-    |-- documentation       // SOS documentation
     |-- sos-core            // The core of the SOS
     |-- sos-rest            // REST interface for the SOS
     |-- sos-rest-jetty      // Jetty server

@@ -3,6 +3,8 @@ package uk.ac.standrews.cs.sos.impl.context;
 /**
  * http://maxmind.github.io/GeoIP2-java/
  *
+ * TODO - move to its own project
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class IPGeoUtils {
