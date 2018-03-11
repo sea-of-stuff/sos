@@ -9,7 +9,6 @@
       },
       "cms": {
         "exposed": false,
-        "loadedPath": "sos/java/contexts/",
         "automatic": false,
         "predicateOnNewContext" : false,
         "predicateThread": {

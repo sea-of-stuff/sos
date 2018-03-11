@@ -6,7 +6,6 @@
             },
             "cms": {
                 "exposed": false,
-                "loadedPath": "sos-core/src/test/resources/contexts/",
                 "automatic": false,
                 "predicateThread": {
                     "initialDelay": 30,
