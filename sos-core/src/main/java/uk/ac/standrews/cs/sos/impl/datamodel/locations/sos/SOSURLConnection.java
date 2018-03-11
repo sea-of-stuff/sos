@@ -16,6 +16,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.FetchAtom;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
+import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,7 @@ public class SOSURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    protected SOSURLConnection(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService, URL url) {
+    SOSURLConnection(LocalStorage localStorage, NodeDiscoveryService nodeDiscoveryService, URL url) {
         super(url);
 
         this.localStorage = localStorage;
@@ -62,27 +63,26 @@ public class SOSURLConnection extends URLConnection {
         InputStream inputStream;
 
         try {
-            IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
-            IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip initial slash
+            Pair<IGUID, IGUID> location = extractGUIDs(url);
 
-            if (isLocalNode(nodeGUID) && dataIsStoredLocally(entityGUID)) {
+            if (isLocalNode(location.X()) && dataIsStoredLocally(location.Y())) {
 
-                inputStream = getDataLocally(entityGUID);
+                inputStream = getDataLocally(location.Y());
 
-            } else if (!isLocalNode(nodeGUID)) {
+            } else if (!isLocalNode(location.X())) {
 
-                Node nodeToContact = nodeDiscoveryService.getNode(nodeGUID);
+                Node nodeToContact = nodeDiscoveryService.getNode(location.X());
 
-                FetchAtom fetchAtom = new FetchAtom(nodeToContact, entityGUID);
+                FetchAtom fetchAtom = new FetchAtom(nodeToContact, location.Y());
                 TasksQueue.instance().performSyncTask(fetchAtom);
                 if (fetchAtom.getState() == TaskState.SUCCESSFUL) {
                     inputStream = fetchAtom.getBody();
                 } else {
-                    throw new IOException("(1) Unable to get data from the node: " + nodeGUID.toMultiHash());
+                    throw new IOException("(1) Unable to get data from the node: " + location.X().toMultiHash());
                 }
 
             } else {
-                throw new IOException("(2) Unable to get data from the node: " + nodeGUID.toMultiHash());
+                throw new IOException("(2) Unable to get data from the node: " + location.X().toMultiHash());
             }
 
         } catch (GUIDGenerationException | DataException | BindingAbsentException | DataStorageException | NodeNotFoundException e) {
@@ -90,6 +90,14 @@ public class SOSURLConnection extends URLConnection {
         }
 
         return inputStream;
+    }
+
+    private Pair<IGUID, IGUID> extractGUIDs(URL url) throws GUIDGenerationException {
+
+        IGUID nodeGUID = GUIDFactory.recreateGUID(url.getHost());
+        IGUID entityGUID = GUIDFactory.recreateGUID(url.getFile().substring(1)); // skip separating slash
+
+        return new Pair<>(nodeGUID, entityGUID);
     }
 
     private boolean isLocalNode(IGUID nodeGUID) {

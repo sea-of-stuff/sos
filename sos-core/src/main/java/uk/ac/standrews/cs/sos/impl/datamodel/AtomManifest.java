@@ -62,7 +62,7 @@ public class AtomManifest extends BasicManifest implements Atom {
 
         for (LocationBundle location : getLocations()) {
 
-            Data data = LocationUtility.getDataFromLocation(location.getLocation());
+            Data data = LocationUtility.getData(location.getLocation());
 
             if (!(data instanceof EmptyData)) {
                 return data;
@@ -112,7 +112,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     @Override
     public boolean verifyIntegrity(LocationBundle locationBundle) {
 
-        try (Data data = LocationUtility.getDataFromLocation(locationBundle.getLocation())) {
+        try (Data data = LocationUtility.getData(locationBundle.getLocation())) {
 
             IGUID generatedGUID = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
             if (generatedGUID.isInvalid() || !guid().equals(generatedGUID)) {

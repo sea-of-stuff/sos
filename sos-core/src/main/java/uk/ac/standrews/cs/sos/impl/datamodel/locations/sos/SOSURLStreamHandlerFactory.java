@@ -20,7 +20,7 @@ public class SOSURLStreamHandlerFactory implements URLStreamHandlerFactory {
     /**
      * Construct the factory with the given nodes directory.
      */
-    public SOSURLStreamHandlerFactory(LocalStorage localStorage) {
+    SOSURLStreamHandlerFactory(LocalStorage localStorage) {
         sosurlStreamHandler = new SOSURLStreamHandler(localStorage);
     }
 

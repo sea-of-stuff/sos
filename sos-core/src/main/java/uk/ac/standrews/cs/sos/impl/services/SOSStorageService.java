@@ -381,7 +381,7 @@ public class SOSStorageService implements StorageService {
                 }
             }
 
-            Data data = LocationUtility.getDataFromLocation(location);
+            Data data = LocationUtility.getData(location);
 
             if (!(data instanceof EmptyData)) {
 

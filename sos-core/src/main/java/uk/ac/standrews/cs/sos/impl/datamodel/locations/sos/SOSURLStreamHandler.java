@@ -15,7 +15,7 @@ public class SOSURLStreamHandler extends URLStreamHandler {
     private LocalStorage localStorage;
     private NodeDiscoveryService nodeDiscoveryService;
 
-    public SOSURLStreamHandler(LocalStorage localStorage) {
+    SOSURLStreamHandler(LocalStorage localStorage) {
         this.localStorage = localStorage;
     }
 

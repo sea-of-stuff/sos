@@ -20,7 +20,7 @@ public class LocationUtility {
      * @param location where the data is
      * @return the data at the given location.
      */
-    public static Data getDataFromLocation(Location location) {
+    public static Data getData(Location location) {
 
         try (InputStream inputStream = location.getSource()){
             return new InputStreamData(inputStream);

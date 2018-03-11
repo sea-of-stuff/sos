@@ -103,10 +103,7 @@ public class URILocation implements Location {
 
     private InputStream getHTTPSSource() throws IOException {
 
-        SyncRequest request = new SyncRequest(HTTPMethod.GET, uri.toURL(), ResponseType.BINARY);
-        Response response = RequestsManager.getInstance().playSyncRequest(request);
-
-        return response.getBody();
+        return getHTTPSource();
     }
 
     private InputStream getFileSource() throws IOException {

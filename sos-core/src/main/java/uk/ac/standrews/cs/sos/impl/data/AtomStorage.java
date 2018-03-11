@@ -165,7 +165,7 @@ public class AtomStorage {
 
     private IGUID generateGUID(Location location) {
 
-        try (Data data = LocationUtility.getDataFromLocation(location)) {
+        try (Data data = LocationUtility.getData(location)) {
 
             long start = System.nanoTime();
             IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());
