@@ -14,6 +14,4 @@ public interface Service {
      * Stops the threads and cleans up the data structures
      */
     void shutdown();
-
-
 }

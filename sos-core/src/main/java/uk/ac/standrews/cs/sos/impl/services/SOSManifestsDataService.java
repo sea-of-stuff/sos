@@ -129,7 +129,7 @@ public class SOSManifestsDataService implements ManifestsDataService {
     }
 
     @Override
-    public void addManifest(Manifest manifest, NodesCollection nodes, int replicationFactor, boolean limitReplication, boolean storeLocally) throws ManifestPersistException {
+    public void addManifest(Manifest manifest, boolean storeLocally, NodesCollection nodes, int replicationFactor, boolean limitReplication) throws ManifestPersistException {
 
         if (storeLocally) {
             addManifest(manifest);

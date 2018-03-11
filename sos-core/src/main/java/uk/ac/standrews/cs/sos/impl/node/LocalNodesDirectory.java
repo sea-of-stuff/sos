@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
+import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 
 import java.util.*;
@@ -72,13 +73,14 @@ public class LocalNodesDirectory {
      * @param limit max number of nodes to return, ignore if limit <= 0
      * @return set of nodes
      */
-    public Set<Node> getNodes(Predicate<Node> predicate, int limit) {
+    public Set<IGUID> getNodes(Predicate<Node> predicate, int limit) {
 
-        Stream<Node> nodesStream = knownNodes.stream()
-                .filter(predicate);
+        Stream<IGUID> nodesStream = knownNodes.stream()
+                .filter(predicate)
+                .map(Manifest::guid);
 
         if (getLocalNode() != null) {
-            nodesStream = nodesStream.filter(n -> !n.guid().equals(getLocalNode().guid()));
+            nodesStream = nodesStream.filter(n -> !n.equals(getLocalNode().guid()));
         }
 
         nodesStream = nodesStream.distinct();
@@ -87,7 +89,7 @@ public class LocalNodesDirectory {
             nodesStream = nodesStream.limit(limit);
         }
 
-        List<Node> nodes = nodesStream.collect(toList());
+        List<IGUID> nodes = nodesStream.collect(toList());
         Collections.shuffle(nodes); // Naive load balancing
 
         return new HashSet<>(nodes);

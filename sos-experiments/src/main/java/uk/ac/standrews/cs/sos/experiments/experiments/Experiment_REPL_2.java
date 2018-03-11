@@ -118,7 +118,7 @@ public class Experiment_REPL_2 extends BaseExperiment implements Experiment {
 
                 try {
                     Version version = ManifestFactory.createVersionManifest(GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID(), null, null, null);
-                    manifestsDataService.addManifest(version, codomain, replicationFactor, false, false);
+                    manifestsDataService.addManifest(version, false, codomain, replicationFactor, false);
                 } catch (ManifestNotMadeException | ManifestPersistException e) {
                     throw new IOException(e);
                 }

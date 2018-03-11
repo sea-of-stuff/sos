@@ -14,27 +14,17 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Context Management Service
- *
- * On creation, the CMS will load the persisted contexts
- * Contexts will be referenced through versions
+ * Context Management Service (*CMS)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public interface ContextService extends Service {
 
     /**
-     * Get all the contexts run by this node
-     *
-     * @return set of context objects
-     */
-    Set<Context> getContexts();
-
-    /**
      * Get all the contexts run by this node.
      * @return set of references to the contexts
      */
-    Set<IGUID> getContextsRefs();
+    Set<IGUID> getContexts();
 
     /**
      * Adds a context to this service.
@@ -103,10 +93,10 @@ public interface ContextService extends Service {
      * Get a context given its name
      *
      * @param contextName string used for querying contexts
-     * @return set of contexts matching the string name
+     * @return set of context refs matching the string name
      * @throws ContextNotFoundException if not context was found for given GUID
      */
-    Set<Context> searchContexts(String contextName) throws ContextNotFoundException;
+    Set<IGUID> searchContexts(String contextName) throws ContextNotFoundException;
 
     /**
      * Get the set for all content belonging to the specified context.
@@ -115,8 +105,6 @@ public interface ContextService extends Service {
      *
      * @param context for which we want to find its contents
      * @return the references to the contents of the context
-     *
-     *
      */
     Set<IGUID> getContents(IGUID context);
 

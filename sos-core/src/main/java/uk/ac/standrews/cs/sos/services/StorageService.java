@@ -39,14 +39,6 @@ public interface StorageService extends Service {
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
 
     /**
-     * Delete the data for the atom matching the guid from the local node.
-     *
-     * @param guid of the atom
-     * @throws AtomNotFoundException if no atom data was found
-     */
-    void deleteAtom(IGUID guid) throws AtomNotFoundException;
-
-    /**
      * Let granterRole grant access to granteeRole to the secure entity
      *
      * @param secureManifest in question
@@ -129,6 +121,14 @@ public interface StorageService extends Service {
      * @return the guid of the atom+challenge
      */
     IGUID challenge(IGUID guid, String challenge);
+
+    /**
+     * Delete the data for the atom matching the guid from the local node.
+     *
+     * @param guid of the atom
+     * @throws AtomNotFoundException if no atom data was found
+     */
+    void deleteAtom(IGUID guid) throws AtomNotFoundException;
 
     /**
      * Flush all indexes and caches managed by the storage actor

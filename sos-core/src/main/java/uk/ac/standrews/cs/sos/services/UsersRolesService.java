@@ -22,14 +22,14 @@ public interface UsersRolesService extends Service {
      *
      * @return set of users
      */
-    Set<User> getUsers();
+    Set<IGUID> getUsers();
 
     /**
      * Get the roles stored at this node
      *
      * @return set of roles
      */
-    Set<Role> getRoles();
+    Set<IGUID> getRoles();
 
     /**
      * Add a user to the service
@@ -82,7 +82,7 @@ public interface UsersRolesService extends Service {
      * @return set of roles created by the user
      * @throws RoleNotFoundException if no role could be found
      */
-    Set<Role> getRoles(IGUID userGUID) throws RoleNotFoundException;
+    Set<IGUID> getRoles(IGUID userGUID) throws RoleNotFoundException;
 
     /**
      * Delete the user/role having the given guid

@@ -18,6 +18,11 @@ This is a prototype of a distributed autonomic personal data storage system.
      \__\/         \__\/         \__\/
 ```
 
+## Goals
+
+- persistent data
+- versionable content
+- ...
 
 ## SOS Model
 
@@ -31,3 +36,16 @@ WIP
 ## Comparison with similar systems
 
 See [comparison table](comparison.htm)
+
+## Example applications
+
+- WebApp
+- SOS-WebDAV server
+- SOS WebArchive
+- git-to-sos
+
+
+## Download
+
+Download the stable releases from [here](https://github.com/stacs-srg/sos/releases)
+or checkout the [latest code](https://github.com/stacs-srg/sos).

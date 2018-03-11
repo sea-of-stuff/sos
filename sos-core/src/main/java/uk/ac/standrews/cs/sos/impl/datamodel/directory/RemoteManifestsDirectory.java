@@ -29,7 +29,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.REPLICATION_FACTOR_MULTIPLIER;
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
@@ -248,9 +247,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         } else if (nodesCollection.type().equals(NodesCollectionType.ANY)){
 
             // Get nodes where we know the entity could be
-            nodesToCheck = nodeDiscoveryService.getNodes(nodeType).stream()
-                    .map(Node::guid)
-                    .collect(Collectors.toSet());
+            nodesToCheck = nodeDiscoveryService.getNodes(nodeType);
 
         } else {
 

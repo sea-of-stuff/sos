@@ -52,9 +52,9 @@ public interface NodeDiscoveryService extends Service {
      * Get a set of nodes matching the specified type
      *
      * @param type of request nodes
-     * @return set of nodes
+     * @return set of node refs
      */
-    Set<Node> getNodes(NodeType type);
+    Set<IGUID> getNodes(NodeType type);
 
     /**
      * Get a set of nodes from a nodes collection.
@@ -64,7 +64,7 @@ public interface NodeDiscoveryService extends Service {
      * @param limit max number of returned nodes
      * @return the set of nodes found
      */
-    Set<Node> getNodes(NodesCollection nodesCollection, int limit);
+    Set<IGUID> getNodes(NodesCollection nodesCollection, int limit);
 
     /**
      * Returns a set of node refs matching the NodesCollection and NodeType constraints.
@@ -77,6 +77,13 @@ public interface NodeDiscoveryService extends Service {
      */
     NodesCollection filterNodesCollection(NodesCollection nodesCollection, NodeType type, int limit);
 
+    /**
+     * Filter the nodes in the collection by the given limit
+     *
+     * @param nodesCollection
+     * @param limit
+     * @return
+     */
     NodesCollection filterNodesCollection(NodesCollection nodesCollection, int limit);
 
     /**
@@ -84,7 +91,7 @@ public interface NodeDiscoveryService extends Service {
      *
      * @return set of nodes
      */
-    Set<Node> getNodes();
+    Set<IGUID> getNodes();
 
     /**
      * Returns a set of known nodes.
@@ -93,9 +100,10 @@ public interface NodeDiscoveryService extends Service {
      * @param limit max number of nodes to return
      * @return the nodes found
      */
-    Set<Node> getNodes(int limit);
+    Set<IGUID> getNodes(int limit);
 
     /**
+     * Get the generic info about a given node
      *
      * @param guid of the node
      * @return the info in JSON format
@@ -104,6 +112,7 @@ public interface NodeDiscoveryService extends Service {
     String infoNode(IGUID guid) throws NodeNotFoundException;
 
     /**
+     * Get the generic info about a given node
      *
      * @param node with partial info. This node must have: host address, host port, signature certificate
      * @return the info in JSON format

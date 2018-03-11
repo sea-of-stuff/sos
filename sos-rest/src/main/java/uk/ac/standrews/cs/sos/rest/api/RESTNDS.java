@@ -20,6 +20,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
@@ -89,10 +90,19 @@ public class RESTNDS {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/nds/service/{service}");
 
         try {
-            NodeType nodeType = NodeType.get(service.toLowerCase());
-
             NodeDiscoveryService nodeDiscoveryService = RESTConfig.sos.getNDS();
-            Set<Node> nodes = nodeDiscoveryService.getNodes(nodeType);
+
+            NodeType nodeType = NodeType.get(service.toLowerCase());
+            Set<Node> nodes = new LinkedHashSet<>();
+            for(IGUID nodeRef:nodeDiscoveryService.getNodes(nodeType)) {
+                try {
+                    Node node = nodeDiscoveryService.getNode(nodeRef);
+                    nodes.add(node);
+                } catch (NodeNotFoundException e) {
+                    /* IGNORE */
+                }
+            }
+
             String out = JSONHelper.jsonObjMapper().writeValueAsString(nodes);
 
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);

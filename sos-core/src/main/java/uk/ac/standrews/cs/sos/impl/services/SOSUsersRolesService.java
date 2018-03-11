@@ -29,7 +29,6 @@ import uk.ac.standrews.cs.sos.utils.Persistence;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.*;
@@ -64,41 +63,15 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public Set<User> getUsers() {
+    public Set<IGUID> getUsers() {
 
-        Set<User> users = new LinkedHashSet<>();
-        Set<IGUID> refs = manifestsDataService.getManifests(ManifestType.USER);
-        for(IGUID ref:refs) {
-
-            try {
-                User user = (User) manifestsDataService.getManifest(ref, NodeType.RMS);
-                users.add(user);
-
-            } catch (ManifestNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get User manifest from GUID " + ref.toMultiHash());
-            }
-        }
-
-        return users;
+        return manifestsDataService.getManifests(ManifestType.USER);
     }
 
     @Override
-    public Set<Role> getRoles() {
+    public Set<IGUID> getRoles() {
 
-        Set<Role> roles = new LinkedHashSet<>();
-        Set<IGUID> refs = manifestsDataService.getManifests(ManifestType.ROLE);
-        for(IGUID ref:refs) {
-
-            try {
-                Role role = (Role) manifestsDataService.getManifest(ref, NodeType.RMS);
-                roles.add(role);
-
-            } catch (ManifestNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get Role manifest from GUID " + ref.toMultiHash());
-            }
-        }
-
-        return roles;
+        return manifestsDataService.getManifests(ManifestType.ROLE);
     }
 
     @Override
@@ -152,22 +125,9 @@ public class SOSUsersRolesService implements UsersRolesService {
     }
 
     @Override
-    public Set<Role> getRoles(IGUID userGUID) {
+    public Set<IGUID> getRoles(IGUID userGUID) {
 
-        Set<Role> roles = new LinkedHashSet<>();
-        Set<IGUID> roleRefs = index.getRoles(userGUID);
-        for(IGUID ref:roleRefs) {
-
-            try {
-                Role role = (Role) manifestsDataService.getManifest(ref, NodeType.RMS);
-                roles.add(role);
-
-            } catch (ManifestNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get Role manifest from GUID " + ref.toMultiHash());
-            }
-        }
-
-        return roles;
+        return index.getRoles(userGUID);
     }
 
     @Override

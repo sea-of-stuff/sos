@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * The SOSNDS represents a basic NDS implementation.
@@ -87,7 +86,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
             if (localOnly) {
                 manifestsDataService.addManifest(node);
             } else {
-                manifestsDataService.addManifest(node, new NodesCollectionImpl(NodesCollectionType.ANY), 1, true, true);
+                manifestsDataService.addManifest(node, true, new NodesCollectionImpl(NodesCollectionType.ANY), 1, true);
             }
 
         } catch (ManifestPersistException | NodesDirectoryException | NodesCollectionException e) {
@@ -125,7 +124,7 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public Set<Node> getNodes(NodeType type) {
+    public Set<IGUID> getNodes(NodeType type) {
 
         switch(type) {
             case STORAGE:
@@ -146,26 +145,21 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     }
 
     @Override
-    public Set<Node> getNodes(NodesCollection nodesCollection, int limit) {
+    public Set<IGUID> getNodes(NodesCollection nodesCollection, int limit) {
 
         if (nodesCollection.type() == NodesCollectionType.ANY) {
             return getNodes(limit);
         }
 
         if (nodesCollection.type() == NodesCollectionType.LOCAL) {
-            Set<Node> retval = new LinkedHashSet<>();
-            retval.add(localNodesDirectory.getLocalNode());
+            Set<IGUID> retval = new LinkedHashSet<>();
+            retval.add(localNodesDirectory.getLocalNode().guid());
             return retval;
         }
 
-        Set<Node> retval = new LinkedHashSet<>();
+        Set<IGUID> retval = new LinkedHashSet<>();
         for(IGUID guid : nodesCollection.nodesRefs()) {
-
-            try {
-                retval.add(getNode(guid));
-            } catch (NodeNotFoundException e) {
-                continue;
-            }
+            retval.add(guid);
 
             if (retval.size() > limit) break;
         }
@@ -228,20 +222,17 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
     @Override
     public NodesCollection filterNodesCollection(NodesCollection nodesCollection, int limit) {
 
-        Set<Node> filteredNodes = getNodes(nodesCollection, limit);
-        Set<IGUID> filteredNodesRef = filteredNodes.stream()
-                .map(Manifest::guid)
-                .collect(Collectors.toSet());
-        return new NodesCollectionImpl(filteredNodesRef);
+        Set<IGUID> filteredNodes = getNodes(nodesCollection, limit);
+        return new NodesCollectionImpl(filteredNodes);
     }
 
     @Override
-    public Set<Node> getNodes() {
+    public Set<IGUID> getNodes() {
         return getNodes(NO_LIMIT);
     }
 
     @Override
-    public Set<Node> getNodes(int limit) {
+    public Set<IGUID> getNodes(int limit) {
         return localNodesDirectory.getNodes(p -> true, limit);
     }
 
@@ -314,15 +305,22 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
         service.scheduleWithFixedDelay(() -> {
 
-            for(Node node:getNodes()) {
+            for(IGUID nodeRef:getNodes()) {
 
-                if (!nodesStats.containsKey(node.guid())) {
-                    nodesStats.put(node.guid(), new NodeStats(node.guid()));
+                try {
+                    if (!nodesStats.containsKey(nodeRef)) {
+                        nodesStats.put(nodeRef, new NodeStats(nodeRef));
+                    }
+
+                    Node node = getNode(nodeRef);
+                    PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
+                    TasksQueue.instance().performSyncTask(pingNode);
+                    nodesStats.get(nodeRef).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
+
+                } catch (NodeNotFoundException e) {
+                    SOS_LOG.log(LEVEL.WARN, "Unable to ping node with GUID " + nodeRef.toShortString());
+                    continue;
                 }
-
-                PingNode pingNode = new PingNode(node, UUID.randomUUID().toString());
-                TasksQueue.instance().performSyncTask(pingNode);
-                nodesStats.get(node.guid()).addMeasure(pingNode.getTimestamp(), pingNode.valid(), pingNode.getLatency());
             }
 
         }, 10, 10, TimeUnit.SECONDS); // TODO - use settings from node config

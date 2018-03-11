@@ -130,25 +130,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<Context> getContexts() {
-
-        Set<Context> contexts = new LinkedHashSet<>();
-        for(IGUID contextRef:getContextsRefs()) {
-
-            try {
-                Context context = getContext(contextRef);
-                contexts.add(context);
-            } catch (ContextNotFoundException e) {
-                SOS_LOG.log(LEVEL.WARN, "Unable to get context with ref: " + contextRef.toMultiHash());
-                /* SKIP */
-            }
-        }
-
-        return contexts;
-    }
-
-    @Override
-    public Set<IGUID> getContextsRefs() {
+    public Set<IGUID> getContexts() {
 
         Set<IGUID> contexts = new LinkedHashSet<>();
 
@@ -335,20 +317,12 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public Set<Context> searchContexts(String contextName) throws ContextNotFoundException {
+    public Set<IGUID> searchContexts(String contextName) throws ContextNotFoundException {
 
         List<ManifestParam> params = new LinkedList<>();
         params.add(new ManifestParam(JSONConstants.KEY_CONTEXT_NAME, contextName));
 
-        Set<IGUID> contextsFound = manifestsDataService.searchVersionableManifests(ManifestType.CONTEXT, params);
-
-        Set<Context> retval = new LinkedHashSet<>();
-        for(IGUID contextRef:contextsFound) {
-            Context context = getContext(contextRef);
-            retval.add(context);
-        }
-
-        return retval;
+        return manifestsDataService.searchVersionableManifests(ManifestType.CONTEXT, params);
     }
 
     @Override
@@ -571,9 +545,10 @@ public class SOSContextService implements ContextService {
 
         int counter = 0;
 
-        for (Context context : getContexts()) {
-            SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
+        for (IGUID contextRef : this.getContexts()) {
             try {
+                Context context = getContext(contextRef);
+                SOS_LOG.log(LEVEL.INFO, "Running predicate for context " + context.getUniqueName());
 
                 ContextStats.Predicate predicateStats = new ContextStats.Predicate();
 
@@ -584,10 +559,10 @@ public class SOSContextService implements ContextService {
                 InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_dataset, context.getName(), predicateStats.getPred_time_to_run_predicate_on_current_dataset().get());
                 InstrumentFactory.instance().measure(StatsTYPE.predicate, StatsTYPE.predicate_update_context, context.getName(), predicateStats.getPred_time_to_update_context().get());
 
+                SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getUniqueName());
             } catch (ContextException e) {
-                SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + context.getUniqueName() + " properly");
+                SOS_LOG.log(LEVEL.ERROR, "Unable to run predicates for context " + contextRef.toShortString() + " properly");
             }
-            SOS_LOG.log(LEVEL.INFO, "Finished to run predicate for context " + context.getUniqueName());
         }
 
         return counter;
@@ -806,15 +781,20 @@ public class SOSContextService implements ContextService {
     @Override
     public void runPolicies() {
 
-        Set<Context> contexts = getContexts();
-        for (Context context : contexts) {
-            SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
+        for (IGUID contextRef : this.getContexts()) {
+            try {
+                Context context = getContext(contextRef);
 
-            ContextStats.PolicyApply policyApplyStats = new ContextStats.PolicyApply();
-            runPolicies(context, policyApplyStats);
-            InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policyApplyStats.getPolicy_time_to_run_apply_on_current_dataset().get());
+                SOS_LOG.log(LEVEL.INFO, "Running policies for context " + context.getUniqueName());
 
-            SOS_LOG.log(LEVEL.INFO, "Finished running policies for context " + context.getUniqueName());
+                ContextStats.PolicyApply policyApplyStats = new ContextStats.PolicyApply();
+                runPolicies(context, policyApplyStats);
+                InstrumentFactory.instance().measure(StatsTYPE.policies, StatsTYPE.policy_apply_dataset, context.getName(), policyApplyStats.getPolicy_time_to_run_apply_on_current_dataset().get());
+
+                SOS_LOG.log(LEVEL.INFO, "Finished running policies for context " + context.getUniqueName());
+            } catch (ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to run policies for context " + contextRef.toShortString() + " properly");
+            }
         }
 
     }
@@ -956,12 +936,17 @@ public class SOSContextService implements ContextService {
     @Override
     public void runCheckPolicies() {
 
-        for (Context context : getContexts()) {
+        for (IGUID contextRef : this.getContexts()) {
 
-            ContextStats.PolicyCheck policyCheckStats = new ContextStats.PolicyCheck();
-            runCheckPolicies(context, policyCheckStats);
+            try {
+                Context context = getContext(contextRef);
+                ContextStats.PolicyCheck policyCheckStats = new ContextStats.PolicyCheck();
+                runCheckPolicies(context, policyCheckStats);
 
-            InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().get());
+                InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.policy_check_dataset, context.getName(), policyCheckStats.getPolicy_time_to_run_check_on_current_dataset().get());
+            } catch (ContextNotFoundException e) {
+                SOS_LOG.log(LEVEL.ERROR, "Unable to run check-policies for context " + contextRef.toShortString() + " properly");
+            }
         }
 
     }
@@ -1062,16 +1047,21 @@ public class SOSContextService implements ContextService {
         service.scheduleWithFixedDelay(() -> {
             SOS_LOG.log(LEVEL.INFO, "Spawn contexts to other nodes of the specified domain - this is a periodic background thread");
 
-            for (Context context : getContexts()) {
+            for (IGUID contextRef : this.getContexts()) {
 
-                NodesCollection domain = context.domain();
-                if (domain.type() == NodesCollectionType.SPECIFIED) {
+                try {
+                    Context context = getContext(contextRef);
+                    NodesCollection domain = context.domain();
+                    if (domain.type() == NodesCollectionType.SPECIFIED) {
 
-                    try {
-                        spawnContext(context);
-                    } catch (ManifestPersistException e) {
-                        SOS_LOG.log(LEVEL.ERROR, "Unable to spawn context " + context.guid().toMultiHash());
+                        try {
+                            spawnContext(context);
+                        } catch (ManifestPersistException e) {
+                            SOS_LOG.log(LEVEL.ERROR, "Unable to spawn context " + context.guid().toMultiHash());
+                        }
                     }
+                } catch (ContextNotFoundException e) {
+                    SOS_LOG.log(LEVEL.ERROR, "Unable to spawn properly the context " + contextRef.toShortString() + " over its domain");
                 }
             }
 
@@ -1096,7 +1086,7 @@ public class SOSContextService implements ContextService {
         NodesCollection domainWithoutLocalNode = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
 
         int replication = domainWithoutLocalNode.nodesRefs().size();
-        manifestsDataService.addManifest(context, domainWithoutLocalNode, replication, false, false);
+        manifestsDataService.addManifest(context, false, domainWithoutLocalNode, replication, false);
     }
 
 }

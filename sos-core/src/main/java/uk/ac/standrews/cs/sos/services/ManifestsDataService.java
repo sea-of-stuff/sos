@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Manifest Data Service
+ * Manifest Data Service (MDS)
  *
  * The MDS takes care of:
  * - managing the first class entities of the SOS
@@ -38,13 +38,13 @@ public interface ManifestsDataService extends Service {
      * Adds a manifest to the specified nodes using the replication factor as an AT_LEAST restriction
      *
      * @param manifest to be added
+     * @param storeLocally if true the manifest is stored locally
      * @param nodes where to add the manifest
      * @param replication suggested replication factor for the manifest
      * @param limitReplication if true check replication factor against node settings
-     * @param storeLocally if true the manifest is stored locally
      * @throws ManifestPersistException if the manifest could not be added correctly
      */
-    void addManifest(Manifest manifest, NodesCollection nodes, int replication, boolean limitReplication, boolean storeLocally) throws ManifestPersistException;
+    void addManifest(Manifest manifest, boolean storeLocally, NodesCollection nodes, int replication, boolean limitReplication) throws ManifestPersistException;
 
     /**
      * Get the manifest that matches a given GUID.
@@ -66,6 +66,14 @@ public interface ManifestsDataService extends Service {
      * @throws ManifestNotFoundException if the manifest could not be found
      */
     Manifest getManifest(IGUID guid, NodeType nodeTypeFilter) throws ManifestNotFoundException;
+
+    /**
+     * Get manifests of given type
+     *
+     * @param type of manifests to get
+     * @return set of refs to manifests
+     */
+    Set<IGUID> getManifests(ManifestType type);
 
     /**
      * Resolve the path to a manifest
@@ -172,14 +180,6 @@ public interface ManifestsDataService extends Service {
      * @return set of refs to versions of the asset
      */
     Set<IGUID> getVersions(NodesCollection nodesCollection, IGUID invariant);
-
-    /**
-     * Get manifests of given type
-     *
-     * @param type of manifests to get
-     * @return set of refs to manifests
-     */
-    Set<IGUID> getManifests(ManifestType type);
 
     /**
      * Search manifests of given type for the given params

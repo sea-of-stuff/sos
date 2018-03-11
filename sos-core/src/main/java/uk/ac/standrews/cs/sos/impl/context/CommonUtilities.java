@@ -80,7 +80,7 @@ public class CommonUtilities {
     public void replicateManifest(Manifest manifest, NodesCollection codomain, int replicationFactor) throws PolicyException {
 
         try {
-            manifestsDataService.addManifest(manifest, codomain, replicationFactor, true, false);
+            manifestsDataService.addManifest(manifest, false, codomain, replicationFactor, true);
         } catch (ManifestPersistException e) {
             throw new PolicyException("Unable to replicate manifest");
         }

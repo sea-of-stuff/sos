@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.web.agents;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import spark.Request;
@@ -11,24 +10,41 @@ import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.NodeStats;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.model.Node;
+import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class WNodes {
 
-    public static String Render(SOSLocalNode sos) throws JsonProcessingException {
+    public static String Render(SOSLocalNode sos) {
         Map<String, Object> model = new HashMap<>();
 
-        model.put("thisNode", sos.getNDS().getThisNode());
-        model.put("nodes", sos.getNDS().getNodes());
+        NodeDiscoveryService nodeDiscoveryService = sos.getNDS();
+
+        model.put("thisNode", nodeDiscoveryService.getThisNode());
+
+        Set<Node> nodes = new LinkedHashSet<>();
+        for(IGUID nodeRef:nodeDiscoveryService.getNodes()) {
+            try {
+                Node node = nodeDiscoveryService.getNode(nodeRef);
+                nodes.add(node);
+            } catch (NodeNotFoundException e) {
+                /* IGNORE */
+            }
+        }
+
+        model.put("nodes", nodes);
 
         return VelocityUtils.RenderTemplate("velocity/nodes.vm", model);
     }
@@ -43,7 +59,7 @@ public class WNodes {
         }
     }
 
-    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException, JsonProcessingException {
+    public static String Find(Request request, SOSLocalNode sos) throws GUIDGenerationException {
 
         String q = request.queryParams("nodeid");
         IGUID nodeid = GUIDFactory.recreateGUID(q);

@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
@@ -85,7 +86,12 @@ public class RESTUSRO {
         UsersRolesService usro = RESTConfig.sos.getUSRO();
 
         try {
-            Set<Role> roles = usro.getRoles(userGUID);
+            Set<Role> roles = new LinkedHashSet<>();
+            Set<IGUID> roleRefs = usro.getRoles(userGUID);
+            for(IGUID ref:roleRefs) {
+                Role role = usro.getRole(ref);
+                roles.add(role);
+            }
 
             String out = JSONHelper.jsonObjMapper().writeValueAsString(roles);
             return HTTPResponses.OK(RESTConfig.sos, node_challenge, out);

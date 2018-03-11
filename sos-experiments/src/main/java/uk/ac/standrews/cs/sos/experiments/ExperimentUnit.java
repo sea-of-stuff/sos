@@ -457,7 +457,7 @@ public interface ExperimentUnit {
 
             IGUID invariant = GUIDFactory.generateGUID(atom.guid().toMultiHash());
             Version version = ManifestFactory.createVersionManifest(atom.guid(), invariant, null, null, null);
-            node.getMDS().addManifest(version, remoteNode, 1, false, false);
+            node.getMDS().addManifest(version, false, remoteNode, 1, false);
 
             return version.guid();
 

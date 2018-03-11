@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
@@ -18,6 +19,7 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
 import uk.ac.standrews.cs.sos.services.ContextService;
+import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
@@ -31,14 +33,30 @@ public class WContexts {
 
     public static String Render(SOSLocalNode sos){
         Map<String, Object> model = new HashMap<>();
-        model.put("contexts", sos.getCMS().getContexts());
+
+        ContextService contextService = sos.getCMS();
+
+        Set<Context> contexts = new LinkedHashSet<>();
+        for(IGUID contextRef:contextService.getContexts()) {
+
+            try {
+                Context context = contextService.getContext(contextRef);
+                contexts.add(context);
+            } catch (ContextNotFoundException e) {
+                /* do nothing */
+            }
+        }
+        model.put("contexts", contexts);
+
+        UsersRolesService usersRolesService = sos.getUSRO();
 
         Set<Pair<User, Role>> usro = new LinkedHashSet<>();
-        for(Role role:sos.getUSRO().getRoles()) {
+        for(IGUID roleRef:usersRolesService.getRoles()) {
             try {
-                User user = sos.getUSRO().getUser(role.getUser());
+                Role role = usersRolesService.getRole(roleRef);
+                User user = usersRolesService.getUser(role.getUser());
                 usro.add(new Pair<>(user, role));
-            } catch (UserNotFoundException e) { /* do nothing */ }
+            } catch (RoleNotFoundException | UserNotFoundException e) { /* do nothing */ }
         }
         model.put("usro", usro);
 
@@ -92,12 +110,14 @@ public class WContexts {
 
     public static String SearchContext(Request request, SOSLocalNode sos) {
 
+        ContextService contextService = sos.getCMS();
+
         String nameToSearch = request.params("name");
         try {
-
             ArrayNode arrayNode = JSONHelper.jsonObjMapper().createArrayNode();
-            Set<Context> contexts = sos.getCMS().searchContexts(nameToSearch);
-            for(Context context:contexts) {
+            Set<IGUID> contexts = contextService.searchContexts(nameToSearch);
+            for(IGUID contextRef:contexts) {
+                Context context = contextService.getContext(contextRef);
                 arrayNode.add(context.toString());
             }
 

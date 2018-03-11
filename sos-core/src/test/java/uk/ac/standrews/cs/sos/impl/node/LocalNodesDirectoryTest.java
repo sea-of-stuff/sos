@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
@@ -91,9 +90,9 @@ public class LocalNodesDirectoryTest extends SetUpTest {
     }
 
     @Test
-    public void persistMultipleNodesTest() throws GUIDGenerationException, NodesDirectoryException {
+    public void persistMultipleNodesTest() {
 
-        Set<Node> nodes = localNodesDirectory.getNodes(p -> true, NO_LIMIT);
+        Set<IGUID> nodes = localNodesDirectory.getNodes(p -> true, NO_LIMIT);
         assertEquals(nodes.size(), 0);
 
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
@@ -118,7 +117,7 @@ public class LocalNodesDirectoryTest extends SetUpTest {
     }
 
     @Test
-    public void persistTest() throws GUIDGenerationException, NodesDirectoryException {
+    public void persistTest() throws NodesDirectoryException {
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false, false);
 
@@ -145,7 +144,7 @@ public class LocalNodesDirectoryTest extends SetUpTest {
         addNode(true, true, false, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 3);
+        Set<IGUID> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 3);
         assertEquals(storageNodes.size(), 3);
     }
 
@@ -163,7 +162,7 @@ public class LocalNodesDirectoryTest extends SetUpTest {
         addNode(true, true, false, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 2);
+        Set<IGUID> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 2);
         assertEquals(storageNodes.size(), 2);
     }
 
@@ -181,7 +180,7 @@ public class LocalNodesDirectoryTest extends SetUpTest {
         addNode(true, true, false, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 10);
+        Set<IGUID> storageNodes = localNodesDirectory.getNodes(Node::isStorage, 10);
         assertEquals(storageNodes.size(), 3);
     }
 
@@ -199,12 +198,12 @@ public class LocalNodesDirectoryTest extends SetUpTest {
         addNode(true, true, false, false, false, false, false, false);
         addNode(true, true, true, true, true, false, false, false);
 
-        Set<Node> storageNodes = localNodesDirectory.getNodes(Node::isStorage, -1);
+        Set<IGUID> storageNodes = localNodesDirectory.getNodes(Node::isStorage, -1);
         assertEquals(storageNodes.size(), 3);
     }
 
     @Test
-    public void nodeIsUpdatedTest() throws NodesDirectoryException {
+    public void nodeIsUpdatedTest() {
         IGUID guid = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
         Node node = new SOSNode(guid, mockSignatureCertificate,"example.com", 8080, true, false, false, false, false, false, false, false);
 

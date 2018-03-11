@@ -40,7 +40,7 @@ public class RESTCMS {
 
         try {
             ContextService contextService = RESTConfig.sos.getCMS();
-            Set<IGUID> contexts = contextService.getContextsRefs();
+            Set<IGUID> contexts = contextService.getContexts();
 
             ArrayNode jsonArray = CommonJson.GUIDSetToJsonArray(contexts);
             String output = JSONHelper.jsonObjMapper().writeValueAsString(jsonArray);

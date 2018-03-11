@@ -5,12 +5,12 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.TIPNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.model.User;
+import uk.ac.standrews.cs.sos.services.UsersRolesService;
 import uk.ac.standrews.cs.sos.web.VelocityUtils;
 import uk.ac.standrews.cs.utilities.Pair;
 
@@ -28,28 +28,27 @@ public class WWebDAV {
     public static String Render(SOSLocalNode sos, IFileSystem fileSystem){
         Map<String, Object> model = new HashMap<>();
 
-        try {
-            String data = getTreeInJson(fileSystem);
+        model.put("node_id", sos.guid().toMultiHash());
 
-            model.put("node_id", sos.guid().toMultiHash());
-            model.put("tree", data);
-        } catch (TIPNotFoundException | ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
+        String data = getTreeInJson(fileSystem);
+        model.put("tree", data);
+
+        UsersRolesService usersRolesService = sos.getUSRO();
 
         Set<Pair<User, Role>> usro = new LinkedHashSet<>();
-        for(Role role:sos.getUSRO().getRoles()) {
+        for(IGUID roleRef:usersRolesService.getRoles()) {
             try {
-                User user = sos.getUSRO().getUser(role.getUser());
+                Role role = usersRolesService.getRole(roleRef);
+                User user = usersRolesService.getUser(role.getUser());
                 usro.add(new Pair<>(user, role));
-            } catch (UserNotFoundException e) { /* do nothing */ }
+            } catch (RoleNotFoundException | UserNotFoundException e) { /* do nothing */ }
         }
         model.put("usro", usro);
 
         return VelocityUtils.RenderTemplate("velocity/webdav.vm", model);
     }
 
-    private static String getTreeInJson(IFileSystem fileSystem) throws TIPNotFoundException, ManifestNotFoundException {
+    private static String getTreeInJson(IFileSystem fileSystem) {
 
         IGUID rootGUID = fileSystem.getRootId(); // Version ID for the root
         String children = getChildren(fileSystem.getRootDirectory(), rootGUID);
@@ -65,7 +64,7 @@ public class WWebDAV {
         return data;
     }
 
-    private static String getChildren(IDirectory parent, IGUID parentGUID) throws ManifestNotFoundException {
+    private static String getChildren(IDirectory parent, IGUID parentGUID) {
         StringBuilder retval = new StringBuilder();
 
         Iterator<NameAttributedPersistentObjectBinding> it = parent.iterator();

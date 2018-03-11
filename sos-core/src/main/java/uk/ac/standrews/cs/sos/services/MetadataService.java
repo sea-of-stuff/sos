@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.model.Metadata;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 
 /**
- * Metadata Service
+ * Metadata Management Service (MMS)
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -39,5 +39,14 @@ public interface MetadataService extends Service {
      * @throws MetadataNotFoundException if not found
      */
     Metadata getMetadata(IGUID guid) throws MetadataNotFoundException;
+
+    /**
+     * Get the metadata that matches the given GUID and that is stored within a given nodes collection
+     *
+     * @param nodesCollection within which the metadata should be stored
+     * @param guid of the metadata
+     * @return the metadata
+     * @throws MetadataNotFoundException if the metadata could not be found
+     */
     Metadata getMetadata(NodesCollection nodesCollection, IGUID guid) throws MetadataNotFoundException;
 }
