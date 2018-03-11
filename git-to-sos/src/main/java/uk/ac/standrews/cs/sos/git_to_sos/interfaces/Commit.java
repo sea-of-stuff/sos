@@ -13,5 +13,6 @@ public interface Commit extends Entity {
     List<Commit> getNext();
     void addNext();
 
+    void setTree(Tree tree);
     Tree getTree();
 }

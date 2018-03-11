@@ -12,10 +12,7 @@ import uk.ac.standrews.cs.sos.git_to_sos.impl.BlobImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.impl.CommitImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.impl.DAGImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.impl.TreeImpl;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Blob;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Commit;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.DAG;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Tree;
+import uk.ac.standrews.cs.sos.git_to_sos.interfaces.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,10 +35,15 @@ public class GitToSOS {
 
     public static void main(String[] args) throws IOException, GitAPIException {
 
-        GitToSOS gitToSOS = new GitToSOS("git-to-sos/src/main/resources/test-git");
+        String[] repos = new String[]{
+                "git-to-sos/src/main/resources/test-git",
+                "git-to-sos/src/main/resources/one-file-commit"
+        };
+
+        GitToSOS gitToSOS = new GitToSOS(repos[0]);
     }
 
-    public GitToSOS(String path) throws IOException, GitAPIException {
+    private GitToSOS(String path) throws IOException, GitAPIException {
 
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try (Repository repository = builder.setGitDir(new File(path + "/.git"))
@@ -76,21 +78,28 @@ public class GitToSOS {
             RevCommit commit = walk.parseCommit(branchRef.getObjectId());
             System.out.println("Start-Commit: " + commit);
             System.out.println("-------------------------------------");
-            walk.markStart(commit);
+
             int count = 0;
             RevCommit currentRev = null;
+            walk.markStart(commit);
             for (RevCommit rev : walk) {
                 currentRev = rev;
                 Commit currentCommit = new CommitImpl(currentRev.getId().name());
-                commits.put(currentCommit.getId(), currentCommit);
-                processPreviousCommits(currentRev, currentCommit);
 
-                getFilesInCommit(repository, rev);
+                Tree tree = processCommit(repository, rev);
+                currentCommit.setTree(tree);
+
+                String currentCommitId = currentCommit.getId();
+
+                commits.put(currentCommitId, currentCommit);
+                processPreviousCommits(currentRev, currentCommitId);
+
                 count++;
             }
 
+            // Last visited commit of the master branch is the root of the DAG
             if (currentRev != null && branchRef.getName().equals("refs/heads/master")) {
-                Commit rootCommit = new CommitImpl(currentRev.getId().name());
+                Commit rootCommit = commits.get(currentRev.getId().name());
                 dag = new DAGImpl(rootCommit);
             }
 
@@ -101,44 +110,62 @@ public class GitToSOS {
         }
     }
 
-    private void processPreviousCommits(RevCommit rev, Commit commit) {
+    private void processPreviousCommits(RevCommit rev, String currentCommitId) {
 
         List<Commit> parents = new LinkedList<>();
         for(RevCommit prev:rev.getParents()) {
             String id = prev.getId().name();
-            Commit prevCommit = commits.containsKey(id) ? commits.get(id) : new CommitImpl(id);
+            Commit prevCommit;
+            if (commits.containsKey(id)) {
+                prevCommit = commits.get(id);
+            } else {
+                prevCommit = new CommitImpl(id);
+                commits.put(id, prevCommit);
+            }
             parents.add(prevCommit);
         }
-        commit.addPrevious(parents);
+
+        commits.get(currentCommitId).addPrevious(parents);
     }
 
-    private void getFilesInCommit(Repository repository, RevCommit commit) throws IOException {
+    private Tree processCommit(Repository repository, RevCommit commit) throws IOException {
         System.out.println("Commit: " + commit);
         System.out.println("\tMessage: " + commit.getShortMessage());
 
-        RevTree tree = commit.getTree();
-        System.out.println("Tree: " + tree);
+        RevTree revTree = commit.getTree();
+        System.out.println("Tree: " + revTree);
+        String currentTreeId = revTree.getId().getName();
+        Tree tree = new TreeImpl(currentTreeId);
+        trees.put(currentTreeId, tree);
 
         // now use a TreeWalk to iterate over all files in the Tree recursively
         // you can set Filters to narrow down the results if needed
         try (TreeWalk treeWalk = new TreeWalk(repository)) {
-            treeWalk.addTree(tree);
+            treeWalk.addTree(revTree);
             treeWalk.setRecursive(false);
+
             int idx = 0;
             while (treeWalk.next()) {
                 ObjectId objId = treeWalk.getObjectId(0);
+                String name = treeWalk.getPathString();
                 String objSHA1 = objId.getName();
-                System.out.println("[ " + idx + " ] Entity path: " + treeWalk.getPathString() + " - SHA1: " + objSHA1);
+
+                System.out.println("[ " + idx + " ] Entity path: " + name + " - SHA1: " + objSHA1);
 
                 ObjectLoader objectLoader = repository.getObjectDatabase().open(objId);
                 if (objectLoader.getType() == OBJ_BLOB) {
-                    readBlob(repository, treeWalk.getObjectId(0));
+                    Entity blob = readBlob(repository, treeWalk.getObjectId(0));
+                    trees.get(currentTreeId).addContent(name, blob);
                 } else {
                     if (treeWalk.isSubtree()) {
-
                         if (!trees.containsKey(objSHA1)) {
-                            Tree subtree = new TreeImpl(objSHA1);
-                            trees.put(objSHA1, subtree);
+                            currentTreeId = objSHA1;
+
+                            Tree subtree = new TreeImpl(currentTreeId);
+                            if (trees.containsKey(currentTreeId)) {
+                                trees.get(currentTreeId).addContent(name, subtree);
+                            }
+                            trees.put(currentTreeId, subtree);
                         }
 
                         System.out.println(">> Subtree");
@@ -152,9 +179,11 @@ public class GitToSOS {
         }
 
         System.out.println(); // print empty line
+
+        return tree;
     }
 
-    private void readBlob(Repository repository, AnyObjectId id) throws IOException {
+    private Entity readBlob(Repository repository, AnyObjectId id) throws IOException {
 
         ObjectLoader loader = repository.open(id);
         System.out.print("Blob: ");
@@ -166,6 +195,7 @@ public class GitToSOS {
             blobs.put(blobSHA, blob);
         }
 
+        return blobs.get(blobSHA);
     }
 
 }

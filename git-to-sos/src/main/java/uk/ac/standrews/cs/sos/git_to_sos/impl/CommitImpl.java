@@ -11,8 +11,10 @@ import java.util.List;
  */
 public class CommitImpl extends EntityImpl implements Commit {
 
-    List<Commit> previous;
-    List<Commit> next;
+    private List<Commit> previous;
+    private List<Commit> next;
+
+    private Tree tree;
 
     public CommitImpl(String id) {
         super(id);
@@ -29,7 +31,7 @@ public class CommitImpl extends EntityImpl implements Commit {
     @Override
     public void addPrevious(List<Commit> previous) {
 
-        previous.addAll(previous);
+        this.previous.addAll(previous);
     }
 
     @Override
@@ -43,8 +45,14 @@ public class CommitImpl extends EntityImpl implements Commit {
     }
 
     @Override
+    public void setTree(Tree tree) {
+
+        this.tree = tree;
+    }
+
+    @Override
     public Tree getTree() {
-        return null;
+        return tree;
     }
 
 }
