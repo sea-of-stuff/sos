@@ -30,8 +30,8 @@ import java.util.List;
  */
 public class SettingsConfiguration {
 
-    public static final char HOME_SYMBOL = '~';
-    public static final String HOME_PATH = System.getProperty("user.home");
+    private static final char HOME_SYMBOL = '~';
+    static final String HOME_PATH = System.getProperty("user.home");
 
     @JsonIgnore
     private JsonNode node;
@@ -51,7 +51,7 @@ public class SettingsConfiguration {
         return JSONHelper.jsonObjMapper().convertValue(node, SettingsConfiguration.class).getSettings();
     }
 
-    public static String absolutePath(String path) {
+    static String absolutePath(String path) {
         if (path.charAt(0) == HOME_SYMBOL) {
             path = HOME_PATH + path.substring(1); // Skip HOME_SYMBOL
         }
