@@ -1,6 +1,6 @@
-package uk.ac.standrews.cs.sos.git_to_sos.impl;
+package uk.ac.standrews.cs.sos.git_to_sos.dag.impl;
 
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Blob;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Blob;
 
 import java.io.InputStream;
 

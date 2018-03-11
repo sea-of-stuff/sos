@@ -1,7 +1,7 @@
-package uk.ac.standrews.cs.sos.git_to_sos.impl;
+package uk.ac.standrews.cs.sos.git_to_sos.dag.impl;
 
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Entity;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.Tree;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Entity;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Tree;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

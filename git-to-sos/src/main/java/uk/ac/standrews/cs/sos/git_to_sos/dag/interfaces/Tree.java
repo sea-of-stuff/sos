@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.git_to_sos.interfaces;
+package uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces;
 
 import java.util.HashMap;
 

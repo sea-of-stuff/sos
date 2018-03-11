@@ -8,11 +8,11 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import uk.ac.standrews.cs.sos.git_to_sos.impl.BlobImpl;
-import uk.ac.standrews.cs.sos.git_to_sos.impl.CommitImpl;
-import uk.ac.standrews.cs.sos.git_to_sos.impl.DAGImpl;
-import uk.ac.standrews.cs.sos.git_to_sos.impl.TreeImpl;
-import uk.ac.standrews.cs.sos.git_to_sos.interfaces.*;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.BlobImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.CommitImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.DAGImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.TreeImpl;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,10 @@ public class GitToSOS {
                 "git-to-sos/src/main/resources/one-file-commit"
         };
 
+        // TODO - init SOS Node
         GitToSOS gitToSOS = new GitToSOS(repos[0]);
+
+        TransformDagToSOS.transform(null, gitToSOS.getDag());
     }
 
     private GitToSOS(String path) throws IOException, GitAPIException {
@@ -63,7 +66,7 @@ public class GitToSOS {
 
     }
 
-    public DAG getDAG() {
+    public DAG getDag() {
         return dag;
     }
 

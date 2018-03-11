@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.sos.git_to_sos.interfaces;
+package uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
