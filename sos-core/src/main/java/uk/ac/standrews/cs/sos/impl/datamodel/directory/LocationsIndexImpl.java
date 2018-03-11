@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 
-import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -12,8 +11,8 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.utils.LRU_GUID;
 import uk.ac.standrews.cs.sos.interfaces.manifests.LocationsIndex;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.Persistence;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -141,20 +140,8 @@ public class LocationsIndexImpl implements LocationsIndex {
 
     @Override
     public void persist(IFile file) throws IOException {
-        if (!file.exists()) {
-            try {
-                file.persist();
-            } catch (PersistenceException e) {
-                throw new IOException(e);
-            }
-        }
 
-        try (FileOutputStream ostream = new FileOutputStream(file.toFile());
-             ObjectOutputStream p = new ObjectOutputStream(ostream)) {
-
-            p.writeObject(this);
-            p.flush();
-        }
+        Persistence.persist(this, file);
     }
 
     @Override

@@ -3,10 +3,7 @@ package uk.ac.standrews.cs.sos.utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -21,6 +18,7 @@ public class IO {
     }
 
     public static InputStream StringToInputStream(String input) {
+
         return new ByteArrayInputStream(input.getBytes(StandardCharsets.ISO_8859_1));
     }
 
@@ -48,9 +46,15 @@ public class IO {
 
     public static ByteArrayOutputStream InputStreamToByteArrayOutputStream(InputStream input) throws IOException {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        IOUtils.copy(input, baos);
-        return baos;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            IOUtils.copy(input, baos);
+            return baos;
+        }
+    }
+
+    public static OutputStream toOutputStream(InputStream input) throws IOException {
+
+        return InputStreamToByteArrayOutputStream(input);
     }
 
     public static InputStream OutputStreamToInputStream(ByteArrayOutputStream out) {
