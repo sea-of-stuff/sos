@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
 
@@ -18,8 +19,8 @@ public class TasksDatabase extends AbstractDatabase {
             "(`DB_taskid`       INTEGER , " +
             "PRIMARY KEY (`DB_taskid`) )";
 
-    public TasksDatabase(String path) throws DatabaseException {
-        super(path);
+    public TasksDatabase(IFile dbFile) throws DatabaseException {
+        super(dbFile);
 
         try (Connection connection = getSQLiteConnection()) {
 

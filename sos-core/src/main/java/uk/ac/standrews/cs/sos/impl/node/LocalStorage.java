@@ -83,6 +83,14 @@ public class LocalStorage {
         }
     }
 
+    public IDirectory getJavaDirectory() throws DataStorageException {
+        try {
+            return storage.createDirectory(JAVA_DIRECTORY_NAME);
+        } catch (StorageException e) {
+            throw new DataStorageException(e);
+        }
+    }
+
     /**
      * Create an arbitrary file in a given directory
      * @param parent

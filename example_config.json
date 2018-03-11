@@ -51,9 +51,6 @@
         "exposed": true
       }
     },
-    "database": {
-      "filename": "node.db"
-    },
     "rest": {
       "port": 8080
     },

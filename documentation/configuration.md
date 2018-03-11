@@ -60,9 +60,6 @@ See also the [example_config.json](../example_config.json)
         "exposed": false
       }
     },
-    "database": {
-      "filename": "node.db"
-    },
     "rest": {
       "port": 8080
     },

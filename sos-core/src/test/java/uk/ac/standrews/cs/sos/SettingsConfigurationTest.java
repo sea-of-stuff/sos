@@ -57,15 +57,6 @@ public class SettingsConfigurationTest {
     }
 
     @Test
-    public void dbTest() throws ConfigurationException {
-
-        SettingsConfiguration settings = new SettingsConfiguration(configFile);
-
-        SettingsConfiguration.Settings.DatabaseSettings databaseSettings = settings.getSettingsObj().getDatabase();
-        assertEquals(databaseSettings.getFilename(), "node.db");
-    }
-
-    @Test
     public void restTest() throws ConfigurationException {
 
         SettingsConfiguration settings = new SettingsConfiguration(configFile);

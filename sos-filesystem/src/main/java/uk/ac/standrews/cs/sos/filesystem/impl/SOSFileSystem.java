@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.services.Agent;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
-import uk.ac.standrews.cs.utilities.archive.UriUtil;
+import uk.ac.standrews.cs.utilities.network.UriUtil;
 
 import java.net.URI;
 import java.util.HashMap;

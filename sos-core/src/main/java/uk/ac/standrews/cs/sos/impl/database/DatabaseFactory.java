@@ -1,11 +1,9 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.interfaces.database.Database;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
-import uk.ac.standrews.cs.sos.utils.FileUtils;
-
-import java.io.File;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -16,21 +14,20 @@ public class DatabaseFactory {
     private TasksDatabase tasksDatabase;
     private ContextsContentsDirectoryDatabase contextsContentsDirectoryDatabase;
 
-    private DatabaseFactory(String path) throws DatabaseException {
+    private DatabaseFactory(IFile dbFile) throws DatabaseException {
 
-        nodesDatabase = new NodesDatabaseImpl(path);
-        tasksDatabase = new TasksDatabase(path);
-        contextsContentsDirectoryDatabase = new ContextsContentsDirectoryDatabase(path);
+        nodesDatabase = new NodesDatabaseImpl(dbFile);
+        tasksDatabase = new TasksDatabase(dbFile);
+        contextsContentsDirectoryDatabase = new ContextsContentsDirectoryDatabase(dbFile);
     }
 
     private static DatabaseFactory instance;
 
-    public static void initInstance(String path) throws DatabaseException {
-        FileUtils.MakePath(path);
+    public static void initInstance(IFile dbFile) throws DatabaseException {
 
-        boolean dbExists = new File(path).exists();
+        boolean dbExists = dbFile.exists();
         if (instance == null || !dbExists) {
-            instance = new DatabaseFactory(path);
+            instance = new DatabaseFactory(dbFile);
         }
     }
 

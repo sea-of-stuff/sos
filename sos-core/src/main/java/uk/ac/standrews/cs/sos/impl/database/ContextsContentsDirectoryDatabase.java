@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -52,8 +53,8 @@ public class ContextsContentsDirectoryDatabase extends AbstractDatabase implemen
 
     private static final String SQL_DELETE_ENTRIES = "DELETE from contexts WHERE context_id=?";
 
-    ContextsContentsDirectoryDatabase(String path) throws DatabaseException {
-        super(path);
+    ContextsContentsDirectoryDatabase(IFile dbFile) throws DatabaseException {
+        super(dbFile);
 
         try (Connection connection = getSQLiteConnection()) {
 

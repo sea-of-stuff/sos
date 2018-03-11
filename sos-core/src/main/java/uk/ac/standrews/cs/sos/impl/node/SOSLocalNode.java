@@ -31,7 +31,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -44,8 +43,7 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
-import static uk.ac.standrews.cs.sos.constants.Internals.NODE_MAINTAINER_TIME_UNIT;
+import static uk.ac.standrews.cs.sos.constants.Internals.*;
 
 /**
  * This class represents the SOSNode of this machine.
@@ -305,12 +303,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     private void initDB() throws SOSException {
         try {
-            String dbFilename = settings.getDatabase().getFilename();
-            File file = localStorage.createFile(localStorage.getNodeDirectory(), dbFilename).toFile();
-
-            DatabaseFactory.initInstance(file.getPath());
+            IFile dbFile = localStorage.createFile(localStorage.getNodeDirectory(), DB_FILE);
+            DatabaseFactory.initInstance(dbFile);
             nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
-        } catch (DataStorageException | DatabaseException | IOException e) {
+        } catch (DataStorageException | DatabaseException e) {
             throw new SOSException(e);
         }
     }

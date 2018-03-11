@@ -56,9 +56,9 @@ public class SOSReflectionTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
-        SOSReflection.Load(node);
+        SOSReflection.instance().load(node);
 
-        Predicate predicate = SOSReflection.PredicateInstance(node);
+        Predicate predicate = SOSReflection.instance().predicateInstance(node);
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
         assertTrue(predicate.test(GUIDFactory.generateRandomGUID(GUID_ALGORITHM)));
@@ -74,9 +74,9 @@ public class SOSReflectionTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_PREDICATE);
-        SOSReflection.Load(node);
+        SOSReflection.instance().load(node);
 
-        Predicate predicate = SOSReflection.PredicateInstance(node);
+        Predicate predicate = SOSReflection.instance().predicateInstance(node);
         assertNotNull(predicate.guid());
         assertEquals(predicate.getType(), ManifestType.PREDICATE);
 
@@ -124,9 +124,9 @@ public class SOSReflectionTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
-        SOSReflection.Load(node);
+        SOSReflection.instance().load(node);
 
-        Policy policy = SOSReflection.PolicyInstance(node);
+        Policy policy = SOSReflection.instance().policyInstance(node);
         assertNotNull(policy.guid());
         assertEquals(policy.getType(), ManifestType.POLICY);
         assertTrue(policy.satisfied(null, null, null));
@@ -148,9 +148,9 @@ public class SOSReflectionTest extends SetUpTest {
                         "}";
 
         JsonNode node = JSONHelper.jsonObjMapper().readTree(JSON_POLICY);
-        SOSReflection.Load(node);
+        SOSReflection.instance().load(node);
 
-        Policy policy = SOSReflection.PolicyInstance(node);
+        Policy policy = SOSReflection.instance().policyInstance(node);
         assertNotNull(policy.guid());
         assertEquals(policy.getType(), ManifestType.POLICY);
         assertFalse(policy.satisfied(null, null, null));

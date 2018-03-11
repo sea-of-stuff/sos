@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseConnectionException;
 import uk.ac.standrews.cs.sos.interfaces.database.Database;
 
@@ -10,10 +11,10 @@ import java.sql.*;
  */
 public class AbstractDatabase implements Database {
 
-    private String path;
+    private IFile dbFile;
 
-    public AbstractDatabase(String path) {
-        this.path = path;
+    public AbstractDatabase(IFile dbFile) {
+        this.dbFile = dbFile;
     }
 
     /**
@@ -26,7 +27,7 @@ public class AbstractDatabase implements Database {
         Connection connection;
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getPathname());
         } catch (ClassNotFoundException | SQLException e) {
             throw new DatabaseConnectionException(e);
         }

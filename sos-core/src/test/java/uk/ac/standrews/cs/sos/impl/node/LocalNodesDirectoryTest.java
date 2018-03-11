@@ -3,23 +3,23 @@ package uk.ac.standrews.cs.sos.impl.node;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.sos.CommonTest;
-import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodesDirectoryException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseFactory;
 import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.utils.HelperTest;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
-import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.security.PublicKey;
 import java.util.Set;
@@ -27,14 +27,14 @@ import java.util.Set;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static uk.ac.standrews.cs.sos.constants.Internals.DB_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
-import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 import static uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService.NO_LIMIT;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class LocalNodesDirectoryTest extends CommonTest {
+public class LocalNodesDirectoryTest extends SetUpTest {
 
     private LocalNodesDirectory localNodesDirectory;
     private Node testNode;
@@ -44,14 +44,13 @@ public class LocalNodesDirectoryTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-        SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/local_nodes_directory_test.json")).getSettingsObj();
-
         // Make sure that the DB path is clean
-        HelperTest.DeletePath(settings.getDatabase().getFilename());
+        localStorage.getNodeDirectory().remove(DB_FILE);
 
         NodesDatabase nodesDatabase;
         try {
-            DatabaseFactory.initInstance(settings.getDatabase().getFilename());
+            IFile dbFile = localStorage.createFile(localStorage.getNodeDirectory(), DB_FILE);
+            DatabaseFactory.initInstance(dbFile);
             nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
         } catch (DatabaseException e) {
             throw new SOSException(e);
@@ -69,7 +68,7 @@ public class LocalNodesDirectoryTest extends CommonTest {
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() throws InterruptedException, DataStorageException, IOException {
         super.tearDown();
 
         DatabaseFactory.kill();

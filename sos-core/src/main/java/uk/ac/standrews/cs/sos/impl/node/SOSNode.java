@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.impl.manifest.BasicManifest;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.utilities.archive.NetworkUtil;
+import uk.ac.standrews.cs.utilities.network.NetworkUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

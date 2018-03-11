@@ -79,7 +79,6 @@ public class SettingsConfiguration {
         private String guid; // The local node uses this field to share its GUID across different parts of the node.
 
         private AdvanceServicesSettings services;
-        private DatabaseSettings database;
         private RESTSettings rest;
         private WebDAVSettings webDAV;
         private WebAPPSettings webAPP;
@@ -116,14 +115,6 @@ public class SettingsConfiguration {
 
         public void setServices(AdvanceServicesSettings services) {
             this.services = services;
-        }
-
-        public DatabaseSettings getDatabase() {
-            return database;
-        }
-
-        public void setDatabase(DatabaseSettings database) {
-            this.database = database;
         }
 
         public RESTSettings getRest() {
@@ -518,8 +509,6 @@ public class SettingsConfiguration {
 
             public static class CMSSettings extends RoleSettings {
 
-                private String loadedPath = "~/sos/java/contexts/"; // This is the default path
-
                 // If true, the CMS will run background processes to classify content and maintain the contexts
                 private boolean automatic = false;
                 // If true the predicates are run just after adding the context
@@ -583,14 +572,6 @@ public class SettingsConfiguration {
                     this.checkPoliciesThread = checkPoliciesThread;
                 }
 
-                public String getLoadedPath() {
-                    return absolutePath(loadedPath);
-                }
-
-                public void setLoadedPath(String loadedPath) {
-                    this.loadedPath = loadedPath;
-                }
-
                 public boolean isPredicateOnNewContext() {
                     return predicateOnNewContext;
                 }
@@ -622,21 +603,6 @@ public class SettingsConfiguration {
 
             public void setExposed(boolean exposed) {
                 this.exposed = exposed;
-            }
-        }
-
-        public static class DatabaseSettings {
-
-            private String filename;
-
-            public DatabaseSettings() {}
-
-            public String getFilename() {
-                return filename;
-            }
-
-            public void setFilename(String filename) {
-                this.filename = filename;
             }
         }
 

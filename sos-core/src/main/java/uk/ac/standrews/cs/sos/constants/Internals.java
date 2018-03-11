@@ -19,6 +19,7 @@ public class Internals {
     public static final String CMS_INDEX_FILE = "cms.index";
     public static final String USRO_INDEX_FILE = "usro.index";
     public static final String LOCATIONS_INDEX_FILE = "locations.index";
+    public static final String DB_FILE = "node.db";
 
     public static final TimeUnit NODE_MAINTAINER_TIME_UNIT = TimeUnit.SECONDS;
 

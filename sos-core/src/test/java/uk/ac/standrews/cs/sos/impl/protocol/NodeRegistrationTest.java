@@ -6,7 +6,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.CastoreBuilder;
 import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
@@ -28,7 +30,6 @@ import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
-import uk.ac.standrews.cs.sos.utils.HelperTest;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static uk.ac.standrews.cs.sos.constants.Internals.DB_FILE;
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 
@@ -121,14 +123,14 @@ public class NodeRegistrationTest extends ProtocolTest {
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/node_registration_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
 
-        // Make sure that the DB path is clean
-        HelperTest.DeletePath(settings.getDatabase().getFilename());
-
         NodesDatabase nodesDatabase;
         try {
-            DatabaseFactory.initInstance(settings.getDatabase().getFilename());
+            // Make sure that the DB path is clean
+            localStorage.getNodeDirectory().remove(DB_FILE);
+            IFile dbFile = localStorage.createFile(localStorage.getNodeDirectory(), DB_FILE);
+            DatabaseFactory.initInstance(dbFile);
             nodesDatabase = (NodesDatabase) DatabaseFactory.instance().getDatabase(DatabaseType.NODES);
-        } catch (DatabaseException e) {
+        } catch (DatabaseException | BindingAbsentException e) {
             throw new SOSException(e);
         }
 

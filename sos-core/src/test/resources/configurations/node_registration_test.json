@@ -5,9 +5,6 @@
         "ping": false
       }
     },
-    "database": {
-      "filename": "node.db"
-    },
     "store": {
       "type": "local",
       "location": "~/sos/"

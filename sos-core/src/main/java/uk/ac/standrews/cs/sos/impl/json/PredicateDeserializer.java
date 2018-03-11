@@ -21,8 +21,8 @@ public class PredicateDeserializer extends JsonDeserializer<Predicate> {
 
         try {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            SOSReflection.Load(node);
-            return SOSReflection.PredicateInstance(node);
+            SOSReflection.instance().load(node);
+            return SOSReflection.instance().predicateInstance(node);
 
         } catch (ClassLoaderException e) {
             throw new IOException(e);

@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.sos.impl.database;
 
+import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
@@ -48,8 +49,8 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             "DB_is_agent, DB_is_storage, DB_is_mds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms, DB_is_experiment FROM nodes";
 
 
-    public NodesDatabaseImpl(String path) throws DatabaseException {
-        super(path);
+    public NodesDatabaseImpl(IFile dbFile) throws DatabaseException {
+        super(dbFile);
 
         try (Connection connection = getSQLiteConnection()) {
 

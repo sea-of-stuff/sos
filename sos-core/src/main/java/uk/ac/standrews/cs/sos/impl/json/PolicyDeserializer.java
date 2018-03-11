@@ -20,8 +20,8 @@ public class PolicyDeserializer extends JsonDeserializer<Policy> {
 
         try {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            SOSReflection.Load(node);
-            return SOSReflection.PolicyInstance(node);
+            SOSReflection.instance().load(node);
+            return SOSReflection.instance().policyInstance(node);
 
         } catch (ClassLoaderException e) {
             throw new IOException(e);

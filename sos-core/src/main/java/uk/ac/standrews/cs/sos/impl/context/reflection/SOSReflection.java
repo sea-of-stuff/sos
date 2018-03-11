@@ -2,16 +2,16 @@ package uk.ac.standrews.cs.sos.impl.context.reflection;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Files;
+import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.constants.JSONConstants;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassBuilderException;
 import uk.ac.standrews.cs.sos.exceptions.reflection.ClassLoaderException;
-import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.ManifestType;
 import uk.ac.standrews.cs.sos.model.Policy;
 import uk.ac.standrews.cs.sos.model.Predicate;
-import uk.ac.standrews.cs.sos.utils.FileUtils;
-import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import javax.tools.*;
@@ -20,93 +20,46 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SOSReflection {
 
-    private static Set<String> loadedClasses = new LinkedHashSet<>();
+    private LocalStorage localStorage;
+    private Set<String> loadedClasses;
 
-    /**
-     * Load multiple classes at path
-     *
-     * @param path
-     * @throws ClassLoaderException
-     */
-    public static void LoadMultipleClasses(String path) throws ClassLoaderException {
+    private static SOSReflection instance;
 
-        ArrayList<String> notLoaded = new ArrayList<>();
+    public void init(LocalStorage localStorage) {
+        this.localStorage = localStorage;
 
-        File folder = new File(path);
-        File[] files = folder.listFiles();
-        for(File f: files != null ? files : new File[0]) {
-            if (f.isFile()) {
-
-                try {
-                    LoadClassFromPath(path);
-                } catch (ClassLoaderException e) {
-                    notLoaded.add(f.getName());
-                }
-
-            }
-        }
-
-        if (!notLoaded.isEmpty()) {
-            throw new ClassLoaderException("Unable to load the following classes: " + Arrays.toString(notLoaded.toArray()));
-        }
-
+        loadedClasses = new LinkedHashSet<>();
+        instance = new SOSReflection();
     }
 
-    /**
-     * Load the class at the given path
-     *
-     * @param path
-     * @throws ClassLoaderException
-     */
-    public static void LoadClassFromPath(String path) throws ClassLoaderException {
+    public static SOSReflection instance() {
 
-        try {
-            File file = new File(path);
-            JsonNode node = JSONHelper.jsonObjMapper().readTree(file);
-
-            Load(node);
-
-        } catch (IOException | ClassLoaderException e) {
-            throw new ClassLoaderException(e);
-        }
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public static void Load(String node) throws ClassLoaderException {
-
-        try {
-            JsonNode jsonNode = JSONHelper.jsonObjMapper().readTree(node);
-            Load(jsonNode);
-        } catch (IOException e) {
-            throw new ClassLoaderException(e);
-        }
+        return instance;
     }
 
     /**
      * Load a class given a context JSON structure
      *
-     * @param node
-     * @throws ClassLoaderException
+     * @param node JSON representation for computational unit to load
+     * @throws ClassLoaderException if computational unit could not be loaded properly
      */
-    public static void Load(JsonNode node) throws ClassLoaderException {
+    public void load(JsonNode node) throws ClassLoaderException {
 
-        String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
-
-        if (!new File(targetClassPath).exists()) {
-            FileUtils.MakePath(targetClassPath);
-        }
 
         try {
+            IDirectory targetClassPath = localStorage.getJavaDirectory();
+
             ManifestType type = ManifestType.get(node.get(JSONConstants.KEY_TYPE).textValue());
             SOS_LOG.log(LEVEL.INFO, "Preparing to load class for computation unit of type: " + type.toString());
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder(type.toString());
@@ -115,6 +68,7 @@ public class SOSReflection {
 
             // Print class to file
             String clazzName = classBuilder.className(node);
+            // Assume that we have access to the local file system and can create a temporary directory there
             File sourceClazzFile = new File(Files.createTempDir() + "/" + clazzName + ".java");
             if (sourceClazzFile.exists()) {
                 boolean deleted = sourceClazzFile.delete();
@@ -131,7 +85,7 @@ public class SOSReflection {
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
             try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
-                fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(targetClassPath)));
+                fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(targetClassPath.toFile()));
 
                 // Compile the file
                 JavaCompiler.CompilationTask task = compiler.getTask(
@@ -143,11 +97,8 @@ public class SOSReflection {
                         fileManager.getJavaFileObjects(sourceClazzFile));
 
                 if (task.call()) {
-
-                    LoadClassName(clazzName);
-
+                    loadClassName(clazzName);
                 } else {
-
                     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
                         SOS_LOG.log(LEVEL.ERROR, "Error on line " + diagnostic.getLineNumber() + " in " + diagnostic.getSource().toUri());
                     }
@@ -155,17 +106,17 @@ public class SOSReflection {
 
             }
 
-        } catch (IOException | ClassLoaderException | ClassBuilderException e) {
+        } catch (IOException | DataStorageException | ClassLoaderException | ClassBuilderException e) {
             throw new ClassLoaderException(e);
         }
     }
 
     /**
      * Load context class from path
-     * @param className
-     * @throws ClassLoaderException
+     * @param className to be loaded
+     * @throws ClassLoaderException if class could not be loaded
      */
-    private static void LoadClassName(String className) throws ClassLoaderException {
+    private void loadClassName(String className) throws ClassLoaderException {
 
         if (loadedClasses.contains(ClassBuilderFactory.PACKAGE + "." + className)) return;
 
@@ -181,7 +132,7 @@ public class SOSReflection {
 
     }
 
-    public static Predicate PredicateInstance(JsonNode node) throws ClassLoaderException {
+    public Predicate predicateInstance(JsonNode node) throws ClassLoaderException {
 
         try {
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("PREDICATE");
@@ -203,7 +154,7 @@ public class SOSReflection {
 
     }
 
-    public static Policy PolicyInstance(JsonNode node) throws ClassLoaderException {
+    public Policy policyInstance(JsonNode node) throws ClassLoaderException {
 
         try {
             ClassBuilder classBuilder = ClassBuilderFactory.getClassBuilder("POLICY");
@@ -225,22 +176,18 @@ public class SOSReflection {
 
     }
 
-    private static java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {
+    private java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {
 
-        String targetClassPath = SOSLocalNode.settings.getServices().getCms().getLoadedPath();
-        File classesDirectory = new File(targetClassPath);
-
-        if (!classesDirectory.exists()) {
-            throw new ClassLoaderException("Cannot find path for java classes");
-        }
 
         try {
-            URL url = classesDirectory.toURI().toURL();
+            IDirectory targetClassPath = localStorage.getJavaDirectory();
+
+            URL url = targetClassPath.toFile().toURI().toURL();
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory
             return new URLClassLoader(urls);
-        } catch (MalformedURLException e) {
+        } catch (IOException | DataStorageException e) {
             throw new ClassLoaderException("Cannot create class loader");
         }
     }
