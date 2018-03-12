@@ -3,18 +3,13 @@ package uk.ac.standrews.cs.sos.git_to_sos.transformation_strategies;
 import uk.ac.standrews.cs.castore.data.InputStreamData;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
-import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Blob;
-import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.DAG;
-import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Entity;
-import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.Tree;
+import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.*;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.model.Atom;
-import uk.ac.standrews.cs.sos.model.Compound;
-import uk.ac.standrews.cs.sos.model.CompoundType;
-import uk.ac.standrews.cs.sos.model.Content;
+import uk.ac.standrews.cs.sos.model.*;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -37,6 +32,7 @@ public class OneToOne extends BaseStrategy {
 
         blobsToAtoms();
         treesToCompound();
+        commitsToVersions();
     }
 
     private void blobsToAtoms() {
@@ -64,7 +60,6 @@ public class OneToOne extends BaseStrategy {
 
         for(Map.Entry<String, Tree> entry:dag.getTrees().entrySet()) {
 
-
             Set<Content> contents = new LinkedHashSet<>();
 
             // Re-Map tree contents
@@ -89,6 +84,44 @@ public class OneToOne extends BaseStrategy {
                 e.printStackTrace();
             }
         }
-
     }
+
+    private void commitsToVersions() {
+        System.out.println("Commits --> Versions");
+
+        Commit currentCommit = dag.getRoot();
+        Commit prevCommit = null; // TODO - manage multiple prev commits
+        do {
+
+            try {
+                String treeId = currentCommit.getTree().getId();
+                IGUID treeGUID = all.get(treeId);
+
+                VersionBuilder versionBuilder = new VersionBuilder()
+                        .setContent(treeGUID);
+
+                if (prevCommit != null) {
+
+                    Set<IGUID> prevs = new LinkedHashSet<>();
+                    String prevVersionId = commitsToSOS.get(prevCommit.getId());
+                    IGUID prev = all.get(prevVersionId);
+                    prevs.add(prev);
+
+                    versionBuilder.setPrevious(prevs);
+                }
+
+                Version version = node.getAgent().addVersion(versionBuilder);
+                commitsToSOS.put(currentCommit.getId(), version.guid().toMultiHash());
+                all.put(currentCommit.getId(), version.guid());
+
+                prevCommit = currentCommit;
+                currentCommit = currentCommit.getNext() != null ? currentCommit.getNext().iterator().next() : null;
+
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+
+        } while(currentCommit != null);
+    }
+
 }

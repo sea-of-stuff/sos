@@ -43,14 +43,19 @@ public class GitToSOS {
         String[] repos = new String[]{
                 "git-to-sos/src/main/resources/test-git",
                 "git-to-sos/src/main/resources/one-file-commit",
-                "git-to-sos/src/main/resources/one-large-file-commit"
+                "git-to-sos/src/main/resources/one-large-file-commit",
+                "git-to-sos/src/main/resources/one-larger-file-commit"
         };
 
-        GitToSOS gitToSOS = new GitToSOS(repos[2], false);
+        GitToSOS gitToSOS = new GitToSOS(repos[1], false);
 
+        System.out.println("\n-------------------------------------");
+        System.out.println("Starting SOS Node");
         File configFile = new File("example_config.json");
         SettingsConfiguration configuration = new SettingsConfiguration(configFile);
         SOSLocalNode sos = startSOS(configuration.getSettingsObj());
+        System.out.println("SOS Node running");
+        System.out.println("-------------------------------------\n");
 
         // Perform transformations
         new OneToOne(sos, gitToSOS.getDag()).transform();

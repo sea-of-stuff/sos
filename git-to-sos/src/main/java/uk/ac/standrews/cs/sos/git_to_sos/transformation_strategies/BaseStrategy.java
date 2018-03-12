@@ -19,6 +19,7 @@ public abstract class BaseStrategy {
 
     protected HashMap<String, String> blobToSOS = new LinkedHashMap<>();
     protected HashMap<String, String> treesToSOS = new LinkedHashMap<>();
+    protected HashMap<String, String> commitsToSOS = new LinkedHashMap<>();
 
     BaseStrategy(SOSLocalNode node, DAG dag) {
         this.node = node;
