@@ -4,20 +4,6 @@
 
 This is a prototype of a distributed autonomic personal data storage system.
 
-```
-      ___           ___           ___
-     /  /\         /  /\         /  /\
-    /  /:/_       /  /::\       /  /:/_
-   /  /:/ /\     /  /:/\:\     /  /:/ /\
-  /  /:/ /::\   /  /:/  \:\   /  /:/ /::\
- /__/:/ /:/\:\ /__/:/ \__\:\ /__/:/ /:/\:\
- \  \:\/:/~/:/ \  \:\ /  /:/ \  \:\/:/~/:/
-  \  \::/ /:/   \  \:\  /:/   \  \::/ /:/
-   \__\/ /:/     \  \:\/:/     \__\/ /:/
-     /__/:/       \  \::/        /__/:/
-     \__\/         \__\/         \__\/
-```
-
 ## Goals
 
 - **Location abstraction**. Users can perform data operations irrespective of where the data is stored and from where it is accessed.
@@ -70,24 +56,29 @@ structure.
 
 ## SOS Architecture
 
-Nodes and Services
+### Node
+
+A node is defined as an access point to the SOS that is uniquely identified by a GUID,
+and has a pair of keys to digitally sign requests received by other nodes,
+and provides a set of services to manage the SOS model.
 
 ### Services
 
-- NDS - Node Discovery Service
-- MDS - Manifest-Data Service
-- MMS - Metadata Management Service
-- USRO - Users/Roles Service
-- *CMS - Contxt Management Service
+- NDS - **Node Discovery Service**: allows nodes in the SOS to be discovered.
+- MDS - **Manifest-Data Service**: manages manifests and allows manifests and data stored in the SOS to be found.
+- Storage - **Storage Service**: abstracts storage for atoms.
+- MMS - **Metadata Management Service**: process metadata and abstracts the location of metadata.
+- USRO - **Users/Roles Service**: manages users and roles.
+- *CMS - **Context Management Service**: manages contexts within the nodes and across the domain and codomain of contexts.
 
 
 ## More info on the SOS design
 
-Check the following repository: https://github.com/stacs-srg/sos-docs
+Check the following repository: [sos-docs](https://github.com/stacs-srg/sos-docs)
 
 ## Comparison with similar systems
 
-See [comparison table](comparison.htm)
+See <a href="comparison.htm" target="_blank">comparison table</a>
 
 ## Example applications
 
