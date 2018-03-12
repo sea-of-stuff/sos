@@ -110,7 +110,7 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
-            BindingAbsentException, DataException, IOException {
+            BindingAbsentException, DataException {
 
         IDirectory directory = localStorage.getDataDirectory();
         String filename = entityGUID.toMultiHash();

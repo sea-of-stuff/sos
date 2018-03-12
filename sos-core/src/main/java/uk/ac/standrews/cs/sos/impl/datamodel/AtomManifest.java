@@ -83,7 +83,7 @@ public class AtomManifest extends BasicManifest implements Atom {
     }
 
     @Override
-    public InputStream contentToHash() throws IOException {
+    public InputStream contentToHash() {
         return getData().getInputStream();
     }
 

@@ -320,7 +320,7 @@ public class SOSStorageService implements StorageService {
 
             return GUIDFactory.generateGUID(GUID_ALGORITHM, combinedStream);
 
-        } catch (AtomNotFoundException | IOException | GUIDGenerationException e) {
+        } catch (AtomNotFoundException | GUIDGenerationException e) {
             return new InvalidID();
         }
     }

@@ -137,12 +137,15 @@ public class SOSUsersRolesService implements UsersRolesService {
         boolean isUser = true;
         try {
             Manifest manifest = manifestsDataService.getManifest(guid);
-            if (manifest.getType() == ManifestType.USER) {
-                isUser = true;
-            } else if (manifest.getType() == ManifestType.ROLE) {
-                isUser = false;
-            } else {
-                throw new ManifestNotFoundException();
+            switch (manifest.getType()) {
+                case USER:
+                    isUser = true;
+                    break;
+                case ROLE:
+                    isUser = false;
+                    break;
+                default:
+                    throw new ManifestNotFoundException();
             }
 
             index.delete(guid);
