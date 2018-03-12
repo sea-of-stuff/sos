@@ -1,3 +1,9 @@
+---
+layout: default
+title: Sea of Stuff
+list_title:
+---
+
 # SOS - Sea of Stuff
 
 <img src="images/icon.png" height="150" alt="SOS Icon" class="center">
