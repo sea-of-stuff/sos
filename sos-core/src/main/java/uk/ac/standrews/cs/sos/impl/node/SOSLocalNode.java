@@ -257,12 +257,12 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         try {
             IFile publicKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.CERTIFICATE_EXTENSION);
             if (signatureCertificate == null && publicKeyFile.exists()) {
-                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toFile().toPath());
+                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.getPath());
             }
 
             IFile privateKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.PRIVATE_KEY_EXTENSION);
             if (signaturePrivateKey == null && privateKeyFile.exists()) {
-                signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.toFile().toPath());
+                signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.getPath());
             }
 
             if (signatureCertificate == null && signaturePrivateKey == null) {
@@ -276,7 +276,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         Paths.get(nodeDirectory.getPathname() + "id_rsa"));
             }
 
-        } catch (CryptoException | IOException e) {
+        } catch (CryptoException e) {
             throw new SignatureException(e);
         }
     }

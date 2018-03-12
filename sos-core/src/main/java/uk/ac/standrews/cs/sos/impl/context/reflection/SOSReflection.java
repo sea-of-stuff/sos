@@ -56,7 +56,6 @@ public class SOSReflection {
      */
     public void load(JsonNode node) throws ClassLoaderException {
 
-
         try {
             IDirectory targetClassPath = localStorage.getJavaDirectory();
 
@@ -178,11 +177,10 @@ public class SOSReflection {
 
     private java.lang.ClassLoader SOSClassLoader() throws ClassLoaderException {
 
-
         try {
             IDirectory targetClassPath = localStorage.getJavaDirectory();
 
-            URL url = targetClassPath.toFile().toURI().toURL();
+            URL url = targetClassPath.getPath().toUri().toURL();
             URL[] urls = new URL[]{url};
 
             // Create a new class loader with the directory

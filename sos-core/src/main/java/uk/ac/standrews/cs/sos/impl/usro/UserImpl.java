@@ -139,7 +139,6 @@ public class UserImpl extends BasicManifest implements User {
     private void manageSignatureKeys(boolean loadOnly) throws SignatureException {
 
         try {
-
             File publicKeyFile = new File(keysFolder + guid().toMultiHash() + DigitalSignature.CERTIFICATE_EXTENSION);
             if (signatureCertificate == null && publicKeyFile.exists()) {
                 signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
