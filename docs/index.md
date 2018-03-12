@@ -21,6 +21,8 @@ This is a prototype of a distributed autonomic personal data storage system.
 - **Users and Roles**. Users can play multiple roles and access different data views based on the role played.
 - **Absence of Central Authority**. Entities can be exchanged across individual nodes without the need for a central authority.
 
+---
+
 ## SOS Model
 
 The SOS consists of content-addressable entities described by manifests. A manifest is
@@ -93,6 +95,7 @@ See <a href="comparison.htm" target="_blank">comparison table</a>
 - SOS WebArchive
 - git-to-sos
 
+---
 
 ## Download
 
