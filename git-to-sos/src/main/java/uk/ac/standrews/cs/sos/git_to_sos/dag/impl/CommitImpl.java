@@ -24,24 +24,25 @@ public class CommitImpl extends EntityImpl implements Commit {
     }
 
     @Override
+    public void addPrevious(Commit previous) {
+
+        this.previous.add(previous);
+    }
+
+    @Override
     public List<Commit> getPrevious() {
         return previous;
     }
 
     @Override
-    public void addPrevious(List<Commit> previous) {
+    public void addNext(Commit next) {
 
-        this.previous.addAll(previous);
+        this.next.add(next);
     }
 
     @Override
     public List<Commit> getNext() {
-        return null;
-    }
-
-    @Override
-    public void addNext() {
-
+        return next;
     }
 
     @Override

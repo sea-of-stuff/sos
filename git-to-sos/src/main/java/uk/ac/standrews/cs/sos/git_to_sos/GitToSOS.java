@@ -28,7 +28,6 @@ import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.eclipse.jgit.lib.Constants.OBJ_BLOB;
@@ -44,10 +43,11 @@ public class GitToSOS {
                 "git-to-sos/src/main/resources/test-git",
                 "git-to-sos/src/main/resources/one-file-commit",
                 "git-to-sos/src/main/resources/one-large-file-commit",
-                "git-to-sos/src/main/resources/one-larger-file-commit"
+                "git-to-sos/src/main/resources/one-larger-file-commit",
+                "git-to-sos/src/main/resources/three-commits-text-file"
         };
 
-        GitToSOS gitToSOS = new GitToSOS(repos[1], false);
+        GitToSOS gitToSOS = new GitToSOS(repos[4], false);
 
         System.out.println("\n-------------------------------------");
         System.out.println("Starting SOS Node");
@@ -122,15 +122,20 @@ public class GitToSOS {
             walk.markStart(commit);
             for (RevCommit rev : walk) {
                 currentRev = rev;
-                Commit currentCommit = new CommitImpl(currentRev.getId().name());
+                Commit currentCommit;
+                String currentCommitId = currentRev.getId().name();
+                if (commits.containsKey(currentCommitId)) {
+                    currentCommit = commits.get(currentCommitId);
+                } else {
+                    currentCommit = new CommitImpl(currentCommitId);
+                }
 
                 Tree tree = processCommit(repository, rev);
                 currentCommit.setTree(tree);
 
-                String currentCommitId = currentCommit.getId();
-
                 commits.put(currentCommitId, currentCommit);
                 processPreviousCommits(currentRev, currentCommitId);
+                processNextCommits(currentCommit);
 
                 count++;
             }
@@ -151,8 +156,6 @@ public class GitToSOS {
     private void processPreviousCommits(RevCommit rev, String currentCommitId) {
 
         HashMap<String, Commit> commits = dag.getCommits();
-
-        List<Commit> parents = new LinkedList<>();
         for(RevCommit prev:rev.getParents()) {
             String id = prev.getId().name();
             Commit prevCommit;
@@ -162,10 +165,19 @@ public class GitToSOS {
                 prevCommit = new CommitImpl(id);
                 commits.put(id, prevCommit);
             }
-            parents.add(prevCommit);
-        }
 
-        commits.get(currentCommitId).addPrevious(parents);
+            commits.get(currentCommitId).addPrevious(prevCommit);
+        }
+    }
+
+    private void processNextCommits(Commit current) {
+
+        HashMap<String, Commit> commits = dag.getCommits();
+
+        // Make current the next of previous
+        for(Commit prev:current.getPrevious()) {
+            commits.get(prev.getId()).addNext(current);
+        }
     }
 
     private Tree processCommit(Repository repository, RevCommit commit) throws IOException {

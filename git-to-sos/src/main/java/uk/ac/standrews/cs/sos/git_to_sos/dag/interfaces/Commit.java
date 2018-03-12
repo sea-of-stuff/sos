@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface Commit extends Entity {
 
+    void addPrevious(Commit previous);
     List<Commit> getPrevious();
-    void addPrevious(List<Commit> previous);
 
+    void addNext(Commit commit);
     List<Commit> getNext();
-    void addNext();
 
     void setTree(Tree tree);
     Tree getTree();

@@ -44,6 +44,7 @@ public class OneToOne extends BaseStrategy {
                 AtomBuilder atomBuilder = new AtomBuilder()
                         .setData(new InputStreamData(entry.getValue().getData()));
                 Atom atom = node.getAgent().addAtom(atomBuilder);
+                System.out.println("Added atom --> " + atom.guid().toShortString());
 
                 blobToSOS.put(entry.getKey(), atom.guid().toMultiHash());
                 all.put(entry.getKey(), atom.guid());
@@ -76,6 +77,7 @@ public class OneToOne extends BaseStrategy {
                         .setType(CompoundType.COLLECTION)
                         .setContents(contents);
                 Compound compound = node.getAgent().addCompound(compoundBuilder);
+                System.out.println("Added compound --> " + compound.guid().toShortString());
 
                 treesToSOS.put(entry.getKey(), compound.guid().toMultiHash());
                 all.put(entry.getKey(), compound.guid());
@@ -91,6 +93,7 @@ public class OneToOne extends BaseStrategy {
 
         Commit currentCommit = dag.getRoot();
         Commit prevCommit = null; // TODO - manage multiple prev commits
+        IGUID invariant = null;
         do {
 
             try {
@@ -103,19 +106,26 @@ public class OneToOne extends BaseStrategy {
                 if (prevCommit != null) {
 
                     Set<IGUID> prevs = new LinkedHashSet<>();
-                    String prevVersionId = commitsToSOS.get(prevCommit.getId());
-                    IGUID prev = all.get(prevVersionId);
+                    IGUID prev = all.get(prevCommit.getId());
                     prevs.add(prev);
 
                     versionBuilder.setPrevious(prevs);
                 }
 
+                if (invariant != null) {
+
+                    versionBuilder.setInvariant(invariant);
+                }
+
                 Version version = node.getAgent().addVersion(versionBuilder);
+                invariant = version.invariant();
+                System.out.println("Added version --> " + version.guid().toShortString());
+
                 commitsToSOS.put(currentCommit.getId(), version.guid().toMultiHash());
                 all.put(currentCommit.getId(), version.guid());
 
                 prevCommit = currentCommit;
-                currentCommit = currentCommit.getNext() != null ? currentCommit.getNext().iterator().next() : null;
+                currentCommit = currentCommit.getNext() != null && currentCommit.getNext().iterator().hasNext() ? currentCommit.getNext().iterator().next() : null;
 
             } catch (ServiceException e) {
                 e.printStackTrace();
