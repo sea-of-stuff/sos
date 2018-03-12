@@ -8,16 +8,26 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import uk.ac.standrews.cs.castore.CastoreBuilder;
+import uk.ac.standrews.cs.castore.CastoreFactory;
+import uk.ac.standrews.cs.castore.exceptions.StorageException;
+import uk.ac.standrews.cs.castore.interfaces.IStorage;
+import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.BlobImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.CommitImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.DAGImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.dag.impl.TreeImpl;
 import uk.ac.standrews.cs.sos.git_to_sos.dag.interfaces.*;
+import uk.ac.standrews.cs.sos.git_to_sos.transformation_strategies.OneToOne;
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,25 +38,42 @@ import static org.eclipse.jgit.lib.Constants.OBJ_BLOB;
  */
 public class GitToSOS {
 
-    private DAG dag;
-    private HashMap<String, Commit> commits = new LinkedHashMap<>();
-    private HashMap<String, Tree> trees = new LinkedHashMap<>();
-    private HashMap<String, Blob> blobs = new LinkedHashMap<>();
-
-    public static void main(String[] args) throws IOException, GitAPIException {
+    public static void main(String[] args) throws IOException, GitAPIException, SOSException, ConfigurationException {
 
         String[] repos = new String[]{
                 "git-to-sos/src/main/resources/test-git",
-                "git-to-sos/src/main/resources/one-file-commit"
+                "git-to-sos/src/main/resources/one-file-commit",
+                "git-to-sos/src/main/resources/one-large-file-commit"
         };
 
-        // TODO - init SOS Node
-        GitToSOS gitToSOS = new GitToSOS(repos[0]);
+        GitToSOS gitToSOS = new GitToSOS(repos[2], false);
 
-        TransformDagToSOS.transform(null, gitToSOS.getDag());
+        File configFile = new File("example_config.json");
+        SettingsConfiguration configuration = new SettingsConfiguration(configFile);
+        SOSLocalNode sos = startSOS(configuration.getSettingsObj());
+
+        // Perform transformations
+        new OneToOne(sos, gitToSOS.getDag()).transform();
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            sos.kill();
+        }
     }
 
-    private GitToSOS(String path) throws IOException, GitAPIException {
+    /**********************************/
+    /********* GitToSOS class *********/
+    /**********************************/
+
+    private DAG dag;
+    private boolean printBlobData;
+
+    private GitToSOS(String path, boolean printBlobData) throws IOException, GitAPIException {
+
+        this.printBlobData = printBlobData;
 
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try (Repository repository = builder.setGitDir(new File(path + "/.git"))
@@ -55,6 +82,7 @@ public class GitToSOS {
                 .build()) {
 
             System.out.println("Repository: " + repository.getDirectory());
+            dag = new DAGImpl();
             try (Git git = new Git(repository)) {
 
                 List<Ref> call = git.branchList().call();
@@ -74,9 +102,11 @@ public class GitToSOS {
 
         System.out.println("-------------------------------------");
         System.out.println("-------------------------------------");
-        System.out.println("Branch: " + branchRef + " " + branchRef.getName() + " SHA1: " + branchRef.getObjectId().getName());
+        System.out.println("Branch: " + branchRef + " Name: " + branchRef.getName() + " SHA1: " + branchRef.getObjectId().getName());
 
-        // a RevWalk allows to walk over commits based on some filtering that is defined
+        HashMap<String, Commit> commits = dag.getCommits();
+
+        // A RevWalk allows to walk over commits based on some filtering that is defined
         try (RevWalk walk = new RevWalk(repository)) {
             RevCommit commit = walk.parseCommit(branchRef.getObjectId());
             System.out.println("Start-Commit: " + commit);
@@ -103,7 +133,7 @@ public class GitToSOS {
             // Last visited commit of the master branch is the root of the DAG
             if (currentRev != null && branchRef.getName().equals("refs/heads/master")) {
                 Commit rootCommit = commits.get(currentRev.getId().name());
-                dag = new DAGImpl(rootCommit);
+                dag.setRoot(rootCommit);
             }
 
             System.out.println("-------------------------------------");
@@ -114,6 +144,8 @@ public class GitToSOS {
     }
 
     private void processPreviousCommits(RevCommit rev, String currentCommitId) {
+
+        HashMap<String, Commit> commits = dag.getCommits();
 
         List<Commit> parents = new LinkedList<>();
         for(RevCommit prev:rev.getParents()) {
@@ -134,6 +166,8 @@ public class GitToSOS {
     private Tree processCommit(Repository repository, RevCommit commit) throws IOException {
         System.out.println("Commit: " + commit);
         System.out.println("\tMessage: " + commit.getShortMessage());
+
+        HashMap<String, Tree> trees = dag.getTrees();
 
         RevTree revTree = commit.getTree();
         System.out.println("Tree: " + revTree);
@@ -188,9 +222,15 @@ public class GitToSOS {
 
     private Entity readBlob(Repository repository, AnyObjectId id) throws IOException {
 
+        HashMap<String, Blob> blobs = dag.getBlobs();
+
         ObjectLoader loader = repository.open(id);
         System.out.print("Blob: ");
-        loader.copyTo(System.out);
+        if (printBlobData) {
+            loader.copyTo(System.out);
+        } else {
+            System.out.println("N/A");
+        }
 
         String blobSHA = id.getName();
         if (!blobs.containsKey(blobSHA)) {
@@ -201,4 +241,21 @@ public class GitToSOS {
         return blobs.get(blobSHA);
     }
 
+    private static SOSLocalNode startSOS(SettingsConfiguration.Settings settings) throws SOSException {
+
+        LocalStorage localStorage;
+        try {
+            CastoreBuilder builder = settings.getStore().getCastoreBuilder();
+            IStorage storage = CastoreFactory.createStorage(builder);
+            localStorage = new LocalStorage(storage);
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
+        }
+
+        SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+
+        return builder.settings(settings)
+                .internalStorage(localStorage)
+                .build();
+    }
 }
