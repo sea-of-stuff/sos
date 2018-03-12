@@ -74,7 +74,7 @@ and provides a set of services to manage the SOS model.
 
 ## More info on the SOS design
 
-Check the following repository: [sos-docs](https://github.com/stacs-srg/sos-docs)
+Check the following repository: [sos-docs](https://github.com/stacs-srg/sos-docs) (**private**)
 
 ## Comparison with similar systems
 
@@ -90,5 +90,10 @@ See <a href="comparison.htm" target="_blank">comparison table</a>
 
 ## Download
 
-Download the stable releases from [here](https://github.com/stacs-srg/sos/releases)
-or checkout the [latest code](https://github.com/stacs-srg/sos).
+Download the stable releases from [here](https://github.com/stacs-srg/sos/releases) (**private**)
+or checkout the [latest code](https://github.com/stacs-srg/sos) (**private**).
+
+
+## Contacts
+
+Email Simone Conte (sic2@st-andrews.ac.uk) for additional information about the project.
