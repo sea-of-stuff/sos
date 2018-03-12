@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.DataNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
@@ -458,6 +459,8 @@ public class SOSStorageService implements StorageService {
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             throw new ServiceException(ServiceException.SERVICE.STORAGE, "Unable to create the LocationIndex");
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on locations index loading");
         }
 
         if (locationIndex == null) {

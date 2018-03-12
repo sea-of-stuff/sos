@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.sos.impl.context.directory;
 
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.db.DatabaseException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -10,6 +12,7 @@ import uk.ac.standrews.cs.sos.impl.database.DatabaseType;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.interfaces.context.ContextsContentsDirectory;
 import uk.ac.standrews.cs.sos.utils.Persistence;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 
@@ -51,6 +54,10 @@ public class ContextsContentsDirectoryFactory {
 
         } catch (DataStorageException | IOException | ClassNotFoundException e) {
             throw new ContextException("ContextService - Unable to load CMS Index");
+
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on CMS index loading");
+            return new ContextsContentsDirectoryInMemory();
         }
     }
 }

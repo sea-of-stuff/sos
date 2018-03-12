@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.logger.LEVEL;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
@@ -217,6 +218,8 @@ public class SOSUsersRolesService implements UsersRolesService {
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the UserRoleService index");
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on usro index loading");
         }
 
         if (index == null) {

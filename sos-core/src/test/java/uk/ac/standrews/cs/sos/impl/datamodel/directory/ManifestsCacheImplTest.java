@@ -15,6 +15,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.CommonTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -109,7 +110,7 @@ public class ManifestsCacheImplTest extends CommonTest {
 
     @Test
     public void persistCacheTest() throws IOException, ClassNotFoundException, StorageException,
-            DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException, ManifestNotFoundException {
+            DataStorageException, ManifestPersistException, GUIDGenerationException, URISyntaxException, ManifestNotFoundException, IgnoreException {
 
         String root = System.getProperty("user.home") + "/sos/";
 
@@ -142,7 +143,7 @@ public class ManifestsCacheImplTest extends CommonTest {
 
     @Test (expectedExceptions = ManifestNotFoundException.class)
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
-            ManifestPersistException, StorageException, DataStorageException, ManifestNotFoundException {
+            ManifestPersistException, StorageException, DataStorageException, ManifestNotFoundException, IgnoreException {
 
         String root = System.getProperty("user.home") + "/sos/";
 

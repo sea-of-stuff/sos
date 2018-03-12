@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.impl.datamodel.directory;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -122,7 +123,7 @@ public class ManifestsCacheImpl extends AbstractManifestsDirectory implements Ma
         lru.clear();
     }
 
-    public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException {
+    public static ManifestsCache load(LocalStorage storage, IFile file, IDirectory manifestsDir) throws IOException, ClassNotFoundException, IgnoreException {
 
         ManifestsCache persistedCache = (ManifestsCache) Persistence.load(file);
 

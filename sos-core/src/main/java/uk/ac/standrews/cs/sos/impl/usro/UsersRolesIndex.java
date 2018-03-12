@@ -4,6 +4,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserNotFoundException;
 import uk.ac.standrews.cs.sos.model.Role;
@@ -101,7 +102,7 @@ public class UsersRolesIndex implements Serializable {
         this.activeUser = user;
     }
 
-    public static UsersRolesIndex load(IFile file) throws IOException, ClassNotFoundException {
+    public static UsersRolesIndex load(IFile file) throws IOException, ClassNotFoundException, IgnoreException {
 
         UsersRolesIndex persistedCache = (UsersRolesIndex) Persistence.load(file);
         if (persistedCache == null) throw new ClassNotFoundException();

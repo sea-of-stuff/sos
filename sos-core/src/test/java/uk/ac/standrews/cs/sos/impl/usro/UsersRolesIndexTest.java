@@ -4,6 +4,7 @@ import org.testng.annotations.Test;
 import uk.ac.standrews.cs.castore.interfaces.IDirectory;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.SetUpTest;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.ProtectionException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -46,7 +47,7 @@ public class UsersRolesIndexTest extends SetUpTest {
     }
 
     @Test
-    public void saveLoadActiveUserTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, UserNotFoundException {
+    public void saveLoadActiveUserTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, UserNotFoundException, IgnoreException {
 
         UsersRolesIndex cache = new UsersRolesIndex();
         User user = new UserImpl("TEST");
@@ -63,7 +64,7 @@ public class UsersRolesIndexTest extends SetUpTest {
     }
 
     @Test
-    public void saveLoadActiveRoleTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, ProtectionException, RoleNotFoundException {
+    public void saveLoadActiveRoleTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, ProtectionException, RoleNotFoundException, IgnoreException {
 
         UsersRolesIndex cache = new UsersRolesIndex();
         User user = new UserImpl("TEST");
@@ -81,7 +82,7 @@ public class UsersRolesIndexTest extends SetUpTest {
     }
 
     @Test
-    public void saveLoadRolesTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, ProtectionException, RoleNotFoundException {
+    public void saveLoadRolesTest() throws DataStorageException, IOException, SignatureException, ClassNotFoundException, ProtectionException, RoleNotFoundException, IgnoreException {
 
         UsersRolesIndex cache = new UsersRolesIndex();
         User user = new UserImpl("TEST");

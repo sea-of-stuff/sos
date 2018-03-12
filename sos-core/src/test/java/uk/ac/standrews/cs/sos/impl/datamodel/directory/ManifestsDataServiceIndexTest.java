@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.castore.interfaces.IStorage;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
@@ -65,7 +66,7 @@ public class ManifestsDataServiceIndexTest {
     }
 
     @Test
-    public void persistIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
+    public void persistIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException, IgnoreException {
 
         String root = System.getProperty("user.home") + "/sos/";
 
@@ -96,7 +97,7 @@ public class ManifestsDataServiceIndexTest {
     }
 
     @Test
-    public void persistEmptyIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException {
+    public void persistEmptyIndexTest() throws IOException, ClassNotFoundException, DataStorageException, StorageException, IgnoreException {
 
         String root = System.getProperty("user.home") + "/sos/";
 

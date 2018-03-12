@@ -8,6 +8,7 @@ import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.guid.impl.keys.InvalidID;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -459,7 +460,9 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 inMemoryCache = ManifestsCacheImpl.load(localStorage, file, localStorage.getManifestsDirectory());
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS inMemoryCache");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the Manifests cache");
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on manifests cache loading");
         }
 
         if (inMemoryCache == null) {
@@ -476,6 +479,8 @@ public class SOSManifestsDataService implements ManifestsDataService {
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS index");
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on MDS index loading");
         }
 
         if (manifestsLocationsIndex == null) {
@@ -491,7 +496,9 @@ public class SOSManifestsDataService implements ManifestsDataService {
                 index = (ManifestsIndex) Persistence.load(file);
             }
         } catch (DataStorageException | ClassNotFoundException | IOException e) {
-            SOS_LOG.log(LEVEL.ERROR, "Unable to load the MDS inMemoryCache");
+            SOS_LOG.log(LEVEL.ERROR, "Unable to load the Manifests index");
+        } catch (IgnoreException e) {
+            SOS_LOG.log(LEVEL.WARN, "Ignore exception on manifests Manifests Index loading");
         }
 
         if (index == null) {

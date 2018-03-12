@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.sos.utils;
 import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
+import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
 
 import java.io.*;
 
@@ -32,11 +33,11 @@ public class Persistence {
         }
     }
 
-    public static Object load(IFile file) throws IOException, ClassNotFoundException {
+    public static Object load(IFile file) throws IOException, ClassNotFoundException, IgnoreException {
 
         // Check that file is not empty
         if (!file.exists() || file.getSize() == 0) {
-            throw new IOException("File is empty");
+            throw new IgnoreException("File is empty");
         }
 
         try (InputStream istream = file.getData().getInputStream();
