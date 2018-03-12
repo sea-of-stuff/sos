@@ -21,8 +21,8 @@ public class NodeSerializer extends JsonSerializer<Node> {
         try {
             jsonGenerator.writeStartObject();
 
-            jsonGenerator.writeStringField(JSONConstants.KEY_GUID, node.guid().toMultiHash());
             jsonGenerator.writeStringField(JSONConstants.KEY_TYPE, node.getType().toString());
+            jsonGenerator.writeStringField(JSONConstants.KEY_GUID, node.guid().toMultiHash());
 
             jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(node.getSignatureCertificate()));
             jsonGenerator.writeStringField(JSONConstants.KEY_NODE_HOSTNAME, node.getIP());
