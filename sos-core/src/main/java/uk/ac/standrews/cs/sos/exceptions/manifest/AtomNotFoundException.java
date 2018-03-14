@@ -24,6 +24,6 @@ import uk.ac.standrews.cs.guid.IGUID;
 public class AtomNotFoundException extends Exception {
 
     public AtomNotFoundException(IGUID guid) {
-        super("Atom with GUID " + guid.toMultiHash());
+        super("AtomNotFoundException - GUID " + guid.toMultiHash());
     }
 }

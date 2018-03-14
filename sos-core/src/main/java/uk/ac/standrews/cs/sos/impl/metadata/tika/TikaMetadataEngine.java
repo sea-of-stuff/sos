@@ -89,9 +89,7 @@ public class TikaMetadataEngine implements MetadataEngine {
             Property property;
 
             String value = metadata.get(key);
-            if (value == null) {
-                property = new Property(key);
-            } else if (Misc.isIntegerNumber(value)) { // check integer numbers always before real numbers
+            if (Misc.isIntegerNumber(value)) { // check integer numbers always before real numbers
                 property = new Property(key, Long.parseLong(value));
             } else if (Misc.isRealNumber(value)) {
                 property = new Property(key, Double.parseDouble(value));
@@ -110,6 +108,7 @@ public class TikaMetadataEngine implements MetadataEngine {
         metamap.put(sizeProperty.getKey(), sizeProperty);
     }
 
+    // FIXME - store it as seprate metadata, otherwise we cannot have de-dup over metadata
     private void timestampProperty(HashMap<String, Property> metamap) {
         Instant instant = Instant.now();
         Property timestampProperty = new Property("Timestamp", instant.toEpochMilli());

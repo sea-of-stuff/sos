@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.sos.utils;
 
-import uk.ac.standrews.cs.castore.exceptions.DataException;
 import uk.ac.standrews.cs.castore.exceptions.PersistenceException;
 import uk.ac.standrews.cs.castore.interfaces.IFile;
 import uk.ac.standrews.cs.sos.exceptions.IgnoreException;
@@ -39,13 +38,11 @@ public class Persistence {
             }
         }
 
-        try (OutputStream ostream = IO.toOutputStream(file.getData().getInputStream());
+        try (OutputStream ostream = new FileOutputStream(file.toFile());
              ObjectOutputStream p = new ObjectOutputStream(ostream)) {
 
             p.writeObject(object);
             p.flush();
-        } catch (DataException e) {
-            throw new IOException(e);
         }
     }
 
@@ -56,12 +53,10 @@ public class Persistence {
             throw new IgnoreException("File is empty");
         }
 
-        try (InputStream istream = file.getData().getInputStream();
+        try (InputStream istream = new FileInputStream(file.toFile());
              ObjectInputStream q = new ObjectInputStream(istream)) {
 
             return q.readObject();
-        } catch (DataException e) {
-            throw new IOException(e);
         }
 
     }

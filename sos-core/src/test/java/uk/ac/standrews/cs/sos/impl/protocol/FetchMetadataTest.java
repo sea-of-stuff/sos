@@ -64,11 +64,6 @@ public class FetchMetadataTest extends ProtocolTest {
                     "            \"value\": \"org.apache.tika.parser.DefaultParser\"\n" +
                     "        },\n" +
                     "        {\n" +
-                    "            \"key\": \"Content-Encoding\",\n" +
-                    "            \"type\": \"any\",\n" +
-                    "            \"value\": \"null\"\n" +
-                    "        },\n" +
-                    "        {\n" +
                     "            \"key\": \"Size\",\n" +
                     "            \"type\": \"long\",\n" +
                     "            \"value\": 26\n" +

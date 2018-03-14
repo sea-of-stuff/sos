@@ -32,6 +32,7 @@ import java.security.PublicKey;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static uk.ac.standrews.cs.sos.constants.Keys.MOCK_CERTIFICATE;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -53,7 +54,7 @@ public class ProtocolTest extends SetUpTest {
             mockSignatureCertificate = mock(PublicKey.class);
             PowerMockito.mockStatic(DigitalSignature.class);
             PowerMockito.when(DigitalSignature.verify64(any(PublicKey.class), any(String.class), any(String.class))).thenReturn(true);
-            PowerMockito.when(DigitalSignature.getCertificateString(any(PublicKey.class))).thenReturn("CERTIFICATE_MOCK_TEST");
+            PowerMockito.when(DigitalSignature.getCertificateString(any(PublicKey.class))).thenReturn(MOCK_CERTIFICATE);
         } catch (CryptoException e) {
             throw new SOSProtocolException("Protocol Mocking errors");
         }

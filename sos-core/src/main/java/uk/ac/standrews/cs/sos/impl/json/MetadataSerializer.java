@@ -70,9 +70,6 @@ public class MetadataSerializer extends JsonSerializer<Metadata> {
         } else {
 
             switch (property.getType()) {
-                case ANY:
-                    jsonGenerator.writeNullField(JSONConstants.KEY_META_VALUE);
-                    break;
                 case LONG:
                     jsonGenerator.writeNumberField(JSONConstants.KEY_META_VALUE, property.getValue_l());
                     break;

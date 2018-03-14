@@ -189,7 +189,7 @@ public class LocalManifestsDirectoryTest extends SetUpTest {
 
         try {
             manifestsDirectory.addManifest(atomManifest);
-            localStorage.getManifestsDirectory().remove(guid.toMultiHash() + ".json");
+            localStorage.getManifestsDirectory().remove(guid.toMultiHash());
 
             manifestsDirectory.addManifest(anotherManifest);
             AtomManifest manifest = (AtomManifest) manifestsDirectory.findManifest(guid);

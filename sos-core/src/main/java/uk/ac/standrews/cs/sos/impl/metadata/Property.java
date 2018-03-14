@@ -72,11 +72,6 @@ public class Property {
         this.value_g = value;
     }
 
-    public Property(String key) {
-        this.type = MetaType.ANY;
-        this.key = key;
-    }
-
     public MetaType getType() {
         return type;
     }
@@ -137,8 +132,6 @@ public class Property {
                     break;
                 case GUID:
                     retval += value_g.toMultiHash();
-                    break;
-                case ANY:
                     break;
             }
         }

@@ -25,33 +25,31 @@ import java.sql.*;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class AbstractDatabase implements Database {
+class AbstractDatabase implements Database {
 
-    private IFile dbFile;
+    private String dbPath;
 
-    public AbstractDatabase(IFile dbFile) {
-        this.dbFile = dbFile;
+    AbstractDatabase(IFile dbFile) {
+        this.dbPath = dbFile.getPathname();
     }
 
     /**
      * Caller must make sure that the connection is closed
      *
-     * @return
-     * @throws DatabaseConnectionException
+     * @return connection
+     * @throws DatabaseConnectionException if connection could not be established
      */
-    protected Connection getSQLiteConnection() throws DatabaseConnectionException {
-        Connection connection;
+    Connection getSQLiteConnection() throws DatabaseConnectionException {
+
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getPathname());
+            return DriverManager.getConnection("jdbc:sqlite:" + dbPath);
         } catch (ClassNotFoundException | SQLException e) {
             throw new DatabaseConnectionException(e);
         }
-
-        return connection;
     }
 
-    protected boolean executeQuery(Connection connection, String query) throws SQLException {
+    boolean executeQuery(Connection connection, String query) throws SQLException {
 
         boolean retval;
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -63,7 +61,7 @@ public class AbstractDatabase implements Database {
         return retval;
     }
 
-    protected void executeUpdate(Connection connection, String query) throws SQLException {
+    void executeUpdate(Connection connection, String query) throws SQLException {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 

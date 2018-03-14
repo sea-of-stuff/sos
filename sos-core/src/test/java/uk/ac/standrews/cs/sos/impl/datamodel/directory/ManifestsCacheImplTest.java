@@ -157,6 +157,7 @@ public class ManifestsCacheImplTest extends CommonTest {
         assertNotNull(persistedCache.findManifest(guid));
     }
 
+    // A ref to the manifest is added to cache, but the manifest is not stored anywhere
     @Test (expectedExceptions = ManifestNotFoundException.class)
     public void persistCacheFailsWhenNoManifestsNotSavedTest() throws IOException, ClassNotFoundException,
             ManifestPersistException, StorageException, DataStorageException, ManifestNotFoundException, IgnoreException {

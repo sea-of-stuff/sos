@@ -21,7 +21,7 @@ package uk.ac.standrews.cs.sos.impl.metadata;
  */
 public enum MetaType {
 
-    LONG("long"), DOUBLE("double"), BOOLEAN("boolean"), STRING("string"), GUID("guid"), ANY("any");
+    LONG("long"), DOUBLE("double"), BOOLEAN("boolean"), STRING("string"), GUID("guid");
 
     private final String type;
     MetaType(String type) {

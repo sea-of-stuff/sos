@@ -65,7 +65,7 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
             "DB_is_agent, DB_is_storage, DB_is_mds, DB_is_nds, DB_is_mms, DB_is_cms, DB_is_rms, DB_is_experiment FROM nodes";
 
 
-    public NodesDatabaseImpl(IFile dbFile) throws DatabaseException {
+    NodesDatabaseImpl(IFile dbFile) throws DatabaseException {
         super(dbFile);
 
         try (Connection connection = getSQLiteConnection()) {
@@ -138,6 +138,5 @@ public class NodesDatabaseImpl extends AbstractDatabase implements NodesDatabase
 
         return retval;
     }
-
 
 }

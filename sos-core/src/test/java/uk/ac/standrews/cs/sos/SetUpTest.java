@@ -52,7 +52,6 @@ public class SetUpTest extends CommonTest {
     public void setUp(Method testMethod) throws Exception {
         super.setUp(testMethod);
 
-
         // FORCE THE SOS PROTOCOL TO BE DE-REGISTERED. THIS STUFF IS HACKY, BUT THERE IS NOT ANOTHER WAY OF RESETTING THE
         // URLStreamHandlerFactory
         try {
@@ -63,7 +62,6 @@ public class SetUpTest extends CommonTest {
         } catch (NoSuchFieldException | IllegalAccessException e1) {
             throw new Error("Could not access factory field on URL class: {}", e1);
         }
-
 
         createConfiguration();
 
@@ -88,7 +86,7 @@ public class SetUpTest extends CommonTest {
         FileUtils.deleteDirectory(new File("sos-core/src/test/resources/contexts/"));
     }
 
-    protected void createConfiguration() throws ConfigurationException, IOException {
+    protected void createConfiguration() throws ConfigurationException {
         File file = new File(TEST_CONFIGURATIONS_PATH + "config_setup.json");
 
         settings = new SettingsConfiguration(file).getSettingsObj();

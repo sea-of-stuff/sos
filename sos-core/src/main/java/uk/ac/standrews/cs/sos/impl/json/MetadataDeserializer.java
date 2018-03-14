@@ -92,8 +92,6 @@ public class MetadataDeserializer extends JsonDeserializer<Metadata> {
 
         MetaType metaType = MetaType.get(type);
         switch(metaType) {
-            case ANY:
-                return new Property(key);
             case LONG:
                 return new Property(key, element.asLong());
             case DOUBLE:

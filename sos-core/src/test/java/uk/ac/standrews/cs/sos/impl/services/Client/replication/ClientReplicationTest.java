@@ -46,6 +46,7 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
+import static uk.ac.standrews.cs.sos.constants.Keys.MOCK_CERTIFICATE;
 import static uk.ac.standrews.cs.sos.constants.Paths.TEST_CONFIGURATIONS_PATH;
 
 /**
@@ -91,7 +92,7 @@ public class ClientReplicationTest extends SetUpTest {
             mockSignatureCertificate = mock(PublicKey.class);
             PowerMockito.mockStatic(DigitalSignature.class);
             PowerMockito.when(DigitalSignature.verify64(any(PublicKey.class), any(String.class), any(String.class))).thenReturn(true);
-            PowerMockito.when(DigitalSignature.getCertificateString(any(PublicKey.class))).thenReturn("CERTIFICATE_MOCK_TEST");
+            PowerMockito.when(DigitalSignature.getCertificateString(any(PublicKey.class))).thenReturn(MOCK_CERTIFICATE);
         } catch (CryptoException e) {
             throw new SOSProtocolException("Protocol Mocking errors");
         }

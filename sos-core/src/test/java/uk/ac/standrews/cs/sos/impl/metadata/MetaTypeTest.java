@@ -34,6 +34,5 @@ public class MetaTypeTest extends CommonTest {
         assertEquals(MetaType.BOOLEAN.toString(), "boolean");
         assertEquals(MetaType.STRING.toString(), "string");
         assertEquals(MetaType.GUID.toString(), "guid");
-        assertEquals(MetaType.ANY.toString(), "any");
     }
 }
