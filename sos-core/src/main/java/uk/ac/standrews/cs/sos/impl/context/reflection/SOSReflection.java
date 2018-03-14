@@ -52,11 +52,14 @@ public class SOSReflection {
 
     private static SOSReflection instance;
 
-    public void init(LocalStorage localStorage) {
+    private SOSReflection(LocalStorage localStorage) {
         this.localStorage = localStorage;
-
         loadedClasses = new LinkedHashSet<>();
-        instance = new SOSReflection();
+    }
+
+    public static void init(LocalStorage localStorage) {
+
+        instance = new SOSReflection(localStorage);
     }
 
     public static SOSReflection instance() {

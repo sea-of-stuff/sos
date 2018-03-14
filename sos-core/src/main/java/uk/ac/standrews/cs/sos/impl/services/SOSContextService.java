@@ -37,6 +37,7 @@ import uk.ac.standrews.cs.sos.impl.context.directory.ContextVersionInfo;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryFactory;
 import uk.ac.standrews.cs.sos.impl.context.directory.ContextsContentsDirectoryType;
 import uk.ac.standrews.cs.sos.impl.context.examples.ReferencePredicate;
+import uk.ac.standrews.cs.sos.impl.context.reflection.SOSReflection;
 import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
@@ -115,6 +116,7 @@ public class SOSContextService implements ContextService {
             this.manifestsDataService = manifestsDataService;
             this.commonUtilities = commonUtilities;
 
+            SOSReflection.init(localStorage);
             contextsContentsDirectory = new ContextsContentsDirectoryFactory().makeContextsContentsDirectory(ContextsContentsDirectoryType.IN_MEMORY, localStorage);
             cachedComputationalUnits = new LinkedHashMap<>();
 

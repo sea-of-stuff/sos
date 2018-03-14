@@ -60,6 +60,7 @@ public class SOSReflectionTest extends SetUpTest {
         super.setUp(testMethod);
 
         commonUtilities = new CommonUtilities(localSOSNode.getNDS(), localSOSNode.getMDS(), localSOSNode.getUSRO(), localSOSNode.getStorageService());
+        SOSReflection.init(localStorage);
     }
 
     @Test
