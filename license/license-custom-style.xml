@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<additionalHeaders xmlns="http://exslt.org/common">
+    <java_style>
+        <!-- This custom style is used to override the default formatting for Java files,
+             which uses Javadoc format, therefore causing confusion with the actual class-level
+             Javadoc. This format puts a single asterix in the first line rather than two. -->
+        <firstLine>/*</firstLine>
+        <beforeEachLine> * </beforeEachLine>
+        <endLine> */</endLine>
+        <firstLineDetectionPattern>(\s|\t)*/\*.*$</firstLineDetectionPattern>
+        <lastLineDetectionPattern>.*\*/(\s|\t)*$</lastLineDetectionPattern>
+        <allowBlankLines>false</allowBlankLines>
+        <isMultiline>true</isMultiline>
+        <padLines>false</padLines>
+    </java_style>
+</additionalHeaders>

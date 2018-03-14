@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2018 Systems Research Group, University of St Andrews:
+    <https://github.com/stacs-srg>
+
+    This file is part of the module sos.
+
+    sos is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+    version.
+
+    sos is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with sos. If not, see
+    <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,6 +43,10 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
+
+        <license.template>license/license-template.txt</license.template>
+        <license.style>license/license-custom-style.xml</license.style>
+
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
@@ -53,6 +75,64 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+
+            <plugins>
+
+                <plugin>
+                    <!-- This checks that the required licence, specified in the licence template        -->
+                    <!-- file src/main/resources/license-template.txt, is applied to all source files.   -->
+
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>3.0</version>
+                    <configuration>
+                        <header>${license.template}</header>
+
+                        <headerDefinitions>
+
+                            <!-- This custom style is used to override the default formatting for Java   -->
+                            <!-- files, which uses Javadoc format, therefore causing confusion with the  -->
+                            <!-- actual class-level Javadoc.                                             -->
+                            <headerDefinition>${license.style}</headerDefinition>
+
+                        </headerDefinitions>
+
+                        <mapping>
+                            <java>JAVA_STYLE</java>
+                        </mapping>
+
+                        <includes>
+                            <include>**/src/**</include>
+                            <include>pom.xml</include>
+                        </includes>
+
+                        <excludes>
+                            <exclude>**/README</exclude>
+                            <exclude>**/src/test/resources/**</exclude>
+                            <exclude>**/src/main/resources/**</exclude>
+                            <exclude>**/docs/**</exclude>
+                            <exclude>**/site/**</exclude>
+                            <exclude>**/experiments/**</exclude>
+                            <exclude>**/logs/**</exclude>
+                            <exclude>**/scripts/**</exclude>
+                            <exclude>**/third-party/**</exclude>
+                        </excludes>
+
+                    </configuration>
+
+                    <executions>
+                        <execution>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <repositories>
