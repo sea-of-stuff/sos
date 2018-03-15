@@ -38,7 +38,7 @@ public class Persistence {
             }
         }
 
-        try (OutputStream ostream = new FileOutputStream(file.toFile());
+        try (OutputStream ostream = new FileOutputStream(file.toFile()); // TODO - might not work properly with non-FS storage
              ObjectOutputStream p = new ObjectOutputStream(ostream)) {
 
             p.writeObject(object);
@@ -53,7 +53,7 @@ public class Persistence {
             throw new IgnoreException("File is empty");
         }
 
-        try (InputStream istream = new FileInputStream(file.toFile());
+        try (InputStream istream = new FileInputStream(file.toFile()); // TODO - might not work properly with non-FS storage
              ObjectInputStream q = new ObjectInputStream(istream)) {
 
             return q.readObject();

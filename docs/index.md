@@ -6,7 +6,7 @@ list_title:
 
 # SOS - Sea of Stuff
 
-<img src="images/icon.png" height="150" alt="SOS Icon" class="center">
+<img src="images/icon.png" height="100" alt="SOS Icon" class="center">
 
 This is a prototype of a distributed autonomic personal data storage system.
 
@@ -77,7 +77,7 @@ and provides a set of services to manage the SOS model.
 - Storage - **Storage Service**: abstracts storage for atoms.
 - MMS - **Metadata Management Service**: process metadata and abstracts the location of metadata.
 - USRO - **Users/Roles Service**: manages users and roles.
-- *CMS - **Context Management Service**: manages contexts within the nodes and across the domain and codomain of contexts.
+- \*CMS - **Context Management Service**: manages contexts within the nodes and across the domain and codomain of contexts.
 
 
 ## More info on the SOS design

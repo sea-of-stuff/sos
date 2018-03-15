@@ -27,7 +27,7 @@ import java.sql.*;
  */
 class AbstractDatabase implements Database {
 
-    private String dbPath;
+    private final String dbPath;
 
     AbstractDatabase(IFile dbFile) {
         this.dbPath = dbFile.getPathname();

@@ -10,6 +10,6 @@ When a SOS node is instantiated, the following directory structure is created.
                         // Users have Private Key and Certificate for Digital Signature (.key, .crt)
                         // Roles have Private/Public Asymmetric keys for data protection (.pem, _pub.pem)
                         //       + Digital Signature keys/cert as for the User
-    |-- manifests       // Manifests in JSON
+    |-- manifests       // Manifests
     |-- node            // Indices, caches, dbs for the node
 ```

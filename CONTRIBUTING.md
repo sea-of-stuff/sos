@@ -14,4 +14,4 @@ and any other related matter to the SOS project.
 
 ## Email
 
-Email any issues or suggestions to sic2@st-andrews.ac.uk
+Email any issues or suggestions to Simone (sic2@st-andrews.ac.uk)
