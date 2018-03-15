@@ -29,6 +29,8 @@ public class CompoundBuilder extends ManifestBuilder {
 
     private CompoundType type;
     private Set<Content> contents;
+    private AtomBuilder atomBuilder;
+    // TODO - chunk size param
 
     public CompoundBuilder() {
         type = CompoundType.COLLECTION;
@@ -53,6 +55,18 @@ public class CompoundBuilder extends ManifestBuilder {
         this.contents = contents;
 
         return this;
+    }
+
+    public CompoundBuilder setAtomBuilder(AtomBuilder atomBuilder) {
+        if (type == CompoundType.DATA) {
+            this.atomBuilder = atomBuilder;
+        }
+
+        return this;
+    }
+
+    public AtomBuilder getAtomBuilder() {
+        return atomBuilder;
     }
 
 }

@@ -28,6 +28,7 @@ import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataException;
 import uk.ac.standrews.cs.sos.exceptions.metadata.MetadataNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
+import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
@@ -38,7 +39,9 @@ import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implementation class for the SeaOfStuff interface.
@@ -86,6 +89,25 @@ public class SOSAgent implements Agent {
             return storageService.addAtom(atomBuilder);
         } catch (DataStorageException | ManifestPersistException e) {
             throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
+    }
+
+    // NOTE: This is WIP and should be tested
+    public Compound addChunkedData(CompoundBuilder compoundBuilder) throws ServiceException {
+
+        if (compoundBuilder.getType() != CompoundType.DATA) throw new ServiceException(ServiceException.SERVICE.AGENT, "CompoundBuilder must be set with Type: DATA");
+
+        try {
+            List<Atom> atoms = storageService.addAtom(compoundBuilder);
+
+            Set<Content> contents = atoms.stream() // return list of GUIDs for chunks in order
+                    .map(a -> new ContentImpl(a.guid()))
+                    .collect(Collectors.toSet());
+            compoundBuilder.setContents(contents);
+
+            return addCompound(compoundBuilder);
+        } catch (DataStorageException | ManifestPersistException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, "Unable to add chunked data");
         }
     }
 

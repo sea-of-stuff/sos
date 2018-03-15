@@ -40,6 +40,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.data.AtomStorage;
 import uk.ac.standrews.cs.sos.impl.data.StoredAtomInfo;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.directory.LocationsIndexImpl;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.LocationUtility;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.SOSLocation;
@@ -168,6 +169,16 @@ public class SOSStorageService implements StorageService {
         }
 
         return atom;
+    }
+
+    @Override
+    public List<Atom> addAtom(CompoundBuilder compoundBuilder) throws DataStorageException, ManifestPersistException {
+
+        if (compoundBuilder.getType() != CompoundType.DATA) throw new DataStorageException();
+
+        // WORK IN PROGRESS
+        // Add data in chunks
+        return null;
     }
 
     @Override

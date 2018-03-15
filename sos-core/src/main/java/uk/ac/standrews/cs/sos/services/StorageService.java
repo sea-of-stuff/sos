@@ -25,9 +25,11 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.builders.CompoundBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.bundles.LocationBundle;
 import uk.ac.standrews.cs.sos.model.*;
 
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -53,6 +55,16 @@ public interface StorageService extends Service {
      * @throws ManifestPersistException if the atom manifest could not be created
      */
     Atom addAtom(AtomBuilder atomBuilder) throws DataStorageException, ManifestPersistException;
+
+    /**
+     * Add chunked data
+     *
+     * @param compoundBuilder
+     * @return
+     * @throws DataStorageException
+     * @throws ManifestPersistException
+     */
+    List<Atom> addAtom(CompoundBuilder compoundBuilder) throws DataStorageException, ManifestPersistException;
 
     /**
      * Let granterRole grant access to granteeRole to the secure entity
