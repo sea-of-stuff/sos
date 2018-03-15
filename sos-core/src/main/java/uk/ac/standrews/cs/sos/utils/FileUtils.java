@@ -75,61 +75,13 @@ public class FileUtils {
     }
 
     private static Manifest constructManifestFromJsonFile(ManifestType type, IFile manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
-        Manifest manifest;
+
         try {
-            switch (type) {
-                case ATOM:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Atom.class);
-                    break;
-                case ATOM_PROTECTED:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureAtom.class);
-                    break;
-                case COMPOUND:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Compound.class);
-                    break;
-                case COMPOUND_PROTECTED:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureCompound.class);
-                    break;
-                case VERSION:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Version.class);
-                    break;
-
-                case METADATA:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Metadata.class);
-                    break;
-                case METADATA_PROTECTED:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), SecureMetadata.class);
-                    break;
-
-                case CONTEXT:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Context.class);
-                    break;
-                case PREDICATE:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Predicate.class);
-                    break;
-                case POLICY:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Policy.class);
-                    break;
-
-                case USER:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), User.class);
-                    break;
-                    case ROLE:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Role.class);
-                    break;
-
-                case NODE:
-                    manifest = JSONHelper.jsonObjMapper().readValue(manifestData.toFile(), Node.class);
-                    break;
-
-                default:
-                    throw new UnknownManifestTypeException("Manifest type " + type + " is unknown");
-            }
-        } catch (IOException e) {
+            return constructManifestFromJson(type, new String(manifestData.getData().getState()));
+        } catch (DataException  e) {
             throw new ManifestNotMadeException("Unable to create a manifest from file at " + manifestData.getPathname());
         }
 
-        return manifest;
     }
 
     private static Manifest constructManifestFromJson(ManifestType type, String manifestData) throws UnknownManifestTypeException, ManifestNotMadeException {
