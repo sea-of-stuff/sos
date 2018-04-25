@@ -31,7 +31,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
  */
 public class LocalStorage {
 
-    private static final String DATA_DIRECTORY_NAME = "data";
+    private static final String ATOM_DIRECTORY_NAME = "atom";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
     private static final String JAVA_DIRECTORY_NAME = "java";
@@ -53,13 +53,13 @@ public class LocalStorage {
     }
 
     /**
-     * Return the directory used to store data
+     * Return the directory used to store atoms
      * @return data directory
      * @throws DataStorageException
      */
-    public IDirectory getDataDirectory() throws DataStorageException {
+    public IDirectory getAtomsDirectory() throws DataStorageException {
         try {
-            return storage.createDirectory(DATA_DIRECTORY_NAME);
+            return storage.createDirectory(ATOM_DIRECTORY_NAME);
         } catch (StorageException e) {
             throw new DataStorageException(e);
         }
@@ -148,7 +148,7 @@ public class LocalStorage {
 
         try {
             remove(NODE_DIRECTORY_NAME);
-            remove(DATA_DIRECTORY_NAME);
+            remove(ATOM_DIRECTORY_NAME);
             remove(MANIFESTS_DIRECTORY_NAME);
             remove(JAVA_DIRECTORY_NAME);
             remove(KEYS_DIRECTORY_NAME);
@@ -165,7 +165,7 @@ public class LocalStorage {
 
     private void createSOSDirectories() throws DataStorageException {
         try {
-            storage.createDirectory(DATA_DIRECTORY_NAME).persist();
+            storage.createDirectory(ATOM_DIRECTORY_NAME).persist();
             storage.createDirectory(MANIFESTS_DIRECTORY_NAME).persist();
             storage.createDirectory(NODE_DIRECTORY_NAME).persist();
             storage.createDirectory(JAVA_DIRECTORY_NAME).persist();

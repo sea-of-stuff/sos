@@ -149,7 +149,7 @@ public class AtomStorage {
                 storedAtomInfo.setEncryptedKey(encryptionResult.Y());
             }
 
-            IDirectory dataDirectory = localStorage.getDataDirectory();
+            IDirectory dataDirectory = localStorage.getAtomsDirectory();
             IFile file = localStorage.createFile(dataDirectory, tmpGUID.toMultiHash(), data);
             file.persist();
 
@@ -198,7 +198,7 @@ public class AtomStorage {
     }
 
     private IFile createAtomFileInLocalStorage(IGUID guid) throws DataStorageException {
-        IDirectory dataDirectory = localStorage.getDataDirectory();
+        IDirectory dataDirectory = localStorage.getAtomsDirectory();
         return localStorage.createFile(dataDirectory, guid.toMultiHash());
     }
 

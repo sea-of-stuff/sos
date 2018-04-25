@@ -122,13 +122,13 @@ public class SOSURLConnection extends URLConnection {
     }
 
     private boolean dataIsStoredLocally(IGUID guid) throws DataStorageException {
-        return localStorage.getDataDirectory().contains(guid.toMultiHash());
+        return localStorage.getAtomsDirectory().contains(guid.toMultiHash());
     }
 
     private InputStream getDataLocally(IGUID entityGUID) throws DataStorageException,
             BindingAbsentException, DataException {
 
-        IDirectory directory = localStorage.getDataDirectory();
+        IDirectory directory = localStorage.getAtomsDirectory();
         String filename = entityGUID.toMultiHash();
         IFile file = (IFile) directory.get(filename);
         Data data = file.getData();

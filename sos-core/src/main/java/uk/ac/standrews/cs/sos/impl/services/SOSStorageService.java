@@ -185,7 +185,7 @@ public class SOSStorageService implements StorageService {
     public void deleteAtom(IGUID guid) throws AtomNotFoundException {
 
         try {
-            IDirectory dataDirectory = storage.getDataDirectory();
+            IDirectory dataDirectory = storage.getAtomsDirectory();
             dataDirectory.remove(guid.toMultiHash());
 
             locationIndex.deleteLocation(localNodeGUID, guid);

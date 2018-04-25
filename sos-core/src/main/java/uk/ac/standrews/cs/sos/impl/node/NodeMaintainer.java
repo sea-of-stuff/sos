@@ -86,7 +86,7 @@ public class NodeMaintainer implements Runnable {
     private boolean checkCache() {
 
         try {
-            IDirectory datDir = localStorage.getDataDirectory();
+            IDirectory datDir = localStorage.getAtomsDirectory();
             long dataSize = datDir.getSize();
             SOS_LOG.log(LEVEL.INFO, "Cache Flusher: Data Directory size is: " + dataSize);
 

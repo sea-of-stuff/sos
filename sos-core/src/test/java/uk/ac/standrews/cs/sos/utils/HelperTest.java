@@ -47,7 +47,7 @@ public class HelperTest {
 
     private static String localSOSDataPath(LocalStorage localStorage, SOSLocation location) throws DataStorageException {
 
-        return localStorage.getDataDirectory().toString() + location.getEntityID().toMultiHash();
+        return localStorage.getAtomsDirectory().toString() + location.getEntityID().toMultiHash();
     }
 
     public static Location createDummyDataFile(LocalStorage storage) throws URISyntaxException, StorageException, DataStorageException {
@@ -56,7 +56,7 @@ public class HelperTest {
 
     public static Location createDummyDataFile(LocalStorage storage, String filename)
             throws URISyntaxException, StorageException, DataStorageException {
-        IDirectory testDir = storage.getDataDirectory();
+        IDirectory testDir = storage.getAtomsDirectory();
         return createDummyDataFile(storage, testDir, filename);
     }
 

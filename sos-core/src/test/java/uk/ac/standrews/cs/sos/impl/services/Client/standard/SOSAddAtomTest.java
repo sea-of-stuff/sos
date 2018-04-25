@@ -158,7 +158,7 @@ public class SOSAddAtomTest extends AgentTest {
         AtomBuilder builder = new AtomBuilder().setLocation(location);
         Atom manifest = agent.addAtom(builder);
 
-        IDirectory dataDir = localStorage.getDataDirectory();
+        IDirectory dataDir = localStorage.getAtomsDirectory();
         IDirectory manifestsDir = localStorage.getManifestsDirectory();
 
         IFile file = localStorage.createFile(dataDir, manifest.guid().toMultiHash());

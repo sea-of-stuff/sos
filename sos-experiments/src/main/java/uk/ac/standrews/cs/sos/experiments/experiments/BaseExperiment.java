@@ -37,11 +37,13 @@ public abstract class BaseExperiment implements Experiment {
     protected ExperimentUnit currentExperimentUnit;
     private int iteration;
 
+    private String outputFilename;
+
     public BaseExperiment(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         this.experiment = experimentConfiguration.getExperimentObj();
         this.iteration = 0;
 
-        String outputFilename = getExperimentResultsFilename();
+        this.outputFilename = getExperimentResultsFilename();
         prepareExperiment(outputFilename);
     }
 
@@ -49,6 +51,7 @@ public abstract class BaseExperiment implements Experiment {
         this.experiment = experimentConfiguration.getExperimentObj();
         this.iteration = 0;
 
+        this.outputFilename = outputFilename;
         prepareExperiment(outputFilename);
     }
 
@@ -221,7 +224,7 @@ public abstract class BaseExperiment implements Experiment {
             throw new ExperimentException();
         }
 
-        System.out.println("Finished. You can now collect your data.");
+        System.out.println("Finished. You can now collect your data. OutputFilename: " + outputFilename);
     }
 
     public int numberOfTotalIterations() {

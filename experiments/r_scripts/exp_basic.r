@@ -1,6 +1,50 @@
-
-io <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
+io_1 <- function(datafile, datafile_with_cache) {
   library(ggplot2)
+  library(scales)
+  
+  source("r_scripts/utils_stats.r")
+  
+  d <- read.csv(datafile, header=TRUE, sep="\t") 
+  d <- d[d$StatsTYPE == 'io',]
+  d$cache <- 'No'
+  
+  d_wc <- read.csv(datafile_with_cache, header=TRUE, sep="\t") 
+  d_wc <- d_wc[d_wc$StatsTYPE == 'io',]
+  d_wc$cache <- 'Yes'
+  
+  # Join results
+  d_new <- rbind(d, d_wc)
+  
+  d_new$Subtype<-factor(d_new$Subtype, levels=c("add_atom", "read_atom", "add_manifest", "read_manifest"))
+  
+  d_new$Measures <- (d_new$Message / 1000000) / (d_new$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+  
+  # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+  dd <- summarySE(d_new, measurevar="Measures", groupvars =c("Subtype", "StatsTYPE", "cache"))
+  
+  dodge_offset <- 0.6
+  ggplot(data=dd, aes(x=dd$Subtype, y=dd$Measures, group=dd$cache, color=dd$cache)) + 
+    geom_point(position=position_dodge(width=dodge_offset)) +
+    geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$cache),
+                  position=position_dodge(width=dodge_offset), width=.2) +
+    theme_bw() +
+    theme(axis.text.x=element_text(angle=90,hjust=1), 
+          axis.text=element_text(size=14),
+          axis.title=element_text(size=14),
+          legend.title=element_text(size=13),
+          legend.text=element_text(size=11),
+          legend.justification=c(0,0), legend.position=c(0.05,.85),
+          legend.background = element_rect(fill=alpha('white', 0))) +
+    scale_y_continuous(labels = comma) + 
+    labs(title="IO Performance", x="IO Operations", y="MB/s") +
+    scale_color_discrete(name='Using cache')
+}
+
+
+
+io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
+  library(ggplot2)
+  library(gridExtra)
   library(scales)
   
   source("r_scripts/utils_stats.r")
@@ -51,26 +95,32 @@ io <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold")) +
+            axis.text=element_text(size=12),
+            axis.title=element_text(size=12),
+            legend.title=element_text(size=13),
+            legend.text=element_text(size=11)) +
       scale_y_continuous(labels = comma) + 
       expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
-      labs(title=titlePlot, x="Data size (MB)", y=yLabel) +
-      scale_color_discrete(name='Operation Types')
+      labs(x="Data size (MB)", y=yLabel) +
+      scale_color_discrete(name='Operation Types') +
+      guides(col=guide_legend(nrow=2))
   }
 }
 
-guid <- function(datafile, statsType, titlePlot, showSummary=FALSE, ratio=TRUE) {
+guid <- function(datafile, statsType, showSummary=FALSE, ratio) {
   library(ggplot2)
+  library(gridExtra)
+  library(grid)
   library(scales)
   
   source("r_scripts/utils_stats.r")
   
   d <- read.csv(datafile, header=TRUE, sep="\t") 
   d <- d[d$StatsTYPE == statsType,]
+
+  d$Size <- (d$Message / 1000000) # size in mb
   
-  yLabel = "N/A"
-  if (ratio) {
+  if(ratio) {
     d$Measures <- (d$Message / 1000000) / (d$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
     yLabel = "MB/s"
   } else {
@@ -78,35 +128,31 @@ guid <- function(datafile, statsType, titlePlot, showSummary=FALSE, ratio=TRUE) 
     yLabel = "Time (s)"
   }
   
-  d$Size <- (d$Message / 1000000) # size in mb
-  
-  # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-  dd <- summarySE(d, measurevar="Measures", groupvars=c("Subtype", "Size"))
-  
   if (showSummary) {
+    # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+    dd <- summarySE(d, measurevar="Measures", groupvars=c("Subtype", "Size"))
     dd
   } else {
+  
+    dd <- summarySE(d, measurevar="Measures", groupvars=c("Subtype", "Size"))
     ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Subtype)) + 
       geom_point() +
       geom_line() +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold")) +
-      scale_y_continuous(labels = comma) + 
+            axis.text=element_text(size=12),
+            axis.title=element_text(size=12),
+            legend.title=element_text(size=13),
+            legend.text=element_text(size=11)) +
       expand_limits(x = 0, y = 0) +
-      labs(title=titlePlot, x="Data size (MB)", y=yLabel) +
-      scale_color_discrete(name='Hash Algorithms')
+      labs(x="Data size (MB)", y=yLabel) +
+      scale_color_discrete(name='Hash Algorithms') +
+      guides(col=guide_legend(nrow=1))
   }
 }
 
-guid_data <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
+guid_data <- function(datafile, showSummary=FALSE, ratio) {
   
-  guid(datafile, 'guid_data', titlePlot, showSummary, ratio)
-}
-
-guid_manifest <- function(datafile, titlePlot, showSummary=FALSE, ratio=TRUE) {
-  
-  guid(datafile, 'guid_manifest', titlePlot, showSummary, ratio)
+  guid(datafile, 'guid_data', showSummary, ratio)
 }

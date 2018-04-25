@@ -67,7 +67,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
 
         // Delete atom and atom manifest
         localStorage.getManifestsDirectory().remove(manifest.guid().toMultiHash());
-        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash());
+        localStorage.getAtomsDirectory().remove(manifest.guid().toMultiHash());
 
         // Look at locationIndex in atomStorage
         // Get data from external source (data is never kept in memory, unlike manifests)
@@ -107,7 +107,7 @@ public class SOSAddAtomReplicationTest extends ClientReplicationTest {
         // TODO - make sure that atom can be retrieved from remote?
 
         // Delete atom ONLY
-        localStorage.getDataDirectory().remove(manifest.guid().toMultiHash());
+        localStorage.getAtomsDirectory().remove(manifest.guid().toMultiHash());
 
         // Manifest is ignored
         // Get data from external source (data is never kept in memory, unlike manifests)

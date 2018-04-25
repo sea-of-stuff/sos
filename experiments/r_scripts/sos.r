@@ -3,7 +3,11 @@
 # Plots display means with confidence intervals (.95 confidence level)
 ########
 
+library(gridExtra)
+library(grid)
+
 setwd("/Users/sic2/git/sos/experiments")
+source("r_scripts/utils_stats.r")
 source("r_scripts/os_background.r")
 source("r_scripts/exp_basic.r")
 source("r_scripts/exp_nb.r")
@@ -32,22 +36,37 @@ cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 # Read the CVS file
 # Dataset: text_100kb
 # Iterations: 10
-io("output/io_1__2017_11_13T17_09_13_062Z.tsv", "plot title") # With cache invalidation
-io("output/io_1__2017_11_13T17_19_29_095Z.tsv", "plot title") # Without cache invalidation
+io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "output/io_1__2017_11_13T17_19_29_095Z.tsv")
+
 
 # TODO - with and without cache invalidation
-io("remote/io_2_run_3.tsv", "IO performance.", ratio=FALSE)
-io("remote/io_2_run_3.tsv", "IO performance.", ratio=TRUE)
+throughput <- io("remote/io_2_run_1.tsv", ratio=TRUE)
+latency <- io("remote/io_2_run_1.tsv", ratio=FALSE)
+
+mylegend<-g_legend(throughput)
+grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
+                         latency + theme(legend.position="none"),
+                         nrow=1,
+                         top=textGrob('IO Performance', gp=gpar(fontsize=16))),
+             mylegend, nrow=2,heights=c(10, 1))
 
 mem("remote/io_2_run_3_os.tsv")
 cpu("remote/io_2_run_3_os.tsv")
+
 
 ############
 # GUID
 ############
 
-guid_data("remote/guid_2_run_3.tsv", "Hash Algorithms Performance. Data: from 0 to 100mb.", showSummary = FALSE, ratio=FALSE)
-guid_data("remote/guid_2_run_3.tsv", "Hash Algorithms Performance. Data: from 0 to 100mb.", showSummary = FALSE, ratio=TRUE)
+throughput <- guid_data("remote/guid_2_run_3.tsv", showSummary = FALSE, ratio=TRUE)
+latency <- guid_data("remote/guid_2_run_3.tsv", showSummary = FALSE, ratio=FALSE)
+
+mylegend<-g_legend(throughput)
+grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
+                               latency + theme(legend.position="none"),
+                               nrow=1,
+                         top=textGrob('Hash Algorithms Performance', gp=gpar(fontsize=16))),
+                   mylegend, nrow=2,heights=c(10, 1))
 
 mem("remote/guid_2_run_3.tsv")
 cpu("remote/guid_2_run_3.tsv")
@@ -62,9 +81,16 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 # REPL_x
 ##############
 
-repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Data replication (Dataset: 100KB)");
+atom_repl <- repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Data replication (Dataset: 100KB)");
+manifest_repl <- repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests)");
 
-repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests)");
+mylegend<-g_legend(atom_repl)
+grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),
+                         manifest_repl + theme(legend.position="none"),
+                         nrow=1,
+                         top=textGrob('Content Replication', gp=gpar(fontsize=16))),
+             mylegend, nrow=2,heights=c(10, 1))
+
 
 ############
 # PR_1

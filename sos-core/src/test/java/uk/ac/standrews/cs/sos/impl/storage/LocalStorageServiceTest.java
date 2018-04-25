@@ -35,7 +35,7 @@ public class LocalStorageServiceTest extends SetUpTest {
 
     @Test
     public void defaultDirectoriesExistTest() throws DataStorageException {
-        assertNotNull(localStorage.getDataDirectory());
+        assertNotNull(localStorage.getAtomsDirectory());
         assertNotNull(localStorage.getManifestsDirectory());
     }
 

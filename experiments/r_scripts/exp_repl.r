@@ -7,7 +7,7 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
   # User.Measue_2 --> replicationFactor
   d <- read.csv(datafile, header=TRUE, sep="\t")
   d <- d[d$Subtype == subtype,]
-  d$ContextName <- sprintf("R.F.: %d", d$User.Measure_2)
+  d$ContextName <- sprintf("%d", d$User.Measure_2)
   
   numberOfFiles = 100
   d$Measures <- (d$User.Measure / 1000000000.0) * numberOfFiles; # Nanoseconds to seconds
@@ -16,15 +16,18 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
   if (showSummary) {
     dd
   } else {
-    ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, color=dd$Message_2)) + 
-      geom_point() +
-      geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
+    dodge_offset <- 0.6
+    ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures, group=dd$Message_2, color=dd$Message_2)) + 
+      geom_point(position=position_dodge(width=dodge_offset)) +
+      geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$Message_2),
+                    position=position_dodge(width=dodge_offset), width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold")) +
+            axis.text=element_text(size=12),
+            axis.title=element_text(size=14)) +
       ylim(0, yMax) +
       labs(title=titlePlot, x="Replication Factor", y="Time (s)") +
-      scale_color_discrete(name='Sequential\nReplication')
+      scale_color_discrete(name='Sequential\nReplication') +
+      guides(col=guide_legend(nrow=1))
   }
 }
