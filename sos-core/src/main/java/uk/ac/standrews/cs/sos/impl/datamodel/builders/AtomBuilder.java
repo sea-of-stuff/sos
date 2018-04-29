@@ -44,7 +44,7 @@ public class AtomBuilder extends ManifestBuilder {
 
     private boolean doNotStoreDataLocally = false;
     private boolean doNotStoreManifestLocally = false;
-    private int replicationFactor = 1; // A replication factor of 1, means that data is stored in this node only
+    private int replicationFactor = 0; // TODO - check if the value 0 is correct -- A replication factor of 1, means that data is stored in this node only
     private NodesCollection replicationNodes;
     private boolean delegateReplication = false;
     private boolean setLocationAndProvenance = true;

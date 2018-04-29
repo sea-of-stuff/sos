@@ -10,13 +10,13 @@
     "nodes" : [],
     "experimentnode" : {
       "id" : 12,
-      "name" : "sif12",
+      "name" : "sif11",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-12.cluster",
+        "host" : "sif-11.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
@@ -26,7 +26,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "io_multiple_large",
+      "dataset" : "io_multiple_100mb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

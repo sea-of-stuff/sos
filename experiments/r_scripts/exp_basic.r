@@ -6,10 +6,14 @@ io_1 <- function(datafile, datafile_with_cache) {
   
   d <- read.csv(datafile, header=TRUE, sep="\t") 
   d <- d[d$StatsTYPE == 'io',]
+  d <- d[d$Subtype != 'fs_read_file',]
+  d <- d[d$Subtype != 'fs_write_file',]
   d$cache <- 'No'
   
   d_wc <- read.csv(datafile_with_cache, header=TRUE, sep="\t") 
   d_wc <- d_wc[d_wc$StatsTYPE == 'io',]
+  d_wc <- d_wc[d_wc$Subtype != 'fs_read_file',]
+  d_wc <- d_wc[d_wc$Subtype != 'fs_write_file',]
   d_wc$cache <- 'Yes'
   
   # Join results

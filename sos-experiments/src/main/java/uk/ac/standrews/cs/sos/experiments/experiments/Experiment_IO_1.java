@@ -60,7 +60,7 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             rest_a_bit();
 
             // TODO - comment this line out to invalidate caches
-            // node.getMDS().shutdown();
+            node.getMDS().shutdown();
             Agent agent = node.getAgent();
 
             for(IGUID atom:atoms) {
@@ -74,11 +74,11 @@ public class Experiment_IO_1 extends BaseExperiment implements Experiment {
             rest_a_bit();
 
             // READ/WRITE files via FS and take measurements
-            try {
-                addFilesViaFS(new File(datasetPath));
-            } catch (IOException e) {
-                throw new ExperimentException("Unable to read/write files via FS");
-            }
+//            try {
+//                addFilesViaFS(new File(datasetPath));
+//            } catch (IOException e) {
+//                throw new ExperimentException("Unable to read/write files via FS");
+//            }
         }
     }
 

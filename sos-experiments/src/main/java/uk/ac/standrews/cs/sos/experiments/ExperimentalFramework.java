@@ -67,6 +67,7 @@ public class ExperimentalFramework {
         System.out.println("\tnb_1/configuration/configuration-sif.json");
         System.out.println("\trepl_1/configuration/configuration-sif.json");
         System.out.println("\trepl_2/configuration/configuration-sif.json");
+        System.out.println("\tio_1/configuration/configuration-sif.json");
         System.out.println("\tio_2/configuration/configuration-sif.json");
         System.out.println("\tguid_2/configuration/configuration-sif.json");
         System.out.println("\tfailure_1/configuration/configuration-sif.json");

@@ -22,8 +22,7 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$Message_2),
                     position=position_dodge(width=dodge_offset), width=.2) +
       theme_bw() +
-      theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=12),
+      theme(axis.text=element_text(size=12),
             axis.title=element_text(size=14)) +
       ylim(0, yMax) +
       labs(title=titlePlot, x="Replication Factor", y="Time (s)") +

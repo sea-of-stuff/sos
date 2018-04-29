@@ -38,10 +38,12 @@ cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 # Iterations: 10
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "output/io_1__2017_11_13T17_19_29_095Z.tsv")
 
+io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv")
+
 
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_run_1.tsv", ratio=TRUE)
-latency <- io("remote/io_2_run_1.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_001.tsv", ratio=TRUE)
+latency <- io("remote/io_2_001.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -58,8 +60,8 @@ cpu("remote/io_2_run_3_os.tsv")
 # GUID
 ############
 
-throughput <- guid_data("remote/guid_2_run_3.tsv", showSummary = FALSE, ratio=TRUE)
-latency <- guid_data("remote/guid_2_run_3.tsv", showSummary = FALSE, ratio=FALSE)
+throughput <- guid_data("remote/guid_2_001.tsv", showSummary = FALSE, ratio=TRUE)
+latency <- guid_data("remote/guid_2_001.tsv", showSummary = FALSE, ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -96,11 +98,9 @@ grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),
 # PR_1
 ############
 
-
 # NOTES:
 # dataset of all texts
 # dataset of mixed content (important to test the value of meta check optimisation on predicate)
-
 
 pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
 
