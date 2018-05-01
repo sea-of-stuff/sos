@@ -212,7 +212,9 @@ public class LocationsIndexImpl implements LocationsIndex {
                         out.writeUTF(key.toMultiHash());
 
                         for (LocationBundle bundle : findLocations(key)) {
-                            out.writeUTF(bundle.toString());
+                            if (bundle != null && bundle.toString() != null) {
+                                out.writeUTF(bundle.toString());
+                            }
                         }
                     }
                 }
@@ -237,6 +239,7 @@ public class LocationsIndexImpl implements LocationsIndex {
                 IGUID key = GUIDFactory.recreateGUID(in.readUTF());
 
                 for (int j = 0; j < numberOfLocations; j++) {
+                    // TODO - store it in a more compact format
                     LocationBundle bundle = JSONHelper.jsonObjMapper().readValue(in.readUTF(), LocationBundle.class);
                     addLocation(key, bundle);
                 }

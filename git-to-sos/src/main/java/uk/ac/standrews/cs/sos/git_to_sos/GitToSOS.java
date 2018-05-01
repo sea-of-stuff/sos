@@ -81,7 +81,7 @@ public class GitToSOS {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            sos.kill();
+            sos.kill(true);
         }
     }
 

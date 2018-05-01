@@ -356,8 +356,8 @@ public class SOSStorageService implements StorageService {
     public void flush() {
 
         try {
-            IDirectory cacheDir = storage.getNodeDirectory();
-            IFile file = storage.createFile(cacheDir, LOCATIONS_INDEX_FILE);
+            IDirectory nodeDir = storage.getNodeDirectory();
+            IFile file = storage.createFile(nodeDir, LOCATIONS_INDEX_FILE);
             locationIndex.persist(file);
         } catch (IOException | DataStorageException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to flush LocationIndex");

@@ -1,4 +1,4 @@
-io_1 <- function(datafile, datafile_with_cache) {
+io_1 <- function(datafile, datafile_with_cache, manifestsOnly=FALSE) {
   library(ggplot2)
   library(scales)
   
@@ -8,12 +8,20 @@ io_1 <- function(datafile, datafile_with_cache) {
   d <- d[d$StatsTYPE == 'io',]
   d <- d[d$Subtype != 'fs_read_file',]
   d <- d[d$Subtype != 'fs_write_file',]
+  if (manifestsOnly) {
+    d <- d[d$Subtype != 'add_atom',]
+    d <- d[d$Subtype != 'read_atom',]
+  }
   d$cache <- 'No'
   
   d_wc <- read.csv(datafile_with_cache, header=TRUE, sep="\t") 
   d_wc <- d_wc[d_wc$StatsTYPE == 'io',]
   d_wc <- d_wc[d_wc$Subtype != 'fs_read_file',]
   d_wc <- d_wc[d_wc$Subtype != 'fs_write_file',]
+  if (manifestsOnly) {
+    d_wc <- d_wc[d_wc$Subtype != 'add_atom',]
+    d_wc <- d_wc[d_wc$Subtype != 'read_atom',]
+  }
   d_wc$cache <- 'Yes'
   
   # Join results
@@ -21,7 +29,7 @@ io_1 <- function(datafile, datafile_with_cache) {
   
   d_new$Subtype<-factor(d_new$Subtype, levels=c("add_atom", "read_atom", "add_manifest", "read_manifest"))
   
-  d_new$Measures <- (d_new$Message / 1000000) / (d_new$User.Measure / 1000000000.0); # calculate IO in terms of MB/s
+  d_new$Measures <- (d_new$User.Measure / 1000000000.0); # Nanoseconds to seconds  
   
   # http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
   dd <- summarySE(d_new, measurevar="Measures", groupvars =c("Subtype", "StatsTYPE", "cache"))
@@ -32,15 +40,16 @@ io_1 <- function(datafile, datafile_with_cache) {
     geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$cache),
                   position=position_dodge(width=dodge_offset), width=.2) +
     theme_bw() +
-    theme(axis.text.x=element_text(angle=90,hjust=1), 
+    theme(axis.text.x=element_text(angle=45,hjust=1), 
           axis.text=element_text(size=14),
           axis.title=element_text(size=14),
-          legend.title=element_text(size=13),
-          legend.text=element_text(size=11),
-          legend.justification=c(0,0), legend.position=c(0.05,.85),
+          plot.title=element_text(size=16),
+          legend.title=element_text(size=15),
+          legend.text=element_text(size=13),
+          legend.justification=c(0,0), legend.position=c(0.85,.85),
           legend.background = element_rect(fill=alpha('white', 0))) +
     scale_y_continuous(labels = comma) + 
-    labs(title="IO Performance", x="IO Operations", y="MB/s") +
+    labs(title="IO Performance", x="IO Operations", y="Time (s)") +
     scale_color_discrete(name='Using cache')
 }
 
@@ -99,10 +108,10 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=12),
-            axis.title=element_text(size=12),
-            legend.title=element_text(size=13),
-            legend.text=element_text(size=11)) +
+            axis.text=element_text(size=14),
+            axis.title=element_text(size=14),
+            legend.title=element_text(size=15),
+            legend.text=element_text(size=13)) +
       scale_y_continuous(labels = comma) + 
       expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
       labs(x="Data size (MB)", y=yLabel) +
@@ -145,10 +154,10 @@ guid <- function(datafile, statsType, showSummary=FALSE, ratio) {
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
-            axis.text=element_text(size=12),
-            axis.title=element_text(size=12),
-            legend.title=element_text(size=13),
-            legend.text=element_text(size=11)) +
+            axis.text=element_text(size=14),
+            axis.title=element_text(size=14),
+            legend.title=element_text(size=15),
+            legend.text=element_text(size=13)) +
       expand_limits(x = 0, y = 0) +
       labs(x="Data size (MB)", y=yLabel) +
       scale_color_discrete(name='Hash Algorithms') +

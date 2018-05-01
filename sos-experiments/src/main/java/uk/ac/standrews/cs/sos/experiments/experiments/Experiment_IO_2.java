@@ -67,6 +67,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_IO_2 implements ExperimentUnit {
 
         private File subset;
+        private static final boolean INVALIDATE_CACHE = true; // NOTE
 
         public ExperimentUnit_IO_2(File subset) {
             this.subset = subset;
@@ -79,6 +80,25 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
             System.out.println("Processing subset: " + subset.getAbsolutePath());
 
+            double coin = Math.random();
+            if (coin < 0.5) {
+
+                processSOS();
+                rest_a_bit();
+                processFS();
+
+            } else {
+
+                processFS();
+                rest_a_bit();
+                processSOS();
+
+            }
+
+        }
+
+        private void processSOS() throws ExperimentException {
+
             List<IGUID> atoms;
             try {
                 atoms = addFolderContentToNodeAsAtoms(node, subset);
@@ -90,8 +110,9 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
 
             rest_a_bit();
 
-            // TODO - comment this line out to invalidate caches
-            // node.getMDS().shutdown();
+            if (INVALIDATE_CACHE) {
+                node.getMDS().shutdown();
+            }
             Agent agent = node.getAgent();
 
             for (IGUID atom : atoms) {
@@ -102,7 +123,9 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                 }
             }
 
-            rest_a_bit();
+        }
+
+        private void processFS() throws ExperimentException {
 
             // READ/WRITE files via FS and take measurements
             try {

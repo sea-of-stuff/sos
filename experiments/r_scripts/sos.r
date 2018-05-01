@@ -39,29 +39,39 @@ cpu("output/io_1_on_text1mb_10its_1_os.tsv")
 io_1("output/io_1__2017_11_13T17_09_13_062Z.tsv", "output/io_1__2017_11_13T17_19_29_095Z.tsv")
 
 io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv")
+io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv", manifestsOnly=TRUE)
 
 
+## IO_2
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_001.tsv", ratio=TRUE)
-latency <- io("remote/io_2_001.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_005.tsv", ratio=TRUE)
+latency <- io("remote/io_2_005.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
                          latency + theme(legend.position="none"),
                          nrow=1,
-                         top=textGrob('IO Performance', gp=gpar(fontsize=16))),
+                         top=textGrob('IO Performance', gp=gpar(fontsize=18))),
              mylegend, nrow=2,heights=c(10, 1))
 
-mem("remote/io_2_run_3_os.tsv")
-cpu("remote/io_2_run_3_os.tsv")
+mem("remote/io_2_004_os.tsv")
+cpu("remote/io_2_004_os.tsv")
 
 
 ############
 # GUID
 ############
 
-throughput <- guid_data("remote/guid_2_001.tsv", showSummary = FALSE, ratio=TRUE)
-latency <- guid_data("remote/guid_2_001.tsv", showSummary = FALSE, ratio=FALSE)
+s <- guid_data("remote/guid_2_004.tsv", showSummary = TRUE, ratio=TRUE)
+ci(s, 'md5')
+ci(s, 'sha1')
+ci(s, 'sha256')
+ci(s, 'sha384')
+ci(s, 'sha512')
+
+
+throughput <- guid_data("remote/guid_2_004.tsv", showSummary = FALSE, ratio=TRUE)
+latency <- guid_data("remote/guid_2_004.tsv", showSummary = FALSE, ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -83,8 +93,10 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 # REPL_x
 ##############
 
-atom_repl <- repl("remote/repl_1_test4.tsv", subtype="replicate_atom", yMax=4.25, titlePlot="Data replication (Dataset: 100KB)");
-manifest_repl <- repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests)");
+repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
+
+atom_repl <- repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
+manifest_repl <- repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests). 10 Iterations");
 
 mylegend<-g_legend(atom_repl)
 grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),

@@ -187,6 +187,7 @@ public class AtomReplication extends Task {
             }
 
             checkReplicaConditionAndSetTaskState(successfulReplicas);
+            ((ExecutorService) executor).shutdown();
 
         } catch (IOException | InterruptedException e) {
             setState(TaskState.ERROR);
@@ -242,7 +243,6 @@ public class AtomReplication extends Task {
      * @return true if the data was transferred successfully.
      */
     private boolean transferDataAndUpdateNodeState(InputStream data, Node node, StorageService storageService) {
-        SOS_LOG.log(LEVEL.INFO, "Will attempt to replicate data to node: " + node.guid().toMultiHash());
 
         try {
             Atom atom = transferDataRequest(data, node);
@@ -253,7 +253,7 @@ public class AtomReplication extends Task {
             }
 
         } catch (SOSProtocolException e) {
-            SOS_LOG.log(LEVEL.ERROR, e.getMessage());
+            SOS_LOG.log(LEVEL.ERROR, "Unable to replicate data to node " + node.guid().toMultiHash() + " -- Message: " + e.getMessage());
             return false;
         }
 
@@ -273,7 +273,7 @@ public class AtomReplication extends Task {
 
             DataPackage.Metadata metadata = new DataPackage.Metadata();
             if (delegateReplication) {
-                metadata.setReplicationFactor(replicationFactor -1);
+                metadata.setReplicationFactor(replicationFactor - 1);
 
                 DataPackage.Metadata.ReplicationNodes replicationNodes = new DataPackage.Metadata.ReplicationNodes();
                 replicationNodes.setType(nodesCollection.type());
@@ -306,7 +306,7 @@ public class AtomReplication extends Task {
                     return JSONHelper.jsonObjMapper().readValue(body, AtomManifest.class);
 
                 } else {
-                    throw new SOSProtocolException("Unable to transfer DATA");
+                    throw new SOSProtocolException("Unable to transfer create data on remote node");
                 }
             }
 

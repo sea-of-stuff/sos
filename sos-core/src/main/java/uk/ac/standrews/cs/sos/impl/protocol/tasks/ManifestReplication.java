@@ -154,6 +154,8 @@ public class ManifestReplication extends Task {
             }
 
             checkReplicaConditionAndSetTaskState(successfulReplicas);
+            ((ExecutorService) executor).shutdown();
+
         } catch (InterruptedException e) {
             setState(TaskState.ERROR);
             SOS_LOG.log(LEVEL.ERROR, "An exception occurred while replicating manifest");

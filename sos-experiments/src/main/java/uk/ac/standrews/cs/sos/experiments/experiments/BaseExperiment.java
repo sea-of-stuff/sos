@@ -157,7 +157,7 @@ public abstract class BaseExperiment implements Experiment {
 
     @Override
     public void finishIteration() throws ExperimentException {
-       currentExperimentUnit.finish();
+        currentExperimentUnit.finish();
 
         InstrumentFactory.flush();
         ServerState.kill();
@@ -167,7 +167,7 @@ public abstract class BaseExperiment implements Experiment {
     public void cleanup() throws ExperimentException {
 
         try {
-            node.kill();
+            node.kill(false);
             node.cleanup();
         } catch (DataStorageException e) {
             throw new ExperimentException();
@@ -200,7 +200,7 @@ public abstract class BaseExperiment implements Experiment {
             System.out.println(output);
 
             finishIteration();
-            cleanup(); // NOTE - idea: apply to remote nodes too, which will need to be stopped and restarted
+            cleanup(); // NOTE - idea: apply to remote nodes too, which will need to be stopped and restarted ?
 
             try {
                 System.out.println("Going to sleep for 5 seconds before the next iteration");

@@ -34,6 +34,18 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   return(datac)
 }
 
+
+ci <- function(data, measurevar, conf.interval=.95) {
+  
+  d_sd <- sd(data[data$Subtype == measurevar, ]$Measures)
+  d_n <- nrow(data)
+  d_se <- d_sd / sqrt(d_n)  # Calculate standard error of the mean
+  
+  ciMult <- qt(conf.interval/2 + .5, d_n - 1)
+  ci <- d_se * ciMult
+  return(ci)
+}
+
 # https://stackoverflow.com/questions/13649473/add-a-common-legend-for-combined-ggplots
 g_legend<-function(a.gplot){
   tmp <- ggplot_gtable(ggplot_build(a.gplot))

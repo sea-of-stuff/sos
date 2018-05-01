@@ -39,7 +39,7 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static Integer[] replicationFactors = new Integer[] {1, 2, 3, 4};
+    private static Integer[] replicationFactors = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     private static Boolean[] replicationMethods = new Boolean[] { true, false };
 
     public Experiment_REPL_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
@@ -93,11 +93,17 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
 
             try {
                 Set<IGUID> nodeRefs = new LinkedHashSet<>();
-                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef")); // sif-2
-                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4")); // sif-3
-                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_867ab9daa29ed55ec7761ba4218076cfeaa1f308d6b13cee3e5323b273b24b1f")); // sif-4
-                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_39cf1bcbe1ad206e2e862d9abe5158e05338df0e348661b5a0a8c952337921c0")); // sif-5
-                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_5c1e5af5c2c816978946387a3b6ba2bfc5a182226ad1b50780243ba392c830f0")); // sif-6
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_aed7bbf1e6ef5c8d22162c096ab069b8d2056696be262551951660aac6d836ef")); // <sif/hogun>-2
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_14cdbb3b1154681751681ecf7f0a627cdfb858cb928a6d045befede3099fc2b4")); // <sif/hogun>-3
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_867ab9daa29ed55ec7761ba4218076cfeaa1f308d6b13cee3e5323b273b24b1f")); // <sif/hogun>-4
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_39cf1bcbe1ad206e2e862d9abe5158e05338df0e348661b5a0a8c952337921c0")); // <sif/hogun>-5
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_5c1e5af5c2c816978946387a3b6ba2bfc5a182226ad1b50780243ba392c830f0")); // <sif/hogun>-6
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_5057aaafd6defeab2a0739ea69095f271d94af2fbb20812b06b57434fda1a790")); // <sif/hogun>-7
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_e56ed40c6857d2aba85d9e06a2044d845c851b5456772d60402a6d8049f80086")); // <sif/hogun>-8
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_6462c57359b1f4a4c96b6e4ef00469ee9c566763a212a7144d2ff76ad5b1c439")); // <sif/hogun>-9
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_d23876cfd080fc08074b478bf05e3fb22e7abf0164a8396e47884c9b7010540f")); // <sif/hogun>-10
+                nodeRefs.add(GUIDFactory.recreateGUID("SHA256_16_b00f88a8eaf152286b097d057a0e4bd8e74465f2562e4a5bccbd14a660702e59")); // <sif/hogun>-11
+
                 codomain = new NodesCollectionImpl(nodeRefs);
             } catch (GUIDGenerationException e) {
                 throw new ExperimentException(e);

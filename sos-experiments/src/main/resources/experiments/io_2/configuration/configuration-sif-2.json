@@ -5,18 +5,18 @@
     "description": "The experiment IO_2 investigates ...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 20
+      "iterations": 10
     },
     "nodes" : [],
     "experimentnode" : {
-      "id" : 11,
-      "name" : "sif11",
+      "id" : 2,
+      "name" : "sif2",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-11.cluster",
+        "host" : "sif-2.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
@@ -26,7 +26,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "io_multiple_100mb",
+      "dataset" : "io_multiple_1GB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

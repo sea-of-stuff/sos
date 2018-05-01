@@ -30,7 +30,7 @@ public class ServerState {
     }
 
     public static void kill() {
-        sos.kill();
+        sos.kill(false);
     }
 
     private static SOSLocalNode startSOS(SettingsConfiguration.Settings settings) throws SOSException {

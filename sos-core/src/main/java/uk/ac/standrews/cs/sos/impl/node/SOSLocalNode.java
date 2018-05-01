@@ -203,11 +203,11 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     }
 
     @Override
-    public void kill() {
+    public void kill(boolean flush) {
         uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "Killing SOS NODE");
 
         if (nodeMaintainer != null) {
-            nodeMaintainer.flush();
+            if (flush) nodeMaintainer.flush();
             nodeMaintainer.shutdown();
         }
 

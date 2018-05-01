@@ -75,6 +75,8 @@ public interface LocalNode extends Node {
 
     /**
      * Kill all the resources for this node
+     *
+     * @param flush flush the resource to disk
      */
-    void kill();
+    void kill(boolean flush);
 }

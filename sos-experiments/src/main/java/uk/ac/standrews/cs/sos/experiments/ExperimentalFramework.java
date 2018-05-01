@@ -47,61 +47,72 @@ public class ExperimentalFramework {
         String option = in.nextLine();
 
         System.out.println("Enter experiment configuration path relative to " + CONFIGURATION_FOLDER);
-        System.out.println("Examples:");
-        System.out.println("\tpr_1/configuration/configuration.json");
-        System.out.println("\tpr_1/configuration/configuration-hogun.json");
-        System.out.println("\tpo_a_1/configuration/configuration-hogun.json");
-        System.out.println("\tpo_a_3/configuration/configuration-hogun.json");
-        System.out.println("\tpo_c_1/configuration/configuration-hogun.json");
-        System.out.println("\tpo_c_3/configuration/configuration-hogun.json");
-        System.out.println("\tco_a_1/configuration/configuration-hogun.json");
-        System.out.println("\tco_a_1/configuration/configuration-sif.json");
-        System.out.println("\tco_a_2/configuration/configuration-hogun.json");
-        System.out.println("\tco_c_1/configuration/configuration-hogun.json");
-        System.out.println("\tco_c_2/configuration/configuration-hogun.json");
-        System.out.println("\tdo_1/configuration/configuration-sif.json");
-        System.out.println("\tdo_2/configuration/configuration-sif.json");
-        System.out.println("\tdo_3/configuration/configuration-sif.json");
-        System.out.println("\tping_1/configuration/configuration-sif.json");
-        System.out.println("\tping_2/configuration/configuration-sif.json");
-        System.out.println("\tnb_1/configuration/configuration-sif.json");
-        System.out.println("\trepl_1/configuration/configuration-sif.json");
-        System.out.println("\trepl_2/configuration/configuration-sif.json");
-        System.out.println("\tio_1/configuration/configuration-sif.json");
-        System.out.println("\tio_2/configuration/configuration-sif.json");
-        System.out.println("\tguid_2/configuration/configuration-sif.json");
-        System.out.println("\tfailure_1/configuration/configuration-sif.json");
-        System.out.println("\tfailure_2/configuration/configuration-sif.json");
-        System.out.println("\tfailure_3/configuration/configuration-sif.json");
-        System.out.println("\tfailure_4/configuration/configuration-sif.json");
-        System.out.println("\tfailure_5/configuration/configuration-sif.json");
-        System.out.println("\tfailure_6/configuration/configuration-sif.json");
-        System.out.println("\tfailure_7/configuration/configuration-sif.json");
+        System.out.println("Configuration options (enter number):");
+        String[] configurations = new String[] {
+                "pr_1/configuration/configuration.json",
+                "pr_1/configuration/configuration.json",
+                "pr_1/configuration/configuration-hogun.json",
+                "po_a_1/configuration/configuration-hogun.json",
+                "po_a_3/configuration/configuration-hogun.json",
+                "po_c_1/configuration/configuration-hogun.json",
+                "po_c_3/configuration/configuration-hogun.json",
+                "co_a_1/configuration/configuration-hogun.json",
+                "co_a_1/configuration/configuration-sif.json",
+                "co_a_2/configuration/configuration-hogun.json",
+                "co_c_1/configuration/configuration-hogun.json",
+                "co_c_2/configuration/configuration-hogun.json",
+                "do_1/configuration/configuration-sif.json",
+                "do_2/configuration/configuration-sif.json",
+                "do_3/configuration/configuration-sif.json",
+                "ping_1/configuration/configuration-sif.json",
+                "ping_2/configuration/configuration-sif.json",
+                "nb_1/configuration/configuration-sif.json",
+                "repl_1/configuration/configuration-sif.json",
+                "repl_1/configuration/configuration-hogun.json",
+                "repl_2/configuration/configuration-sif.json",
+                "io_1/configuration/configuration-sif.json",
+                "io_2/configuration/configuration-sif.json",
+                "io_2/configuration/configuration-sif-2.json",
+                "guid_2/configuration/configuration-sif.json",
+                "failure_1/configuration/configuration-sif.json",
+                "failure_2/configuration/configuration-sif.json",
+                "failure_3/configuration/configuration-sif.json",
+                "failure_4/configuration/configuration-sif.json",
+                "failure_5/configuration/configuration-sif.json",
+                "failure_6/configuration/configuration-sif.json",
+                "failure_7/configuration/configuration-sif.json"
+        };
+        for(int i = 0; i < configurations.length; i++) {
+            System.out.println("\t[" + i + "] " + configurations[i]);
+        }
+        int configurationIndex = Integer.parseInt(in.nextLine());
+        String configuration = configurations[configurationIndex];
+        System.out.println("Processing configuration: " + configurationIndex + " --- " + configuration);
 
         switch(option.toLowerCase()) {
 
             case RUN_EXPERIMENT:
-                runExperiment();
+                runExperiment(configuration);
                 break;
 
             case STOP_NODE:
-                stopNode();
+                stopNode(configuration);
                 break;
 
             case STOP_ALL_NODES:
-                stopAllNodes();
+                stopAllNodes(configuration);
                 break;
 
             case CLEAN_NODE:
-                cleanNode();
+                cleanNode(configuration);
                 break;
 
             case CLEAN_ALL_NODES:
-                cleanAllNodes();
+                cleanAllNodes(configuration);
                 break;
 
             case STATS_NODE:
-                getStats();
+                getStats(configuration);
                 break;
 
             case CHECK_NODE:
@@ -113,10 +124,9 @@ public class ExperimentalFramework {
         System.exit(0);
     }
 
-    private static void runExperiment() throws ConfigurationException, ChicShockException, InterruptedException {
+    private static void runExperiment(String configuration) throws ConfigurationException, ChicShockException, InterruptedException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         System.out.println("Enter base name of stats to collect. Leave empty for standard naming.");
@@ -142,10 +152,9 @@ public class ExperimentalFramework {
         System.out.println("\n\nRemember that your base name for the stats is: " + statsBaseName);
     }
 
-    private static void stopNode() throws ConfigurationException, ChicShockException {
+    private static void stopNode(String configuration) throws ConfigurationException, ChicShockException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         System.out.println("Enter name of node to stop. Options:");
@@ -161,10 +170,9 @@ public class ExperimentalFramework {
         chicShock.unShock(nodeName);
     }
 
-    private static void stopAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
+    private static void stopAllNodes(String configuration) throws ConfigurationException, ChicShockException, InterruptedException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
@@ -173,10 +181,9 @@ public class ExperimentalFramework {
         chicShock.unShockExperiment();
     }
 
-    private static void cleanNode() throws ConfigurationException, ChicShockException {
+    private static void cleanNode(String configuration) throws ConfigurationException, ChicShockException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         System.out.println("Enter name of node to stop. Options:");
@@ -192,10 +199,9 @@ public class ExperimentalFramework {
         chicShock.unChic(nodeName);
     }
 
-    private static void cleanAllNodes() throws ConfigurationException, ChicShockException, InterruptedException {
+    private static void cleanAllNodes(String configuration) throws ConfigurationException, ChicShockException, InterruptedException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         ChicShock chicShock = new ChicShock(experimentConfiguration);
@@ -204,10 +210,9 @@ public class ExperimentalFramework {
         chicShock.unChicExperiment();
     }
 
-    private static void getStats() throws ConfigurationException, NetworkException {
+    private static void getStats(String configuration) throws ConfigurationException, NetworkException {
 
-        String configurationPath = in.nextLine();
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configurationPath);
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER + configuration);
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
         System.out.println("Enter base name of stats to collect");

@@ -52,7 +52,7 @@ public class ServerState {
     }
 
     public void kill() throws DataStorageException {
-        sos.kill();
+        sos.kill(true);
 
         localStorage.destroy();
     }
