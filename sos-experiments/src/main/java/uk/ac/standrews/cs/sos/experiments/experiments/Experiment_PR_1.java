@@ -18,8 +18,6 @@ import java.io.IOException;
  */
 public class Experiment_PR_1 extends BaseExperiment implements Experiment {
 
-    private int counter;
-
     public Experiment_PR_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
     }
@@ -56,7 +54,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
         public void run() {
 
             try {
-                counter = cms.runPredicates();
+                cms.runPredicates();
             } catch (ContextException e) {
                 SOS_LOG.log(LEVEL.ERROR, "Experiment PR_1 - Unable to runIteration predicates properly");
             }

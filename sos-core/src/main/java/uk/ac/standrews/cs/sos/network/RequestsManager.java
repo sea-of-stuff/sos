@@ -43,6 +43,7 @@ public class RequestsManager {
     public static RequestsManager getInstance() {
         if(lazyInstance == null){
             Options.refresh(); // Make sure that Unirest instance is restarted
+            Unirest.setTimeouts(10000, 120000); // NOTE - Make these params configurable
             lazyInstance = new RequestsManager();
         }
         return lazyInstance;

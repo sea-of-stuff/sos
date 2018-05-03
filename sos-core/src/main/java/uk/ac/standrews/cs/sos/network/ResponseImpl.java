@@ -60,8 +60,8 @@ public class ResponseImpl implements Response {
     @Override
     public String getStringBody() {
 
-        try {
-            return IO.InputStreamToString(getBody());
+        try (InputStream body = getBody()){
+            return IO.InputStreamToString(body);
         } catch (IOException e) {
             return "";
         }

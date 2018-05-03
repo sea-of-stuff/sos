@@ -38,6 +38,8 @@ import java.net.URL;
 import java.security.PublicKey;
 
 /**
+ * TODO - sign outgoing requests
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class SyncRequest extends Request {
@@ -173,6 +175,7 @@ public class SyncRequest extends Request {
     private Response makeRequest(BaseRequest request) {
         try {
             HttpResponse<?> resp = null;
+            System.out.println("A");
             switch(responseType) {
                 case JSON:
                     resp = request.asJson();
@@ -184,7 +187,7 @@ public class SyncRequest extends Request {
                     resp = request.asBinary();
                     break;
             }
-
+            System.out.println("B");
             if (signatureCertificate != null) {
                 String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
                 boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
@@ -194,9 +197,10 @@ public class SyncRequest extends Request {
                     return new ErrorResponseImpl();
                 }
             }
-
+            System.out.println("C");
             return new ResponseImpl(resp);
         } catch (UnirestException | CryptoException e) {
+            e.printStackTrace();
             SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request: " + e.getMessage());
             return new ErrorResponseImpl();
         } catch (Error e) {

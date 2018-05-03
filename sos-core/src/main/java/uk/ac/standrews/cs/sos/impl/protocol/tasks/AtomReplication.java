@@ -300,11 +300,8 @@ public class AtomReplication extends Task {
             }
 
             try(InputStream body = response.getBody()) {
-
                 if (response.getCode() == HTTPStatus.CREATED) {
-
                     return JSONHelper.jsonObjMapper().readValue(body, AtomManifest.class);
-
                 } else {
                     throw new SOSProtocolException("Unable to transfer create data on remote node");
                 }

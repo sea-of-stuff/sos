@@ -50,6 +50,13 @@ public class SOSURL {
         return makeURL(url);
     }
 
+    public static URL NODE_PAYLOAD_JSON(Node node) throws SOSURLException {
+        String url = buildURLBase(node) +
+                "payload_json/";
+
+        return makeURL(url);
+    }
+
     public static URL NODE_INFO(Node node) throws SOSURLException {
         String url = buildURLBase(node) +
                 "info";

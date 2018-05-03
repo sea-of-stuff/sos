@@ -39,14 +39,22 @@ public class Payload extends Task {
 
     private final Node node;
     private final InputStream payload;
+    private final boolean sign;
     private Long timestamp;
     private Long latency;
 
-    public Payload(Node node, InputStream payload) {
+    /**
+     *
+     * @param node to send payload to
+     * @param payload to send
+     * @param sign if true the request will be signed if possible. if false, the request will never be signed.
+     */
+    public Payload(Node node, InputStream payload, boolean sign) {
         super();
 
         this.node = node;
         this.payload = payload;
+        this.sign = sign;
 
         timestamp = 0L;
     }
@@ -57,21 +65,28 @@ public class Payload extends Task {
 
         try {
             URL url = SOSURL.NODE_PAYLOAD(node);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.TEXT);
+            SyncRequest request;
+            if (sign) {
+                request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.POST, url, ResponseType.TEXT);
+            } else {
+                request = new SyncRequest(HTTPMethod.POST, url, ResponseType.TEXT);
+            }
             request.setBody(payload);
+            request.setContent_type("application/octet-stream");
 
             long startRequest = System.nanoTime();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
 
-                response.consumeResponse();
-
                 if (response.getCode() == HTTPStatus.OK) {
                     setState(TaskState.SUCCESSFUL);
                 } else {
+                    System.out.println("CODE " + response.getCode());
                     setState(TaskState.UNSUCCESSFUL);
                 }
+
+                response.consumeResponse();
 
             } else {
                 setState(TaskState.ERROR);

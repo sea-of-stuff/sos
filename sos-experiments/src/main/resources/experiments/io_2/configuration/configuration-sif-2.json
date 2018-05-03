@@ -26,7 +26,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "io_multiple_1GB",
+      "dataset" : "io_multiple_1GB_50mb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

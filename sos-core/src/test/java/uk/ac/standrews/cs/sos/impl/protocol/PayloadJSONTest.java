@@ -16,7 +16,7 @@
  */
 package uk.ac.standrews.cs.sos.impl.protocol;
 
-import org.apache.xmlbeans.impl.util.Base64;
+import com.adobe.xmp.impl.Base64;
 import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -29,7 +29,7 @@ import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.BasicNode;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.impl.protocol.tasks.Payload;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.Payload_JSON;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
@@ -48,12 +48,13 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class PayloadTest extends ProtocolTest {
+public class PayloadJSONTest extends ProtocolTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10006;
 
     private static final String TEST_DATA = "test-data";
+    private static final String JSON_BODY = "{\n  \"data\" : \"_DATA_\"\n}";
 
     private static byte[] data_l = new byte[10000000]; // 10mb
     private static byte[] data_l_b64;
@@ -78,22 +79,8 @@ public class PayloadTest extends ProtocolTest {
                 .when(
                         request()
                                 .withMethod("POST")
-                                .withPath("/sos/payload/")
-                                .withHeader("Content-Type", "application/octet-stream")
-                                .withBody(TEST_DATA)
-                )
-                .respond(
-                        response()
-                                .withStatusCode(200)
-                );
-
-        mockServer
-                .when(
-                        request()
-                                .withMethod("POST")
-                                .withPath("/sos/payload/")
-                                .withHeader("Content-Type", "application/octet-stream")
-                                .withBody(LARGE_TEST_DATA)
+                                .withPath("/sos/payload_json/")
+                                .withBody(JSON_BODY.replace("_DATA_", Base64.encode(TEST_DATA)))
                 )
                 .respond(
                         response()
@@ -109,20 +96,12 @@ public class PayloadTest extends ProtocolTest {
     }
 
     @Test
-    public void basicPayloadTask() {
+    public void basicPayloadJSONTask() {
+
+        System.out.println(JSON_BODY.replace("_DATA_", Base64.encode(TEST_DATA)));
 
         Node nodeToPing = new BasicNode("localhost", MOCK_SERVER_PORT);
-        Payload payload = new Payload(nodeToPing, IO.StringToInputStream(TEST_DATA), false);
-        TasksQueue.instance().performSyncTask(payload);
-
-        assertEquals(payload.getState(), TaskState.SUCCESSFUL);
-    }
-
-    @Test
-    public void largePayloadTask() {
-
-        Node nodeToPing = new BasicNode("localhost", MOCK_SERVER_PORT);
-        Payload payload = new Payload(nodeToPing, IO.StringToInputStream(LARGE_TEST_DATA), false);
+        Payload_JSON payload = new Payload_JSON(nodeToPing, IO.StringToInputStream(TEST_DATA), false);
         TasksQueue.instance().performSyncTask(payload);
 
         assertEquals(payload.getState(), TaskState.SUCCESSFUL);

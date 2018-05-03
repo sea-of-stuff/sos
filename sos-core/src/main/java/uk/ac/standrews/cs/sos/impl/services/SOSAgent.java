@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.sos.impl.services;
 
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.AtomNotFoundException;
@@ -38,6 +39,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.Property;
 import uk.ac.standrews.cs.sos.interfaces.node.NodeType;
 import uk.ac.standrews.cs.sos.model.*;
 import uk.ac.standrews.cs.sos.services.*;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.util.List;
 import java.util.Set;
@@ -325,7 +327,18 @@ public class SOSAgent implements Agent {
 
     @Override
     public void delete(IGUID guid) throws ServiceException {
-        // TODO
+
+        try {
+            Manifest manifest = manifestsDataService.getManifest(guid);
+
+            if (manifest.getType() == ManifestType.ATOM) {
+                storageService.deleteAtom(guid);
+            } else {
+                SOS_LOG.log(LEVEL.WARN, "Unable to delete content of type: " + manifest.getType());
+            }
+        } catch (ManifestNotFoundException | AtomNotFoundException e) {
+            throw new ServiceException(ServiceException.SERVICE.AGENT, e);
+        }
     }
 
     private void addManifest(Manifest manifest) throws ManifestPersistException {

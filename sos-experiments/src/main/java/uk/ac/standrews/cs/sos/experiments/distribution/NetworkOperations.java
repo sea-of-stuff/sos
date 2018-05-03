@@ -9,6 +9,9 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import java.io.*;
 import java.util.concurrent.*;
 
+import static uk.ac.standrews.cs.sos.experiments.Constants.JVM_INITIAL_HEAP_SIZE_IN_GB;
+import static uk.ac.standrews.cs.sos.experiments.Constants.JVM_MAX_HEAP_SIZE_IN_GB;
+
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
 // http://www.jcraft.com/jsch/examples/ScpFrom.java.html
@@ -111,11 +114,12 @@ public class NetworkOperations implements Closeable {
         if (checkRemoteFile) {
             try (InputStream inputStream = new FileInputStream(new File(lfile))){
 
-                String lCheckum = GUIDFactory.generateGUID(ALGORITHM.SHA1, inputStream).toString();
-                String rChecksum = checkSum(rfile);
+                // MD5 should be good enough for this purpose
+                String lCheckum = GUIDFactory.generateGUID(ALGORITHM.MD5, inputStream).toString();
+                String rChecksum = checkSum("md5sum", rfile);
 
                 if (lCheckum.equals(rChecksum)) {
-                    System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same SHA1 checksum " + lCheckum);
+                    System.out.println("Remote file " + rfile + " and local file " + lfile + " have the same MD5 checksum " + lCheckum);
                     System.out.println("File will not be sent to the remote node");
                     return;
                 }
@@ -209,7 +213,15 @@ public class NetworkOperations implements Closeable {
         System.out.println("NETWORK - Executing jar file " + jarPath);
 
         try {
-            String command = "cd " + basePath + "; " + java + " -Xmx6g -Djava.awt.headless=true -jar " + jarPath + " " + args + "  > " + outFile + " 2>&1 & echo $! > " + pidFile;
+            String command = "cd " + basePath + "; " + java +
+                    " -Xms" + JVM_INITIAL_HEAP_SIZE_IN_GB + "g" +
+                    " -Xmx" + JVM_MAX_HEAP_SIZE_IN_GB + "g" +
+                    // Garbage Collect G1
+                    " -XX:+UseG1GC -XX:MaxGCPauseMillis=1000 " + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
+                    " -XX:G1HeapRegionSize=4" +
+                    " -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 " +
+                    " -XX:+UseStringDeduplication " + // Java 8.20 optimisation
+                    " -Djava.awt.headless=true -jar " + jarPath + " " + args + "  > " + outFile + " 2>&1 & echo $! > " + pidFile;
             exec(command);
 
         } catch (JSchException | IOException e) {
@@ -237,11 +249,11 @@ public class NetworkOperations implements Closeable {
         }
     }
 
-    public String checkSum(String rfile) throws NetworkException {
+    public String checkSum(String hashprogram, String rfile) throws NetworkException {
         System.out.println("NETWORK - Remote check sum for remote file " + rfile);
 
         try {
-            String command = "sha1sum \"" + rfile + "\"";
+            String command = hashprogram + " \"" + rfile + "\"";
             String checksum = exec(command);
 
             if (checksum != null && !checksum.isEmpty()) {

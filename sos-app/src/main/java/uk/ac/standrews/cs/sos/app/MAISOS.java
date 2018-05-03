@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
+import uk.ac.standrews.cs.sos.constants.Internals;
 import uk.ac.standrews.cs.sos.filesystem.SOSFileSystemFactory;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.jetty.JettyApp;
@@ -39,8 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static uk.ac.standrews.cs.sos.constants.Internals.GUID_ALGORITHM;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -225,7 +224,7 @@ public class MAISOS {
             String rootGUID = line.getOptionValue(ROOT_OPT);
             root = GUIDFactory.recreateGUID(rootGUID);
         } else {
-            root = GUIDFactory.generateRandomGUID(GUID_ALGORITHM);
+            root = GUIDFactory.generateRandomGUID(Internals.getGUIDAlgorithm());
         }
 
         return root;

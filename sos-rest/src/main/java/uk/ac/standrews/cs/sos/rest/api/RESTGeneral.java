@@ -18,6 +18,7 @@ package uk.ac.standrews.cs.sos.rest.api;
 
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.impl.protocol.json.DataPackage;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.GeneralAPI;
@@ -27,6 +28,7 @@ import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 
 import static uk.ac.standrews.cs.sos.network.Request.SOS_NODE_CHALLENGE_HEADER;
@@ -53,9 +55,33 @@ public class RESTGeneral {
 
     @POST
     @Path("/payload")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response postMsg(final InputStream inputStream, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/payload");
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/payload");
+
+        try {
+
+            byte[] sink = new byte[512];
+            while(inputStream.available() != 0) {
+                inputStream.read(sink); // TODO - improve by reading in larger chunks
+                System.out.print("r");
+            }
+
+        } catch (IOException e) {
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, "Unable to close the input stream");
+        }
+
+        System.out.println("Returning response for payload");
+        return HTTPResponses.OK(RESTConfig.sos, node_challenge, "Data received");
+    }
+
+    @POST
+    @Path("/payload_json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/payload_json");
 
         return HTTPResponses.OK(RESTConfig.sos, node_challenge, "Data received");
     }

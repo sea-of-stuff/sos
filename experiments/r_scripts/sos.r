@@ -44,8 +44,8 @@ io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv", manifestsOnly=TRUE)
 
 ## IO_2
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_005.tsv", ratio=TRUE)
-latency <- io("remote/io_2_005.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_007.tsv", ratio=TRUE)
+latency <- io("remote/io_2_007.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -94,9 +94,10 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 ##############
 
 repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
+repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifests Repl...");
 
 atom_repl <- repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
-manifest_repl <- repl("remote/repl_2_test1.tsv", subtype="replicate_manifest", yMax=.8, titlePlot="Manifest replication (100 Version manifests). 10 Iterations");
+manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 Version manifests). 10 Iterations");
 
 mylegend<-g_legend(atom_repl)
 grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),

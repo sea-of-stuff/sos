@@ -29,6 +29,10 @@ public class Internals {
 
     public static ALGORITHM GUID_ALGORITHM = SHA256;
 
+    public static ALGORITHM getGUIDAlgorithm() {
+        return GUID_ALGORITHM;
+    }
+
     public static final String MANIFESTS_CACHE_FILE = "manifests.cache";
     public static final String MANIFESTS_INDEX_FILE = "manifests.index";
     public static final String MDS_INDEX_FILE = "mds.index";

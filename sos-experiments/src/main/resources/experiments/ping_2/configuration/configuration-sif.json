@@ -5,27 +5,27 @@
     "description": "The experiment PING_2 investigates...",
     "setup": {
       "app": "sos-app/target/sos-app.jar",
-      "iterations": 10
+      "iterations": 1
     },
     "nodes" : [
       {
-        "id" : 2,
-        "name" : "sif2",
+        "id" : 5,
+        "name" : "sif5",
         "path" : "/cs/scratch/",
         "remote" : true,
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-2.cluster",
+          "host" : "sif-5.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
           "privatekeypath": "/Users/sic2/.ssh/id_rsa",
           "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
         },
-        "configurationfile" : "sif_2.json",
-        "certificatefile" : "sif_2.crt",
-        "keyfile" : "sif_2.key",
+        "configurationfile" : "sif_5.json",
+        "certificatefile" : "sif_5.crt",
+        "keyfile" : "sif_5.key",
         "behaviour": {
           "start": 0,
           "stop": -1,
@@ -35,23 +35,24 @@
       }
     ],
     "experimentnode" : {
-      "id" : 12,
-      "name" : "sif12",
+      "id" : 6,
+      "name" : "sif6",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-12.cluster",
+        "host" : "sif-6.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "sif_12.json",
-      "certificatefile" : "sif_12.crt",
-      "keyfile" : "sif_12.key",
+      "configurationfile" : "sif_6.json",
+      "certificatefile" : "sif_6.crt",
+      "keyfile" : "sif_6.key",
+      "dataset" : "10mb_files",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

@@ -117,11 +117,11 @@ public class RESTStorage {
      * @return the Response to the http request
      */
     @POST
-    @Path("/atom")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-        SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/atom");
+        @Path("/atom")
+        @Consumes(MediaType.APPLICATION_JSON)
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response addAtomStream(final DataPackage dataPackage, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
+            SOS_LOG.log(LEVEL.INFO, "REST: POST /sos/storage/atom");
 
         try (InputStream data = dataPackage.getDataObj().getInputStream()){
             IGUID guidOfReceivedData = GUIDFactory.generateGUID(GUID_ALGORITHM, data);

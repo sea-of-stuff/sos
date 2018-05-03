@@ -47,7 +47,7 @@ public class Experiment_PING_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
 
             for(int i = 0; i < 100; i++) {
-                PingNode pingNode = new PingNode(nodeToPing, "");
+                PingNode pingNode = new PingNode(nodeToPing, "", false);
                 TasksQueue.instance().performSyncTask(pingNode);
 
                 if (pingNode.getState() != TaskState.SUCCESSFUL) {

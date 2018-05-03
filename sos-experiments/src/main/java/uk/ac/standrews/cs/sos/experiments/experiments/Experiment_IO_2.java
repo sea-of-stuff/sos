@@ -68,6 +68,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
 
         private File subset;
         private static final boolean INVALIDATE_CACHE = true; // NOTE
+        private static final int MULTIPLIER = 5; // NOTE: Set this to 10 when the subsets are made of 1 file only, otherwise set it to 1.
 
         public ExperimentUnit_IO_2(File subset) {
             this.subset = subset;
@@ -80,21 +81,22 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
             System.out.println("Processing subset: " + subset.getAbsolutePath());
 
-            double coin = Math.random();
-            if (coin < 0.5) {
+            for(int i = 0; i < MULTIPLIER; i++) {
+                double coin = Math.random();
+                if (coin < 0.5) {
 
-                processSOS();
-                rest_a_bit();
-                processFS();
+                    processSOS();
+                    rest_a_bit();
+                    processFS();
 
-            } else {
+                } else {
 
-                processFS();
-                rest_a_bit();
-                processSOS();
+                    processFS();
+                    rest_a_bit();
+                    processSOS();
 
+                }
             }
-
         }
 
         private void processSOS() throws ExperimentException {
@@ -115,7 +117,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
             }
             Agent agent = node.getAgent();
 
-            for (IGUID atom : atoms) {
+            for (IGUID atom:atoms) {
                 try {
                     agent.getData(atom);
                 } catch (ServiceException e) {
@@ -123,6 +125,14 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                 }
             }
 
+            for(IGUID atom:atoms) {
+
+                try {
+                    agent.delete(atom);
+                } catch (ServiceException e) {
+                    throw new ExperimentException("Unable to delete atom with GUID " + atom.toMultiHash());
+                }
+            }
         }
 
         private void processFS() throws ExperimentException {
@@ -176,6 +186,8 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                 }
                 duration = System.nanoTime() - start;
                 InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.fs_write_file, Integer.toString(size), duration);
+
+                file.delete(); // Delete file before next run
 
                 return FileVisitResult.CONTINUE;
             }

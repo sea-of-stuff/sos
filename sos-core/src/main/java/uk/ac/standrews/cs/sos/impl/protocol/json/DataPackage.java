@@ -42,6 +42,8 @@ public class DataPackage {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Metadata metadata;
     private String data;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String guid;
 
     public DataPackage() {}

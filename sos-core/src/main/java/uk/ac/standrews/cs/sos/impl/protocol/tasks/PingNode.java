@@ -38,14 +38,22 @@ public class PingNode extends Task {
 
     private final Node node;
     private final String message;
+    private final boolean sign;
     private Long timestamp;
     private Long latency;
 
-    public PingNode(Node node, String message) {
+    /**
+     *
+     * @param node to ping
+     * @param message to send with the ping
+     * @param sign if true the request will be signed if possible. if false, the request will never be signed.
+     */
+    public PingNode(Node node, String message, boolean sign) {
         super();
 
         this.node = node;
         this.message = message;
+        this.sign = sign;
 
         timestamp = 0L;
     }
@@ -56,7 +64,12 @@ public class PingNode extends Task {
 
         try {
             URL url = SOSURL.NODE_PING(node, message);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
+            SyncRequest request;
+            if (sign) {
+                request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
+            } else {
+                request = new SyncRequest(HTTPMethod.GET, url, ResponseType.TEXT);
+            }
 
             long startRequest = System.nanoTime();
             Response response = RequestsManager.getInstance().playSyncRequest(request);
