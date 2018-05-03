@@ -35,6 +35,10 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
 
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
+    public Experiment_IO_2(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+        this(experimentConfiguration, "results");
+    }
+
     public Experiment_IO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
@@ -68,7 +72,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
 
         private File subset;
         private static final boolean INVALIDATE_CACHE = true; // NOTE
-        private static final int MULTIPLIER = 5; // NOTE: Set this to 10 when the subsets are made of 1 file only, otherwise set it to 1.
+        private static final int MULTIPLIER = 10; // NOTE: Set this to 10 when the subsets are made of 1 file only, otherwise set it to 1.
 
         public ExperimentUnit_IO_2(File subset) {
             this.subset = subset;
@@ -82,19 +86,16 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
             System.out.println("Processing subset: " + subset.getAbsolutePath());
 
             for(int i = 0; i < MULTIPLIER; i++) {
+
                 double coin = Math.random();
                 if (coin < 0.5) {
-
                     processSOS();
                     rest_a_bit();
                     processFS();
-
                 } else {
-
                     processFS();
                     rest_a_bit();
                     processSOS();
-
                 }
             }
         }
@@ -187,7 +188,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                 duration = System.nanoTime() - start;
                 InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.fs_write_file, Integer.toString(size), duration);
 
-                file.delete(); // Delete file before next run
+                new File("test_file").delete(); // Delete file before next run
 
                 return FileVisitResult.CONTINUE;
             }
@@ -200,7 +201,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_2") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "io_2_run_3");
+        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "io_2_run_10");
         experiment_io_2.process();
     }
 }

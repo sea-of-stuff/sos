@@ -44,8 +44,8 @@ io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv", manifestsOnly=TRUE)
 
 ## IO_2
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_007.tsv", ratio=TRUE)
-latency <- io("remote/io_2_007.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_008.tsv", ratio=TRUE)
+latency <- io("remote/io_2_008.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),

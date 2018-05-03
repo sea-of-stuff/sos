@@ -70,7 +70,6 @@ public class CommonPredicates {
         SOSAgent agent = SOSAgent.instance();
 
         try {
-            System.out.println("Getting metadata property: " + property);
             Property metaProperty = agent.getMetaProperty(guid, property);
             if (metaProperty.getType() == MetaType.STRING) {
 

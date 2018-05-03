@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sos-app/app.iml" filepath="$PROJECT_DIR$/sos-app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-core/core.iml" filepath="$PROJECT_DIR$/sos-core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/dns/dns.iml" filepath="$PROJECT_DIR$/dns/dns.iml" />
       <module fileurl="file://$PROJECT_DIR$/sos-experiments/experiments.iml" filepath="$PROJECT_DIR$/sos-experiments/experiments.iml" />

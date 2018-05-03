@@ -211,8 +211,9 @@ public class SOSDistribution {
     public static void stopExperiment(ExperimentConfiguration configuration) throws NetworkException {
 
         Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
-
-        stopNode(experimentNode);
+        if (experimentNode.isRemote()) {
+            stopNode(experimentNode);
+        }
     }
 
     public static void undoDistributionToExperimentNode(ExperimentConfiguration configuration) throws NetworkException {

@@ -220,7 +220,7 @@ public class NetworkOperations implements Closeable {
                     " -XX:+UseG1GC -XX:MaxGCPauseMillis=1000 " + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
                     " -XX:G1HeapRegionSize=4" +
                     " -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 " +
-                    " -XX:+UseStringDeduplication " + // Java 8.20 optimisation
+                    " -XX:+UseStringDeduplication " + // Java 8.20 optimisation, https://blog.takipi.com/garbage-collectors-serial-vs-parallel-vs-cms-vs-the-g1-and-whats-new-in-java-8/
                     " -Djava.awt.headless=true -jar " + jarPath + " " + args + "  > " + outFile + " 2>&1 & echo $! > " + pidFile;
             exec(command);
 
