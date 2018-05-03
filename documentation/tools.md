@@ -13,5 +13,5 @@
 - List of opened resources: `lsof -p pid`
 - File leak detector (https://github.com/kohsuke/file-leak-detector)
     - Build the sos-app jar first with `mvn package -DskipTests`
-    - `java -javaagent:third-party/file-leak-detector/file-leak-detector-1.10-jar-with-dependencies.jar=http=19999,strong -Djava.awt.headless=true -jar sos-app/target/sos-app.jar -c example_config.json -j`
+    - `java -javaagent:third-party/file-leak-detector/file-leak-detector-1.10-jar-with-dependencies.jar=http=19999,strong -Djava.awt.headless=true -jar sos-slave/target/sos-slave.jar -c example_config.json -j`
 

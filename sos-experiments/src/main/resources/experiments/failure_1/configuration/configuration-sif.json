@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_Failure_1",
     "description": "The experiment Failure_1 investigates...",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 1
     },
     "nodes" : [

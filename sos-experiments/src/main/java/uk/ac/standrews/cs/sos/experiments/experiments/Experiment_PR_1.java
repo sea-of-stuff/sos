@@ -42,7 +42,7 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
                 cms = node.getCMS();
 
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath), -1);
+                addFolderContentToNode(node, new File(datasetPath), 5); // TODO - revert to -1
                 addContexts();
             } catch (ContextException | IOException e) {
                 e.printStackTrace();
@@ -65,23 +65,23 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             addContext(cms, experiment, "base");
 
             // Data only
-            addContext(cms, experiment, "common_word_occurs_once"); // the
-            addContext(cms, experiment, "uncommon_word_occurs_once"); // grain
-            addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
+//            addContext(cms, experiment, "common_word_occurs_once"); // the
+//            addContext(cms, experiment, "uncommon_word_occurs_once"); // grain
+//            addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
 
             // Metadata and Data
             addContext(cms, experiment, "meta_common_word_occurs_once"); // the
-            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // grain
-            addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
+//            addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // grain
+//            addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
 
-            // Check one metadata property
-            addContext(cms, experiment, "metadata");
-
-            // Check two metadata features
-            addContext(cms, experiment, "multi_metadata");
-
-            // Manifest
-            addContext(cms, experiment, "manifest");
+//            // Check one metadata property
+//            addContext(cms, experiment, "metadata");
+//
+//            // Check two metadata features
+//            addContext(cms, experiment, "multi_metadata");
+//
+//            // Manifest
+//            addContext(cms, experiment, "manifest");
 
         }
 

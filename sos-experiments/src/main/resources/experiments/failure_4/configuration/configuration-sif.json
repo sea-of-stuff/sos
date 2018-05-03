@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_Failure_4",
     "description": "The experiment Failure_4 investigates the failure of multiple nodes at regular intervals",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 1
     },
     "nodes" : [

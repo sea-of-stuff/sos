@@ -15,6 +15,7 @@
         <module name="instrument" />
         <module name="rest" />
         <module name="sos-rest-jetty" />
+        <module name="sos-slave" />
         <module name="web-archive" />
         <module name="web-ui" />
       </profile>
@@ -30,6 +31,7 @@
       <module name="rest" target="1.8" />
       <module name="sos" target="1.8" />
       <module name="sos-rest-jetty" target="1.8" />
+      <module name="sos-slave" target="1.8" />
       <module name="web-archive" target="1.8" />
       <module name="web-ui" target="1.8" />
     </bytecodeTargetLevel>

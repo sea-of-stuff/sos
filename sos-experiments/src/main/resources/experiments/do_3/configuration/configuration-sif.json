@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_DO_3",
     "description": "The experiment DO_3 investigates the size of the codomain",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 10
     },
     "nodes" : [

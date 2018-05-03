@@ -32,9 +32,9 @@
         <module>sos-rest</module>
         <module>sos-rest-jetty</module>
         <module>web-ui</module>
-        <module>sos-app</module>
         <module>sos-filesystem</module>
         <module>sos-web-archive</module>
+        <module>sos-slave</module>
         <module>sos-experiments</module>
         <module>sos-instrument</module>
         <module>git-to-sos</module>

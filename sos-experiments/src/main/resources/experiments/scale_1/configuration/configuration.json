@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_Scale_1",
     "description" : "Scale experiment. We run a local node and a few remote nodes.",
     "setup" : {
-      "app" : "sos-app/target/sos-app.jar",
+      "app" : "sos-slave/target/sos-slave.jar",
       "iterations" : 10
     },
     "nodes" : [],

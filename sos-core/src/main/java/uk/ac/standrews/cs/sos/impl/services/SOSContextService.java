@@ -672,11 +672,7 @@ public class SOSContextService implements ContextService {
         // The `contextsContentsDirectory` data structure is needed to run this process faster and avoid unnecessary re-runs.
         // This data structure keeps track of entries and their results (negative results too).
         boolean alreadyRun = contextsContentsDirectory.entryExists(contextInvariant, versionGUID);
-        boolean maxAgeExpired = false;
-
-        if (alreadyRun) {
-            maxAgeExpired = predicateHasExpired(context, versionGUID);
-        }
+        boolean maxAgeExpired = alreadyRun && predicateHasExpired(context, versionGUID);
 
         long duration = System.nanoTime() - start;
         predicateStats.getPred_time_to_check_if_predicate_has_to_be_run().addAndGet(duration);

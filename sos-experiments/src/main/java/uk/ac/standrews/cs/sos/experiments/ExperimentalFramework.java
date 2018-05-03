@@ -50,7 +50,6 @@ public class ExperimentalFramework {
         System.out.println("Configuration options (enter number):");
         String[] configurations = new String[] {
                 "pr_1/configuration/configuration.json",
-                "pr_1/configuration/configuration.json",
                 "pr_1/configuration/configuration-hogun.json",
                 "po_a_1/configuration/configuration-hogun.json",
                 "po_a_3/configuration/configuration-hogun.json",

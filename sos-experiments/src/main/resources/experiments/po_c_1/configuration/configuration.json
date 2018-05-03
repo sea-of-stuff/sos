@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_PO_C_1",
     "description": "The experiment PO_C_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc..",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 1
     },
     "nodes": [],

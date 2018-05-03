@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_GUID_2",
     "description": "The experiment GUID_2 investigates ...",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 10
     },
     "nodes" : [],

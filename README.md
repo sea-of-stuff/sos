@@ -105,6 +105,11 @@ WIP
 WIP
 
 
+## How to run
+
+- mvn package
+- mvn license:format
+
 ## Contributors
 
 This work is developed by Simone Ivan Conte ([@sic2](https://github.com/sic2)) as part of his PhD thesis.

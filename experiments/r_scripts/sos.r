@@ -130,6 +130,8 @@ pr_1("output/test_pr_1_13.tsv", predicateOnly=TRUE, titlePlot="Time to run a pre
 pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
 pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
 
+pr_1("remote/pr_1_001.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
+
 ##############
 # PO_A_1
 ##############

@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_Failure_7",
     "description": "The experiment Failure_7 investigates the failure of multiple nodes and the node responsiveness when nodes get back online",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 1
     },
     "nodes" : [

@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_CO_A_1",
     "description": "The experiment CO_A_1 investigates the size of the codomain",
     "setup": {
-      "app": "sos-app/target/sos-app.jar",
+      "app": "sos-slave/target/sos-slave.jar",
       "iterations": 10
     },
     "nodes" : [

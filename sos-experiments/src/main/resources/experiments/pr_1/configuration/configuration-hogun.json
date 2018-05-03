@@ -4,8 +4,8 @@
     "experimentClass": "Experiment_PR_1",
     "description" : "PR_1 experiment - on hogun-2.",
     "setup" : {
-      "app" : "sos-app/target/sos-app.jar",
-      "iterations" : 10
+      "app" : "sos-slave/target/sos-slave.jar",
+      "iterations" : 1
     },
     "nodes" : [ ],
     "experimentnode" : {
@@ -24,7 +24,7 @@
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
       "configurationfile" : "hogun_2.json",
-      "dataset" : "text_100kb",
+      "dataset" : "text_100kb_3",
       "behaviour": {
         "start": 0,
         "stop": -1,

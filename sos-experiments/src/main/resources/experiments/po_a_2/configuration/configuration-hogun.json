@@ -4,7 +4,7 @@
     "experimentClass": "Experiment_PO_A_2",
     "description" : "PO_A_2 experiment - on hogun.",
     "setup" : {
-      "app" : "sos-app/target/sos-app.jar",
+      "app" : "sos-slave/target/sos-slave.jar",
       "iterations" : 5
     },
     "nodes" : [
