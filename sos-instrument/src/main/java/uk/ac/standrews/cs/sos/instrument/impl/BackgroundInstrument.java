@@ -278,7 +278,7 @@ public class BackgroundInstrument implements Metrics {
                     measurementsQueue.add(metrics);
                 }
 
-            }, 0, 500, TimeUnit.MILLISECONDS);
+            }, 0, 5, TimeUnit.SECONDS);
         }
     }
 
