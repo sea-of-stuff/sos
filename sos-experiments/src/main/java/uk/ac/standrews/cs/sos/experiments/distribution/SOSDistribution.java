@@ -100,7 +100,7 @@ public class SOSDistribution {
                 scp.connect();
 
                 // Run the SOS node with the jetty REST server component
-                scp.executeJar(path, node.getJava(), REMOTE_SOS_JAR_PATH, "-c " + REMOTE_SOS_CONFIGURATION_PATH + " -j", REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
+                scp.executeJar(path, node.getJava(), REMOTE_SOS_JAR_PATH, REMOTE_SOS_CONFIGURATION_PATH, REMOTE_SOS_OUT_FILE, REMOTE_SOS_PID_FILE);
 
             } catch (IOException e) {
                 throw new NetworkException();
