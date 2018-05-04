@@ -15,7 +15,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * PING with payload
@@ -24,22 +24,42 @@ import java.util.Objects;
  */
 public class Experiment_PING_2 extends BaseExperiment implements Experiment {
 
+    private Iterator<ExperimentUnit> experimentUnitIterator;
+
     public Experiment_PING_2(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
     }
 
     public Experiment_PING_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
+        assert(subsets != null);
+        List<ExperimentUnit> units = new LinkedList<>();
+        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
+            for (File subset : subsets) {
+                units.add(new ExperimentUnit_PING_2(subset));
+            }
+        }
+        Collections.shuffle(units);
+
+        experimentUnitIterator = units.iterator();
+
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_PING_2();
+        return experimentUnitIterator.next();
     }
 
     private class ExperimentUnit_PING_2 implements ExperimentUnit {
 
+        private File dataset;
         private Node nodeToPing;
+
+        public ExperimentUnit_PING_2(File dataset) {
+            this.dataset = dataset;
+        }
 
         @Override
         public void setup() {
@@ -51,28 +71,23 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         @Override
         public void run() throws ExperimentException {
 
-            String datasetPath = experiment.getExperimentNode().getDatasetPath();
-            File folder = new File(datasetPath);
-            for(File file:Objects.requireNonNull(folder.listFiles())) {
+            for(File file:Objects.requireNonNull(dataset.listFiles())) {
 
                 long payloadSize = file.length();
-
                 try (FileInputStream fileInputStream = new FileInputStream(file)) {
 
-                    System.out.println("File: " + file.getName() + " payload size: " + payloadSize);
-                    // Payload payload = new Payload(nodeToPing, fileInputStream, false);
+                    // System.out.println("File: " + file.getName() + " payload size: " + payloadSize);
+                    // Payload payload = new Payload(nodeToPing, fileInputStream, false); // NOTE - Payload via inputstream won't work
                     Payload_JSON payload = new Payload_JSON(nodeToPing, fileInputStream, false);
                     TasksQueue.instance().performSyncTask(payload);
 
-                    // FIXME - failing with exception: Unable to make HTTP request: java.net.SocketException: Broken pipe (Write failed)
                     if (payload.getState() != TaskState.SUCCESSFUL) {
                         System.out.println("Unsuccessful");
                     } else {
                         InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Long.toString(payloadSize), payload.getLatency());
                     }
 
-                    Thread.sleep(500);
-                } catch (IOException | InterruptedException e) {
+                } catch (IOException e) {
                     throw new ExperimentException();
                 }
 

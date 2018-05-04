@@ -69,6 +69,12 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
   d$StatsTYPE[d$Subtype == "guid_data"] <- "io"
   d <- d[d$StatsTYPE == 'io',]
   
+  d$Subtype[d$Subtype == "fs_write_file"] <- "FS Write"
+  d$Subtype[d$Subtype == "fs_read_file"] <- "FS Read"
+  d$Subtype[d$Subtype == "add_atom"] <- "Add Atom"
+  d$Subtype[d$Subtype == "read_atom"] <- "Read Atom"
+  d$Subtype[d$Subtype == "guid_data"] <- "GUID"
+  
   # Exclude
   d <- d[d$Subtype != 'replicate_atom',]
   d <- d[d$Subtype != 'replicate_manifest',]
@@ -76,9 +82,9 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
   d <- d[d$Subtype != 'read_manifest',]
   
   # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
-  d$Subtype<-factor(d$Subtype, levels=c("fs_write_file", "fs_read_file",
-                                        "add_atom", "guid_data", "add_manifest",
-                                        "read_atom", "read_manifest", "replicate_atom", "replicate_manifest"
+  d$Subtype<-factor(d$Subtype, levels=c("FS Write", "FS Read",
+                                        "Add Atom", "Read Atom",
+                                        "GUID"
   ))
   
   d$Message <- as.numeric(d$Message)
@@ -104,6 +110,7 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
   } else {
     ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Subtype)) + 
       geom_point() +
+      geom_line() +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 

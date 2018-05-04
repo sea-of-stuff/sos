@@ -42,10 +42,14 @@ io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv")
 io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv", manifestsOnly=TRUE)
 
 
+io("output/local_io_2_011.tsv", ratio=TRUE)
+io("output/local_io_2_011.tsv", ratio=FALSE)
+
+
 ## IO_2
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_008.tsv", ratio=TRUE)
-latency <- io("remote/io_2_008.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_010.tsv", ratio=TRUE)
+latency <- io("remote/io_2_010.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -130,7 +134,7 @@ pr_1("output/test_pr_1_13.tsv", predicateOnly=TRUE, titlePlot="Time to run a pre
 pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
 pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
 
-pr_1("remote/pr_1_001.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
+pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
 
 ##############
 # PO_A_1

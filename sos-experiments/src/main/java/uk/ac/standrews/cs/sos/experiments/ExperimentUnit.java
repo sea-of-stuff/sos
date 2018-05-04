@@ -307,7 +307,7 @@ public interface ExperimentUnit {
 
     default void rest_a_bit(String message, long milliseconds) throws ExperimentException {
         try {
-            System.out.println(message + " --- Going to sleep for " + (milliseconds / 1000) + " seconds ---");
+            System.out.println(message + "--- Going to sleep for " + (milliseconds / 1000) + " seconds ---");
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             throw new ExperimentException();

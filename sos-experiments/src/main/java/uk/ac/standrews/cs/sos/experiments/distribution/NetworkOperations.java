@@ -217,7 +217,7 @@ public class NetworkOperations implements Closeable {
                     " -Xms" + JVM_INITIAL_HEAP_SIZE_IN_GB + "g" +
                     " -Xmx" + JVM_MAX_HEAP_SIZE_IN_GB + "g" +
                     // Garbage Collect G1
-                    " -XX:+UseG1GC -XX:MaxGCPauseMillis=1000 " + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
+                    " -XX:+UseG1GC -XX:MaxGCPauseMillis=200 " + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
                     " -XX:G1HeapRegionSize=4" +
                     " -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 " +
                     " -XX:+UseStringDeduplication " + // Java 8.20 optimisation, https://blog.takipi.com/garbage-collectors-serial-vs-parallel-vs-cms-vs-the-g1-and-whats-new-in-java-8/
