@@ -203,6 +203,7 @@ public abstract class BaseExperiment implements Experiment {
             cleanup(); // NOTE - idea: apply to remote nodes too, which will need to be stopped and restarted ?
 
             try {
+                System.gc();
                 System.out.println("Going to sleep for 5 seconds before the next iteration");
                 System.out.println("*******************************************************\n");
                 Thread.sleep(5000);

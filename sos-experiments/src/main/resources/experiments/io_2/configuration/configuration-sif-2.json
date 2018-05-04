@@ -5,7 +5,7 @@
     "description": "The experiment IO_2 investigates ...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
-      "iterations": 10
+      "iterations": 5
     },
     "nodes" : [],
     "experimentnode" : {

@@ -52,6 +52,14 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         return experimentUnitIterator.next();
     }
 
+    @Override
+    public int numberOfTotalIterations() {
+
+        File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
+        assert(subsets != null);
+        return experiment.getSetup().getIterations() * subsets.length;
+    }
+
     private class ExperimentUnit_PING_2 implements ExperimentUnit {
 
         private File dataset;
@@ -71,6 +79,7 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         @Override
         public void run() throws ExperimentException {
 
+            System.out.println("Processing subset: " + dataset.getAbsolutePath());
             for(File file:Objects.requireNonNull(dataset.listFiles())) {
 
                 long payloadSize = file.length();
@@ -88,6 +97,7 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
                     }
 
                 } catch (IOException e) {
+                    System.out.println("Exception thrown :(");
                     throw new ExperimentException();
                 }
 

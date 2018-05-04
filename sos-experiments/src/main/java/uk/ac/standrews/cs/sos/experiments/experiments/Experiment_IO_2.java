@@ -97,6 +97,9 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                     rest_a_bit();
                     processSOS();
                 }
+
+                System.gc();
+                rest_a_bit(1500);
             }
         }
 
@@ -180,6 +183,12 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
                 long duration = System.nanoTime() - start;
                 InstrumentFactory.instance().measure(StatsTYPE.io, StatsTYPE.fs_read_file, Integer.toString(size), duration);
 
+                try {
+                    rest_a_bit();
+                } catch (ExperimentException e) {
+                    throw new IOException(e);
+                }
+
                 // WRITE FILE
                 start = System.nanoTime();
                 try (FileOutputStream out = new FileOutputStream("test_file")) {
@@ -201,7 +210,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
         File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "io_2") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "io_2_run_10");
+        Experiment_IO_2 experiment_io_2 = new Experiment_IO_2(experimentConfiguration, "local_io_2_011");
         experiment_io_2.process();
     }
 }
