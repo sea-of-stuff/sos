@@ -68,11 +68,13 @@ public class Experiment_PR_1 extends BaseExperiment implements Experiment {
             addContext(cms, experiment, "common_word_occurs_once"); // the
             addContext(cms, experiment, "uncommon_word_occurs_once"); // grain
             addContext(cms, experiment, "common_word_occurs_at_least_10_times"); // the
+            addContext(cms, experiment, "mostly_blue"); // check if mostly blue (no matter the data type)
 
             // Metadata and Data
             addContext(cms, experiment, "meta_common_word_occurs_once"); // the
             addContext(cms, experiment, "meta_uncommon_word_occurs_once"); // grain
             addContext(cms, experiment, "meta_common_word_occurs_at_least_10_times"); // the
+            addContext(cms, experiment, "meta_mostly_blue"); // check if image and if mostly blue
 
             // Check one metadata property
             addContext(cms, experiment, "metadata");
