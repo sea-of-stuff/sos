@@ -368,6 +368,31 @@ public class CommonPredicatesTest extends SetUpTest {
         assertFalse(result);
     }
 
+    @Test
+    public void isMostlyFailOnNonImage() throws URISyntaxException, ServiceException {
+
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setLocation(new URILocation(getImageFilePath("non_image")));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.IsMostly(version.guid(), 0);
+        assertFalse(result);
+
+        result = CommonPredicates.IsMostly(version.guid(), 1);
+        assertFalse(result);
+
+        result = CommonPredicates.IsMostly(version.guid(), 2);
+        assertFalse(result);
+    }
+
     private String getImageFilePath(String imageName) throws URISyntaxException {
         return getClass().getResource("/images/" + imageName).toURI().getPath();
     }

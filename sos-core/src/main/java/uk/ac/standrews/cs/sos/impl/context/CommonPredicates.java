@@ -370,6 +370,8 @@ public class CommonPredicates {
              InputStream inputStream = data.getInputStream()) {
 
             BufferedImage bi = ImageIO.read(inputStream);
+            if (bi == null) throw new IOException("Atom is not an image");
+
             int[] pixel;
 
             int redPixels = 0, greenPixels = 0, bluePixels = 0;
