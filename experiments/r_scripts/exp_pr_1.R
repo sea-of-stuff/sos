@@ -1,4 +1,4 @@
-pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
+pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=FALSE) {
   library(ggplot2)
   source("r_scripts/utils_stats.r")
   source("r_scripts/kruskal.r")
@@ -22,12 +22,16 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
   d$ContextName[d$ContextName == "multi_metadata"] <- "MM"
   d$ContextName[d$ContextName == "manifest"] <- "Ma"
   
+  d$ContextName[d$ContextName == "mostly_blue"] <- "D_MB"
+  d$ContextName[d$ContextName == "meta_mostly_blue"] <- "MD_MB"
+  
   # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
   d$ContextName<-factor(d$ContextName, levels=c("B", 
                                                 "D_CWOO", "D_UWOO", "D_CWO10",
                                                 "MD_CWOO", "MD_UWOO", "MD_CWO10",
                                                 "M", "MM",
-                                                "Ma"
+                                                "Ma",
+                                                "D_MB", "MD_MB"
   ))
   
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
@@ -45,7 +49,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot) {
       geom_text(aes(label=dd$ContextName),hjust=0, vjust=2.5, angle=90) +
       scale_shape_manual(values=seq(0,15)) +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
-      ylim(0, 8) +
+      ylim(0, 40) +
       theme_bw() +
       theme(axis.text.x=element_blank(),
             axis.text=element_text(size=14),

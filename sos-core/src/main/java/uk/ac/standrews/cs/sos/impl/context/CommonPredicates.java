@@ -386,24 +386,17 @@ public class CommonPredicates {
                 }
             }
 
-            boolean retval = false;
             switch (rgb) {
                 case 0:
-                    retval = redPixels > greenPixels && redPixels > bluePixels;
-                    break;
+                    return redPixels > greenPixels && redPixels > bluePixels;
                 case 1:
-                    retval = greenPixels > redPixels && greenPixels > bluePixels;
-                    break;
+                    return greenPixels > redPixels && greenPixels > bluePixels;
                 case 2:
-                    retval = bluePixels > redPixels && bluePixels > greenPixels;
-                    break;
+                    return bluePixels > redPixels && bluePixels > greenPixels;
                 default:
                     SOS_LOG.log(LEVEL.ERROR, "CommonPredicates.isMostly - wrong RGB param");
-                    retval = false;
-                    break;
+                    return false;
             }
-
-            return retval;
 
         } catch (ServiceException | IOException e) {
             return false;

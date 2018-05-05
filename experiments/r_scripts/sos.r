@@ -51,8 +51,8 @@ io("remote/io_2_012.tsv", ratio=FALSE)
 
 ## IO_2
 # TODO - with and without cache invalidation
-throughput <- io("remote/io_2_010.tsv", ratio=TRUE)
-latency <- io("remote/io_2_010.tsv", ratio=FALSE)
+throughput <- io("remote/io_2_012.tsv", ratio=TRUE)
+latency <- io("remote/io_2_012.tsv", ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -61,8 +61,8 @@ grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
                          top=textGrob('IO Performance', gp=gpar(fontsize=18))),
              mylegend, nrow=2,heights=c(10, 1))
 
-mem("remote/io_2_004_os.tsv")
-cpu("remote/io_2_004_os.tsv")
+mem("remote/io_2_012_os.tsv")
+cpu("remote/io_2_012_os.tsv")
 
 
 ############
@@ -138,6 +138,7 @@ pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a pre
 pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
 
 pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
+pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the mixed_content dataset (10 iterations)")
 
 ##############
 # PO_A_1
