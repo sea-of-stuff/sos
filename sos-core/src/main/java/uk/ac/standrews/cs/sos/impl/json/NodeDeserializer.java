@@ -44,7 +44,7 @@ public class NodeDeserializer extends JsonDeserializer<Node> {
         try {
             IGUID guid = CommonJson.GetGUID(node, JSONConstants.KEY_GUID);
 
-            PublicKey signatureCertificate = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_SIGNATURE_CERTIFICATE).asText());
+            PublicKey d_publicKey = DigitalSignature.getCertificate(node.get(JSONConstants.KEY_SIGNATURE_CERTIFICATE).asText());
             String hostname = node.get(JSONConstants.KEY_NODE_HOSTNAME).asText();
             int port = node.get(JSONConstants.KEY_NODE_PORT).asInt();
 
@@ -56,7 +56,7 @@ public class NodeDeserializer extends JsonDeserializer<Node> {
             boolean isRMS = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_RMS);
             boolean isExperiment = isServiceExposed(node, JSONConstants.KEY_NODE_SERVICES_EXPERIMENT);
 
-            return new SOSNode(guid, signatureCertificate, hostname, port, false, isStorage, isMDS, isNDS, isMMS, isCMS, isRMS, isExperiment);
+            return new SOSNode(guid, d_publicKey, hostname, port, false, isStorage, isMDS, isNDS, isMMS, isCMS, isRMS, isExperiment);
 
         } catch (GUIDGenerationException | CryptoException e) {
             throw new IOException("Unable to recreate SOSNode");

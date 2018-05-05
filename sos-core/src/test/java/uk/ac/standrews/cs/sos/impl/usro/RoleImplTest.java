@@ -54,7 +54,7 @@ public class RoleImplTest {
         assertEquals(role.getName(), "ROLE_TEST");
         assertNotNull(role.guid());
         assertNotNull(role.getPubKey());
-        assertNotNull(role.getSignatureCertificate());
+        assertNotNull(role.getSignaturePublicKey());
         assertNotNull(role.getSignature());
         assertNotNull(role.getUser());
     }

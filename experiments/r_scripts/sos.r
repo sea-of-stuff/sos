@@ -45,8 +45,8 @@ io_1("remote/io_1_003.tsv", "remote/io_1_002.tsv", manifestsOnly=TRUE)
 io("output/local_io_2_011.tsv", ratio=TRUE)
 io("output/local_io_2_011.tsv", ratio=FALSE)
 
-io("remote/io_2_011.tsv", ratio=TRUE)
-io("remote/io_2_011.tsv", ratio=FALSE)
+io("remote/io_2_012.tsv", ratio=TRUE)
+io("remote/io_2_012.tsv", ratio=FALSE)
 
 
 ## IO_2

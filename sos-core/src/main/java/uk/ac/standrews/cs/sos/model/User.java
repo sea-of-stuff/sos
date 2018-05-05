@@ -55,7 +55,7 @@ public interface User extends Manifest {
      *
      * @return public key of the user
      */
-    PublicKey getSignatureCertificate();
+    PublicKey getSignaturePublicKey();
 
     /**
      * Sign some given text using this user private key
@@ -69,10 +69,10 @@ public interface User extends Manifest {
     /**
      * Verify that the given text and signature match
      *
-     * @param text
-     * @param signatureToVerify
-     * @return
-     * @throws SignatureException
+     * @param text to verify
+     * @param signatureToVerify matching signature to verify
+     * @return true if the text and signature match
+     * @throws SignatureException if unable to verify the text and signature
      */
     boolean verify(String text, String signatureToVerify) throws SignatureException;
 

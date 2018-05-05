@@ -52,7 +52,7 @@ public class UserImplTest {
 
         assertEquals(user.getName(), "TEST");
         assertNotNull(user.guid());
-        assertNotNull(user.getSignatureCertificate());
+        assertNotNull(user.getSignaturePublicKey());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class UserImplTest {
 
         assertEquals(user.getName(), "TEST");
         assertEquals(user.guid(), guid);
-        assertNotNull(user.getSignatureCertificate());
+        assertNotNull(user.getSignaturePublicKey());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class UserImplTest {
 
         assertEquals(user.getName(), "TEST");
         assertEquals(user.guid(), guid);
-        assertEquals(user.getSignatureCertificate(), certificate);
+        assertEquals(user.getSignaturePublicKey(), certificate);
     }
 
     @Test

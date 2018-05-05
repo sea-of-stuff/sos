@@ -51,6 +51,7 @@ public class ExperimentalFramework {
         String[] configurations = new String[] {
                 "pr_1/configuration/configuration.json",
                 "pr_1/configuration/configuration-hogun.json",
+                "pr_1/configuration/configuration-hogun-mixed-content.json",
                 "po_a_1/configuration/configuration-hogun.json",
                 "po_a_3/configuration/configuration-hogun.json",
                 "po_c_1/configuration/configuration-hogun.json",

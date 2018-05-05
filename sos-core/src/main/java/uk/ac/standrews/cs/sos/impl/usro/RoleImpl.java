@@ -73,13 +73,13 @@ public class RoleImpl extends UserImpl implements Role {
      * @param guid
      * @param name
      * @param signature
-     * @param signatureCertificate
+     * @param d_publicKey
      * @param protectionPublicKey
      * @throws ProtectionException
      * @throws SignatureException
      */
-    public RoleImpl(IGUID userGUID, IGUID guid, String name, String signature, PublicKey signatureCertificate, PublicKey protectionPublicKey) throws ProtectionException, SignatureException {
-        super(ManifestType.ROLE, guid, name, signatureCertificate);
+    public RoleImpl(IGUID userGUID, IGUID guid, String name, String signature, PublicKey d_publicKey, PublicKey protectionPublicKey) throws ProtectionException, SignatureException {
+        super(ManifestType.ROLE, guid, name, d_publicKey);
         this.userGUID = userGUID;
 
         this.signature = signature;

@@ -22,9 +22,11 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.exceptions.ServiceException;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.model.Version;
 
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -288,5 +290,85 @@ public class CommonPredicatesTest extends SetUpTest {
         boolean result = CommonPredicates.ContentTypePredicate(version.guid(),
                 Collections.singletonList("FAIL"));
         assertFalse(result);
+    }
+
+    @Test
+    public void isMostlyRedSuccess() throws URISyntaxException, ServiceException {
+
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setLocation(new URILocation(getImageFilePath("red.jpg")));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.IsMostly(version.guid(), 0);
+        assertTrue(result);
+    }
+
+    @Test
+    public void isMostlyGreenSuccess() throws URISyntaxException, ServiceException {
+
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setLocation(new URILocation(getImageFilePath("green.jpg")));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.IsMostly(version.guid(), 1);
+        assertTrue(result);
+    }
+
+    @Test
+    public void isMostlyBlueSuccess() throws URISyntaxException, ServiceException {
+
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setLocation(new URILocation(getImageFilePath("blue.jpg")));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.IsMostly(version.guid(), 2);
+        assertTrue(result);
+    }
+
+    @Test
+    public void isMostlyBlueFail() throws URISyntaxException, ServiceException {
+
+        AtomBuilder atomBuilder = new AtomBuilder()
+                .setLocation(new URILocation(getImageFilePath("red.jpg")));
+
+        MetadataBuilder metadataBuilder = new MetadataBuilder()
+                .setData(atomBuilder.getData());
+
+        VersionBuilder versionBuilder = new VersionBuilder()
+                .setAtomBuilder(atomBuilder)
+                .setMetadataBuilder(metadataBuilder);
+
+        Version version = localSOSNode.getAgent().addData(versionBuilder);
+
+        boolean result = CommonPredicates.IsMostly(version.guid(), 2);
+        assertFalse(result);
+    }
+
+    private String getImageFilePath(String imageName) throws URISyntaxException {
+        return getClass().getResource("/images/" + imageName).toURI().getPath();
     }
 }

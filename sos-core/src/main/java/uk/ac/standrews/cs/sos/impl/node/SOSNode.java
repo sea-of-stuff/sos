@@ -42,7 +42,7 @@ public class SOSNode extends BasicManifest implements Node {
 
     protected IGUID nodeGUID; // derived by signature certificate.
 
-    PublicKey signatureCertificate;
+    PublicKey d_publicKey;
     InetSocketAddress hostAddress;
 
     /******************
@@ -60,12 +60,12 @@ public class SOSNode extends BasicManifest implements Node {
     private boolean DB_is_rms;
     private boolean DB_is_experiment;
 
-    public SOSNode(IGUID guid, PublicKey signatureCertificate, String hostname, int port,
+    public SOSNode(IGUID guid, PublicKey d_publicKey, String hostname, int port,
                    boolean isAgent, boolean isStorage, boolean isMDS, boolean isNDS, boolean isMMS, boolean isCMS, boolean isRMS, boolean isExperiment) {
         super(ManifestType.NODE);
 
         this.nodeGUID = guid;
-        this.signatureCertificate = signatureCertificate;
+        this.d_publicKey = d_publicKey;
         this.hostAddress = new InetSocketAddress(hostname, port);
 
         this.DB_nodeid = guid.toMultiHash();
@@ -128,7 +128,7 @@ public class SOSNode extends BasicManifest implements Node {
 
     @Override
     public PublicKey getSignatureCertificate() {
-        return signatureCertificate;
+        return d_publicKey;
     }
 
     @Override
@@ -189,7 +189,7 @@ public class SOSNode extends BasicManifest implements Node {
     @Override
     public InputStream contentToHash() {
 
-        return new ByteArrayInputStream(signatureCertificate.getEncoded());
+        return new ByteArrayInputStream(d_publicKey.getEncoded());
     }
 
     @Override

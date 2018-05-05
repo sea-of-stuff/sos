@@ -36,6 +36,7 @@ import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 import java.io.IOException;
 import java.net.URL;
 import java.security.PublicKey;
+import java.util.stream.Collectors;
 
 /**
  * TODO - sign outgoing requests
@@ -57,12 +58,12 @@ public class SyncRequest extends Request {
         this.responseType = responseType;
     }
 
-    public SyncRequest(PublicKey signatureCertificate, HTTPMethod method, URL url) {
-        this(signatureCertificate, method, url, ResponseType.BINARY);
+    public SyncRequest(PublicKey d_publicKey, HTTPMethod method, URL url) {
+        this(d_publicKey, method, url, ResponseType.BINARY);
     }
 
-    public SyncRequest(PublicKey signatureCertificate, HTTPMethod method, URL url, ResponseType responseType) {
-        super(signatureCertificate, method, url);
+    public SyncRequest(PublicKey d_publicKey, HTTPMethod method, URL url, ResponseType responseType) {
+        super(d_publicKey, method, url);
 
         this.responseType = responseType;
     }
@@ -173,7 +174,11 @@ public class SyncRequest extends Request {
     }
 
     private Response makeRequest(BaseRequest request) {
+
         try {
+            signRequest(request);
+            encryptRequest(request);
+
             HttpResponse<?> resp = null;
             switch(responseType) {
                 case JSON:
@@ -187,9 +192,9 @@ public class SyncRequest extends Request {
                     break;
             }
 
-            if (signatureCertificate != null) {
+            if (d_publicKey != null) {
                 String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
-                boolean verified = DigitalSignature.verify64(signatureCertificate, nodeChallenge, signedChallenge);
+                boolean verified = DigitalSignature.verify64(d_publicKey, nodeChallenge, signedChallenge);
 
                 if (!verified) {
                     SOS_LOG.log(LEVEL.ERROR, "SyncRequest - Challenge not verified");
@@ -207,9 +212,39 @@ public class SyncRequest extends Request {
         }
     }
 
+    // NOTE - The following method has not been tested
+    // This method might be particularly slow for requests that have large bodies
+    // I am not signing the body for the time being
+    private void signRequest(BaseRequest request) throws CryptoException {
+
+        if (d_privateKey != null) {
+            HttpRequest httpRequest = request.getHttpRequest();
+            String method = httpRequest.getHttpMethod().name();
+            String url = httpRequest.getUrl();
+            String headers = httpRequest.getHeaders()
+                    .entrySet().stream()
+                        .map(h -> h.getKey() + "=" + h.getValue()
+                                                        .stream()
+                                                        .collect(Collectors.joining())
+                            )
+                        .collect(Collectors.joining("&"));
+            String body = "PLACEHOLDER"; // FIXME - httpRequest.getBody().toString();
+
+            String requestToSign = method + url + headers + body + nodeChallenge;
+            String signedChallenge = DigitalSignature.sign64(d_privateKey, requestToSign);
+
+            request.getHttpRequest().header(SOS_NODE_CHALLENGE_HEADER, signedChallenge);
+        }
+
+    }
+
+    private void encryptRequest(BaseRequest request) {
+        // TODO
+    }
+
     private HttpRequest setChallenge(HttpRequest httpRequest) {
 
-        if (signatureCertificate != null) {
+        if (d_publicKey != null) {
             httpRequest = httpRequest.header(SOS_NODE_CHALLENGE_HEADER, nodeChallenge);
         }
 

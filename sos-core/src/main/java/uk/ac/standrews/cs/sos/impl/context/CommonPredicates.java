@@ -34,7 +34,11 @@ import uk.ac.standrews.cs.sos.model.SecureManifest;
 import uk.ac.standrews.cs.sos.model.Version;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -85,9 +89,14 @@ public class CommonPredicates {
         return false;
     }
 
+    public static boolean ContentTypePredicate(IGUID guid, String matchingType) {
+
+        return MetadataPropertyPredicate(guid, MetadataConstants.CONTENT_TYPE, Collections.singletonList(matchingType));
+    }
+
     public static boolean ContentTypePredicate(IGUID guid, List<String> matchingContentTypes) {
 
-       return MetadataPropertyPredicate(guid, MetadataConstants.CONTENT_TYPE, matchingContentTypes);
+        return MetadataPropertyPredicate(guid, MetadataConstants.CONTENT_TYPE, matchingContentTypes);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -351,6 +360,55 @@ public class CommonPredicates {
 
         return false;
     }
+
+    @SuppressWarnings("WeakerAccess")
+    public static boolean IsMostly(IGUID guid, int rgb /* 0 - red, 1 - green, 2 - blue */) {
+
+        SOSAgent agent = SOSAgent.instance();
+
+        try (Data data = agent.getData(guid);
+             InputStream inputStream = data.getInputStream()) {
+
+            BufferedImage bi = ImageIO.read(inputStream);
+            int[] pixel;
+
+            int redPixels = 0, greenPixels = 0, bluePixels = 0;
+            for (int y = 0; y < bi.getHeight(); y++) {
+                for (int x = 0; x < bi.getWidth(); x++) {
+                    pixel = bi.getRaster().getPixel(x, y, new int[3]);
+                    // System.out.println(pixel[0] + " - " + pixel[1] + " - " + pixel[2] + " - " + (bi.getWidth() * y + x));
+
+                    if (pixel[0] > pixel[1] && pixel[0] > pixel[2]) redPixels++;
+                    if (pixel[1] > pixel[0] && pixel[1] > pixel[2]) greenPixels++;
+                    if (pixel[2] > pixel[0] && pixel[2] > pixel[1]) bluePixels++;
+                }
+            }
+
+            boolean retval = false;
+            switch (rgb) {
+                case 0:
+                    retval = redPixels > greenPixels && redPixels > bluePixels;
+                    break;
+                case 1:
+                    retval = greenPixels > redPixels && greenPixels > bluePixels;
+                    break;
+                case 2:
+                    retval = bluePixels > redPixels && bluePixels > greenPixels;
+                    break;
+                default:
+                    SOS_LOG.log(LEVEL.ERROR, "CommonPredicates.isMostly - wrong RGB param");
+                    retval = false;
+                    break;
+            }
+
+            return retval;
+
+        } catch (ServiceException | IOException e) {
+            return false;
+        }
+
+    }
+
 }
 
 

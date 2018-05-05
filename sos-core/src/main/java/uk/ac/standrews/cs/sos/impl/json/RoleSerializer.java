@@ -44,7 +44,7 @@ public class RoleSerializer  extends JsonSerializer<Role> {
         jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE, role.getSignature());
 
         try {
-            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(role.getSignatureCertificate()));
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(role.getSignaturePublicKey()));
             jsonGenerator.writeStringField(JSONConstants.KEY_PUBLIC_KEY, AsymmetricEncryption.keyToBase64(role.getPubKey()));
         } catch (CryptoException e) {
             throw new IOException("Unable to write signature certificate for user");

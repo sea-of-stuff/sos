@@ -272,8 +272,8 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         try {
             IFile publicKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.CERTIFICATE_EXTENSION);
-            if (signatureCertificate == null && publicKeyFile.exists()) {
-                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.getPath());
+            if (d_publicKey == null && publicKeyFile.exists()) {
+                d_publicKey = DigitalSignature.getCertificate(publicKeyFile.getPath());
             }
 
             IFile privateKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.PRIVATE_KEY_EXTENSION);
@@ -281,10 +281,10 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                 signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.getPath());
             }
 
-            if (signatureCertificate == null && signaturePrivateKey == null) {
+            if (d_publicKey == null && signaturePrivateKey == null) {
 
                 KeyPair keys = DigitalSignature.generateKeys();
-                signatureCertificate = keys.getPublic();
+                d_publicKey = keys.getPublic();
                 signaturePrivateKey = keys.getPrivate();
 
                 DigitalSignature.persist(keys,

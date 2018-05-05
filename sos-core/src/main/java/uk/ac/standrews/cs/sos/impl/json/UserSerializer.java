@@ -41,7 +41,7 @@ public class UserSerializer extends JsonSerializer<User> {
         jsonGenerator.writeStringField(JSONConstants.KEY_NAME, user.getName());
 
         try {
-            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(user.getSignatureCertificate()));
+            jsonGenerator.writeStringField(JSONConstants.KEY_SIGNATURE_CERTIFICATE, DigitalSignature.getCertificateString(user.getSignaturePublicKey()));
         } catch (CryptoException e) {
             throw new IOException("Unable to write signature certificate for user");
         }

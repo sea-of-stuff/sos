@@ -20,6 +20,7 @@ package uk.ac.standrews.cs.sos.network;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URL;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 
@@ -35,22 +36,37 @@ public abstract class Request {
 
     protected HTTPMethod method;
     protected URL url;
-    protected String json_body;
     protected InputStream inputStream;
 
-    protected PublicKey signatureCertificate;
-    protected String nodeChallenge;
+    String json_body;
+    PublicKey d_publicKey;
+    PrivateKey d_privateKey; // TODO - initialise it!
+    String nodeChallenge;
 
+    /**
+     * Request constructor to the given end-point.
+     *
+     * This request is not signed.
+     * @param method of the request
+     * @param url for the request
+     */
     public Request(HTTPMethod method, URL url) {
         this.method = method;
         this.url = url;
     }
 
-    public Request(PublicKey signatureCertificate, HTTPMethod method, URL url) {
+    /**
+     * Request constructor to the given end-point.
+     *
+     * This request is signed and so will be its response.
+     * @param method of the request
+     * @param url for the request
+     */
+    public Request(PublicKey d_publicKey, HTTPMethod method, URL url) {
         this.method = method;
         this.url = url;
 
-        this.signatureCertificate = signatureCertificate;
+        this.d_publicKey = d_publicKey;
         SecureRandom random = new SecureRandom();
         this.nodeChallenge = new BigInteger(NODE_CHALLENGE_LENGTH_BITS, random).toString(NODE_CHALLENGE_BASE);
     }

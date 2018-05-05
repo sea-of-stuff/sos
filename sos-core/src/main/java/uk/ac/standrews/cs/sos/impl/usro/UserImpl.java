@@ -49,7 +49,7 @@ public class UserImpl extends BasicManifest implements User {
     private String name;
     protected String keysFolder; // TODO - manage from InternalStore?
 
-    protected PublicKey signatureCertificate;
+    protected PublicKey d_publicKey;
     private PrivateKey signaturePrivateKey;
 
     public UserImpl(String name) throws SignatureException {
@@ -70,17 +70,17 @@ public class UserImpl extends BasicManifest implements User {
         manageSignatureKeys(false);
     }
 
-    public UserImpl(IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
-        this(ManifestType.USER, guid, name, signatureCertificate);
+    public UserImpl(IGUID guid, String name, PublicKey d_publicKey) throws SignatureException {
+        this(ManifestType.USER, guid, name, d_publicKey);
     }
 
-    UserImpl(ManifestType manifestType, IGUID guid, String name, PublicKey signatureCertificate) throws SignatureException {
+    UserImpl(ManifestType manifestType, IGUID guid, String name, PublicKey d_publicKey) throws SignatureException {
         super(manifestType);
 
         this.guid = guid;
         this.name = name;
         this.keysFolder = SOSLocalNode.settings.getKeys().getLocation();
-        this.signatureCertificate = signatureCertificate;
+        this.d_publicKey = d_publicKey;
 
         manageSignatureKeys(true);
     }
@@ -100,8 +100,8 @@ public class UserImpl extends BasicManifest implements User {
     }
 
     @Override
-    public PublicKey getSignatureCertificate() {
-        return signatureCertificate;
+    public PublicKey getSignaturePublicKey() {
+        return d_publicKey;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UserImpl extends BasicManifest implements User {
     public boolean verify(String text, String signatureToVerify) throws SignatureException {
 
         try {
-            return DigitalSignature.verify64(signatureCertificate, text, signatureToVerify);
+            return DigitalSignature.verify64(d_publicKey, text, signatureToVerify);
         } catch (CryptoException e) {
             throw new SignatureException(e);
         }
@@ -129,7 +129,7 @@ public class UserImpl extends BasicManifest implements User {
         if (signaturePrivateKey == null) return false;
 
         try {
-            return DigitalSignature.verifyKeyPair(signatureCertificate, signaturePrivateKey);
+            return DigitalSignature.verifyKeyPair(d_publicKey, signaturePrivateKey);
         } catch (CryptoException e) {
             return false;
         }
@@ -156,8 +156,8 @@ public class UserImpl extends BasicManifest implements User {
 
         try {
             File publicKeyFile = new File(keysFolder + guid().toMultiHash() + DigitalSignature.CERTIFICATE_EXTENSION);
-            if (signatureCertificate == null && publicKeyFile.exists()) {
-                signatureCertificate = DigitalSignature.getCertificate(publicKeyFile.toPath());
+            if (d_publicKey == null && publicKeyFile.exists()) {
+                d_publicKey = DigitalSignature.getCertificate(publicKeyFile.toPath());
             }
 
             File privateKeyFile = new File(keysFolder + guid().toMultiHash() + DigitalSignature.PRIVATE_KEY_EXTENSION);
@@ -166,10 +166,10 @@ public class UserImpl extends BasicManifest implements User {
             }
 
 
-            if (!loadOnly && signatureCertificate == null && signaturePrivateKey == null) {
+            if (!loadOnly && d_publicKey == null && signaturePrivateKey == null) {
 
                 KeyPair keys = DigitalSignature.generateKeys();
-                signatureCertificate = keys.getPublic();
+                d_publicKey = keys.getPublic();
                 signaturePrivateKey = keys.getPrivate();
 
                 DigitalSignature.persist(keys, Paths.get(keysFolder + guid().toMultiHash()), Paths.get(keysFolder + guid().toMultiHash()));

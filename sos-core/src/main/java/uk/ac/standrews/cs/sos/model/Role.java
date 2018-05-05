@@ -28,15 +28,6 @@ import java.security.PublicKey;
 
 /**
  *
- * {
- *      "guid": "a243",
- *      "name": "Simone's work",
- *      "user": "2321aaa3",
- *      "Signature_PubKey": "1342242234",
- *      "Data_PubKey" : "13442421",
- *      "signature": "MQ17983827se=" // Generated using User's keys
- * }
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 @JsonSerialize(using = RoleSerializer.class)
@@ -71,7 +62,7 @@ public interface Role extends User {
      *
      * @return certificate for this role
      */
-    PublicKey getSignatureCertificate();
+    PublicKey getSignaturePublicKey();
 
     /**
      * Used to encrypt symmetric keys
@@ -92,18 +83,18 @@ public interface Role extends User {
     /**
      * Encrypt a symmetric key using an asymmetric key
      *
-     * @param key
-     * @return
-     * @throws ProtectionException
+     * @param key (symmetric) to encrypt
+     * @return encrypted key
+     * @throws ProtectionException if unable to encrpyt the key
      */
     String encrypt(SecretKey key) throws ProtectionException;
 
     /**
      * Encrypted key is decripted using the private key (e.g. RSA)
      *
-     * @param encryptedKey
-     * @return
-     * @throws ProtectionException
+     * @param encryptedKey key to decrypt
+     * @return decrypted key
+     * @throws ProtectionException if unable to decrypt the key
      */
     SecretKey decrypt(String encryptedKey) throws ProtectionException;
 

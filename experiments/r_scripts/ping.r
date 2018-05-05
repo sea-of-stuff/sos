@@ -22,7 +22,7 @@ dd
 
 
 ##################
-ratio <- FALSE
+ratio <- TRUE
 
 d <- read.csv("remote/ping_2_17.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'ping',]
