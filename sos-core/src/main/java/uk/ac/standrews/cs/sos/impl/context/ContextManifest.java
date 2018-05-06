@@ -267,16 +267,21 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     @Override
     public NodesCollection domain(boolean excludeLocalNode) {
 
-        NodesCollection retval = domain;
-        if (excludeLocalNode) {
-            IGUID localNodeGUID = SOSLocalNode.settings.guid();
-            Set<IGUID> nodeRefsWithoutLocalNode = new LinkedHashSet<>(domain.nodesRefs());
-            nodeRefsWithoutLocalNode.remove(localNodeGUID);
-            retval = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
-        }
+        try {
+            NodesCollection retval = domain.clone();
+            if (excludeLocalNode) {
+                IGUID localNodeGUID = SOSLocalNode.settings.guid();
+                Set<IGUID> nodeRefsWithoutLocalNode = new LinkedHashSet<>(domain.nodesRefs());
+                nodeRefsWithoutLocalNode.remove(localNodeGUID);
+                retval = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
+            }
 
-        retval.shuffle();
-        return retval;
+            retval.shuffle();
+            return retval;
+
+        } catch (CloneNotSupportedException e) {
+            return new NodesCollectionImpl(new LinkedHashSet<>()); // Empty domain
+        }
     }
 
     @Override

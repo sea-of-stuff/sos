@@ -64,6 +64,8 @@ public class NodesCollectionImpl implements NodesCollection {
 
         if (type == NodesCollectionType.SPECIFIED) {
             nodesRefs.add(nodeRef);
+        } else if (type == NodesCollectionType.LOCAL && nodesRefs.isEmpty()) {
+            nodesRefs.add(nodeRef);
         }
     }
 
@@ -99,5 +101,27 @@ public class NodesCollectionImpl implements NodesCollection {
         List<IGUID> nodes = new ArrayList<>(nodesRefs);
         Collections.shuffle(nodes);
         this.nodesRefs = new LinkedHashSet<>(nodes);
+    }
+
+    @Override
+    public NodesCollection clone() throws CloneNotSupportedException {
+        super.clone();
+
+        try {
+            switch (type) {
+                case LOCAL:
+                    return new NodesCollectionImpl(nodesRefs.iterator().next());
+                case SPECIFIED:
+                    return new NodesCollectionImpl(nodesRefs);
+                case ANY:
+                    return new NodesCollectionImpl(NodesCollectionType.ANY);
+                default:
+                    throw new CloneNotSupportedException();
+            }
+
+        } catch (NodesCollectionException e) {
+            throw new CloneNotSupportedException();
+        }
+
     }
 }

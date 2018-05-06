@@ -37,7 +37,9 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
-                                                         "predicate_4", "predicate_5", "predicate_6"}; // TODO - get up to domain size of 10
+                                                            "predicate_4", "predicate_5", "predicate_6",
+                                                            "predicate_7", "predicate_8", "predicate_9",
+                                                            "predicate_10"};
 
     public Experiment_DO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
@@ -89,7 +91,6 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
 
                 System.out.println("Spawning context to nodes in domain. Context GUID: " + contextGUID.toMultiHash());
                 context = cms.getContext(contextGUID);
-                // REMOVEME - System.out.println(context.domain(false).toUniqueString());
                 cms.spawnContext(context);
 
                 System.out.println("Adding content to nodes");

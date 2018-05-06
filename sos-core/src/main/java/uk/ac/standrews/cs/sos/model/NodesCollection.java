@@ -37,7 +37,7 @@ import java.util.Set;
  */
 @JsonSerialize(using = NodesCollectionSerializer.class)
 @JsonDeserialize(using = NodesCollectionDeserializer.class)
-public interface NodesCollection {
+public interface NodesCollection extends Cloneable {
 
     /**
      * Returns the refs of the nodes available from within this scope
@@ -79,5 +79,7 @@ public interface NodesCollection {
      * Shuffle this nodes collection
      */
     void shuffle();
+
+    NodesCollection clone() throws CloneNotSupportedException;
 
 }
