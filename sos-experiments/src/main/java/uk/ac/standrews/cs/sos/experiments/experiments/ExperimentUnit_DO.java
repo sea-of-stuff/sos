@@ -28,19 +28,25 @@ import java.util.concurrent.Executors;
  */
 public class ExperimentUnit_DO implements ExperimentUnit {
 
+    public enum TYPE {contextName, datasetSize, subset};
+
+    private TYPE type;
+    private ExperimentConfiguration.Experiment experiment;
     private int datasetSize;
     private SOSLocalNode node;
-    private ExperimentConfiguration.Experiment experiment;
+    private String subset;
 
     Context context;
     String contextFilename;
     List<IGUID> allVersions;
     ContextService cms;
 
-    ExperimentUnit_DO(ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
+    ExperimentUnit_DO(TYPE type, ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize, String subset) {
+        this.type = type;
         this.experiment = experiment;
         this.contextFilename = contextFilename;
         this.datasetSize = datasetSize;
+        this.subset = subset;
     }
 
     void setLocalNode(SOSLocalNode node) {
@@ -62,6 +68,11 @@ public class ExperimentUnit_DO implements ExperimentUnit {
             cms.spawnContext(context);
 
             System.out.println("Adding content to nodes");
+            if (type == TYPE.subset) {
+                experiment.getExperimentNode().setDataset(subset);
+                System.out.println("Adding content to nodes. Subdataset: " + subset + "   --- Path: " + experiment.getExperimentNode().getDatasetPath());
+            }
+
             allVersions = distributeData(experiment, node, context, datasetSize);
 
         } catch (ManifestPersistException | ContextException | IOException e) {
@@ -85,7 +96,18 @@ public class ExperimentUnit_DO implements ExperimentUnit {
             long start = System.nanoTime();
             executorService.invokeAll(runnables); // This method returns when all the calls finish
             long duration = System.nanoTime() - start;
-            InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, duration);
+
+            switch(type) {
+                case contextName:
+                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, duration);
+                    break;
+                case datasetSize:
+                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, Integer.toString(datasetSize), duration);
+                    break;
+                case subset:
+                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, subset, duration);
+                    break;
+            }
 
             executorService.shutdownNow();
 

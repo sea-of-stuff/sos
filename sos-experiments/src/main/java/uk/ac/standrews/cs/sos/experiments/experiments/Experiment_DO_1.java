@@ -55,7 +55,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     class ExperimentUnit_DO_1 extends ExperimentUnit_DO {
 
         ExperimentUnit_DO_1(ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
-            super(experiment, contextFilename, datasetSize);
+            super(TYPE.contextName, experiment, contextFilename, datasetSize, "");
         }
 
         public void setup() throws ExperimentException {

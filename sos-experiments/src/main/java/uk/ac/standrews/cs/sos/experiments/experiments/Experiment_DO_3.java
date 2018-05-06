@@ -1,14 +1,10 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
-import uk.ac.standrews.cs.guid.IGUID;
-import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -64,35 +60,15 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
         private static final int SUBSET_SIZE = 60;
 
-        private String subdataset;
-
         ExperimentUnit_DO_3(ExperimentConfiguration.Experiment experiment, String contextFilename, String subdataset) {
-            super(experiment, contextFilename, SUBSET_SIZE);
-            this.subdataset = subdataset;
+            super(TYPE.subset, experiment, contextFilename, SUBSET_SIZE, masterDataset + "/" + subdataset + "/");
         }
 
         @Override
         public void setup() throws ExperimentException {
-            System.out.println("Node GUID is " + node.guid().toMultiHash());
+
             this.setLocalNode(node);
-
-            try {
-                cms = node.getCMS();
-
-                System.out.println("Adding contexts to node");
-                IGUID contextGUID = addContext(cms, experiment, contextFilename);
-
-                System.out.println("Spawning context to nodes in domain. Context GUID: " + contextGUID.toMultiHash());
-                context = cms.getContext(contextGUID);
-                cms.spawnContext(context);
-
-                experiment.getExperimentNode().setDataset(masterDataset + "/" + subdataset + "/");
-                System.out.println("Adding content to nodes. Subdataset: " + subdataset + "   --- Path: " + experiment.getExperimentNode().getDatasetPath());
-                allVersions = distributeData(experiment, node, context, SUBSET_SIZE);
-
-            } catch (ManifestPersistException | ContextException | IOException e) {
-                throw new ExperimentException(e);
-            }
+            super.setup();
         }
 
     }
