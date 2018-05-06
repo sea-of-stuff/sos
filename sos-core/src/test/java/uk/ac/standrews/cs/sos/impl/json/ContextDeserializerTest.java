@@ -64,8 +64,8 @@ public class ContextDeserializerTest extends SetUpTest {
         assertTrue(context.policies().contains(GUIDFactory.recreateGUID("SHA256_16_d9e4b085724893ff91d4666cd0fc63dbf98fd38b1e05952dc7b836ece28d2a84")));
         assertTrue(context.policies().contains(GUIDFactory.recreateGUID("SHA256_16_acad290a502ea13384879c68d9cc481604190c46a31508ccf8bb93a4a74ee8e2")));
 
-        assertNotNull(context.domain());
-        assertEquals(context.domain().type(), NodesCollectionType.LOCAL);
+        assertNotNull(context.domain(false));
+        assertEquals(context.domain(false).type(), NodesCollectionType.LOCAL);
 
         assertNotNull(context.codomain());
         assertEquals(context.codomain().type(), NodesCollectionType.SPECIFIED);

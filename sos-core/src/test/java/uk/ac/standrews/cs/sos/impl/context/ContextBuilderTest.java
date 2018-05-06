@@ -96,7 +96,7 @@ public class ContextBuilderTest extends SetUpTest {
         assertTrue(context.previous().isEmpty());
         assertEquals(context.maxAge(), 0);
 
-        NodesCollection domain = context.domain();
+        NodesCollection domain = context.domain(false);
         assertEquals(domain.type(), NodesCollectionType.LOCAL);
         assertTrue(domain.nodesRefs().isEmpty());
 

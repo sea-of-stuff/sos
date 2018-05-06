@@ -325,19 +325,19 @@ public interface ExperimentUnit {
      */
     default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context, int datasetSize) throws IOException {
 
-        int domainSize = context.domain().size();
-        System.out.println("Domain size: " + domainSize);
+        int domainSize = context.domain(false).size();
+        System.out.println("Domain size: " + domainSize + " (local node included)");
 
         ExperimentConfiguration.Experiment.ExperimentNode experimentNode = experiment.getExperimentNode();
         String datasetPath = experimentNode.getDatasetPath();
         File folderDataset = new File(datasetPath);
 
         List<IGUID> addedContents = new LinkedList<>();
-        if (domainSize == 0) {
+        if (domainSize == 1) {
             addedContents = addFolderContentToNode(node, folderDataset, datasetSize);
 
         } else {
-            assert(context.domain().type() == NodesCollectionType.SPECIFIED);
+            assert(context.domain(false).type() == NodesCollectionType.SPECIFIED);
 
             // Retrieve list of files to distribute
             File[] listOfFiles = folderDataset.listFiles();
@@ -350,17 +350,17 @@ public interface ExperimentUnit {
             Misc.shuffleArray(listOfFiles);
             System.out.println("Total number of files: " + listOfFiles.length);
 
-            // The split is done considering this local node too. That is why the (+1) is added to the domain size
+            // The split is done considering this local node too.
             // The split is approximated with an upper bound
-            int filesPerSublist = (listOfFiles.length + (domainSize + 1) - 1) / (domainSize + 1);
+            int filesPerSublist = (listOfFiles.length + (domainSize) - 1) / (domainSize);
             System.out.println("Files per node: " + filesPerSublist);
 
             // Perform list splitting into sublists
             // Last elements of last sublist might contain null values
-            File[][] sublists = new File[domainSize + 1][filesPerSublist];
+            File[][] sublists = new File[domainSize][filesPerSublist];
             if (experimentNode.isEqual_distribution_dataset()) {
 
-                for(int i = 0; i < domainSize + 1; i++) {
+                for(int i = 0; i < domainSize; i++) {
                     for(int j = 0; j < filesPerSublist && (i * filesPerSublist + j) < listOfFiles.length; j++) {
                         sublists[i][j] = listOfFiles[i * filesPerSublist + j];
                     }
@@ -378,7 +378,7 @@ public interface ExperimentUnit {
 
             // Distribute data indexed by sublists to remote nodes
             int i = 1;
-            for(IGUID nodeInDomain:context.domain().nodesRefs()) {
+            for(IGUID nodeInDomain:context.domain(true).nodesRefs()) {
                 List<IGUID> addedContentsInNode = distributeDataToNode(node, sublists[i], nodeInDomain);
                 addedContents.addAll(addedContentsInNode);
                 i++;
@@ -485,7 +485,7 @@ public interface ExperimentUnit {
             Version versionToDelete = new VersionManifest(GUIDFactory.generateRandomGUID(), guid, GUIDFactory.generateRandomGUID(), null,
                     GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID(), "");
 
-            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(), versionToDelete);
+            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(true), versionToDelete);
             TasksQueue.instance().performSyncTask(manifestDeletion);
         }
     }
@@ -493,7 +493,7 @@ public interface ExperimentUnit {
     default void deleteContext(SOSLocalNode node, Context context) {
 
         NodeDiscoveryService nodeDiscoveryService = node.getNDS();
-        NodesCollection domain = context.domain();
+        NodesCollection domain = context.domain(true);
         ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, domain, context);
         TasksQueue.instance().performSyncTask(manifestDeletion);
     }

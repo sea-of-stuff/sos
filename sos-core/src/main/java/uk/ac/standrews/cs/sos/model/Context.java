@@ -81,7 +81,7 @@ public interface Context extends Versionable, SignedManifest {
      *
      * @return domain of the context
      */
-    NodesCollection domain();
+    NodesCollection domain(boolean excludeLocalNode);
 
     /**
      * The codomain of this context

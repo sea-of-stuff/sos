@@ -149,7 +149,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
         private List<Callable<Object>> triggerRemotePredicate(Context context) {
 
             List<Callable<Object>> runnables = new LinkedList<>();
-            NodesCollection domain = context.domain();
+            NodesCollection domain = context.domain(true);
             for(IGUID nodeRef:domain.nodesRefs()) {
                 runnables.add(triggerRemotePredicate(nodeRef, context.guid()));
             }

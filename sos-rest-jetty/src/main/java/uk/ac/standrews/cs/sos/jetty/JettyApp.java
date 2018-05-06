@@ -50,6 +50,7 @@ public class JettyApp {
         Server server = startServer(sos);
 
         try {
+            System.out.println("NODE GUID: " + sos.guid().toMultiHash());
             System.out.println("Starting REST server on port: " + sos.getHostAddress().getPort());
             server.start();
             server.join();

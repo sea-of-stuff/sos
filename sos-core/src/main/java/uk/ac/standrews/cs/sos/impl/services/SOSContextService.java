@@ -42,7 +42,6 @@ import uk.ac.standrews.cs.sos.impl.datamodel.CompoundManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.ContentImpl;
 import uk.ac.standrews.cs.sos.impl.manifest.ManifestParam;
 import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
-import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -253,7 +252,7 @@ public class SOSContextService implements ContextService {
                 Compound contents = contextBuilder.getContents();
 
                 if (!previous.content().equals(contents.guid()) ||
-                        !previous.domain().equals(contextBuilder.getDomain()) ||
+                        !previous.domain(false).equals(contextBuilder.getDomain()) ||
                         !previous.codomain().equals(contextBuilder.getCodomain()) ||
                         previous.maxAge() != contextBuilder.getMaxage()) {
 
@@ -632,7 +631,7 @@ public class SOSContextService implements ContextService {
         try {
             // The context will contain only the new processed assets. To get all assets, we need to go back through the previous versions.
             Compound contextContents = new CompoundManifest(CompoundType.COLLECTION, contents, null);
-            ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(), context.codomain(), context.maxAge());
+            ContextBuilder contextBuilder = new ContextBuilder(context.guid(), contextContents, context.domain(false), context.codomain(), context.maxAge());
             updateContext(context, contextBuilder);
 
             IGUID contextInvariant = context.invariant();
@@ -1065,7 +1064,7 @@ public class SOSContextService implements ContextService {
 
                 try {
                     Context context = getContext(contextRef);
-                    NodesCollection domain = context.domain();
+                    NodesCollection domain = context.domain(false);
                     if (domain.type() == NodesCollectionType.SPECIFIED) {
 
                         try {
@@ -1090,17 +1089,9 @@ public class SOSContextService implements ContextService {
      */
     public void spawnContext(Context context) throws ManifestPersistException {
 
-        NodesCollection domain = context.domain();
-
-        // Remove local node from domain where the context has to be replicated.
-        // The context, however, still has this node in its domain.
-        IGUID localNodeGUID = SOSLocalNode.settings.guid();
-        Set<IGUID> nodeRefsWithoutLocalNode = new LinkedHashSet<>(domain.nodesRefs());
-        nodeRefsWithoutLocalNode.remove(localNodeGUID);
-        NodesCollection domainWithoutLocalNode = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
-
-        int replication = domainWithoutLocalNode.nodesRefs().size();
-        manifestsDataService.addManifest(context, false, domainWithoutLocalNode, replication, false);
+        NodesCollection domain = context.domain(true);
+        int replication = domain.nodesRefs().size();
+        manifestsDataService.addManifest(context, false, domain, replication, false);
     }
 
 }

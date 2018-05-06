@@ -24,6 +24,8 @@ import uk.ac.standrews.cs.sos.constants.Internals;
 import uk.ac.standrews.cs.sos.exceptions.crypto.SignatureException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.impl.manifest.AbstractSignedManifest;
+import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.*;
@@ -236,7 +238,7 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
         }
 
         contentToHash += "C" + content().toMultiHash();
-        contentToHash += "DO" + domain().toUniqueString();
+        contentToHash += "DO" + domain(false).toUniqueString();
         contentToHash += "CO" + codomain().toUniqueString();
 
         return IO.StringToInputStream(contentToHash);
@@ -263,9 +265,18 @@ public class ContextManifest extends AbstractSignedManifest implements Context {
     }
 
     @Override
-    public NodesCollection domain() {
-        domain.shuffle();
-        return domain;
+    public NodesCollection domain(boolean excludeLocalNode) {
+
+        NodesCollection retval = domain;
+        if (excludeLocalNode) {
+            IGUID localNodeGUID = SOSLocalNode.settings.guid();
+            Set<IGUID> nodeRefsWithoutLocalNode = new LinkedHashSet<>(domain.nodesRefs());
+            nodeRefsWithoutLocalNode.remove(localNodeGUID);
+            retval = new NodesCollectionImpl(nodeRefsWithoutLocalNode);
+        }
+
+        retval.shuffle();
+        return retval;
     }
 
     @Override

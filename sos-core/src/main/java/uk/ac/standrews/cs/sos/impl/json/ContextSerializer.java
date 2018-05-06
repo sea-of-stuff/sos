@@ -46,7 +46,7 @@ public class ContextSerializer extends JsonSerializer<Context> {
 
         writePrevious(context, jsonGenerator);
 
-        jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_DOMAIN, context.domain());
+        jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_DOMAIN, context.domain(false));
         jsonGenerator.writeObjectField(JSONConstants.KEY_CONTEXT_CODOMAIN, context.codomain());
 
         jsonGenerator.writeStringField(JSONConstants.KEY_CONTEXT_PREDICATE, context.predicate().toMultiHash());
