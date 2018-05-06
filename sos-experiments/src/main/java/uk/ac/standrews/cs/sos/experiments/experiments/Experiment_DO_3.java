@@ -7,13 +7,10 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.experiments.protocol.TriggerPredicate;
-import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.IOException;
@@ -21,9 +18,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Investigate the context performance as the cardinality of its domain changes
@@ -50,7 +44,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
                 for(String subdataset: subdatasets) {
-                    units.add(new ExperimentUnit_DO_3(aContextsToRun, subdataset));
+                    units.add(new ExperimentUnit_DO_3(node, experiment, aContextsToRun, subdataset));
                 }
             }
         }
@@ -71,17 +65,15 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
         return experiment.getSetup().getIterations() * contextsToRun.length * subdatasets.length;
     }
 
-    private class ExperimentUnit_DO_3 implements ExperimentUnit {
+    private class ExperimentUnit_DO_3 extends ExperimentUnit_DO {
 
         private String subdataset;
-        private String contextFilename;
         private Context context;
-        private List<IGUID> allVersions;
 
         private ContextService cms;
 
-        ExperimentUnit_DO_3(String contextFilename, String subdataset) {
-            this.contextFilename = contextFilename;
+        ExperimentUnit_DO_3(SOSLocalNode node, ExperimentConfiguration.Experiment experiment, String contextFilename, String subdataset) {
+            super(node, experiment, contextFilename, 60);
             this.subdataset = subdataset;
         }
 
@@ -109,73 +101,5 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
             }
         }
 
-        @Override
-        public void run() throws ExperimentException {
-
-            try {
-                ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough
-
-                List<Callable<Object>> runnables = new LinkedList<>();
-                runnables.add(triggerLocalPredicate());
-                runnables.addAll(triggerRemotePredicate(context));
-
-                System.out.println("Running Predicates");
-                long start = System.nanoTime();
-                executorService.invokeAll(runnables); // This method returns when all the calls finish
-                long duration = System.nanoTime() - start;
-                InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, subdataset, duration);
-
-                executorService.shutdownNow();
-
-            } catch (InterruptedException e) {
-                throw new ExperimentException(e);
-            }
-        }
-
-        @Override
-        public void finish() throws ExperimentException {
-
-            // Remove data from remote nodes
-            deleteData(node, context, allVersions);
-
-            // Remove context and context results from remote nodes
-            deleteContext(node, context);
-        }
-
-        private Callable<Object> triggerLocalPredicate() {
-
-            return () -> {
-                int numberOfAssets = cms.runPredicates();
-                System.out.println("Local predicate run over " + numberOfAssets + " assets"); // TODO - commentme
-                return 0;
-            };
-        }
-
-        private List<Callable<Object>> triggerRemotePredicate(Context context) {
-
-            List<Callable<Object>> runnables = new LinkedList<>();
-            NodesCollection domain = context.domain(true);
-            for(IGUID nodeRef:domain.nodesRefs()) {
-                runnables.add(triggerRemotePredicate(nodeRef, context.guid()));
-            }
-
-            return runnables;
-        }
-
-        private Callable<Object> triggerRemotePredicate(IGUID nodeRef, IGUID contextGUID) {
-
-            return () -> {
-                System.out.println("Running pred for node " + nodeRef.toMultiHash()); // TODO - commentme
-                Node nodeToContext = node.getNDS().getNode(nodeRef);
-                TriggerPredicate triggerPredicate = new TriggerPredicate(nodeToContext, contextGUID);
-
-                TasksQueue.instance().performSyncTask(triggerPredicate);
-
-                System.out.println("Finished to run pred for node " + nodeRef.toMultiHash() + " State: " + triggerPredicate.getState().name()); // TODO - commentme
-                return 0;
-            };
-        }
-
     }
-
 }

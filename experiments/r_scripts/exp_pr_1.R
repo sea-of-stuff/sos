@@ -1,4 +1,4 @@
-pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=FALSE) {
+pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=FALSE, yMax=8) {
   library(ggplot2)
   source("r_scripts/utils_stats.r")
   source("r_scripts/kruskal.r")
@@ -49,7 +49,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
       geom_text(aes(label=dd$ContextName),hjust=0, vjust=2.5, angle=90) +
       scale_shape_manual(values=seq(0,15)) +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
-      ylim(0, 40) +
+      ylim(0, yMax) +
       theme_bw() +
       theme(axis.text.x=element_blank(),
             axis.text=element_text(size=14),

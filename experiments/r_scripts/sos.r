@@ -138,7 +138,7 @@ pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a pre
 pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
 
 pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
-pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the mixed_content dataset (10 iterations)")
+pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the mixed_content dataset (10 iterations)", yMax=40)
 
 ##############
 # PO_A_1
@@ -196,10 +196,13 @@ co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yM
 ##############
 
 do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), Dataset: 100 files of 100kb text files\ndistributed evenly over domain.", xLabel="Domain size");
+do("remote/do_1_006.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files.", xLabel="Nodes in domain");
 
 do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 1KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
 
 do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
+
+
 
 
 ##############
