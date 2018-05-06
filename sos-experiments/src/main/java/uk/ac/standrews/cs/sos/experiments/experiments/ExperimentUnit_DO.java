@@ -28,25 +28,27 @@ import java.util.concurrent.Executors;
  */
 public class ExperimentUnit_DO implements ExperimentUnit {
 
-    private Context context;
     private int datasetSize;
-    protected String contextFilename;
-    protected List<IGUID> allVersions;
-
     private SOSLocalNode node;
-    private ContextService cms;
     private ExperimentConfiguration.Experiment experiment;
 
-    public ExperimentUnit_DO(SOSLocalNode node, ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
-        this.node = node;
+    Context context;
+    String contextFilename;
+    List<IGUID> allVersions;
+    ContextService cms;
+
+    ExperimentUnit_DO(ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
         this.experiment = experiment;
         this.contextFilename = contextFilename;
         this.datasetSize = datasetSize;
     }
 
+    void setLocalNode(SOSLocalNode node) {
+        this.node = node;
+    }
+
     @Override
     public void setup() throws ExperimentException {
-        InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
         System.out.println("Node GUID is " + node.guid().toMultiHash());
 
         try {
@@ -69,6 +71,8 @@ public class ExperimentUnit_DO implements ExperimentUnit {
 
     @Override
     public void run() throws ExperimentException {
+        System.out.println("Domain size: " + context.domain(false) + " (local node included)");
+        System.out.println("Size dataset: " + datasetSize + " (-1 means that all the dataset will be evaluated)");
 
         try {
             ExecutorService executorService = Executors.newFixedThreadPool(11); // 11 threads should be enough

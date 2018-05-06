@@ -32,7 +32,7 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun:contextsToRun) {
-                units.add(new ExperimentUnit_DO(node, experiment, aContextsToRun, -1));
+                units.add(new ExperimentUnit_DO_1(experiment, aContextsToRun, -1));
             }
         }
         Collections.shuffle(units);
@@ -50,6 +50,19 @@ public class Experiment_DO_1 extends BaseExperiment implements Experiment {
     public int numberOfTotalIterations() {
 
         return experiment.getSetup().getIterations() * contextsToRun.length;
+    }
+
+    class ExperimentUnit_DO_1 extends ExperimentUnit_DO {
+
+        ExperimentUnit_DO_1(ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
+            super(experiment, contextFilename, datasetSize);
+        }
+
+        public void setup() throws ExperimentException {
+
+            this.setLocalNode(node);
+            super.setup();
+        }
     }
 
 }

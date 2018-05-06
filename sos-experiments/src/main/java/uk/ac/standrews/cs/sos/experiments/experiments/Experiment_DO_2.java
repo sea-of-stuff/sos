@@ -31,7 +31,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
                 for(Integer datasetSize : datasetSizes) {
-                    units.add(new ExperimentUnit_DO(node, experiment, aContextsToRun, datasetSize));
+                    units.add(new ExperimentUnit_DO_2(experiment, aContextsToRun, datasetSize));
                 }
             }
         }
@@ -50,6 +50,19 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     public int numberOfTotalIterations() {
 
         return experiment.getSetup().getIterations() * contextsToRun.length * datasetSizes.length;
+    }
+
+    class ExperimentUnit_DO_2 extends ExperimentUnit_DO {
+
+        ExperimentUnit_DO_2(ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize) {
+            super(experiment, contextFilename, datasetSize);
+        }
+
+        public void setup() throws ExperimentException {
+
+            this.setLocalNode(node);
+            super.setup();
+        }
     }
 
 }

@@ -7,11 +7,6 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
-import uk.ac.standrews.cs.sos.model.Context;
-import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -44,7 +39,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
                 for(String subdataset: subdatasets) {
-                    units.add(new ExperimentUnit_DO_3(node, experiment, aContextsToRun, subdataset));
+                    units.add(new ExperimentUnit_DO_3(experiment, aContextsToRun, subdataset));
                 }
             }
         }
@@ -67,20 +62,19 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
     private class ExperimentUnit_DO_3 extends ExperimentUnit_DO {
 
+        private static final int SUBSET_SIZE = 60;
+
         private String subdataset;
-        private Context context;
 
-        private ContextService cms;
-
-        ExperimentUnit_DO_3(SOSLocalNode node, ExperimentConfiguration.Experiment experiment, String contextFilename, String subdataset) {
-            super(node, experiment, contextFilename, 60);
+        ExperimentUnit_DO_3(ExperimentConfiguration.Experiment experiment, String contextFilename, String subdataset) {
+            super(experiment, contextFilename, SUBSET_SIZE);
             this.subdataset = subdataset;
         }
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
+            this.setLocalNode(node);
 
             try {
                 cms = node.getCMS();
@@ -94,7 +88,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
                 experiment.getExperimentNode().setDataset(masterDataset + "/" + subdataset + "/");
                 System.out.println("Adding content to nodes. Subdataset: " + subdataset + "   --- Path: " + experiment.getExperimentNode().getDatasetPath());
-                allVersions = distributeData(experiment, node, context, 60);
+                allVersions = distributeData(experiment, node, context, SUBSET_SIZE);
 
             } catch (ManifestPersistException | ContextException | IOException e) {
                 throw new ExperimentException(e);
