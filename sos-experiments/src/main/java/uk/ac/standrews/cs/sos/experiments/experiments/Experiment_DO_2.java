@@ -5,10 +5,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Investigate the context performance as the cardinality of its domain changes
@@ -23,10 +20,14 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
                                                             "predicate_6", "predicate_10"};
-    private static int[] datasetSizes = new int[] {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    private ArrayList<Integer> datasetSizes = new ArrayList<>();
 
     public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        for(int i = 1; i <= 10000/100; i++) {
+            datasetSizes.add(i * 100);
+        }
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
@@ -50,7 +51,7 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     @Override
     public int numberOfTotalIterations() {
 
-        return experiment.getSetup().getIterations() * contextsToRun.length * datasetSizes.length;
+        return experiment.getSetup().getIterations() * contextsToRun.length * datasetSizes.size();
     }
 
     class ExperimentUnit_DO_2 extends ExperimentUnit_DO {

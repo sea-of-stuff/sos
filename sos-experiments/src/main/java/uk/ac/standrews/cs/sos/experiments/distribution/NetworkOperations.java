@@ -19,7 +19,7 @@ public class NetworkOperations implements Closeable {
 
     private static final String EXEC_CHANNEL = "exec";
     private static final int PROCESS_KILL_SIGNAL = 15; // Signal name: TERM
-    private static final int BUFFER_SIZE = 8096;
+    private static final int BUFFER_SIZE = 2*8096;
 
     private ExperimentConfiguration.Experiment.Node.SSH ssh;
     private Session session;
@@ -353,7 +353,7 @@ public class NetworkOperations implements Closeable {
             try (FileInputStream fis = new FileInputStream(lfile)) {
                 byte[] buf = new byte[BUFFER_SIZE];
                 long dataSent = 0;
-                int printingIndex = 0, printingFrequency = 500; // This is just an arbitrary number to avoid too much printing
+                int printingIndex = 0, printingFrequency = 1000; // This is just an arbitrary number to avoid too much printing
 
                 while (true) {
                     int len = fis.read(buf, 0, buf.length);
