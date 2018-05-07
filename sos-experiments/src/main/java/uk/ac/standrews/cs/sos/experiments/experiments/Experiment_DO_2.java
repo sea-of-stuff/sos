@@ -25,8 +25,8 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
 
-        for(int i = 1; i <= 10000/100; i++) {
-            datasetSizes.add(i * 100);
+        for(int i = 1; i <= 10000/500; i++) {
+            datasetSizes.add(i * 500);
         }
 
         List<ExperimentUnit> units = new LinkedList<>();

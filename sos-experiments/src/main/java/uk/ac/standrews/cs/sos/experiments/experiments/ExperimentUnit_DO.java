@@ -82,7 +82,7 @@ public class ExperimentUnit_DO implements ExperimentUnit {
 
     @Override
     public void run() throws ExperimentException {
-        System.out.println("Domain size: " + context.domain(false) + " (local node included)");
+        System.out.println("Domain size: " + context.domain(false).size() + " (local node included)");
         System.out.println("Size dataset: " + datasetSize + " (-1 means that all the dataset will be evaluated)");
 
         try {

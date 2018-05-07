@@ -201,6 +201,10 @@ do("remote/do_1_006.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1
 do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 1KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
 do("remote/do_2_003.tsv", yMax=8, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 100KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
 
+do("remote/do_2_005.tsv", yMax=8, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 100KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
+
+
+
 do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
 
 
