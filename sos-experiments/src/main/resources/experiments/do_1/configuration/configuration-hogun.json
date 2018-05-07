@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "do_2",
-    "experimentClass": "Experiment_DO_2",
-    "description": "The experiment DO_2 investigates the size of the codomain",
+    "name": "do_1",
+    "experimentClass": "Experiment_DO_1",
+    "description": "The experiment DO_1 investigates the size of the codomain",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
       "iterations": 10
@@ -16,7 +16,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-2.cluster",
+          "host" : "hogun-2.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -41,7 +41,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-3.cluster",
+          "host" : "hogun-3.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -66,7 +66,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-4.cluster",
+          "host" : "hogun-4.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -91,7 +91,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-5.cluster",
+          "host" : "hogun-5.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -116,7 +116,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-6.cluster",
+          "host" : "hogun-6.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -141,7 +141,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-7.cluster",
+          "host" : "hogun-7.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -166,7 +166,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-8.cluster",
+          "host" : "hogun-8.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -191,7 +191,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-9.cluster",
+          "host" : "hogun-9.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -216,7 +216,7 @@
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-10.cluster",
+          "host" : "hogun-10.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -242,14 +242,14 @@
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-12.cluster",
+        "host" : "hogun-12.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "sif_12.json",
+      "configurationfile" : "hogun_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
       "dataset" : "text_100kb_7",

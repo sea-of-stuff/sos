@@ -21,7 +21,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_6"};
+    private static String[] contextsToRun = new String[] {"predicate_6"}; // TODO - have multiple of these
     private static String[] subdatasets = new String[] { "text_1kb_1", "text_100kb_1", "text_1mb_1" }; // NOTE - 1mb dataset has less than 100 files
 
     private final String masterDataset;

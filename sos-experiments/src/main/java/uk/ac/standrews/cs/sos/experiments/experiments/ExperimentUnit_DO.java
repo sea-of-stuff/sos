@@ -34,11 +34,11 @@ public class ExperimentUnit_DO implements ExperimentUnit {
     private ExperimentConfiguration.Experiment experiment;
     private int datasetSize;
     private SOSLocalNode node;
-    private String subset;
+    private String subset = "";
+    private String contextFilename;
+    private List<IGUID> allVersions;
 
     Context context;
-    String contextFilename;
-    List<IGUID> allVersions;
     ContextService cms;
 
     ExperimentUnit_DO(TYPE type, ExperimentConfiguration.Experiment experiment, String contextFilename, int datasetSize, String subset) {
@@ -96,18 +96,7 @@ public class ExperimentUnit_DO implements ExperimentUnit {
             long start = System.nanoTime();
             executorService.invokeAll(runnables); // This method returns when all the calls finish
             long duration = System.nanoTime() - start;
-
-            switch(type) {
-                case contextName:
-                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, duration);
-                    break;
-                case datasetSize:
-                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, Integer.toString(datasetSize), duration);
-                    break;
-                case subset:
-                    InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, subset, duration);
-                    break;
-            }
+            InstrumentFactory.instance().measure(StatsTYPE.predicate_remote, StatsTYPE.predicate_dataset, contextFilename, subset, datasetSize, duration);
 
             executorService.shutdownNow();
 

@@ -184,14 +184,14 @@
         }
       },
       {
-        "id" : 9,
-        "name" : "sif9",
+        "id" : 11,
+        "name" : "sif11",
         "path" : "/cs/scratch/",
         "remote" : true,
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-9.cluster",
+          "host" : "sif-11.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -249,7 +249,7 @@
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "sif_12.json",
+      "configurationfile" : "sif_12_alternative.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
       "dataset" : "text_100kb_7",

@@ -126,7 +126,7 @@
       },
       {
         "guid" : "SHA256_16_6462c57359b1f4a4c96b6e4ef00469ee9c566763a212a7144d2ff76ad5b1c439",
-        "hostname" : "192.168.1.9",
+        "hostname" : "192.168.1.11",
         "port" : 8080,
         "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAL3on6mYHeFC1SxlJNLBNKSIJhTo4kY8TItPaYkvVIVzRVeTQ0nrSX6pF1S9hbVJTwkEo2PbmOzzXoSaov7ZGtsCAwEAAQ=="
       },

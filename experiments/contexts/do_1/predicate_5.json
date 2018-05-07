@@ -16,7 +16,7 @@
   },
   "predicate": {
     "type": "Predicate",
-    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"the\") == 1;"
+    "predicate": "CommonPredicates.TextOccurrencesIgnoreCase(guid, \"bibliopole\") == 1;"
   },
   "policies": []
 }

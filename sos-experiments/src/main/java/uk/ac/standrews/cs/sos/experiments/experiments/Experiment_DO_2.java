@@ -21,7 +21,8 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_6"};
+    private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
+                                                            "predicate_6", "predicate_10"};
     private static int[] datasetSizes = new int[] {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
     public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {

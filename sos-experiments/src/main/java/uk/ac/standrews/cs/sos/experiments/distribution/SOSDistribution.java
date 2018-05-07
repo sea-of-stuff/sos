@@ -34,6 +34,7 @@ public class SOSDistribution {
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
 
+            System.out.println("__________________________________________________");
             System.out.println("Sending files for node " + node.getName());
             String path = node.getPath() + node.getSsh().getUser() + "/";
 
@@ -59,6 +60,8 @@ public class SOSDistribution {
             } catch (IOException e) {
                 throw new NetworkException();
             }
+
+            System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||");
         }
 
         System.out.println("App distribution finished");

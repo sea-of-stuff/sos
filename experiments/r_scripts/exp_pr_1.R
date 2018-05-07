@@ -9,7 +9,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
   d$ContextName <- d$Message
   
   d$ContextName <- as.character(d$ContextName)
-  d$ContextName[d$ContextName == "base"] <- "B"
+  d$ContextName[d$ContextName == "base"] <- "Base"
   d$ContextName[d$ContextName == "common_word_occurs_once"] <- "D_CWOO"
   d$ContextName[d$ContextName == "uncommon_word_occurs_once"] <- "D_UWOO"
   d$ContextName[d$ContextName == "common_word_occurs_at_least_10_times"] <- "D_CWO10"
@@ -18,19 +18,19 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
   d$ContextName[d$ContextName == "meta_uncommon_word_occurs_once"] <- "MD_UWOO"
   d$ContextName[d$ContextName == "meta_common_word_occurs_at_least_10_times"] <- "MD_CWO10"
   
-  d$ContextName[d$ContextName == "metadata"] <- "M"
-  d$ContextName[d$ContextName == "multi_metadata"] <- "MM"
-  d$ContextName[d$ContextName == "manifest"] <- "Ma"
+  d$ContextName[d$ContextName == "metadata"] <- "Metadata"
+  d$ContextName[d$ContextName == "multi_metadata"] <- "MultiMetadata"
+  d$ContextName[d$ContextName == "manifest"] <- "Manifest"
   
   d$ContextName[d$ContextName == "mostly_blue"] <- "D_MB"
   d$ContextName[d$ContextName == "meta_mostly_blue"] <- "MD_MB"
   
   # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
-  d$ContextName<-factor(d$ContextName, levels=c("B", 
+  d$ContextName<-factor(d$ContextName, levels=c("Base", 
                                                 "D_CWOO", "D_UWOO", "D_CWO10",
                                                 "MD_CWOO", "MD_UWOO", "MD_CWO10",
-                                                "M", "MM",
-                                                "Ma",
+                                                "Metadata", "MultiMetadata",
+                                                "Manifest",
                                                 "D_MB", "MD_MB"
   ))
   
