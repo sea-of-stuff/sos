@@ -325,13 +325,13 @@ public interface ExperimentUnit {
      */
     default List<IGUID> distributeData(ExperimentConfiguration.Experiment experiment, SOSLocalNode node, Context context, int datasetSize) throws IOException {
 
-
         ExperimentConfiguration.Experiment.ExperimentNode experimentNode = experiment.getExperimentNode();
         String datasetPath = experimentNode.getDatasetPath();
         File folderDataset = new File(datasetPath);
         List<IGUID> addedContents = new LinkedList<>();
 
         int domainSize = context.domain(false).size();
+        System.out.println("Domain Size: " + domainSize + " (local node included)");
         if (domainSize == 1) {
             addedContents = addFolderContentToNode(node, folderDataset, datasetSize);
 

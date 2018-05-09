@@ -5,6 +5,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -21,8 +22,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
     private Iterator<ExperimentUnit> experimentUnitIterator;
 
     // Must be static to be initialized before constructor
-    private static String[] contextsToRun = new String[] {"predicate_6"}; // TODO - have multiple of these
-    private static String[] subdatasets = new String[] { "text_1kb_1", "text_100kb_1", "text_1mb_1" }; // NOTE - 1mb dataset has less than 100 files
+    private static String[] contextsToRun = new String[] {"predicate_6"}; // TODO - have it for domain of 3 nodes only?
 
     private final String masterDataset;
 
@@ -31,11 +31,14 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
         masterDataset = experiment.getExperimentNode().getDataset();
 
+        File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
+        assert(subsets != null);
+
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (String aContextsToRun : contextsToRun) {
-                for(String subdataset: subdatasets) {
-                    units.add(new ExperimentUnit_DO_3(experiment, aContextsToRun, subdataset));
+                for (File subset : subsets) {
+                    units.add(new ExperimentUnit_DO_3(experiment, aContextsToRun, subset.getName()));
                 }
             }
         }
@@ -53,12 +56,14 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
     @Override
     public int numberOfTotalIterations() {
 
-        return experiment.getSetup().getIterations() * contextsToRun.length * subdatasets.length;
+        File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
+        assert(subsets != null);
+        return experiment.getSetup().getIterations() * contextsToRun.length * subsets.length;
     }
 
     private class ExperimentUnit_DO_3 extends ExperimentUnit_DO {
 
-        private static final int SUBSET_SIZE = 60;
+        private static final int SUBSET_SIZE = -1;
 
         ExperimentUnit_DO_3(ExperimentConfiguration.Experiment experiment, String contextFilename, String subdataset) {
             super(TYPE.subset, experiment, contextFilename, SUBSET_SIZE, masterDataset + "/" + subdataset + "/");

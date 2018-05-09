@@ -152,7 +152,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "text_multiple",
+      "dataset" : "text_100KB_1GB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

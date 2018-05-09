@@ -47,6 +47,7 @@ do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FA
   
   if (extractDomainSize) {
     d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 2)
+    d$ContextName<-factor(d$ContextName, levels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
   } else {
     d$ContextName <- d$Message
   }
