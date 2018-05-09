@@ -47,14 +47,15 @@ public class Experiment_PING_1 extends BaseExperiment implements Experiment {
         public void run() throws ExperimentException {
 
             for(int i = 0; i < 100; i++) {
-                PingNode pingNode = new PingNode(nodeToPing, "", false);
+                PingNode pingNode = new PingNode(nodeToPing, "", i%2==0);
                 TasksQueue.instance().performSyncTask(pingNode);
 
                 if (pingNode.getState() != TaskState.SUCCESSFUL) {
                     throw new ExperimentException("Ping request was not successful");
                 }
 
-                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, "No data sent", pingNode.getLatency());
+                // TODO - update r-script
+                InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Boolean.toString(i%2==0), pingNode.getLatency());
             }
         }
 
