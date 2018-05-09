@@ -13,7 +13,6 @@ import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.PingNode;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument;
 import uk.ac.standrews.cs.sos.model.Node;
 
 import java.io.File;
@@ -150,9 +149,9 @@ public abstract class BaseExperiment implements Experiment {
 
     @Override
     public void runIteration() throws ExperimentException {
-        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.experiment;
+//        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.experiment;
         currentExperimentUnit.run();
-        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.non_experiment;
+//        BackgroundInstrument.type = BackgroundInstrument.METRIC_TYPE.non_experiment;
     }
 
     @Override

@@ -19,7 +19,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
   d$ContextName[d$ContextName == "meta_common_word_occurs_at_least_10_times"] <- "MD_CWO10"
   
   d$ContextName[d$ContextName == "metadata"] <- "Metadata"
-  d$ContextName[d$ContextName == "multi_metadata"] <- "MultiMetadata"
+  d$ContextName[d$ContextName == "multi_metadata"] <- "Multi-Metadata"
   d$ContextName[d$ContextName == "manifest"] <- "Manifest"
   
   d$ContextName[d$ContextName == "mostly_blue"] <- "D_MB"
@@ -29,7 +29,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
   d$ContextName<-factor(d$ContextName, levels=c("Base", 
                                                 "D_CWOO", "D_UWOO", "D_CWO10",
                                                 "MD_CWOO", "MD_UWOO", "MD_CWO10",
-                                                "Metadata", "MultiMetadata",
+                                                "Metadata", "Multi-Metadata",
                                                 "Manifest",
                                                 "D_MB", "MD_MB"
   ))

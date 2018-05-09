@@ -45,7 +45,7 @@ public class InstrumentFactory {
         if (basicInstrument == null) {
             System.out.println("---------------------------------------------");
             basicInstrument = new BasicInstrument(statistics, filename);
-            backgroundInstrument = new BackgroundInstrument(filename);
+//            backgroundInstrument = new BackgroundInstrument(filename);
             System.out.println("---------------------------------------------");
         }
 
@@ -54,9 +54,9 @@ public class InstrumentFactory {
 
     public static void start() {
 
-        if (backgroundInstrument != null) {
-            backgroundInstrument.start();
-        }
+//        if (backgroundInstrument != null) {
+//            backgroundInstrument.start();
+//        }
 
     }
 
@@ -65,15 +65,15 @@ public class InstrumentFactory {
             basicInstrument.flush();
         }
 
-        if (backgroundInstrument != null) {
-            backgroundInstrument.flush();
-        }
+//        if (backgroundInstrument != null) {
+//            backgroundInstrument.flush();
+//        }
     }
 
     public static void stop() {
 
-        if (backgroundInstrument != null) {
-            backgroundInstrument.stop();
-        }
+//        if (backgroundInstrument != null) {
+//            backgroundInstrument.stop();
+//        }
     }
 }

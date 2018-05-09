@@ -66,7 +66,7 @@ public class Experiment_PO_A_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws ContextException {
 
-            addContext(cms, experiment, "no_policies");
+            // addContext(cms, experiment, "no_policies");
             addContext(cms, experiment, "do_nothing_policy");
 
             // Must have multiple nodes up and running
