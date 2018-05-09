@@ -58,7 +58,7 @@ public class Experiment_DO_3 extends BaseExperiment implements Experiment {
 
         File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
         assert(subsets != null);
-        return experiment.getSetup().getIterations() * contextsToRun.length * subsets.length;
+        return experiment.getSetup().getIterations() * subsets.length;
     }
 
     private class ExperimentUnit_DO_3 extends ExperimentUnit_DO {

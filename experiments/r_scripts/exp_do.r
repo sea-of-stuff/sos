@@ -49,7 +49,19 @@ do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FA
     d$ContextName <- sapply(strsplit(as.character(d$Message), '_'), '[', 2)
     d$ContextName<-factor(d$ContextName, levels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
   } else {
-    d$ContextName <- d$Message
+    d$ContextName <- sapply(strsplit(as.character(d$Message_2), '/'), '[', 2)
+    d$ContextName[d$ContextName == "100000"] <- "100"
+    d$ContextName[d$ContextName == "200000"] <- "200"
+    d$ContextName[d$ContextName == "300000"] <- "300"
+    d$ContextName[d$ContextName == "400000"] <- "400"
+    d$ContextName[d$ContextName == "500000"] <- "500"
+    d$ContextName[d$ContextName == "600000"] <- "600"
+    d$ContextName[d$ContextName == "700000"] <- "700"
+    d$ContextName[d$ContextName == "800000"] <- "800"
+    d$ContextName[d$ContextName == "900000"] <- "900"
+    d$ContextName[d$ContextName == "1000000"] <- "1000"
+    
+    d$ContextName<-factor(d$ContextName, levels=c("100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"))
   }
   
   d$Measures <- d$User.Measure_2 / 1000000000.0; # Nanoseconds to seconds
