@@ -115,7 +115,7 @@ public class FetchMetadataTest extends ProtocolTest {
     @Test(timeOut = 10000)
     public void basicMetadataFetchTest() throws IOException, GUIDGenerationException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, true, true, false, false, false);
 

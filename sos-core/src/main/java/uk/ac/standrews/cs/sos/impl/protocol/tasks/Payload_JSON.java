@@ -46,7 +46,7 @@ public class Payload_JSON extends Task {
      *
      * @param node to send payload to
      * @param payload to send
-     * @param sign if true the request will be signed if possible. if false, the request will never be signed.
+     * @param sign if true the request will be signed if possible. if false, the request will never be signed. FIXME
      */
     public Payload_JSON(Node node, InputStream payload, boolean sign) {
         super();
@@ -73,7 +73,7 @@ public class Payload_JSON extends Task {
             request.setJSONBody(jsonBody);
 
             long startRequest = System.nanoTime();
-            Response response = RequestsManager.getInstance().playSyncRequest(request);
+            Response response = RequestsManager.getInstance().playSyncRequest(request, sign);
             if (response instanceof ErrorResponseImpl) {
                 setState(TaskState.ERROR);
                 throw new IOException();

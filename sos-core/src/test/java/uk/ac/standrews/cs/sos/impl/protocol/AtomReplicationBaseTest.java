@@ -200,7 +200,7 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void basicMockServerTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
@@ -229,7 +229,7 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void replicateToNoStorageNodeTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
@@ -254,12 +254,12 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void replicateOnlyOnceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
@@ -291,17 +291,17 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void replicateOnlyOnceSecondTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
-        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node anotherNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 true, false, true, true, true, false, false, false); // Won't replicate to non-storage
         when(mockNodeDiscoveryService.getNode(anotherNode.guid())).thenReturn(anotherNode);
@@ -334,13 +334,13 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void replicateToSameNodeTwiceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
         // Will have different GUID to get around the nodes Set. However, they will both return the same HTTP response (see mock server config for MOCK_SERVER_POST)
-        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node twinStorageNode = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.guid())).thenReturn(twinStorageNode);
@@ -371,12 +371,12 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void replicateSameDataTwiceTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockSignatureCertificate,
+        Node storageNode = new SOSNode(GUIDFactory.recreateGUID(NODE_ID), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(storageNode.guid())).thenReturn(storageNode);
 
-        Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID), mockSignatureCertificate,
+        Node twinStorageNode = new SOSNode(GUIDFactory.recreateGUID(TWIN_NODE_ID), mockD_PublicKey,
                 "localhost", MOCK_TWIN_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(twinStorageNode.guid())).thenReturn(twinStorageNode);
@@ -410,7 +410,7 @@ public class AtomReplicationBaseTest extends ProtocolTest {
     void basicTimeoutMockServerTest(boolean isSequential) throws GUIDGenerationException, SOSProtocolException, NodeNotFoundException {
         System.out.println("---> Sequential: " + isSequential);
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
         when(mockNodeDiscoveryService.getNode(node.guid())).thenReturn(node);

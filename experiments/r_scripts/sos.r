@@ -149,7 +149,7 @@ po_1("remote/po_a1_002.tsv", type="policies", subtype="policy_apply_dataset", ti
 
 ## PO_C_1
 # Number of iterations: 10
-po_1("remote/po_c1_001.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=2)
+po_1("remote/po_c1_001.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=10)
 
 ##############
 # PO_A_3

@@ -39,7 +39,6 @@ import java.security.PublicKey;
 import java.util.stream.Collectors;
 
 /**
- * TODO - sign outgoing requests
  *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
@@ -48,29 +47,63 @@ public class SyncRequest extends Request {
     private ResponseType responseType;
     private String content_type;
 
+    /**
+     * Synchronous request
+     * Response type is BINARY by default
+     *
+     * @param method of the request
+     * @param url of the request
+     */
     public SyncRequest(HTTPMethod method, URL url) {
         this(method, url, ResponseType.BINARY);
     }
 
+    /**
+     * Synchronous request
+     *
+     * @param method of the request
+     * @param url of the request
+     * @param responseType for the response
+     */
     public SyncRequest(HTTPMethod method, URL url, ResponseType responseType) {
         super(method, url);
 
         this.responseType = responseType;
     }
 
+    /**
+     * Constructor for a signed synchronous request.
+     * Response type is BINARY by default
+     *
+     * @param d_publicKey used to verify that the contacted node has signed the response properly
+     * @param method of the request
+     * @param url of the request
+     */
     public SyncRequest(PublicKey d_publicKey, HTTPMethod method, URL url) {
         this(d_publicKey, method, url, ResponseType.BINARY);
     }
 
+    /**
+     * Constructor for a signed synchronous request.
+     *
+     * @param d_publicKey used to verify that the contacted node has signed the response properly
+     * @param method of the request
+     * @param url of the request
+     * @param responseType for the response
+     */
     public SyncRequest(PublicKey d_publicKey, HTTPMethod method, URL url, ResponseType responseType) {
         super(d_publicKey, method, url);
 
         this.responseType = responseType;
     }
 
-    public Response play() throws IOException {
+    /**
+     * Execute the request
+     * @return the response to the request made
+     * @throws IOException if the request could not be processed properly
+     */
+    Response play() throws IOException {
         SOS_LOG.log(LEVEL.INFO, "Play request. Method: " + method + " URL: " + url.toString());
-
 
         switch(method) {
             case GET: return get();
@@ -193,7 +226,7 @@ public class SyncRequest extends Request {
             }
 
             if (d_publicKey != null) {
-                String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
+                String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_SIGNED_CHALLENGE_HEADER); // TODO - update the sos-rest accordingly
                 boolean verified = DigitalSignature.verify64(d_publicKey, nodeChallenge, signedChallenge);
 
                 if (!verified) {
@@ -233,17 +266,18 @@ public class SyncRequest extends Request {
             String requestToSign = method + url + headers + body + nodeChallenge;
             String signedChallenge = DigitalSignature.sign64(d_privateKey, requestToSign);
 
-            request.getHttpRequest().header(SOS_NODE_CHALLENGE_HEADER, signedChallenge);
+            request.getHttpRequest().header(SOS_NODE_SIGNED_CHALLENGE_HEADER, signedChallenge);
         }
 
     }
 
     private void encryptRequest(BaseRequest request) {
-        // TODO
+        // TODO - This will be developed in the future to protect data in-transit
     }
 
     private HttpRequest setChallenge(HttpRequest httpRequest) {
 
+        // If the public key is unknown, then there is no reason to challenge the contacted node
         if (d_publicKey != null) {
             httpRequest = httpRequest.header(SOS_NODE_CHALLENGE_HEADER, nodeChallenge);
         }

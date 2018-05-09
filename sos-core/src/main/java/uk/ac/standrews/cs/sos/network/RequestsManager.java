@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
+import java.security.PrivateKey;
 
 /**
  * Singleton Class
@@ -35,21 +36,51 @@ import java.io.IOException;
  */
 public class RequestsManager {
 
+    private PrivateKey d_privateKey;
     private static RequestsManager lazyInstance;
 
     // Ensure that this class cannot be instantiated by other classes by making the constructor private
-    private RequestsManager() {}
+    private RequestsManager(PrivateKey d_privateKey) {
+        this.d_privateKey = d_privateKey;
+    }
 
-    public static RequestsManager getInstance() {
+    public static RequestsManager init(PrivateKey d_privateKey) {
         if(lazyInstance == null){
             Options.refresh(); // Make sure that Unirest instance is restarted
             // Unirest.setTimeouts(10000, 120000); // NOTE - Make these params configurable
-            lazyInstance = new RequestsManager();
+            lazyInstance = new RequestsManager(d_privateKey);
         }
         return lazyInstance;
     }
 
-    public Response playSyncRequest(SyncRequest request) throws IOException {
+    public static RequestsManager getInstance() {
+        return lazyInstance;
+    }
+
+    /**
+     * Synchronous request, which is signed by default.
+     *
+     * @param request to make
+     * @return response to the request
+     * @throws IOException if request failed to be executed
+     */
+    public Response playSyncRequest(Request request) throws IOException {
+        return playSyncRequest(request, false);
+    }
+
+    /**
+     * Synchronous request
+     *
+     * @param request to make
+     * @param sign set to true to sign the outgoing request, false otherwise
+     * @return response to the request
+     * @throws IOException if request failed to be executed
+     */
+    public Response playSyncRequest(Request request, boolean sign) throws IOException {
+
+        if (sign) {
+            request = request.setSigningPrivateKey(d_privateKey);
+        }
         return request.play();
     }
 

@@ -335,7 +335,6 @@ public class SOSNodeDiscoveryService implements NodeDiscoveryService {
 
                 } catch (NodeNotFoundException e) {
                     SOS_LOG.log(LEVEL.WARN, "Unable to ping node with GUID " + nodeRef.toShortString());
-                    continue;
                 }
             }
 

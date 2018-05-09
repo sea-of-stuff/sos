@@ -36,7 +36,6 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -56,13 +55,13 @@ public class PayloadJSONTest extends ProtocolTest {
     private static final String TEST_DATA = "test-data";
     private static final String JSON_BODY = "{\n  \"data\" : \"_DATA_\"\n}";
 
-    private static byte[] data_l = new byte[10000000]; // 10mb
-    private static byte[] data_l_b64;
-    static {
-        new Random().nextBytes(data_l);
-        data_l_b64 = Base64.encode(data_l);
-    }
-    private static final String LARGE_TEST_DATA= new String(data_l_b64);
+//    private static byte[] data_l = new byte[10000000]; // 10mb
+//    private static byte[] data_l_b64;
+//    static {
+//        new Random().nextBytes(data_l);
+//        data_l_b64 = Base64.encode(data_l);
+//    }
+//    private static final String LARGE_TEST_DATA= new String(data_l_b64);
 
     @BeforeMethod
     public void setUp() throws ConfigurationException, GUIDGenerationException, IOException, SOSException {
@@ -93,6 +92,13 @@ public class PayloadJSONTest extends ProtocolTest {
     @AfterMethod
     public void tearDown() {
         mockServer.stop();
+
+        // Let the mock server stop properly
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -106,5 +112,19 @@ public class PayloadJSONTest extends ProtocolTest {
 
         assertEquals(payload.getState(), TaskState.SUCCESSFUL);
     }
+
+    @Test
+    public void basicPayloadJSONTaskSigned() {
+
+        System.out.println(JSON_BODY.replace("_DATA_", Base64.encode(TEST_DATA)));
+
+        Node nodeToPing = new BasicNode("localhost", MOCK_SERVER_PORT);
+        Payload_JSON payload = new Payload_JSON(nodeToPing, IO.StringToInputStream(TEST_DATA), true);
+        TasksQueue.instance().performSyncTask(payload);
+
+        assertEquals(payload.getState(), TaskState.SUCCESSFUL);
+    }
+
+    // TODO - test for large data too
 
 }

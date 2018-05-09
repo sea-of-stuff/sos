@@ -81,7 +81,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     // The SOSLocalNode will use this private key to digitally sign messages
     // that the receivers can then verify using the known digital signature certificate (public key) of this node.
-    private PrivateKey signaturePrivateKey;
+    private PrivateKey d_privateKey;
 
     public static SettingsConfiguration.Settings settings;
 
@@ -255,7 +255,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
     public String sign(String message) throws CryptoException {
 
-        return DigitalSignature.sign64(signaturePrivateKey, message);
+        return DigitalSignature.sign64(d_privateKey, message);
     }
 
     /**
@@ -277,20 +277,23 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             }
 
             IFile privateKeyFile = localStorage.createFile(nodeDirectory, "id_rsa" + DigitalSignature.PRIVATE_KEY_EXTENSION);
-            if (signaturePrivateKey == null && privateKeyFile.exists()) {
-                signaturePrivateKey = DigitalSignature.getPrivateKey(privateKeyFile.getPath());
+            if (d_privateKey == null && privateKeyFile.exists()) {
+                d_privateKey = DigitalSignature.getPrivateKey(privateKeyFile.getPath());
             }
 
-            if (d_publicKey == null && signaturePrivateKey == null) {
+            if (d_publicKey == null && d_privateKey == null) {
 
                 KeyPair keys = DigitalSignature.generateKeys();
                 d_publicKey = keys.getPublic();
-                signaturePrivateKey = keys.getPrivate();
+                d_privateKey = keys.getPrivate();
 
                 DigitalSignature.persist(keys,
                         Paths.get(nodeDirectory.getPathname() + "id_rsa"),
                         Paths.get(nodeDirectory.getPathname() + "id_rsa"));
             }
+
+            // Pass the private key to the request manager, so that requests can be signed by the node
+            RequestsManager.init(d_privateKey);
 
         } catch (CryptoException e) {
             throw new SignatureException(e);
@@ -458,13 +461,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         SOSLocalNode that = (SOSLocalNode) o;
-        return Objects.equals(signaturePrivateKey, that.signaturePrivateKey);
+        return Objects.equals(d_privateKey, that.d_privateKey);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), signaturePrivateKey);
+        return Objects.hash(super.hashCode(), d_privateKey);
     }
 
 

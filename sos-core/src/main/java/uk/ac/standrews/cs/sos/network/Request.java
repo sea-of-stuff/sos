@@ -17,6 +17,9 @@
 package uk.ac.standrews.cs.sos.network;
 
 
+import uk.ac.standrews.cs.sos.interfaces.network.Response;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URL;
@@ -31,6 +34,7 @@ import java.security.SecureRandom;
 public abstract class Request {
 
     public static final String SOS_NODE_CHALLENGE_HEADER = "sos-node-challenge";
+    public static final String SOS_NODE_SIGNED_CHALLENGE_HEADER = "sos-node-signed-challenge";
     private static final int NODE_CHALLENGE_LENGTH_BITS = 1024;
     private static final int NODE_CHALLENGE_BASE = 32;
 
@@ -40,7 +44,7 @@ public abstract class Request {
 
     String json_body;
     PublicKey d_publicKey;
-    PrivateKey d_privateKey; // TODO - initialise it!
+    PrivateKey d_privateKey;
     String nodeChallenge;
 
     /**
@@ -63,10 +67,10 @@ public abstract class Request {
      * @param url for the request
      */
     public Request(PublicKey d_publicKey, HTTPMethod method, URL url) {
+        this.d_publicKey = d_publicKey;
         this.method = method;
         this.url = url;
 
-        this.d_publicKey = d_publicKey;
         SecureRandom random = new SecureRandom();
         this.nodeChallenge = new BigInteger(NODE_CHALLENGE_LENGTH_BITS, random).toString(NODE_CHALLENGE_BASE);
     }
@@ -82,6 +86,14 @@ public abstract class Request {
         this.json_body = null;
         return this;
     }
+
+    Request setSigningPrivateKey(PrivateKey d_privateKey) {
+        this.d_privateKey = d_privateKey;
+
+        return this;
+    }
+
+    abstract Response play() throws IOException;
 
     @Override
     public String toString() {

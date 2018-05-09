@@ -94,7 +94,7 @@ public class FetchAtomTest extends ProtocolTest {
     @Test
     public void basicDataFetchTest() throws IOException, GUIDGenerationException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
 
@@ -113,7 +113,7 @@ public class FetchAtomTest extends ProtocolTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchDataFromNonStorageNodeTest() throws IOException, GUIDGenerationException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, false, false, false, false, false, false, false);
 
@@ -125,7 +125,7 @@ public class FetchAtomTest extends ProtocolTest {
     @Test (expectedExceptions = IOException.class)
     public void fetchANullGUIDTest() throws IOException {
 
-        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockSignatureCertificate,
+        Node node = new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey,
                 "localhost", MOCK_SERVER_PORT,
                 false, true, false, false, false, false, false, false);
 
