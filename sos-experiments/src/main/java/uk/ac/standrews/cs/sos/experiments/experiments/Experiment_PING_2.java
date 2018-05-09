@@ -38,7 +38,8 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
             for (File subset : subsets) {
-                units.add(new ExperimentUnit_PING_2(subset));
+                units.add(new ExperimentUnit_PING_2(subset, true));
+                units.add(new ExperimentUnit_PING_2(subset, false));
             }
         }
         Collections.shuffle(units);
@@ -63,10 +64,12 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
     private class ExperimentUnit_PING_2 implements ExperimentUnit {
 
         private File dataset;
+        private boolean sign;
         private Node nodeToPing;
 
-        public ExperimentUnit_PING_2(File dataset) {
+        public ExperimentUnit_PING_2(File dataset, boolean sign) {
             this.dataset = dataset;
+            this.sign = sign;
         }
 
         @Override
@@ -87,13 +90,14 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
 
                     // System.out.println("File: " + file.getName() + " payload size: " + payloadSize);
                     // Payload payload = new Payload(nodeToPing, fileInputStream, false); // NOTE - Payload via inputstream won't work
-                    Payload_JSON payload = new Payload_JSON(nodeToPing, fileInputStream, false);
+                    Payload_JSON payload = new Payload_JSON(nodeToPing, fileInputStream, sign);
                     TasksQueue.instance().performSyncTask(payload);
 
                     if (payload.getState() != TaskState.SUCCESSFUL) {
                         System.out.println("Unsuccessful");
                     } else {
-                        InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Long.toString(payloadSize), payload.getLatency());
+                        // TODO - update r-script!
+                        InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Boolean.toString(sign), payloadSize, payload.getLatency());
                     }
 
                 } catch (IOException e) {
