@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name" : "po_a_1",
-    "experimentClass": "Experiment_PO_A_1",
-    "description" : "PO_A_1 experiment - on hogun.",
+    "name" : "po_1",
+    "experimentClass": "Experiment_PO_1",
+    "description" : "PO_1 experiment - on hogun.",
     "setup" : {
       "app" : "sos-slave/target/sos-slave.jar",
       "iterations" : 10
@@ -65,7 +65,7 @@
       "experiment": false,
       "predicate": false,
       "policies": true,
-      "checkPolicies": false
+      "checkPolicies": true
     }
   }
 }
