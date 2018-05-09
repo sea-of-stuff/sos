@@ -78,7 +78,7 @@ public class HTTPResponses {
         return builder.build();
     }
 
-    public static Response OK(SOSLocalNode localNode, String challenge, String message) {
+    public static Response OK(SOSLocalNode localNode, String challenge, Object message) {
         Response.ResponseBuilder builder =  Response.status(HTTPStatus.OK)
                 .entity(message);
 

@@ -20,14 +20,16 @@ public class Experiment_DO_2 extends BaseExperiment implements Experiment {
     // Must be static to be initialized before constructor
     private static String[] contextsToRun = new String[] {"predicate_1", "predicate_2", "predicate_3",
                                                             "predicate_6", "predicate_10"};
-    private ArrayList<Integer> datasetSizes = new ArrayList<>();
 
-    public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
-        super(experimentConfiguration, outputFilename);
-
+    private static ArrayList<Integer> datasetSizes = new ArrayList<>();
+    static {
         for(int i = 1; i <= 10000/500; i++) {
             datasetSizes.add(i * 500);
         }
+    }
+
+    public Experiment_DO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+        super(experimentConfiguration, outputFilename);
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {

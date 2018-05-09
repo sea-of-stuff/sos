@@ -49,6 +49,8 @@ public interface Experiment {
 
     /**
      * Number of iterations for the experiment
+     *
+     * The following must be able to return before the experiment is finished to be constructed
      * @return number of iterations
      */
     int numberOfTotalIterations();

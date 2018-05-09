@@ -195,17 +195,15 @@ co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yM
 # DO_x
 ##############
 
-do("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), Dataset: 100 files of 100kb text files\ndistributed evenly over domain.", xLabel="Domain size");
-do("remote/do_1_006.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files, domain of 6 nodes max", xLabel="Nodes in domain");
+do_old("remote/do_1_test57.tsv", yMax=0.3, titlePlot="DO_1 (10 iterations), Dataset: 100 files of 100kb text files\ndistributed evenly over domain.", xLabel="Domain size");
+do_old("remote/do_1_006.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files, domain of 6 nodes max", xLabel="Nodes in domain");
 
-do("remote/do_2_test4.tsv", yMax=.15, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 1KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
-do("remote/do_2_003.tsv", yMax=8, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 100KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
+do("remote/do_1_008.tsv", yMax=200, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files (~1GB), domain of 10 nodes max", xLabel="Nodes in domain");
 
-do("remote/do_2_005.tsv", yMax=8, titlePlot="DO_2 (10 iterations), Dataset: Variable number of 100KB text files.", xLabel="Numer of files", isNumeric=TRUE, extractDomainSize=FALSE);
-
+do_2("remote/do_2_005.tsv", yMax=8, titlePlot="Variation over the data-cardinality of the domain", xLabel="Numer of assets");
 
 
-do("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
+do_old("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
 
 
 

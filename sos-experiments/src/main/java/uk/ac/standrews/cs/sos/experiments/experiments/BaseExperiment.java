@@ -143,7 +143,7 @@ public abstract class BaseExperiment implements Experiment {
                 }
             }
 
-            System.out.println("Nodes running: " + nodesRunning + " out of " + totalNumberOfNodes + " nodes");
+            System.out.println("Remote nodes running: " + nodesRunning + " out of " + totalNumberOfNodes);
         }
 
     }
