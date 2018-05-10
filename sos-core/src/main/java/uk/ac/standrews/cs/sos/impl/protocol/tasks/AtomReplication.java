@@ -232,6 +232,8 @@ public class AtomReplication extends Task {
         } else {
             setState(TaskState.UNSUCCESSFUL);
         }
+
+        System.out.println("ATOM REPL " + successfulReplicas + " RF: " + replicationFactor); // REMOVEME
     }
 
     /**

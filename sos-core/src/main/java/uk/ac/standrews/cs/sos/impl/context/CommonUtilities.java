@@ -121,6 +121,7 @@ public class CommonUtilities {
                     .setReplicationFactor(replicationFactor)
                     .setAlreadyProtected(dataIsAlreadyProtected);
 
+            System.out.println("Replicate data " + replicationFactor + " times"); // REMOVEME
             storageService.addAtom(atomBuilder);
 
         } catch (DataStorageException | ManifestPersistException e) {

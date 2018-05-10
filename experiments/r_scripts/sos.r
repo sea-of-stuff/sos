@@ -147,7 +147,7 @@ pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predica
 po_1("remote/po_1_001.tsv", titlePlot = "Time to run the policy functions over the 1000x1MB dataset")
 
 ##############
-# PO_A_3
+# PO_A_3 - LEGACY
 ##############
 
 # Number of iterations: 10
@@ -155,10 +155,8 @@ po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to ru
 po_3("remote/po_a_3_100kb_its10_3.tsv", type="policies", titlePlot = "Time to run multiple policy apply functions over ???", showSummary=TRUE)
 
 
-
-
 ##############
-# PO_C_3
+# PO_C_3 - LEGACY
 ##############
 
 # Number of iterations: 10
@@ -169,13 +167,9 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 # CO_x
 ##############
 
-co("remote/co_a_test25.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
-co("remote/co_a_2_v1.tsv", type="policies", subtype="policy_apply_dataset", yMax=10, titlePlot="CO_A_2 (10 iterations), 100kb dataset. Replication factor = 1-10")
-co("remote/co_c_1_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_1 (10 iterations), 100kb dataset. Replication factor = 1")
-co("remote/co_c_2_v1.tsv", type="checkPolicies", subtype="policy_check_dataset", yMax=10, titlePlot="CO_C_2 (10 iterations), 100kb dataset. Replication factor = 1-10")
+co("remote/co_1_005.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
 
-co("remote/co_a_test40.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="paral, CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
-co("remote/co_a_test43.tsv", type="policies", subtype="policy_apply_dataset", yMax=5, titlePlot="seq, CO_A_1 (10 iterations), 100kb dataset. Replication factor = 1")
+co("remote/co_2_001.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
 
 ##############
 # DO_x

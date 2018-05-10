@@ -144,7 +144,8 @@ public abstract class BasicManifest implements Manifest {
 
     protected IGUID makeGUID() {
 
-        try (Data data = new InputStreamData(contentToHash())){
+        try (InputStream contentToHash = contentToHash();
+             Data data = new InputStreamData(contentToHash)){
 
             long start = System.nanoTime();
             IGUID guid = GUIDFactory.generateGUID(GUID_ALGORITHM, data.getInputStream());

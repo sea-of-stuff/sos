@@ -39,6 +39,8 @@ public class RequestsManager {
     private PrivateKey d_privateKey;
     private static RequestsManager lazyInstance;
 
+    private RequestsManager() {}
+
     // Ensure that this class cannot be instantiated by other classes by making the constructor private
     private RequestsManager(PrivateKey d_privateKey) {
         this.d_privateKey = d_privateKey;
@@ -54,6 +56,10 @@ public class RequestsManager {
     }
 
     public static RequestsManager getInstance() {
+        if(lazyInstance == null){
+            Options.refresh(); // Make sure that Unirest instance is restarted
+            lazyInstance = new RequestsManager();
+        }
         return lazyInstance;
     }
 

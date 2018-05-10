@@ -277,7 +277,7 @@
       "configurationfile" : "hogun_12.json",
       "certificatefile" : "hogun_12.crt",
       "keyfile" : "hogun_12.key",
-      "dataset" : "text_100kb_1",
+      "dataset" : "random_1mb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,
@@ -290,7 +290,7 @@
       "experiment": false,
       "predicate": false,
       "policies": true,
-      "checkPolicies": false
+      "checkPolicies": true
     }
   }
 }

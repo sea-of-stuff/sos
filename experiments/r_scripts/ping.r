@@ -52,13 +52,13 @@ ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Message)) +
   geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$Message),
                 position=position_dodge(width=dodge_offset), width=.2) +
   theme_bw() +
-  theme(axis.text.x=element_text(angle=90,hjust=1), 
-        axis.text=element_text(size=14),
+  theme(axis.text=element_text(size=14),
         axis.title=element_text(size=14),
+        plot.title=element_text(size=16),
         legend.title=element_text(size=15),
         legend.text=element_text(size=13)) +
   expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
-  labs(x="Data size (MB)", y=yLabel) +
+  labs(title="Network Throughput between SOS Nodes", x="Data size (MB)", y=yLabel) +
   scale_color_discrete(name='Signed\nRequests') +
   guides(col=guide_legend(nrow=2))
   

@@ -22,18 +22,17 @@ import org.testng.annotations.BeforeMethod;
 import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.SettingsConfiguration;
 import uk.ac.standrews.cs.sos.constants.Hashes;
-import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSProtocolException;
-import uk.ac.standrews.cs.sos.impl.datamodel.locations.sos.SOSURLProtocol;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestReplication;
 import uk.ac.standrews.cs.sos.model.*;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.FileUtils;
@@ -41,6 +40,7 @@ import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -56,7 +56,7 @@ import static uk.ac.standrews.cs.sos.constants.Paths.TEST_RESOURCES_PATH;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ManifestReplicationBaseTest {
+public class ManifestReplicationBaseTest extends SetUpTest {
 
     private ClientAndServer mockServer;
     private static final int MOCK_SERVER_PORT = 10002;
@@ -169,7 +169,8 @@ public class ManifestReplicationBaseTest {
     private static final String TEST_BAD_MANIFEST = "BAD Manifest";
 
     @BeforeMethod
-    public void setUp() throws SOSException, ConfigurationException {
+    public void setUp(Method testMethod) throws Exception {
+        super.setUp(testMethod);
 
         SettingsConfiguration.Settings settings = new SettingsConfiguration(new File(TEST_RESOURCES_PATH + "configurations/manifest_replication_test.json")).getSettingsObj();
         SOSLocalNode.settings = settings;
@@ -243,12 +244,12 @@ public class ManifestReplicationBaseTest {
                         response()
                                 .withStatusCode(400)
                 );
-
-        SOSURLProtocol.getInstance().register(null, null); // Local storage is not needed for this set of tests
     }
 
     @AfterMethod
     public void tearDown() {
+        RequestsManager.getInstance().shutdown();
+
         mockServer.stop();
 
         // Let the mock server stop properly
