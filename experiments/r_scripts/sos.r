@@ -144,7 +144,7 @@ pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predica
 # PO_A_1
 ##############
 
-po_1("remote/po_1_001.tsv", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
+po_1("remote/po_1_001.tsv", titlePlot = "Time to run the policy functions over the 1000x1MB dataset")
 
 ##############
 # PO_A_3

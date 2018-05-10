@@ -146,6 +146,77 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
             "  ]\n" +
             "}\n";
 
+
+    private static final String REPL_CONTEXT_1 = "" +
+            "{\n" +
+            "  \"context\": {\n" +
+            "    \"name\": \"data_replication_1\",\n" +
+            "    \"domain\": {\n" +
+            "      \"type\": \"LOCAL\",\n" +
+            "      \"nodes\": []\n" +
+            "    },\n" +
+            "    \"codomain\": {\n" +
+            "      \"type\": \"SPECIFIED\",\n" +
+            "      \"nodes\": [\"SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2\"]\n" +
+            "    },\n" +
+            "    \"max_age\": 0\n" +
+            "  },\n" +
+            "  \"predicate\": {\n" +
+            "    \"type\": \"Predicate\",\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
+            "  },\n" +
+            "  \"policies\": [\n" +
+            "    {\n" +
+            "      \"type\" : \"Policy\",\n" +
+            "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor);\",\n" +
+            "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor);\",\n" +
+            "      \"fields\" : [\n" +
+            "        {\n" +
+            "          \"type\" : \"int\",\n" +
+            "          \"name\" : \"factor\",\n" +
+            "          \"value\" : \"1\"\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+
+    private static final String REPL_CONTEXT_2 = "" +
+            "{\n" +
+            "  \"context\": {\n" +
+            "    \"name\": \"data_replication_2\",\n" +
+            "    \"domain\": {\n" +
+            "      \"type\": \"LOCAL\",\n" +
+            "      \"nodes\": []\n" +
+            "    },\n" +
+            "    \"codomain\": {\n" +
+            "      \"type\": \"SPECIFIED\",\n" +
+            "      \"nodes\": [\"SHA256_16_924d9fa80b1e409741686775a197b2ae48ef4b5d6c4189af888b0111b6bb47f2\",\n" +
+            "                \"SHA256_16_c2134ef5253f507dcda39b25e9a999769c1bd5e337145de1662a118682a76cc0\"]\n" +
+            "    },\n" +
+            "    \"max_age\": 0\n" +
+            "  },\n" +
+            "  \"predicate\": {\n" +
+            "    \"type\": \"Predicate\",\n" +
+            "    \"predicate\": \"CommonPredicates.AcceptAll();\"\n" +
+            "  },\n" +
+            "  \"policies\": [\n" +
+            "    {\n" +
+            "      \"type\" : \"Policy\",\n" +
+            "      \"apply\" : \"CommonPolicies.replicateData(codomain, utilities, manifest, factor_2);\",\n" +
+            "      \"satisfied\" : \"return CommonPolicies.dataIsReplicated(codomain, utilities, manifest, factor_2);\",\n" +
+            "      \"fields\" : [\n" +
+            "        {\n" +
+            "          \"type\" : \"int\",\n" +
+            "          \"name\" : \"factor_2\",\n" +
+            "          \"value\" : \"1\"\n" +
+            "        }\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+
+
     @Test
     public void addContextTest() throws ContextException {
 
@@ -253,6 +324,16 @@ public class SOSAddRetrieveContextTest extends ContextServiceTest {
         assertNotNull(context_3);
 
         contextService.addContext(FAT_CONTEXT_4);
+    }
+
+    @Test
+    public void addTwoContexts() throws ContextException {
+
+        IGUID guid_1 = contextService.addContext(REPL_CONTEXT_1);
+        IGUID guid_2 = contextService.addContext(REPL_CONTEXT_2);
+
+        assertTrue(guid_1.isInvalid());
+        assertTrue(guid_2.isInvalid());
     }
 
     // TODO - test max age property and getting contents from multiple contexts (w previous) WITH EXPIRATION

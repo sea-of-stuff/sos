@@ -6,8 +6,6 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
@@ -37,7 +35,6 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
@@ -55,6 +52,7 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
                 System.out.println("Running Predicates");
                 cms.runPredicates();
             } catch (ContextException | IOException e) {
+                e.printStackTrace();
                 throw new ExperimentException();
             }
         }

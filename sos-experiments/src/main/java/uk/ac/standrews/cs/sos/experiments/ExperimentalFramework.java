@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.sos.experiments.exceptions.ChicShockException;
 import java.io.File;
 import java.util.Scanner;
 
-import static uk.ac.standrews.cs.sos.instrument.impl.BackgroundInstrument.OS_FILE;
 import static uk.ac.standrews.cs.sos.instrument.impl.BasicInstrument.DATASET_FILES;
 import static uk.ac.standrews.cs.sos.instrument.impl.BasicInstrument.DATASET_SUMMARY;
 
@@ -232,7 +231,7 @@ public class ExperimentalFramework {
         String statsBaseName = in.nextLine();
 
         SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + ".tsv", "experiments/remote/" + statsBaseName + ".tsv");
-        SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + OS_FILE, "experiments/remote/" + statsBaseName + OS_FILE);
+        // SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + OS_FILE, "experiments/remote/" + statsBaseName + OS_FILE);
         SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + DATASET_SUMMARY, "experiments/remote/" + statsBaseName + DATASET_SUMMARY);
         SOSDistribution.getFileFromExperimentNode(experimentConfiguration, "experiments/output/" + statsBaseName + DATASET_FILES, "experiments/remote/" + statsBaseName + DATASET_FILES);
 

@@ -287,8 +287,6 @@ public class SOSContextService implements ContextService {
                 IGUID tip = manifestsDataService.getTips(invariant).iterator().next();
                 if (context.previous().equals(tip)) return;
             }
-
-
         } catch (TIPNotFoundException ignored) {}
 
         throw new ContextException("Context " + context.getUniqueName() + " cannot be added to this node");

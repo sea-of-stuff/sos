@@ -1,8 +1,8 @@
 {
   "experiment" : {
-    "name": "co_a_1",
-    "experimentClass": "Experiment_CO_A_1",
-    "description": "The experiment CO_A_1 investigates the size of the codomain",
+    "name": "co_1",
+    "experimentClass": "Experiment_CO_1",
+    "description": "The experiment CO_1 investigates the size of the codomain",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
       "iterations": 10

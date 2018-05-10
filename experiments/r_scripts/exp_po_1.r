@@ -7,7 +7,11 @@ po_1 <- function(datafile, titlePlot="NO TITLE") {
   d$StatsTYPE[d$StatsTYPE == "policies"] <- "Apply"
   d$StatsTYPE[d$StatsTYPE == "checkPolicies"] <- "Check"
   
-  d$Message <- droplevels(d$Message)
+  d$Message <- as.character(d$Message)
+  d$Message[d$Message == "data_replication_1"] <- "Atom Replication"
+  d$Message[d$Message == "do_nothing_policy"] <- "Void Policy"
+  d$Message[d$Message == "manifest_replication_1"] <- "Manifest Replication"
+  
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
   
   dd <- summarySE(d, measurevar="Measures", groupvars=c("Message", "StatsTYPE"))
@@ -16,11 +20,13 @@ po_1 <- function(datafile, titlePlot="NO TITLE") {
     geom_point() +
     geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$StatsTYPE),width=.2) +
     theme_bw() +
-    theme(axis.text.x=element_text(angle=90,hjust=1), 
-          axis.text=element_text(size=14),
-          axis.title=element_text(size=16,face="bold")) +
-    labs(title=titlePlot, x="Policy", y="Time (s)") +
-    scale_color_discrete(name='Policy Function')
+    theme(axis.text=element_text(size=14),
+          axis.title=element_text(size=14),
+          plot.title=element_text(size=16),
+          legend.title=element_text(size=15),
+          legend.text=element_text(size=13)) +
+    labs(title=titlePlot, x="Policies", y="Time (s)") +
+    scale_color_discrete(name='Function')
 
 }
 
