@@ -52,35 +52,41 @@ public class ExperimentalFramework {
                 "pr_1/configuration/configuration.json",
                 "pr_1/configuration/configuration-hogun.json",
                 "pr_1/configuration/configuration-hogun-mixed-content.json",
+
                 "po_1/configuration/configuration-hogun.json",
                 "po_a_3/configuration/configuration-hogun.json",
-//                "po_c_1/configuration/configuration-hogun.json",
                 "po_c_3/configuration/configuration-hogun.json",
-                "co_a_1/configuration/configuration-hogun.json",
-                "co_a_1/configuration/configuration-sif.json",
-                "co_a_2/configuration/configuration-hogun.json",
-                "co_c_1/configuration/configuration-hogun.json",
-                "co_c_2/configuration/configuration-hogun.json",
+
+                "co_1/configuration/configuration-hogun.json",
+                "co_1/configuration/configuration-sif.json",
+                "co_2/configuration/configuration-hogun.json",
+
                 "do_1/configuration/configuration-sif.json",
                 "do_1/configuration/configuration-sif-alternative.json",
                 "do_1/configuration/configuration-hogun.json",
                 "do_2/configuration/configuration-sif.json",
                 "do_2/configuration/configuration-sif-alternative.json",
                 "do_3/configuration/configuration-sif.json",
+
                 "ping_1/configuration/configuration-sif.json",
                 "ping_1/configuration/configuration-sif-hogun.json",
                 "ping_2/configuration/configuration-sif.json",
                 "ping_2/configuration/configuration-sif-hogun.json",
+
                 "nb_1/configuration/configuration-sif.json",
+
                 "repl_1/configuration/configuration-sif.json",
                 "repl_1/configuration/configuration-hogun.json",
                 "repl_2/configuration/configuration-sif.json",
                 "repl_2/configuration/configuration-hogun.json",
+
                 "io_1/configuration/configuration-sif.json",
                 "io_2/configuration/configuration.json",
                 "io_2/configuration/configuration-sif.json",
                 "io_2/configuration/configuration-sif-2.json",
+
                 "guid_2/configuration/configuration-sif.json",
+
                 "failure_1/configuration/configuration-sif.json",
                 "failure_2/configuration/configuration-sif.json",
                 "failure_3/configuration/configuration-sif.json",

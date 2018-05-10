@@ -27,9 +27,8 @@ dd
 ##################
 ratio <- TRUE
 
-d <- read.csv("remote/ping_2_17.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/ping_2_022.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/ping_2_020.tsv", header=TRUE, sep="\t")
 d <- d[d$StatsTYPE == 'ping',]
 d$User.Measure <- as.numeric(d$User.Measure)
 d$User.Measure_2 <- as.numeric(d$User.Measure_2)
@@ -47,7 +46,7 @@ if (ratio) {
 }
 
 dd <- summarySE(d, measurevar="Measures", groupvars=c("Size", "Message"))
-dodge_offset <- 5
+dodge_offset <- 0
 ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Message)) + 
   geom_point(position=position_dodge(width=dodge_offset)) +
   geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci, color=dd$Message),
@@ -62,3 +61,4 @@ ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Message)) +
   labs(x="Data size (MB)", y=yLabel) +
   scale_color_discrete(name='Signed\nRequests') +
   guides(col=guide_legend(nrow=2))
+  

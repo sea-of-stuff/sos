@@ -6,43 +6,46 @@ import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
+import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * The experiment PO_A_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
- *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class Experiment_PO_1 extends BaseExperiment implements Experiment {
+public class Experiment_CO_2 extends BaseExperiment implements Experiment {
 
-    public Experiment_PO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
+    public Experiment_CO_2(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
     }
 
-    public Experiment_PO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
+    public Experiment_CO_2(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_PO_1();
+        return new ExperimentUnit_CO_2();
     }
 
-    private class ExperimentUnit_PO_1 implements ExperimentUnit {
+    private class ExperimentUnit_CO_2 implements ExperimentUnit {
 
         private ContextService cms;
 
         @Override
         public void setup() throws ExperimentException {
+            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");
+
+                // NOTE - Keep amount of data fixed
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
                 addFolderContentToNode(node, new File(datasetPath), -1);
 
@@ -52,7 +55,7 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
                 System.out.println("Running Predicates");
                 cms.runPredicates();
             } catch (ContextException | IOException e) {
-                throw new ExperimentException(e);
+                throw new ExperimentException();
             }
         }
 
@@ -71,25 +74,29 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws ContextException {
 
-            // addContext(cms, experiment, "no_policies");
             addContext(cms, experiment, "do_nothing_policy");
-
-            // Must have multiple nodes up and running
             addContext(cms, experiment, "data_replication_1");
-            addContext(cms, experiment, "manifest_replication_1");
-
-            // TODO - manifest & data replication, all versions replication?
+            addContext(cms, experiment, "data_replication_2");
+            addContext(cms, experiment, "data_replication_3");
+            addContext(cms, experiment, "data_replication_4");
+            addContext(cms, experiment, "data_replication_5");
+            addContext(cms, experiment, "data_replication_6");
+            addContext(cms, experiment, "data_replication_7");
+            addContext(cms, experiment, "data_replication_8");
+            addContext(cms, experiment, "data_replication_9");
+            addContext(cms, experiment, "data_replication_10");
         }
 
     }
 
     public static void main(String[] args) throws ExperimentException, ConfigurationException {
 
-        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "po_a_1") + "configuration.json");
+        File experimentConfigurationFile = new File(CONFIGURATION_FOLDER.replace("{experiment}", "co_a_2") + "configuration.json");
         ExperimentConfiguration experimentConfiguration = new ExperimentConfiguration(experimentConfigurationFile);
 
-        Experiment_PO_1 experiment_po__1 = new Experiment_PO_1(experimentConfiguration);
-        experiment_po__1.process();
+        Experiment_CO_2 experiment_co__2 = new Experiment_CO_2(experimentConfiguration);
+        experiment_co__2.process();
     }
+
 
 }

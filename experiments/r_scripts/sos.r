@@ -144,12 +144,7 @@ pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predica
 # PO_A_1
 ##############
 
-# Number of iterations: 10
-po_1("remote/po_a1_002.tsv", type="policies", subtype="policy_apply_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset (10 iterations)", yMax=100)
-
-## PO_C_1
-# Number of iterations: 10
-po_1("remote/po_c1_001.tsv", type="checkPolicies", subtype="policy_check_dataset", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset", yMax=10)
+po_1("remote/po_1_001.tsv", titlePlot = "Time to run the policy apply function over the ~100 x 100kB dataset")
 
 ##############
 # PO_A_3
