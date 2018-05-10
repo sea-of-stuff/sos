@@ -72,7 +72,7 @@ public class PingNode extends Task {
             }
 
             long startRequest = System.nanoTime();
-            Response response = RequestsManager.getInstance().playSyncRequest(request, sign);
+            Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {
 

@@ -17,6 +17,7 @@
 package uk.ac.standrews.cs.sos.network;
 
 
+import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -29,11 +30,13 @@ import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.apache.commons.io.IOUtils;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
+import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 import uk.ac.standrews.cs.utilities.crypto.CryptoException;
 import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.PublicKey;
 import java.util.stream.Collectors;
@@ -236,7 +239,7 @@ public class SyncRequest extends Request {
             }
 
             return new ResponseImpl(resp);
-        } catch (UnirestException | CryptoException e) {
+        } catch (UnirestException | CryptoException | IOException e) {
             SOS_LOG.log(LEVEL.ERROR, "Unable to make HTTP request: " + e.getMessage());
             return new ErrorResponseImpl();
         } catch (Error e) {
@@ -248,7 +251,7 @@ public class SyncRequest extends Request {
     // NOTE - The following method has not been tested
     // This method might be particularly slow for requests that have large bodies
     // I am not signing the body for the time being
-    private void signRequest(BaseRequest request) throws CryptoException {
+    private void signRequest(BaseRequest request) throws CryptoException, IOException {
 
         if (d_privateKey != null) {
             HttpRequest httpRequest = request.getHttpRequest();
@@ -261,7 +264,13 @@ public class SyncRequest extends Request {
                                                         .collect(Collectors.joining())
                             )
                         .collect(Collectors.joining("&"));
-            String body = "PLACEHOLDER"; // FIXME - httpRequest.getBody().toString();
+
+            String body = "";
+            if (httpRequest.getHttpMethod() == HttpMethod.POST || httpRequest.getHttpMethod() == HttpMethod.PUT) {
+                try (InputStream bodyContent = httpRequest.getBody().getEntity().getContent()) {
+                    body = IO.InputStreamToString(bodyContent);
+                }
+            }
 
             String requestToSign = method + url + headers + body + nodeChallenge;
             String signedChallenge = DigitalSignature.sign64(d_privateKey, requestToSign);

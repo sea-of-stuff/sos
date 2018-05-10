@@ -58,7 +58,7 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
 
         File[] subsets = new File(experiment.getExperimentNode().getDatasetPath()).listFiles();
         assert(subsets != null);
-        return experiment.getSetup().getIterations() * subsets.length;
+        return experiment.getSetup().getIterations() * subsets.length * 2;
     }
 
     private class ExperimentUnit_PING_2 implements ExperimentUnit {

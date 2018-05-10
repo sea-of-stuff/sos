@@ -120,7 +120,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
 
         manageSignatureKeys();
         manageNodeGUID();
-
         initLog();
 
         // Logo generated with: http://patorjk.com/software/taag/#p=display&f=Isometric3&t=SOS
@@ -149,6 +148,7 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         "Starting up Node with GUID: " + this.guid().toMultiHash() + "\n" +
                         "Address: " + this.getHostAddress().toString() + "\n");
 
+        initRequestManager();
         initDB();
         initBasicServices();
         loadBootstrapNodes();
@@ -245,7 +245,9 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
             nodeDiscoveryService.shutdown();
         }
 
-        RequestsManager.getInstance().shutdown();
+        if (RequestsManager.getInstance() != null) {
+            RequestsManager.getInstance().shutdown();
+        }
 
         DatabaseFactory.kill();
         SOSAgent.destroy();
@@ -292,9 +294,6 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
                         Paths.get(nodeDirectory.getPathname() + "id_rsa"));
             }
 
-            // Pass the private key to the request manager, so that requests can be signed by the node
-            RequestsManager.init(d_privateKey);
-
         } catch (CryptoException e) {
             throw new SignatureException(e);
         }
@@ -317,7 +316,13 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
     private void initLog() {
         // Each node will have its own log and it will be used to log errors as well
         // as useful information about the node itself.
-        uk.ac.standrews.cs.sos.utils.SOS_LOG SOS_LOG = new SOS_LOG(guid());
+        new SOS_LOG(guid());
+    }
+
+    private void initRequestManager() {
+
+        // Pass the private key to the request manager, so that requests can be signed by the node
+        RequestsManager.init(d_privateKey);
     }
 
     private void initDB() throws SOSException {

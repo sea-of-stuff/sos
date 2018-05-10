@@ -1,31 +1,31 @@
 {
   "experiment" : {
-    "name": "ping_1",
-    "experimentClass": "Experiment_PING_1",
-    "description": "The experiment PING_1 investigates ...",
+    "name": "ping_2",
+    "experimentClass": "Experiment_PING_2",
+    "description": "The experiment PING_2 investigates...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
       "iterations": 5
     },
     "nodes" : [
       {
-        "id" : 3,
-        "name" : "sif3",
+        "id" : 5,
+        "name" : "hogun5",
         "path" : "/cs/scratch/",
         "remote" : true,
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-3.cluster",
+          "host" : "hogun-5.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
           "privatekeypath": "/Users/sic2/.ssh/id_rsa",
           "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
         },
-        "configurationfile" : "sif_3.json",
-        "certificatefile" : "sif_3.crt",
-        "keyfile" : "sif_3.key",
+        "configurationfile" : "hogun_5.json",
+        "certificatefile" : "hogun_5.crt",
+        "keyfile" : "hogun_5.key",
         "behaviour": {
           "start": 0,
           "stop": -1,
@@ -35,23 +35,24 @@
       }
     ],
     "experimentnode" : {
-      "id" : 4,
-      "name" : "sif4",
+      "id" : 6,
+      "name" : "sif6",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-4.cluster",
+        "host" : "sif-6.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "sif_4.json",
-      "certificatefile" : "sif_4.crt",
-      "keyfile" : "sif_4.key",
+      "configurationfile" : "sif_6_cross_rack.json",
+      "certificatefile" : "sif_6.crt",
+      "keyfile" : "sif_6.key",
+      "dataset" : "random_100mb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

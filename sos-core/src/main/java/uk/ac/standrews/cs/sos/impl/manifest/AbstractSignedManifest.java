@@ -25,6 +25,7 @@ import uk.ac.standrews.cs.sos.model.SignedManifest;
 import uk.ac.standrews.cs.sos.utils.IO;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Abstract class for all manifests that support signatures.
@@ -91,8 +92,8 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
 
         if (signature == null || signature.isEmpty()) return false;
 
-        try {
-            String manifestToSign = IO.InputStreamToString(contentToHash());
+        try (InputStream contentToHash = contentToHash()){
+            String manifestToSign = IO.InputStreamToString(contentToHash);
             return role.verify(manifestToSign, signature);
         } catch (IOException e) {
             throw new SignatureException(e);
@@ -107,8 +108,8 @@ public abstract class AbstractSignedManifest extends BasicManifest implements Si
      */
     protected String makeSignature() throws SignatureException {
 
-        try {
-            String manifestToSign = IO.InputStreamToString(contentToHash());
+        try (InputStream contentToHash = contentToHash()){
+            String manifestToSign = IO.InputStreamToString(contentToHash);
             return generateSignature(manifestToSign);
 
         } catch (IOException e) {

@@ -5,27 +5,27 @@
     "description": "The experiment PING_1 investigates ...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
-      "iterations": 5
+      "iterations": 10
     },
     "nodes" : [
       {
         "id" : 3,
-        "name" : "sif3",
+        "name" : "hogun3",
         "path" : "/cs/scratch/",
         "remote" : true,
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-3.cluster",
+          "host" : "hogun-3.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
           "privatekeypath": "/Users/sic2/.ssh/id_rsa",
           "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
         },
-        "configurationfile" : "sif_3.json",
-        "certificatefile" : "sif_3.crt",
-        "keyfile" : "sif_3.key",
+        "configurationfile" : "hogun_3.json",
+        "certificatefile" : "hogun_3.crt",
+        "keyfile" : "hogun_3.key",
         "behaviour": {
           "start": 0,
           "stop": -1,
@@ -49,7 +49,7 @@
         "privatekeypath": "/Users/sic2/.ssh/id_rsa",
         "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
       },
-      "configurationfile" : "sif_4.json",
+      "configurationfile" : "sif_4_cross_rack.json",
       "certificatefile" : "sif_4.crt",
       "keyfile" : "sif_4.key",
       "sendUSRO" : false,
