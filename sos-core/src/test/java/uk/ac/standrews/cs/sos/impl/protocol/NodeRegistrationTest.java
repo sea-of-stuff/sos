@@ -46,9 +46,12 @@ import uk.ac.standrews.cs.sos.impl.services.SOSNodeDiscoveryService;
 import uk.ac.standrews.cs.sos.interfaces.database.NodesDatabase;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.ManifestsDataService;
+import uk.ac.standrews.cs.utilities.crypto.CryptoException;
+import uk.ac.standrews.cs.utilities.crypto.DigitalSignature;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.PublicKey;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -205,7 +208,7 @@ public class NodeRegistrationTest extends ProtocolTest {
 
 
     @Test
-    public void basicRegistrationTest() throws NodeRegistrationException {
+    public void basicRegistrationTest() throws NodeRegistrationException, CryptoException {
 
         Node nodeMock = makeMockNode();
         Node registeredNode = nds.registerNode(nodeMock, true);
@@ -220,9 +223,9 @@ public class NodeRegistrationTest extends ProtocolTest {
     }
 
     @Test
-    public void registerToNDSTest() throws NodeRegistrationException {
-
-        Node nodeMock = new SOSNode(localNodeGUID, mockD_PublicKey, "localhost", 8080, true, true, false, false, false, false, false, false);
+    public void registerToNDSTest() throws NodeRegistrationException, CryptoException {
+        PublicKey publicKey = DigitalSignature.generateKeys().getPublic();
+        Node nodeMock = new SOSNode(localNodeGUID, publicKey, "localhost", 8080, true, true, false, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
@@ -233,15 +236,16 @@ public class NodeRegistrationTest extends ProtocolTest {
      * @throws NodeRegistrationException if the node could not be registered. Test will fail
      */
     @Test
-    public void registerToNDSFailsTest() throws NodeRegistrationException {
-
-        Node nodeMock = new SOSNode(localNodeGUID, mockD_PublicKey, "localhost", 8081, true, true, false, false, false, false, false, false);
+    public void registerToNDSFailsTest() throws NodeRegistrationException, CryptoException {
+        PublicKey publicKey = DigitalSignature.generateKeys().getPublic();
+        Node nodeMock = new SOSNode(localNodeGUID, publicKey, "localhost", 8081, true, true, false, false, false, false, false, false);
         Node registeredNode = nds.registerNode(nodeMock, false);
         assertNotNull(registeredNode);
         assertEquals(registeredNode, nodeMock);
     }
 
-    private Node makeMockNode() {
-        return new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), mockD_PublicKey, "localhost", 8090, true, true, true, true, true, true, true, true);
+    private Node makeMockNode() throws CryptoException {
+        PublicKey publicKey = DigitalSignature.generateKeys().getPublic();
+        return new SOSNode(GUIDFactory.generateRandomGUID(GUID_ALGORITHM), publicKey, "localhost", 8090, true, true, true, true, true, true, true, true);
     }
 }
