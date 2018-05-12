@@ -178,7 +178,7 @@ public class SOSURL {
 
     public static URL STORAGE_ATOM_CHALLENGE(Node node, IGUID guid, String challenge) throws SOSURLException {
         String url = buildURLBase(node) +
-                "storage/atom/atom/" + guid.toMultiHash() + "/challenge/" + challenge;
+                "storage/atom/" + guid.toMultiHash() + "/challenge/" + challenge;
 
         return makeURL(url);
     }
@@ -198,7 +198,6 @@ public class SOSURL {
     }
 
     public static URL USRO_GET_ROLES(Node node, IGUID user) throws SOSURLException {
-
         String url = buildURLBase(node) +
                 "usro/user/" + user.toMultiHash() + "/roles";
 

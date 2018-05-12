@@ -148,7 +148,7 @@ public class SOSStorageService implements StorageService {
 
         int replicationFactor = atomBuilder.getReplicationFactor() <= storageSettings.getMaxReplication() ? atomBuilder.getReplicationFactor() : storageSettings.getMaxReplication();
         if (replicationFactor > 0) {
-            System.out.println("RF: " + replicationFactor); // REMOVEME
+
             try (Data data = atomBuilder.getData()){
 
                 NodesCollection codomain = atomBuilder.getReplicationNodes();

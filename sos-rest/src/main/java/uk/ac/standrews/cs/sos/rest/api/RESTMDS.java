@@ -112,9 +112,8 @@ public class RESTMDS {
 
     @GET
     @Path("/manifest/guid/{guid}/challenge/{challenge: .*}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getManifest(@PathParam("guid") String guid, @PathParam("challenge") final String challenge, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/mds/manifest/guid/" + guid + "/challenge/" + challenge);
 
         IGUID manifestGUID;

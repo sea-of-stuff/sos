@@ -72,7 +72,6 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
 
         private void addContexts() throws ContextException {
 
-            addContext(cms, experiment, "do_nothing_policy");
             addContext(cms, experiment, "data_replication_1");
             addContext(cms, experiment, "data_replication_2");
             addContext(cms, experiment, "data_replication_3");

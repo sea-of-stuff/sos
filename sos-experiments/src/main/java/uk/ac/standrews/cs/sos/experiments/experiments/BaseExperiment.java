@@ -134,7 +134,7 @@ public abstract class BaseExperiment implements Experiment {
             for (ExperimentConfiguration.Experiment.Node node : experiment.getNodes()) {
 
                 Node nodeToPing = new BasicNode(node.getSsh().getHost(), 8080);
-                PingNode pingNode = new PingNode(nodeToPing, "HELLO WORLD", true);
+                PingNode pingNode = new PingNode(nodeToPing, "HELLO_WORLD", true);
 
                 TasksQueue.instance().performSyncTask(pingNode);
                 if (pingNode.getState() == TaskState.SUCCESSFUL) {

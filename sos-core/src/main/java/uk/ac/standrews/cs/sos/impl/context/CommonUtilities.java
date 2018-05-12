@@ -121,7 +121,6 @@ public class CommonUtilities {
                     .setReplicationFactor(replicationFactor)
                     .setAlreadyProtected(dataIsAlreadyProtected);
 
-            System.out.println("Replicate data " + replicationFactor + " times"); // REMOVEME
             storageService.addAtom(atomBuilder);
 
         } catch (DataStorageException | ManifestPersistException e) {
@@ -222,7 +221,6 @@ public class CommonUtilities {
             return entityChallenge.getState() == TaskState.SUCCESSFUL && entityChallenge.isChallengePassed();
 
         } catch (NodeNotFoundException | GUIDGenerationException | AtomNotFoundException | IOException e) {
-
             return false;
         }
 

@@ -57,6 +57,7 @@ public class ExperimentalFramework {
                 "po_c_3/configuration/configuration-hogun.json",
 
                 "co_1/configuration/configuration-hogun.json",
+                "co_1/configuration/configuration-hogun-light.json",
                 "co_1/configuration/configuration-sif.json",
                 "co_2/configuration/configuration-hogun.json",
 

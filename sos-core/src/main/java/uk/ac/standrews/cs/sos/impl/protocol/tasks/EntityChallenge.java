@@ -16,7 +16,6 @@
  */
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.ac.standrews.cs.castore.data.Data;
 import uk.ac.standrews.cs.guid.GUIDFactory;
@@ -29,11 +28,7 @@ import uk.ac.standrews.cs.sos.impl.protocol.Task;
 import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.interfaces.network.Response;
 import uk.ac.standrews.cs.sos.model.Node;
-import uk.ac.standrews.cs.sos.network.ErrorResponseImpl;
-import uk.ac.standrews.cs.sos.network.HTTPMethod;
-import uk.ac.standrews.cs.sos.network.RequestsManager;
-import uk.ac.standrews.cs.sos.network.SyncRequest;
-import uk.ac.standrews.cs.sos.utils.IO;
+import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -133,7 +128,7 @@ public class EntityChallenge extends Task {
     @Override
     public Task deserialize(String json) throws IOException {
 
-        JsonNode node = JSONHelper.jsonObjMapper().readTree(json);
+        // JsonNode node = JSONHelper.jsonObjMapper().readTree(json);
 
         return null;
     }
@@ -141,16 +136,15 @@ public class EntityChallenge extends Task {
     private boolean challenge(Node node) throws SOSURLException, IOException {
 
         URL url = isData ? SOSURL.STORAGE_ATOM_CHALLENGE(node, entity, challenge) : SOSURL.MDS_MANIFEST_CHALLENGE(node, entity, challenge);
-        SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url);
+        SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.GET, url, ResponseType.TEXT);
         Response response = RequestsManager.getInstance().playSyncRequest(request);
         if (response instanceof ErrorResponseImpl) {
             throw new IOException();
         }
 
-        try (InputStream inputStream = response.getBody()) {
-            String responseBody = IO.InputStreamToString(inputStream);
+        try {
+            String responseBody = response.getStringBody();
             IGUID responseGUID = GUIDFactory.recreateGUID(responseBody);
-
             return responseGUID.equals(challengedEntity);
         } catch (GUIDGenerationException e) {
             return false;

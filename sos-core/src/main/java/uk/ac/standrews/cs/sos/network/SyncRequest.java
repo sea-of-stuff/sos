@@ -229,7 +229,7 @@ public class SyncRequest extends Request {
             }
 
             if (d_publicKey != null) {
-                String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_SIGNED_CHALLENGE_HEADER); // TODO - update the sos-rest accordingly
+                String signedChallenge = resp.getHeaders().getFirst(SOS_NODE_CHALLENGE_HEADER);
                 boolean verified = DigitalSignature.verify64(d_publicKey, nodeChallenge, signedChallenge);
 
                 if (!verified) {
@@ -275,7 +275,7 @@ public class SyncRequest extends Request {
             String requestToSign = method + url + headers + body + nodeChallenge;
             String signedChallenge = DigitalSignature.sign64(d_privateKey, requestToSign);
 
-            request.getHttpRequest().header(SOS_NODE_SIGNED_CHALLENGE_HEADER, signedChallenge);
+            request.getHttpRequest().header(SOS_NODE_SIGNED_CHALLENGE_HEADER, signedChallenge); // TODO - Have remote node verify the signature
         }
 
     }

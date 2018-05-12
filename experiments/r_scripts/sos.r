@@ -167,9 +167,9 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 # CO_x
 ##############
 
-co("remote/co_1_005.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
+co("remote/co_1_006.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
 
-co("remote/co_2_001.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
+co("remote/co_2_003.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
 
 ##############
 # DO_x

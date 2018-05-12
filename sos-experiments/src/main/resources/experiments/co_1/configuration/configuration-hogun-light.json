@@ -1,0 +1,71 @@
+{
+  "experiment" : {
+    "name": "co_1",
+    "experimentClass": "Experiment_CO_1",
+    "description": "The experiment CO_1 investigates the size of the codomain",
+    "setup": {
+      "app": "sos-slave/target/sos-slave.jar",
+      "iterations": 1
+    },
+    "nodes" : [
+      {
+        "id" : 2,
+        "name" : "hogun2",
+        "path" : "/cs/scratch/",
+        "remote" : true,
+        "java" : "/usr/local/jdk/bin/java",
+        "ssh" : {
+          "type" : 1,
+          "host" : "hogun-2.cluster",
+          "user" : "sic2",
+          "known_hosts": "/Users/sic2/.ssh/known_hosts",
+          "config": "/Users/sic2/.ssh/config",
+          "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+          "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+        },
+        "configurationfile" : "hogun_2.json",
+        "certificatefile" : "hogun_2.crt",
+        "keyfile" : "hogun_2.key",
+        "behaviour": {
+          "start": 0,
+          "stop": -1,
+          "pause": [],
+          "operations": [ "WIP" ]
+        }
+      }
+    ],
+    "experimentnode" : {
+      "id" : 12,
+      "name" : "hogun12",
+      "path" : "/cs/scratch/",
+      "remote" : true,
+      "java" : "/usr/local/jdk/bin/java",
+      "ssh" : {
+        "type" : 1,
+        "host" : "hogun-12.cluster",
+        "user" : "sic2",
+        "known_hosts": "/Users/sic2/.ssh/known_hosts",
+        "config": "/Users/sic2/.ssh/config",
+        "privatekeypath": "/Users/sic2/.ssh/id_rsa",
+        "passphrase" : "85GDkVfAMHAV//2ZcoTeW8YzfB1mQHdbm9A/ZdSYuRY6Va2whCYprV0Uh+Dx+ZxGnAmK5SRIzFIfPjrqyeHzYA=="
+      },
+      "configurationfile" : "hogun_12_light.json",
+      "certificatefile" : "hogun_12.crt",
+      "keyfile" : "hogun_12.key",
+      "dataset" : "hello_world",
+      "sendUSRO" : false,
+      "behaviour": {
+        "start": 0,
+        "stop": -1,
+        "pause": [],
+        "operations": [ "WIP" ]
+      }
+    },
+    "stats": {
+      "experiment": false,
+      "predicate": false,
+      "policies": true,
+      "checkPolicies": true
+    }
+  }
+}

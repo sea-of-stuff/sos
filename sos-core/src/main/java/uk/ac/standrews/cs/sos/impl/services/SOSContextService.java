@@ -820,8 +820,8 @@ public class SOSContextService implements ContextService {
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
+                runCheckPolicies(context, guid, dummyStats, false);
                 runPolicies(context, guid, policyApplyStats);
-                runCheckPolicies(context, guid, dummyStats, true);
             }
 
         });
@@ -1011,6 +1011,7 @@ public class SOSContextService implements ContextService {
         }
     }
 
+    // NOTE: This method is needed for experimental purposes
     private void trackNumberOfValidPolicies(IGUID contextInvariant, IGUID head, boolean allPoliciesAreSatisfied, boolean isAfterApply) {
 
         int headIndex = versionsProcessed.indexOf(head);
