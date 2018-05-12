@@ -139,6 +139,8 @@ public interface StorageService extends Service {
      */
     Queue<LocationBundle> findLocations(IGUID guid);
 
+    boolean atomExists(IGUID guid);
+
     /**
      * Challenge the storage for the atom matching the given guid.
      *

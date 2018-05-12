@@ -10,11 +10,23 @@ import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Experiment_CO_1 extends BaseExperiment implements Experiment {
+
+    private Iterator<ExperimentUnit> experimentUnitIterator;
+
+    // Must be static to be initialized before constructor
+    private static String[] contextsToRun = new String[] {"data_replication_1", "data_replication_2", "data_replication_3",
+            "data_replication_4", "data_replication_5", "data_replication_6",
+            "data_replication_7", "data_replication_8", "data_replication_9",
+            "data_replication_10"};
 
     public Experiment_CO_1(ExperimentConfiguration experimentConfiguration) throws ExperimentException {
         super(experimentConfiguration);
@@ -22,16 +34,39 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
 
     public Experiment_CO_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);
+
+        List<ExperimentUnit> units = new LinkedList<>();
+        for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
+            for (String aContextsToRun:contextsToRun) {
+                units.add(new ExperimentUnit_CO_1(aContextsToRun));
+            }
+        }
+        Collections.shuffle(units);
+
+        experimentUnitIterator = units.iterator();
     }
 
     @Override
     public ExperimentUnit getExperimentUnit() {
-        return new ExperimentUnit_CO_1();
+
+        return experimentUnitIterator.next();
     }
+
+    @Override
+    public int numberOfTotalIterations() {
+
+        return experiment.getSetup().getIterations() * contextsToRun.length;
+    }
+
 
     private class ExperimentUnit_CO_1 implements ExperimentUnit {
 
+        private String contextName;
         private ContextService cms;
+
+        public ExperimentUnit_CO_1(String contextName) {
+            this.contextName = contextName;
+        }
 
         @Override
         public void setup() throws ExperimentException {
@@ -41,13 +76,11 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");
-
-                // NOTE - Keep amount of data fixed
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath), -1);
+                addFolderContentToNode(node, new File(datasetPath), -1); // NOTE - Keep amount of data fixed
 
-                System.out.println("Adding contexts to node");
-                addContexts();
+                System.out.println("Add context " + contextName + " to node");
+                addContext(cms, experiment, contextName);
 
                 System.out.println("Running Predicates");
                 cms.runPredicates();
@@ -68,20 +101,6 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
             cms.runCheckPolicies();
 
             rest_a_bit(2000);
-        }
-
-        private void addContexts() throws ContextException {
-
-            addContext(cms, experiment, "data_replication_1");
-            addContext(cms, experiment, "data_replication_2");
-            addContext(cms, experiment, "data_replication_3");
-            addContext(cms, experiment, "data_replication_4");
-            addContext(cms, experiment, "data_replication_5");
-            addContext(cms, experiment, "data_replication_6");
-            addContext(cms, experiment, "data_replication_7");
-            addContext(cms, experiment, "data_replication_8");
-            addContext(cms, experiment, "data_replication_9");
-            addContext(cms, experiment, "data_replication_10");
         }
 
     }

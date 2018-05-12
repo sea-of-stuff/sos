@@ -182,9 +182,14 @@ public class RESTStorage {
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
         StorageService storageService = RESTConfig.sos.getStorageService();
-        IGUID challengeResult = storageService.challenge(atomGUID, challenge);
 
-        return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
+        if (storageService.atomExists(atomGUID)) {
+            IGUID challengeResult = storageService.challenge(atomGUID, challenge);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
+        } else {
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Atom is not stored in this node");
+        }
+
     }
 
     @DELETE

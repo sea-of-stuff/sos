@@ -126,9 +126,17 @@ public class RESTMDS {
         if (challenge.trim().isEmpty()) return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Challenge is empty");
 
         ManifestsDataService mds = RESTConfig.sos.getMDS();
-        IGUID challengeResult = mds.challenge(manifestGUID, challenge);
 
-        return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
+        try {
+            mds.getManifest(manifestGUID); // Check if node is stored in this node
+            IGUID challengeResult = mds.challenge(manifestGUID, challenge);
+            return HTTPResponses.OK(RESTConfig.sos, node_challenge, challengeResult.toMultiHash());
+
+        } catch (ManifestNotFoundException e) {
+
+            return HTTPResponses.BAD_REQUEST(RESTConfig.sos, node_challenge, "Manifest is not stored in this node");
+        }
+
     }
 
     @DELETE

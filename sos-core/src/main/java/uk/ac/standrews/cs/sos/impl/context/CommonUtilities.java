@@ -178,9 +178,10 @@ public class CommonUtilities {
      *
      * @param codomain nodes to check
      * @param guid of the manifest
+     * @param limit
      * @return number of replicas
      */
-    public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid) {
+    public int numberOfManifestReplicas(NodesCollection codomain, IGUID guid, int limit) {
 
         int counter = 0;
 
@@ -197,6 +198,8 @@ public class CommonUtilities {
                 // Make sure that the manifestDataService has record of this information
                 manifestsDataService.addManifestNodeMapping(guid, nodeRef);
             }
+
+            if (limit != -1 && counter >= limit) return counter;
         }
 
         return counter;
@@ -231,9 +234,10 @@ public class CommonUtilities {
      *
      * @param codomain nodes to check
      * @param guid of the data
+     * @param limit
      * @return number of replicas
      */
-    public int numberOfDataReplicas(NodesCollection codomain, IGUID guid) {
+    public int numberOfDataReplicas(NodesCollection codomain, IGUID guid, int limit) {
 
         int counter = 0;
 
@@ -255,6 +259,8 @@ public class CommonUtilities {
                     SOS_LOG.log(LEVEL.WARN, "Unable to add the mapping data-location " +
                             guid.toShortString() + " -- " + nodeRef.toShortString() + " to the storage service");
                 }
+
+                if (limit != -1 && counter >= limit) return counter;
             }
         }
 

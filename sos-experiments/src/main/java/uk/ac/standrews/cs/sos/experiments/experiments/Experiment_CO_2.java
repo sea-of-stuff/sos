@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * FIXME - see CO_1
+ *
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
 public class Experiment_CO_2 extends BaseExperiment implements Experiment {

@@ -13,8 +13,6 @@ import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
-import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
-import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
 import uk.ac.standrews.cs.sos.model.Atom;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
 import uk.ac.standrews.cs.sos.services.StorageService;
@@ -85,7 +83,6 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
 
         @Override
         public void setup() throws ExperimentException {
-            InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "SETTING UP EXPERIMENT");
             System.out.println("Node GUID is " + node.guid().toMultiHash());
             System.out.println("Parallel: " + parallel + " ReplicationFactor: " + replicationFactor);
 
@@ -172,7 +169,6 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
                             .setDoNotStoreManifestLocally(true);
 
                     Atom atom = storageService.addAtom(atomBuilder);
-                    InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added atom " + atom.guid().toShortString() + " from URI " + file.toString());
                 } catch (URISyntaxException | DataStorageException | ManifestPersistException e) {
                     e.printStackTrace();
                 }

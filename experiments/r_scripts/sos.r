@@ -114,6 +114,21 @@ grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),
              mylegend, nrow=2,heights=c(10, 1))
 
 
+manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)");
+atom_repl_1 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_100kb)");
+atom_repl_2 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_1MB)"); # TODO
+atom_repl_3 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_10MB)"); # TODO
+
+
+mylegend<-g_legend(manifest_repl)
+grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
+                         atom_repl_1 + theme(legend.position="none"),
+                         atom_repl_2 + theme(legend.position="none"),
+                         atom_repl_3 + theme(legend.position="none"),
+                         nrow=2,
+                         top=textGrob('Manifest and Atom Replication', gp=gpar(fontsize=16))),
+             mylegend, nrow=2,heights=c(10, 1))
+
 ############
 # PR_1
 ############
@@ -169,7 +184,17 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 
 co("remote/co_1_006.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
 
-co("remote/co_2_003.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
+co("remote/co_1_014.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
+
+co1 <- co("remote/co_1_015.tsv", titlePlot="CO_1 (10 iterations), 1mb dataset (~1GB). Replication factor = 1")  # --- throughput is lower than what measured between two nodes
+c02 <- co("remote/co_2_003.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
+
+mylegend<-g_legend(co1)
+grid.arrange(arrangeGrob(co1 + theme(legend.position="none"),
+                         c02 + theme(legend.position="none"),
+                         nrow=1,
+                         top=textGrob('Function', gp=gpar(fontsize=16))),
+             mylegend, nrow=2, heights=c(10, 1))
 
 ##############
 # DO_x

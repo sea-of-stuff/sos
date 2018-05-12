@@ -56,7 +56,7 @@ public class CommonPolicies {
     @SuppressWarnings("WeakerAccess")
     public static boolean manifestIsReplicated(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest, int factor) {
 
-        int numberReplicas = commonUtilities.numberOfManifestReplicas(codomain, manifest.guid());
+        int numberReplicas = commonUtilities.numberOfManifestReplicas(codomain, manifest.guid(), factor);
         return numberReplicas >= factor;
     }
 
@@ -99,7 +99,7 @@ public class CommonPolicies {
             Manifest contentManifest = commonUtilities.getContentManifest((Version) manifest);
             if (contentManifest.getType().equals(ManifestType.ATOM)) {
 
-                int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, contentManifest.guid());
+                int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, contentManifest.guid(), factor);
                 return numberReplicas >= factor;
             }
 
@@ -118,7 +118,7 @@ public class CommonPolicies {
     @SuppressWarnings("WeakerAccess")
     public static boolean isDataDeleted(NodesCollection codomain, CommonUtilities commonUtilities, Manifest manifest) {
 
-        int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, manifest.guid());
+        int numberReplicas = commonUtilities.numberOfDataReplicas(codomain, manifest.guid(), -1);
         return numberReplicas == 0;
     }
 

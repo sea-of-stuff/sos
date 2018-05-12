@@ -335,6 +335,18 @@ public class SOSStorageService implements StorageService {
     }
 
     @Override
+    public boolean atomExists(IGUID guid) {
+
+        try {
+            IDirectory dataDirectory = storage.getAtomsDirectory();
+
+            return dataDirectory.contains(guid.toMultiHash());
+        } catch (DataStorageException e) {
+            return false;
+        }
+    }
+
+    @Override
     public IGUID challenge(IGUID guid, String challenge) {
 
         try {
