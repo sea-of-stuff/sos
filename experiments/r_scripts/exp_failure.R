@@ -5,7 +5,10 @@ source("r_scripts/exp_basic.r")
 library(ggplot2)
 
 d <- read.csv("remote/failure_1_run_24.tsv", header=TRUE, sep="\t")
+
 d <- read.csv("remote/failure_2_run_5.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_2_003.tsv", header=TRUE, sep="\t")
+
 d <- read.csv("remote/failure_3_run_3.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_4_run_1.tsv", header=TRUE, sep="\t")
 

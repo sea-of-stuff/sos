@@ -11,10 +11,10 @@ import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.node.NodeNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.userrole.UserRolePersistException;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
-import uk.ac.standrews.cs.sos.impl.datamodel.VersionManifest;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.AtomBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.impl.datamodel.locations.URILocation;
@@ -23,6 +23,7 @@ import uk.ac.standrews.cs.sos.impl.metadata.MetadataBuilder;
 import uk.ac.standrews.cs.sos.impl.node.NodesCollectionImpl;
 import uk.ac.standrews.cs.sos.impl.node.SOSLocalNode;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
+import uk.ac.standrews.cs.sos.impl.protocol.tasks.AtomDeletion;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.ManifestDeletion;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
@@ -467,7 +468,7 @@ public interface ExperimentUnit {
 
     default void deleteData(SOSLocalNode node, Context context, List<IGUID> versionsToDelete) {
 
-        System.out.println("Delete data in local node.");
+        System.out.println("Delete data in local node. --- No. versions: " + versionsToDelete.size());
         for(IGUID guid:versionsToDelete) {
 
             try {
@@ -476,16 +477,38 @@ public interface ExperimentUnit {
 
         }
 
-        System.out.println("Delete data in remote nodes.");
+        System.out.println("Delete data in remote nodes. --- No. versions: " + versionsToDelete.size());
         NodeDiscoveryService nodeDiscoveryService = node.getNDS();
 
+
+        // FIXME - unable to delete version/atom because the policy replicas the atom only
         // Delete versions only. It does not matter if atoms are deleted or not since they are not processed directly by contexts
         for(IGUID guid:versionsToDelete) {
-            Version versionToDelete = new VersionManifest(GUIDFactory.generateRandomGUID(), guid, GUIDFactory.generateRandomGUID(), null,
-                    GUIDFactory.generateRandomGUID(), GUIDFactory.generateRandomGUID(), "");
 
-            ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(true), versionToDelete);
-            TasksQueue.instance().performSyncTask(manifestDeletion);
+            try {
+                Version versionToDelete = (Version) node.getMDS().getManifest(guid);
+                ManifestDeletion manifestDeletion = new ManifestDeletion(nodeDiscoveryService, context.domain(true), versionToDelete);
+                TasksQueue.instance().performSyncTask(manifestDeletion);
+
+                IGUID content = versionToDelete.content();
+                System.out.println("Atom to delete " + content.toMultiHash());
+                for(IGUID nodeRef:context.domain(true).nodesRefs()) {
+
+                    try {
+                        Node remoteNode = node.getNDS().getNode(nodeRef);
+                        AtomDeletion atomDeletion = new AtomDeletion(remoteNode, content);
+                        TasksQueue.instance().performSyncTask(atomDeletion);
+
+                    } catch (NodeNotFoundException e) {
+                        System.out.println("Unable to get node " + nodeRef.toShortString() + " for data deletion");
+                    }
+                }
+
+
+            } catch (ManifestNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

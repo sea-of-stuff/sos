@@ -451,6 +451,7 @@ public class SOSContextService implements ContextService {
         predicateThreadSessionStatistics = new LinkedList<>();
         applyPolicyThreadSessionStatistics = new LinkedList<>();
         checkPolicyThreadSessionStatistics = new LinkedList<>();
+        validPoliciesPerContext = new LinkedHashMap<>();
     }
 
     ////////////////////////////////////////////////////////////

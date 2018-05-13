@@ -64,7 +64,7 @@ public class Experiment_CO_1 extends BaseExperiment implements Experiment {
         private String contextName;
         private ContextService cms;
 
-        public ExperimentUnit_CO_1(String contextName) {
+        ExperimentUnit_CO_1(String contextName) {
             this.contextName = contextName;
         }
 

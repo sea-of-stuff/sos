@@ -174,7 +174,7 @@ public class RemoteManifestsDirectory extends AbstractManifestsDirectory impleme
         }
 
         int trial = 0;
-        for(IGUID nodeToCheck : nodesToCheck) {
+        for(IGUID nodeToCheck:nodesToCheck) {
 
             if (trial >= NUMBER_OF_REMOTE_TRIALS) {
                 break;

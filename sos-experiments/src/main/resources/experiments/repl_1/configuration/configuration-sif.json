@@ -5,7 +5,7 @@
     "description": "The experiment REPL_1 ...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
-      "iterations": 1
+      "iterations": 10
     },
     "nodes" : [
       {
@@ -277,7 +277,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "random_100kb",
+      "dataset" : "100MB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

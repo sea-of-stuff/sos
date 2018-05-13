@@ -82,6 +82,7 @@ public class RESTExperiment {
     @Produces(MediaType.TEXT_PLAIN)
     public Response disabledREST(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/rest/disable");
+        System.out.println("REST API - Disabled");
 
         RESTConfig.sos.setRestEnabled(false);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge);
@@ -92,6 +93,7 @@ public class RESTExperiment {
     @Produces(MediaType.TEXT_PLAIN)
     public Response enableREST(@HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/rest/enable");
+        System.out.println("REST API - Enabled");
 
         RESTConfig.sos.setRestEnabled(true);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge);

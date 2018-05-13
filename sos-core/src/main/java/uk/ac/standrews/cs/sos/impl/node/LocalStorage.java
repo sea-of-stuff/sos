@@ -31,7 +31,7 @@ import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
  */
 public class LocalStorage {
 
-    private static final String ATOM_DIRECTORY_NAME = "atom";
+    private static final String ATOM_DIRECTORY_NAME = "atoms";
     private static final String MANIFESTS_DIRECTORY_NAME = "manifests";
     private static final String NODE_DIRECTORY_NAME = "node"; // where all internal data structures and setting files are stored
     private static final String JAVA_DIRECTORY_NAME = "java";

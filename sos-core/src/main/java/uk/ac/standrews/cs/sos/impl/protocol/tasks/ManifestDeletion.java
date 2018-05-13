@@ -29,7 +29,10 @@ import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Manifest;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.model.NodesCollection;
-import uk.ac.standrews.cs.sos.network.*;
+import uk.ac.standrews.cs.sos.network.ErrorResponseImpl;
+import uk.ac.standrews.cs.sos.network.HTTPMethod;
+import uk.ac.standrews.cs.sos.network.RequestsManager;
+import uk.ac.standrews.cs.sos.network.SyncRequest;
 import uk.ac.standrews.cs.sos.services.NodeDiscoveryService;
 import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
@@ -85,7 +88,7 @@ public class ManifestDeletion extends Task {
 
         try {
             URL url = getManifestURL(node, manifest);
-            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.DELETE, url, ResponseType.TEXT);
+            SyncRequest request = new SyncRequest(node.getSignatureCertificate(), HTTPMethod.DELETE, url);
             Response response = RequestsManager.getInstance().playSyncRequest(request);
 
             if (!(response instanceof ErrorResponseImpl)) {

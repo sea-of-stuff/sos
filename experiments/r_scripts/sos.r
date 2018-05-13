@@ -100,24 +100,16 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 # REPL_x
 ##############
 
-repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
-repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifests Repl...");
+# On the y axis is the time to replicate the entire dataset?
 
-atom_repl <- repl("remote/dr_005.tsv", subtype="replicate_atom", yMax=8, titlePlot="Data replication (Dataset: 100KBx1000files). 10 Iterations");
-manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 Version manifests). 10 Iterations");
-
-mylegend<-g_legend(atom_repl)
-grid.arrange(arrangeGrob(atom_repl + theme(legend.position="none"),
-                         manifest_repl + theme(legend.position="none"),
-                         nrow=1,
-                         top=textGrob('Content Replication', gp=gpar(fontsize=16))),
-             mylegend, nrow=2,heights=c(10, 1))
+repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
+repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 100MB)");
 
 
-manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)");
-atom_repl_1 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_100kb)");
-atom_repl_2 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_1MB)"); # TODO
-atom_repl_3 <- repl("remote/repl_1_001.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: random_10MB)"); # TODO
+manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)", numberOfFiles=100);
+atom_repl_1 <- repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
+atom_repl_2 <- repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 100MB)");
+atom_repl_3 <- repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1GB)"); # TODO
 
 
 mylegend<-g_legend(manifest_repl)
@@ -126,7 +118,7 @@ grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
                          atom_repl_2 + theme(legend.position="none"),
                          atom_repl_3 + theme(legend.position="none"),
                          nrow=2,
-                         top=textGrob('Manifest and Atom Replication', gp=gpar(fontsize=16))),
+                         top=textGrob('Manifest and Atom Replication\nTime to replicate all content vs replication factor\n', gp=gpar(fontsize=16))),
              mylegend, nrow=2,heights=c(10, 1))
 
 ############
@@ -184,16 +176,19 @@ po_3("remote/po_c_3_text100kb_its10_1.tsv", type="checkPolicies", titlePlot = "T
 
 co("remote/co_1_006.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
 
-co("remote/co_1_014.tsv", titlePlot="CO_1 (10 iterations), 100kb dataset. Replication factor = 1")
 
-co1 <- co("remote/co_1_015.tsv", titlePlot="CO_1 (10 iterations), 1mb dataset (~1GB). Replication factor = 1")  # --- throughput is lower than what measured between two nodes
-c02 <- co("remote/co_2_003.tsv", titlePlot="CO_2 (10 iterations), 100kb dataset. Replication factor = INCREASING")
+co("remote/co_1_016.tsv", titlePlot="Policy over Codomain. RF=1")
+co("remote/co_2_010.tsv", titlePlot="Policy over Codomain. RF=[1,10]")
+
+
+co1 <- co("remote/co_1_016.tsv", titlePlot="Replication Factor=1") #  1GB dataset.
+co2 <- co("remote/co_2_010.tsv", titlePlot="Replication Factor=[1,10]")
 
 mylegend<-g_legend(co1)
 grid.arrange(arrangeGrob(co1 + theme(legend.position="none"),
-                         c02 + theme(legend.position="none"),
+                         co2 + theme(legend.position="none"),
                          nrow=1,
-                         top=textGrob('Function', gp=gpar(fontsize=16))),
+                         top=textGrob('Policy over Codomain', gp=gpar(fontsize=16))),
              mylegend, nrow=2, heights=c(10, 1))
 
 ##############

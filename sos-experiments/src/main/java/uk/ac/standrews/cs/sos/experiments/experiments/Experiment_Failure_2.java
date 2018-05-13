@@ -63,7 +63,7 @@ public class Experiment_Failure_2 extends Experiment_Failure implements Experime
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
             // policiesThread runs every 60 seconds
-            rest_a_bit(120 * 1000); // 2 minutes
+            rest_a_bit(90 * 1000); // 2 minutes
 
             writePolicyCheckStats();
         }

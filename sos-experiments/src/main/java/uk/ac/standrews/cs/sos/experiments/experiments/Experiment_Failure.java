@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.sos.experiments.experiments;
 
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
@@ -12,16 +13,14 @@ import uk.ac.standrews.cs.sos.impl.protocol.TaskState;
 import uk.ac.standrews.cs.sos.impl.protocol.TasksQueue;
 import uk.ac.standrews.cs.sos.instrument.InstrumentFactory;
 import uk.ac.standrews.cs.sos.instrument.StatsTYPE;
+import uk.ac.standrews.cs.sos.model.Context;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.ContextService;
 import uk.ac.standrews.cs.utilities.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Basic skeleton for ExperimentFailure experiments
@@ -46,6 +45,8 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
         protected int index;
         protected ContextService cms;
+        private IGUID contextGUID;
+        private List<IGUID> allVersions;
 
         ExperimentUnit_Failure(int index) {
             this.index = index;
@@ -59,10 +60,10 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
                 System.out.println("Adding content to node");
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath), -1);
+                allVersions = addFolderContentToNode(node, new File(datasetPath), -1);
 
                 System.out.println("Adding contexts to node");
-                addContexts();
+                contextGUID = addContext(cms, experiment, "data_replication_1");
 
                 System.out.println("Running Predicates");
                 cms.runPredicates();
@@ -85,14 +86,19 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
                     throw new ExperimentException("Enable REST request was not successful for node: " + slaveNode.getName());
                 }
             }
+
+            try {
+                Context context = cms.getContext(contextGUID);
+                deleteData(node, context, allVersions);
+
+            } catch (ContextNotFoundException e) {
+                e.printStackTrace();
+                throw new ExperimentException();
+            }
+
         }
 
-        private void addContexts() throws ContextException {
-
-            addContext(cms, experiment, "data_replication_1");
-        }
-
-        protected void writePolicyCheckStats() {
+        void writePolicyCheckStats() {
 
             for(Map.Entry<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > entry : cms.getValidPoliciesOverTime().entrySet()) {
                 for(Pair<Long, ArrayList<Integer>> pair:entry.getValue()) {
@@ -103,7 +109,7 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
         }
 
-        protected void changeRESTAPIonAllNodes(int intervalInSeconds, boolean disable) throws ExperimentException {
+        void changeRESTAPIonAllNodes(int intervalInSeconds, boolean disable) throws ExperimentException {
 
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
             for(ExperimentConfiguration.Experiment.Node slaveNode : experiment.getNodes()) {

@@ -195,7 +195,6 @@ public class RESTStorage {
     @DELETE
     @Path("/atom/guid/{guid}")
     public Response deleteData(@PathParam("guid") final String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
-
         SOS_LOG.log(LEVEL.INFO, "REST: DELETE /sos/storage/atom/guid/" + guid);
 
         IGUID atomGUID;

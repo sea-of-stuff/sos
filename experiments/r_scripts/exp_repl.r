@@ -1,4 +1,4 @@
-repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMax, isNumeric=FALSE) {
+repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMax, isNumeric=FALSE, numberOfFiles=1) {
   
   library(ggplot2)
   source("r_scripts/utils_stats.r")
@@ -9,7 +9,6 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
   d <- d[d$Subtype == subtype,]
   d$RF <- sprintf("%d", d$User.Measure_2)
   
-  numberOfFiles = 100
   d$Measures <- (d$User.Measure / 1000000000.0) * numberOfFiles; # Nanoseconds to seconds
   dd <- summarySE(d, measurevar="Measures", groupvars=c("Message_2", "RF"))
   
