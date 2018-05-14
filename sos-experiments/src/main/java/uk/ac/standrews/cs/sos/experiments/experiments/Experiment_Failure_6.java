@@ -24,16 +24,16 @@ public class Experiment_Failure_6 extends Experiment_Failure implements Experime
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_Failure_5(i));
+            units.add(new ExperimentUnit_Failure_6(i));
         }
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
     }
 
-    private class ExperimentUnit_Failure_5 extends ExperimentUnit_Failure {
+    private class ExperimentUnit_Failure_6 extends ExperimentUnit_Failure {
 
-        ExperimentUnit_Failure_5(int index) {
+        ExperimentUnit_Failure_6(int index) {
             super(index);
         }
 

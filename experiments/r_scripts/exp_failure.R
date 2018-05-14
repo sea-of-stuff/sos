@@ -5,18 +5,24 @@ source("r_scripts/exp_basic.r")
 library(ggplot2)
 
 d <- read.csv("remote/failure_1_run_24.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_1_001.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_2_run_5.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_2_003.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_2_011.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_3_run_3.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_3_003.tsv", header=TRUE, sep="\t")
+
 d <- read.csv("remote/failure_4_run_1.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_4_002.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_5_run_2.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_5_run_3.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_6_run_8.tsv", header=TRUE, sep="\t")
+
 d <- read.csv("remote/failure_7_run_1.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_7_001.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
 d$StartTime <- 0
@@ -48,8 +54,8 @@ d <- d[d$Subtype == 'no_valid_policies',]
 d$User.Measure <- (d$User.Measure - d$StartTime) / 1000000000.0; 
 
 ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3, group=d$User.Measure_3)) + 
-  scale_colour_continuous(guide = FALSE) +
-  # scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
+  #scale_colour_continuous(guide = FALSE) +
+  scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
   geom_point(size=.5) +
   geom_line() +
   theme_bw() +
@@ -57,36 +63,4 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
         axis.text=element_text(size=14),
         axis.title=element_text(size=16,face="bold")) +
   expand_limits(x = 0, y = 0) +
-  labs(title="Number of replicas in codomain over time", x="Time (s)", y="Number of replicas")
-
-
-########################
-#### OLD CODE ##########
-########################
-
-toggleAPI <- d[d$StatsTYPE == 'experiment' & d$Subtype == 'ping',]$User.Measure / 1000000000.0
-vlines <- data.frame(xint = c(toggleAPI))
-
-d <- d[d$StatsTYPE != 'experiment',]
-d <- d[d$Subtype == 'no_valid_policies',]
-
-t <- d$User.Measure / 1000000000.0; 
-mi <- min(t)
-t <- t - mi
-vlines$xint <- vlines$xint - mi 
-
-ggplot(data=d, aes(x=t, y=d$User.Measure_2)) + 
-  geom_point() +
-  geom_line() +
-  geom_vline(data=vlines, aes(xintercept=xint, colour="Red"), linetype="longdash") +
-  theme_bw() +
-  theme(axis.text.x=element_text(angle=90,hjust=1), 
-        axis.text=element_text(size=14),
-        axis.title=element_text(size=16,face="bold")) +
-  expand_limits(x = 0, y = 0) +
-  labs(title="Number of valid policies over time", x="Time (s)", y="Number of valid policies")
-  
-
-
-# TODO
-# - Display vertical lines for threads regarding policies
+  labs(title="Number of valid replicas in codomain over time", x="Time (s)", y="Number of valid replicas")

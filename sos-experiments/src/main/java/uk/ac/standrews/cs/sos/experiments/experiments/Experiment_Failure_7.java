@@ -24,16 +24,16 @@ public class Experiment_Failure_7 extends Experiment_Failure implements Experime
 
         List<ExperimentUnit> units = new LinkedList<>();
         for(int i = 0; i < experiment.getSetup().getIterations(); i++) {
-            units.add(new ExperimentUnit_Failure_5(i));
+            units.add(new ExperimentUnit_Failure_7(i));
         }
         Collections.shuffle(units);
 
         experimentUnitIterator = units.iterator();
     }
 
-    private class ExperimentUnit_Failure_5 extends ExperimentUnit_Failure {
+    private class ExperimentUnit_Failure_7 extends ExperimentUnit_Failure {
 
-        ExperimentUnit_Failure_5(int index) {
+        ExperimentUnit_Failure_7(int index) {
             super(index);
         }
 
@@ -44,6 +44,8 @@ public class Experiment_Failure_7 extends Experiment_Failure implements Experime
             System.out.println("Running Policies");
             cms.runPolicies();
             cms.runCheckPolicies();
+
+            rest_a_bit(10 * 1000);
 
             // Disable REST API on remote nodes
             Runnable task = () -> {
@@ -59,9 +61,9 @@ public class Experiment_Failure_7 extends Experiment_Failure implements Experime
 
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
-            rest_a_bit(90 * 1000); // 1.5 minutes
+            rest_a_bit(45 * 1000); // 45 seconds
 
-            // Re-Disable REST API on remote nodes
+            // Re-Enable REST API on remote nodes
             task = () -> {
                 try {
                     changeRESTAPIonAllNodes(15, false);

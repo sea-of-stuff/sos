@@ -58,7 +58,7 @@ mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
                          latency + theme(legend.position="none"),
                          nrow=1,
-                         top=textGrob('IO Performance', gp=gpar(fontsize=18))),
+                         top=textGrob('Input/Output Performance', gp=gpar(fontsize=18))),
              mylegend, nrow=2,heights=c(10, 1))
 
 mem("remote/io_2_012_os.tsv")
@@ -129,23 +129,8 @@ grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
 # dataset of all texts
 # dataset of mixed content (important to test the value of meta check optimisation on predicate)
 
-pr_1("remote/pr_1_text100kb_20its.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
-
-
-# NEW EXPS
-
-pr_1("remote/pr_1_run_4.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 1000x100kb dataset (20 its)")
-
-pr_1("remote/pr_1_run_5.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
-
-pr_1("output/test_pr_1_11.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
-pr_1("output/test_pr_1_12.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
-pr_1("output/test_pr_1_13.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
-pr_1("output/test_pr_1_14.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the 100x100kb dataset (20 its)")
-pr_1("output/test_pr_1_16.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the Random_1 dataset (20 its)")
-
-pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the text100kb_3 dataset (10 iterations)")
-pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run a predicate over the mixed_content dataset (10 iterations)", yMax=40)
+pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run predicates over the text 1MB dataset", yMax=7.5)
+pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run predicates over the mixed_content dataset", yMax=36)
 
 ##############
 # PO_A_1

@@ -137,7 +137,6 @@ public class AtomReplication extends Task {
              final ByteArrayOutputStream baos = IO.InputStreamToByteArrayOutputStream(inputStream)) {
 
             int successfulReplicas = 0;
-            System.out.println("COLLECT SIZE " + nodesCollection.size()); // REMOVEME
             Iterator<IGUID> nodeRefs = nodesCollection.nodesRefs().iterator();
             while (nodeRefs.hasNext() && successfulReplicas < replicationFactor) {
 
@@ -148,7 +147,9 @@ public class AtomReplication extends Task {
                 }
             }
 
-            System.out.println("ATOM REPL " + successfulReplicas + "  RF: " + replicationFactor); // REMOVEME
+            if (successfulReplicas < replicationFactor)
+                System.out.println("ATOM REPL " + successfulReplicas + "  RF: " + replicationFactor); // REMOVEME
+
             checkReplicaConditionAndSetTaskState(successfulReplicas);
 
         } catch (IOException e) {

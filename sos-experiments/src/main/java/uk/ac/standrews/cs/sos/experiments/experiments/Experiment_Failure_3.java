@@ -45,11 +45,13 @@ public class Experiment_Failure_3 extends Experiment_Failure implements Experime
             cms.runPolicies();
             cms.runCheckPolicies();
 
+            rest_a_bit(10 * 1000);
+
             // Disable REST API on remote nodes
             changeRESTAPIonAllNodes(0, true);
 
             // The check policy thread runs every 30 seconds according to the master experiment node configuration (see sif_12.json).
-            rest_a_bit(90 * 1000); // 1.5 minutes
+            rest_a_bit(120 * 1000); // 1.5 minutes
 
             writePolicyCheckStats();
         }

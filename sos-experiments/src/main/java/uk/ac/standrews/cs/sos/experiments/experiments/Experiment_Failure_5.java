@@ -50,6 +50,8 @@ public class Experiment_Failure_5 extends Experiment_Failure implements Experime
             cms.runPolicies();
             cms.runCheckPolicies();
 
+            rest_a_bit(10 * 1000);
+
             // Disable REST API on remote node
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
             ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
@@ -65,7 +67,7 @@ public class Experiment_Failure_5 extends Experiment_Failure implements Experime
             // Re-Enable node after 60 seconds
             Runnable task = () -> {
                 try {
-                    reEnableNode(slaveNode, 60);
+                    reEnableNode(slaveNode, 45);
                 } catch (ExperimentException e) {
                     e.printStackTrace();
                 }

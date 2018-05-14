@@ -21,6 +21,7 @@ import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.rest.HTTP.HTTPResponses;
 import uk.ac.standrews.cs.sos.rest.RESTConfig;
 import uk.ac.standrews.cs.sos.rest.bindings.ExperimentNode;
@@ -47,6 +48,7 @@ public class RESTExperiment {
     @Produces(MediaType.TEXT_PLAIN)
     public Response triggerPredicateOfContext(@PathParam("guid") String guid, @HeaderParam(SOS_NODE_CHALLENGE_HEADER) String node_challenge) {
         SOS_LOG.log(LEVEL.INFO, "REST: GET /sos/experiment/guid/{guid}/predicate");
+        System.out.println("REST API - Triggering predicate");
 
         if (guid == null || guid.isEmpty()) {
             SOS_LOG.log(LEVEL.ERROR, "REST: GET /sos/experiment/guid/{guid}/predicate - Bad input (no context guid)");
@@ -97,5 +99,20 @@ public class RESTExperiment {
 
         RESTConfig.sos.setRestEnabled(true);
         return HTTPResponses.OK(RESTConfig.sos, node_challenge);
+    }
+
+    @DELETE
+    @Path("/atoms")
+    public Response deleteAtoms() {
+        SOS_LOG.log(LEVEL.INFO, "REST: DELETE /sos/experiment/atoms");
+        System.out.println("REST API - Delete all atoms");
+
+        try {
+            RESTConfig.sos.getLocalStorage().deleteAtomsDirectory();
+            return HTTPResponses.OK(RESTConfig.sos, null);
+        } catch (DataStorageException e) {
+            return HTTPResponses.INTERNAL_SERVER(RESTConfig.sos, null);
+        }
+
     }
 }

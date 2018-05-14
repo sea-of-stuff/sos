@@ -122,6 +122,7 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
       expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
       labs(x="Data size (MB)", y=yLabel) +
       scale_color_discrete(name='Operation Types') +
+      scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
       guides(col=guide_legend(nrow=2))
   }
 }
@@ -166,6 +167,7 @@ guid <- function(datafile, statsType, showSummary=FALSE, ratio) {
       expand_limits(x = 0, y = 0) +
       labs(x="Data size (MB)", y=yLabel) +
       scale_color_discrete(name='Hash Algorithms') +
+      scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
       guides(col=guide_legend(nrow=1))
   }
 }

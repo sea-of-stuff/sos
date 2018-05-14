@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.sos.interfaces.node;
 
+import uk.ac.standrews.cs.sos.impl.node.LocalStorage;
 import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.services.*;
 
@@ -79,4 +80,11 @@ public interface LocalNode extends Node {
      * @param flush flush the resource to disk
      */
     void kill(boolean flush);
+
+    /**
+     * NOTE: For experiment purposes only
+     *
+     * @return local storage
+     */
+    LocalStorage getLocalStorage();
 }

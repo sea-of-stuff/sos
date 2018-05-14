@@ -94,6 +94,7 @@ public class SOSDistribution {
     public static void startAllApplications(ExperimentConfiguration configuration) throws NetworkException {
 
         for(Experiment.Node node:configuration.getExperimentObj().getNodes()) {
+            System.out.println("___________________________________________");
             System.out.println("Starting the node " + node.getName());
 
             String path = node.getPath() + node.getSsh().getUser() + "/";
@@ -194,6 +195,7 @@ public class SOSDistribution {
     }
 
     public static void runExperiment(ExperimentConfiguration configuration, String args) throws NetworkException {
+        System.out.println("___________________________________________");
         System.out.println("Running the SOS-Experiment from a remote node");
 
         Experiment.Node experimentNode = configuration.getExperimentObj().getExperimentNode();
@@ -260,6 +262,7 @@ public class SOSDistribution {
 
     private static void stopNode(Experiment.Node node) throws NetworkException {
 
+        System.out.println("___________________________________________");
         String path = node.getPath() + node.getSsh().getUser() + "/";
 
         try (NetworkOperations scp = new NetworkOperations()) {
@@ -277,6 +280,7 @@ public class SOSDistribution {
 
     private static void undoDistribution(Experiment.Node node) throws NetworkException {
 
+        System.out.println("___________________________________________");
         System.out.println("Deleting files for node " + node.getName());
         String path = node.getPath() + node.getSsh().getUser() + "/";
 

@@ -255,6 +255,17 @@ public class SOSLocalNode extends SOSNode implements LocalNode {
         uk.ac.standrews.cs.sos.utils.SOS_LOG.log(LEVEL.WARN, "SOS NODE killed");
     }
 
+    @Override
+    public LocalStorage getLocalStorage() {
+
+        if (settings.getServices().getExperiment().isExposed()) {
+
+            return localStorage;
+        }
+
+        return null;
+    }
+
     public String sign(String message) throws CryptoException {
 
         return DigitalSignature.sign64(d_privateKey, message);

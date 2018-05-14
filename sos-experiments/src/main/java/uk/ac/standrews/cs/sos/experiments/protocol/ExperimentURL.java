@@ -10,9 +10,9 @@ import java.net.URL;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class ExperimentURL extends SOSURL {
+class ExperimentURL extends SOSURL {
 
-    public static URL EXPERIMENT_TRIGGER_PREDICATE(Node node, IGUID context) throws SOSURLException {
+    static URL EXPERIMENT_TRIGGER_PREDICATE(Node node, IGUID context) throws SOSURLException {
 
         String url = buildURLBase(node) +
                 "experiment/cms/guid/" + context.toMultiHash() + "/predicate";
@@ -20,7 +20,7 @@ public class ExperimentURL extends SOSURL {
         return makeURL(url);
     }
 
-    public static URL DISABLE_REST(Node node) throws SOSURLException {
+    static URL DISABLE_REST(Node node) throws SOSURLException {
 
         String url = buildURLBase(node) +
                 "experiment/rest/disable";
@@ -28,10 +28,18 @@ public class ExperimentURL extends SOSURL {
         return makeURL(url);
     }
 
-    public static URL ENABLE_REST(Node node) throws SOSURLException {
+    static URL ENABLE_REST(Node node) throws SOSURLException {
 
         String url = buildURLBase(node) +
                 "experiment/rest/enable";
+
+        return makeURL(url);
+    }
+
+    static URL DELETE_ALL_ATOMS(Node node) throws SOSURLException {
+
+        String url = buildURLBase(node) +
+                "experiment/atoms";
 
         return makeURL(url);
     }

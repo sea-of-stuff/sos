@@ -59,9 +59,9 @@ do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FA
     d$ContextName[d$ContextName == "700000"] <- "700"
     d$ContextName[d$ContextName == "800000"] <- "800"
     d$ContextName[d$ContextName == "900000"] <- "900"
-    d$ContextName[d$ContextName == "1000000"] <- "1000"
+    d$ContextName[d$ContextName == "1000000"] <- "1,000"
     
-    d$ContextName<-factor(d$ContextName, levels=c("100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"))
+    d$ContextName<-factor(d$ContextName, levels=c("100", "200", "300", "400", "500", "600", "700", "800", "900", "1,000"))
   }
   
   d$Measures <- d$User.Measure_2 / 1000000000.0; # Nanoseconds to seconds
