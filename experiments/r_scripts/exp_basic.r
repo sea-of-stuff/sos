@@ -71,9 +71,9 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
   
   d$Subtype[d$Subtype == "fs_write_file"] <- "FS Write"
   d$Subtype[d$Subtype == "fs_read_file"] <- "FS Read"
-  d$Subtype[d$Subtype == "add_atom"] <- "Add Atom"
+  d$Subtype[d$Subtype == "add_atom"] <- "Write Atom"
   d$Subtype[d$Subtype == "read_atom"] <- "Read Atom"
-  d$Subtype[d$Subtype == "guid_data"] <- "GUID"
+  d$Subtype[d$Subtype == "guid_data"] <- "Atom GUID"
   
   # Exclude
   d <- d[d$Subtype != 'replicate_atom',]
@@ -83,8 +83,8 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
   
   # https://jpwendler.wordpress.com/2013/05/21/reordering-the-factor-levels-in-r-boxplots-and-making-them-look-pretty-with-base-graphics/
   d$Subtype<-factor(d$Subtype, levels=c("FS Write", "FS Read",
-                                        "Add Atom", "Read Atom",
-                                        "GUID"
+                                        "Write Atom", "Read Atom",
+                                        "Atom GUID"
   ))
   
   d$Message <- as.numeric(d$Message)
@@ -121,7 +121,7 @@ io <- function(datafile, showSummary=FALSE, ratio=TRUE) {
       scale_y_continuous(labels = comma) + 
       expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
       labs(x="Data size (MB)", y=yLabel) +
-      scale_color_discrete(name='Operation Types') +
+      scale_color_discrete(name='IO Operations') +
       scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
       guides(col=guide_legend(nrow=2))
   }

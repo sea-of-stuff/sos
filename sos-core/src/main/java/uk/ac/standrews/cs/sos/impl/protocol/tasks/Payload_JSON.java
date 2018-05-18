@@ -16,6 +16,7 @@
  */
 package uk.ac.standrews.cs.sos.impl.protocol.tasks;
 
+import uk.ac.standrews.cs.logger.LEVEL;
 import uk.ac.standrews.cs.sos.exceptions.protocol.SOSURLException;
 import uk.ac.standrews.cs.sos.impl.protocol.SOSURL;
 import uk.ac.standrews.cs.sos.impl.protocol.Task;
@@ -26,6 +27,7 @@ import uk.ac.standrews.cs.sos.model.Node;
 import uk.ac.standrews.cs.sos.network.*;
 import uk.ac.standrews.cs.sos.utils.IO;
 import uk.ac.standrews.cs.sos.utils.JSONHelper;
+import uk.ac.standrews.cs.sos.utils.SOS_LOG;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,6 +62,7 @@ public class Payload_JSON extends Task {
 
     @Override
     protected void performAction() {
+        SOS_LOG.log(LEVEL.INFO, "Starting Payload JSON task");
 
         try {
             URL url = SOSURL.NODE_PAYLOAD_JSON(node);
@@ -90,6 +93,7 @@ public class Payload_JSON extends Task {
             timestamp = System.currentTimeMillis();
 
         } catch (SOSURLException | IOException e) {
+            e.printStackTrace();
             setState(TaskState.ERROR);
         }
     }

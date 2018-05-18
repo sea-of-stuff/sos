@@ -9,8 +9,7 @@ import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import java.io.*;
 import java.util.concurrent.*;
 
-import static uk.ac.standrews.cs.sos.experiments.Constants.JVM_INITIAL_HEAP_SIZE_IN_GB;
-import static uk.ac.standrews.cs.sos.experiments.Constants.JVM_MAX_HEAP_SIZE_IN_GB;
+import static uk.ac.standrews.cs.sos.experiments.Constants.*;
 
 // Based on the following examples:
 // http://www.jcraft.com/jsch/examples/ScpTo.java.html
@@ -217,9 +216,9 @@ public class NetworkOperations implements Closeable {
                     " -Xms" + JVM_INITIAL_HEAP_SIZE_IN_GB + "g" +
                     " -Xmx" + JVM_MAX_HEAP_SIZE_IN_GB + "g" +
                     // Garbage Collect G1
-                    " -XX:+UseG1GC -XX:MaxGCPauseMillis=200 " + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
+                    " -XX:+UseG1GC -XX:MaxGCPauseMillis=" + MAX_GB_PAUSE_MILLIS + // https://stackoverflow.com/questions/7980177/agressive-garbage-collector-strategy
                     " -XX:G1HeapRegionSize=4" +
-                    " -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 " +
+                    " -XX:ParallelGCThreads=8 -XX:ConcGCThreads=2 " +
                     " -XX:+UseStringDeduplication " + // Java 8.20 optimisation, https://blog.takipi.com/garbage-collectors-serial-vs-parallel-vs-cms-vs-the-g1-and-whats-new-in-java-8/
                     " -Djava.awt.headless=true -jar " + jarPath + " " + args + "  > " + outFile + " 2>&1 & echo $! > " + pidFile;
             exec(command);

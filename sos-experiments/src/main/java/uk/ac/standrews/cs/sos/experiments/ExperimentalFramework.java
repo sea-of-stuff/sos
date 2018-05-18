@@ -84,6 +84,8 @@ public class ExperimentalFramework {
                 "io_2/configuration/configuration.json",
                 "io_2/configuration/configuration-sif.json",
                 "io_2/configuration/configuration-sif-2.json",
+                "io_2/configuration/configuration-hogun-11.json",
+                "io_2/configuration/configuration-hogun-12.json",
 
                 "guid_2/configuration/configuration-sif.json",
 

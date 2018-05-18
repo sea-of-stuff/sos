@@ -18,6 +18,7 @@ d <- read.csv("remote/failure_4_002.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_5_run_2.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_5_run_3.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_5_001.tsv", header=TRUE, sep="\t")
 
 d <- read.csv("remote/failure_6_run_8.tsv", header=TRUE, sep="\t")
 
@@ -61,6 +62,10 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
   theme_bw() +
   theme(axis.text.x=element_text(angle=90,hjust=1), 
         axis.text=element_text(size=14),
-        axis.title=element_text(size=16,face="bold")) +
+        axis.title=element_text(size=14),
+        plot.title=element_text(size=16),
+        legend.title=element_text(size=15),
+        legend.text=element_text(size=13)) +
   expand_limits(x = 0, y = 0) +
   labs(title="Number of valid replicas in codomain over time", x="Time (s)", y="Number of valid replicas")
+

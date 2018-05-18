@@ -48,6 +48,15 @@ io("output/local_io_2_011.tsv", ratio=FALSE)
 io("remote/io_2_012.tsv", ratio=TRUE)
 io("remote/io_2_012.tsv", ratio=FALSE)
 
+io("remote/io_2_012.tsv", ratio=TRUE) # 200ms, initH=8, maxH=10   --- 10 its
+io("remote/io_2_014.tsv", ratio=TRUE) # 200ms, initH=12, maxH=14  --- 5 its
+io("remote/io_2_015.tsv", ratio=TRUE) # 100ms, initH=12, maxH=14  --- 5 its
+io("remote/io_2_016.tsv", ratio=TRUE) # 500ms, initH=12, maxH=14  --- 5 its
+io("remote/io_2_017.tsv", ratio=TRUE) # 50ms, initH=12, maxH=14  --- 5 its
+
+
+io("remote/io_2_017.tsv", ratio=TRUE) # 50ms, initH=12, maxH=16  --- 5 its
+
 
 ## IO_2
 # TODO - with and without cache invalidation
@@ -60,9 +69,6 @@ grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
                          nrow=1,
                          top=textGrob('Input/Output Performance', gp=gpar(fontsize=18))),
              mylegend, nrow=2,heights=c(10, 1))
-
-mem("remote/io_2_012_os.tsv")
-cpu("remote/io_2_012_os.tsv")
 
 
 ############
@@ -103,13 +109,14 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 # On the y axis is the time to replicate the entire dataset?
 
 repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
-repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 100MB)");
+repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=80, titlePlot="Atom replication (Dataset: 100MB)");
+repl("remote/repl_1_014.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 1GB)");
 
 
 manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)", numberOfFiles=100);
 atom_repl_1 <- repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
-atom_repl_2 <- repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 100MB)");
-atom_repl_3 <- repl("remote/repl_1_006.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1GB)"); # TODO
+atom_repl_2 <- repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=80, titlePlot="Atom replication (Dataset: 100MB)");
+atom_repl_3 <- repl("remote/repl_1_014.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1GB)"); # TODO
 
 
 mylegend<-g_legend(manifest_repl)
@@ -118,7 +125,7 @@ grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
                          atom_repl_2 + theme(legend.position="none"),
                          atom_repl_3 + theme(legend.position="none"),
                          nrow=2,
-                         top=textGrob('Manifest and Atom Replication\nTime to replicate all content vs replication factor\n', gp=gpar(fontsize=16))),
+                         top=textGrob('Manifest and Atom Replication\nTime to replicate contents vs replication factor\n', gp=gpar(fontsize=16))),
              mylegend, nrow=2,heights=c(10, 1))
 
 ############
@@ -136,7 +143,7 @@ pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run predicate
 # PO_A_1
 ##############
 
-po_1("remote/po_1_001.tsv", titlePlot = "Time to run the policy functions over the 1000x1MB dataset")
+po_1("remote/po_1_002.tsv", titlePlot = "Time to run the policy functions over the R_1MBx1000 dataset")
 
 ##############
 # PO_A_3 - LEGACY

@@ -9,14 +9,14 @@
     },
     "nodes" : [
       {
-        "id" : 5,
-        "name" : "sif5",
+        "id" : 12,
+        "name" : "sif12",
         "path" : "/cs/scratch/",
         "remote" : true,
         "java" : "/usr/local/jdk/bin/java",
         "ssh" : {
           "type" : 1,
-          "host" : "sif-5.cluster",
+          "host" : "sif-12.cluster",
           "user" : "sic2",
           "known_hosts": "/Users/sic2/.ssh/known_hosts",
           "config": "/Users/sic2/.ssh/config",
@@ -52,7 +52,7 @@
       "configurationfile" : "sif_6.json",
       "certificatefile" : "sif_6.crt",
       "keyfile" : "sif_6.key",
-      "dataset" : "random_100mb",
+      "dataset" : "100MB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

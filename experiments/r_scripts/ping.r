@@ -29,6 +29,9 @@ ratio <- TRUE
 
 d <- read.csv("remote/ping_2_022.tsv", header=TRUE, sep="\t")
 
+d <- read.csv("remote/ping_2_033.tsv", header=TRUE, sep="\t") # same rack
+d <- read.csv("remote/ping_2_035.tsv", header=TRUE, sep="\t") # different racks
+
 d <- d[d$StatsTYPE == 'ping',]
 d$User.Measure <- as.numeric(d$User.Measure)
 d$User.Measure_2 <- as.numeric(d$User.Measure_2)
@@ -45,6 +48,10 @@ if (ratio) {
   yLabel = "Time (s)"
 }
 
+d$Message <- as.character(d$Message)
+d$Message[d$Message == "false"] <- "Unsigned"
+d$Message[d$Message == "true"] <- "Signed"
+
 dd <- summarySE(d, measurevar="Measures", groupvars=c("Size", "Message"))
 dodge_offset <- 0
 ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Message)) + 
@@ -58,7 +65,7 @@ ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Message)) +
         legend.title=element_text(size=15),
         legend.text=element_text(size=13)) +
   expand_limits(x = 0, y = 0) +  # Make sure that the min value is 0 on the y-axis
-  labs(title="Network Throughput between SOS Nodes", x="Data size (MB)", y=yLabel) +
-  scale_color_discrete(name='Signed\nRequests') +
+  labs(title="Throughput between SOS Nodes", x="Data size (MB)", y=yLabel) +
+  scale_color_discrete(name="Request\nType") +
   guides(col=guide_legend(nrow=2))
   

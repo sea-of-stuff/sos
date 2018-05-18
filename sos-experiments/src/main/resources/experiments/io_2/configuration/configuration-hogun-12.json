@@ -1,22 +1,22 @@
 {
   "experiment" : {
-    "name": "guid_2",
-    "experimentClass": "Experiment_GUID_2",
-    "description": "The experiment GUID_2 investigates ...",
+    "name": "io_2",
+    "experimentClass": "Experiment_IO_2",
+    "description": "The experiment IO_2 investigates ...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
-      "iterations": 10
+      "iterations": 5
     },
     "nodes" : [],
     "experimentnode" : {
       "id" : 12,
-      "name" : "sif12",
+      "name" : "hogun12",
       "path" : "/cs/scratch/",
       "remote" : true,
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-12.cluster",
+        "host" : "hogun-12.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
@@ -26,7 +26,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "0_1GB_50MB",
+      "dataset" : "io_1GB_100mb",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,
@@ -36,9 +36,9 @@
       }
     },
     "stats": {
-      "io": false,
+      "io": true,
       "guid_data": true,
-      "guid_manifest": true,
+      "guid_manifest": false,
       "experiment": false,
       "predicate": false,
       "policies": false,

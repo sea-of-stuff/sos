@@ -86,7 +86,7 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
             System.out.println("Processing subset: " + subset.getAbsolutePath());
 
             for(int i = 0; i < MULTIPLIER; i++) {
-
+                System.out.println("\n------  SubIteration [" + (i + 1) + "] --------");
                 double coin = Math.random();
                 if (coin < 0.5) {
                     processSOS();
@@ -119,8 +119,8 @@ public class Experiment_IO_2 extends BaseExperiment implements Experiment {
             if (INVALIDATE_CACHE) {
                 node.getMDS().shutdown();
             }
-            Agent agent = node.getAgent();
 
+            Agent agent = node.getAgent();
             for (IGUID atom:atoms) {
                 try {
                     agent.getData(atom);

@@ -96,7 +96,6 @@ public class Experiment_PING_2 extends BaseExperiment implements Experiment {
                     if (payload.getState() != TaskState.SUCCESSFUL) {
                         System.out.println("Unsuccessful");
                     } else {
-                        // TODO - update r-script!
                         InstrumentFactory.instance().measure(StatsTYPE.ping, StatsTYPE.none, Boolean.toString(sign), payloadSize, payload.getLatency());
                     }
 

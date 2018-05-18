@@ -277,7 +277,7 @@
       "configurationfile" : "sif_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "100MB",
+      "dataset" : "1GB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

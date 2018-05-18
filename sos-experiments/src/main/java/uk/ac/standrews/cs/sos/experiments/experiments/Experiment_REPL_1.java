@@ -38,7 +38,7 @@ public class Experiment_REPL_1 extends BaseExperiment implements Experiment {
 
     // Must be static to be initialized before constructor
     private static Integer[] replicationFactors = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    private static Boolean[] replicationMethods = new Boolean[] { false }; // TODO - true
+    private static Boolean[] replicationMethods = new Boolean[] { true, false };
 
     public Experiment_REPL_1(ExperimentConfiguration experimentConfiguration, String outputFilename) throws ExperimentException {
         super(experimentConfiguration, outputFilename);

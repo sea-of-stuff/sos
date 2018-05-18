@@ -9,6 +9,10 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
   d <- d[d$Subtype == subtype,]
   d$RF <- sprintf("%d", d$User.Measure_2)
   
+  d$Message_2 <- as.character(d$Message_2)
+  d$Message_2[d$Message_2 == "false"] <- "Parallel"
+  d$Message_2[d$Message_2 == "true"] <- "Sequential"
+  
   d$Measures <- (d$User.Measure / 1000000000.0) * numberOfFiles; # Nanoseconds to seconds
   dd <- summarySE(d, measurevar="Measures", groupvars=c("Message_2", "RF"))
   
@@ -28,7 +32,7 @@ repl <- function(datafile, subtype, titlePlot="NO TITLE", showSummary=FALSE, yMa
             legend.text=element_text(size=13)) +
       ylim(0, yMax) +
       labs(title=titlePlot, x="Replication Factor", y="Time (s)") +
-      scale_color_discrete(name='Sequential') +
+      scale_color_discrete(name='Replication Strategy') +
       scale_x_discrete(limits=c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) +
       guides(col=guide_legend(nrow=1))
   }

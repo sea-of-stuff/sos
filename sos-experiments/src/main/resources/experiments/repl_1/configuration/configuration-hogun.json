@@ -277,7 +277,7 @@
       "configurationfile" : "hogun_12.json",
       "certificatefile" : "sif_12.crt",
       "keyfile" : "sif_12.key",
-      "dataset" : "text_100kb_1",
+      "dataset" : "100MB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

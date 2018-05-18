@@ -51,7 +51,7 @@ public class LocalNodesDirectory {
     }
 
     /**
-     * Add an arbitrary node to the directory.
+     * Add/update an arbitrary node to the directory.
      * This will be used to discovery nodes/data in the LocalSOSNode.
      *
      * @param node to be added
@@ -60,9 +60,7 @@ public class LocalNodesDirectory {
 
         synchronized (knownNodes) {
             SOSNode clone = new SOSNode(node);
-            if (knownNodes.contains(node)) {
-                knownNodes.remove(node);
-            }
+            knownNodes.remove(node);
             knownNodes.add(clone);
         }
 

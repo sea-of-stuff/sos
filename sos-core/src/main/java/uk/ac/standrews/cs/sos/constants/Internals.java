@@ -51,5 +51,5 @@ public class Internals {
      */
     public static final int REPLICATION_FACTOR_MULTIPLIER = 3;
 
-    public static final int TIMEOUT_LIMIT_S = 30;
+    public static final int TIMEOUT_LIMIT_S = 1000; // FIXME - set to 1000 only for test purposes
 }

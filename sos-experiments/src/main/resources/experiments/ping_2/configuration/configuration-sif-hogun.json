@@ -5,7 +5,7 @@
     "description": "The experiment PING_2 investigates...",
     "setup": {
       "app": "sos-slave/target/sos-slave.jar",
-      "iterations": 5
+      "iterations": 10
     },
     "nodes" : [
       {
@@ -52,7 +52,7 @@
       "configurationfile" : "sif_6_cross_rack.json",
       "certificatefile" : "sif_6.crt",
       "keyfile" : "sif_6.key",
-      "dataset" : "random_100mb",
+      "dataset" : "100MB",
       "sendUSRO" : false,
       "behaviour": {
         "start": 0,

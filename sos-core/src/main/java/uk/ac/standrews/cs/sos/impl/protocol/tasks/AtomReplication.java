@@ -123,7 +123,7 @@ public class AtomReplication extends Task {
 
     @Override
     public void performAction() {
-
+        System.out.println("REPLICATE ATOM");
         if (sequential) {
             sequentialDataReplication();
         } else {
