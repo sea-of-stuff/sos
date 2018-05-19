@@ -55,7 +55,6 @@ d <- d[d$Subtype == 'no_valid_policies',]
 d$User.Measure <- (d$User.Measure - d$StartTime) / 1000000000.0; 
 
 ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3, group=d$User.Measure_3)) + 
-  #scale_colour_continuous(guide = FALSE) +
   scale_colour_gradientn(colours=rainbow(4), guide=FALSE) +
   geom_point(size=.5) +
   geom_line() +

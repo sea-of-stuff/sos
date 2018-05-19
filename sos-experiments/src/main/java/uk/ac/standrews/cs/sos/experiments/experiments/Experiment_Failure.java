@@ -98,17 +98,6 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
 
         }
 
-        void writePolicyCheckStats() {
-
-            for(Map.Entry<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > entry : cms.getValidPoliciesOverTime().entrySet()) {
-                for(Pair<Long, ArrayList<Integer>> pair:entry.getValue()) {
-
-                    InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.no_valid_policies, "---", pair.X(), pair.Y().size());
-                }
-            }
-
-        }
-
         void changeRESTAPIonAllNodes(int intervalInSeconds, boolean disable) throws ExperimentException {
 
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.ping, "Toggle REST API", System.nanoTime());
@@ -124,5 +113,17 @@ public class Experiment_Failure extends BaseExperiment implements Experiment {
                 rest_a_bit(intervalInSeconds * 1000);
             }
         }
+
+        void writePolicyCheckStats() {
+
+            for(Map.Entry<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > entry : cms.getValidPoliciesOverTime().entrySet()) {
+                for(Pair<Long, ArrayList<Integer>> pair:entry.getValue()) {
+
+                    InstrumentFactory.instance().measure(StatsTYPE.checkPolicies, StatsTYPE.no_valid_policies, "---", pair.X(), pair.Y().size());
+                }
+            }
+
+        }
+
     }
 }

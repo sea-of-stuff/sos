@@ -45,7 +45,7 @@ public class Experiment_Failure_3 extends Experiment_Failure implements Experime
             cms.runPolicies();
             cms.runCheckPolicies();
 
-            rest_a_bit(10 * 1000);
+            rest_a_bit(30 * 1000);
 
             // Disable REST API on remote nodes
             changeRESTAPIonAllNodes(0, true);

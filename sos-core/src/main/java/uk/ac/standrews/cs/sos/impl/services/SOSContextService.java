@@ -60,9 +60,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static uk.ac.standrews.cs.sos.constants.Internals.CMS_INDEX_FILE;
 
@@ -97,7 +95,7 @@ public class SOSContextService implements ContextService {
     // List of all the heads processed by policies.
     private ArrayList<IGUID> versionsProcessed;
     // ( context -> [ timestamp, [indices of contents] ] )
-    private HashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > validPoliciesPerContext;
+    private ConcurrentHashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > validPoliciesPerContext;
     /////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -138,7 +136,7 @@ public class SOSContextService implements ContextService {
             trackPolicies = SOSLocalNode.settings.getServices().getCms().isTrackPolicies();
             if (trackPolicies) {
                 versionsProcessed = new ArrayList<>();
-                validPoliciesPerContext = new LinkedHashMap<>();
+                validPoliciesPerContext = new ConcurrentHashMap();
             }
 
         } catch (ContextException e) {
@@ -451,7 +449,7 @@ public class SOSContextService implements ContextService {
         predicateThreadSessionStatistics = new LinkedList<>();
         applyPolicyThreadSessionStatistics = new LinkedList<>();
         checkPolicyThreadSessionStatistics = new LinkedList<>();
-        validPoliciesPerContext = new LinkedHashMap<>();
+        validPoliciesPerContext = new ConcurrentHashMap<>();
     }
 
     ////////////////////////////////////////////////////////////
@@ -477,7 +475,7 @@ public class SOSContextService implements ContextService {
     }
 
     @Override
-    public HashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > getValidPoliciesOverTime() {
+    public ConcurrentHashMap<IGUID, Deque<Pair<Long, ArrayList<Integer> > > > getValidPoliciesOverTime() {
         return validPoliciesPerContext;
     }
 
@@ -815,14 +813,17 @@ public class SOSContextService implements ContextService {
 
         copyPreviousCountOnNumberOfValidPoliciesPerContext(context);
 
+        ContextStats.PolicyCheck dummyStats = new ContextStats.PolicyCheck();
+
         IGUID contextInvariant = context.invariant();
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
-        ContextStats.PolicyCheck dummyStats = new ContextStats.PolicyCheck();
         contentsToProcess.forEach((guid, row) -> {
 
             if (row.predicateResult && !row.policySatisfied) {
-                runCheckPolicies(context, guid, dummyStats, false);
-                runPolicies(context, guid, policyApplyStats);
+                boolean policySatisfied = runCheckPolicies(context, guid, dummyStats);
+                if (!policySatisfied) {
+                    runPolicies(context, guid, policyApplyStats);
+                }
             }
 
         });
@@ -843,7 +844,7 @@ public class SOSContextService implements ContextService {
 
             } else {
 
-                Deque<Pair<Long, ArrayList<Integer>>> validPolicies = new LinkedList<>();
+                Deque<Pair<Long, ArrayList<Integer>>> validPolicies = new ConcurrentLinkedDeque<>();
                 long now = System.nanoTime();
                 validPolicies.add(new Pair<>(now, new ArrayList<>()));
                 validPoliciesPerContext.put(contextInvariant, validPolicies);
@@ -971,13 +972,13 @@ public class SOSContextService implements ContextService {
         Map<IGUID, ContextVersionInfo> contentsToProcess = contextsContentsDirectory.getContentsThatPassedPredicateTestRows(contextInvariant, false);
         contentsToProcess.forEach((guid, row) -> {
             if (row.predicateResult) {
-                runCheckPolicies(context, guid, policyCheckStats, false);
+                runCheckPolicies(context, guid, policyCheckStats);
             }
         });
 
     }
 
-    private void runCheckPolicies(Context context, IGUID guid, ContextStats.PolicyCheck policyCheckStats, boolean isAfterApply) {
+    private boolean runCheckPolicies(Context context, IGUID guid, ContextStats.PolicyCheck policyCheckStats) {
 
         try {
             ContextVersionInfo content = new ContextVersionInfo();
@@ -1001,19 +1002,23 @@ public class SOSContextService implements ContextService {
 
             if (trackPolicies) {
                 // Keep track of how many assets have a valid policy
-                trackNumberOfValidPolicies(context.invariant(), guid, allPoliciesAreSatisfied, isAfterApply);
+                trackNumberOfValidPolicies(context.invariant(), guid, allPoliciesAreSatisfied);
             }
 
             content.policySatisfied = allPoliciesAreSatisfied;
             contextsContentsDirectory.addOrUpdateEntry(context.invariant(), guid, content);
 
+            return allPoliciesAreSatisfied;
+
         } catch (ManifestNotFoundException | PolicyException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
-    // NOTE: This method is needed for experimental purposes
-    private void trackNumberOfValidPolicies(IGUID contextInvariant, IGUID head, boolean allPoliciesAreSatisfied, boolean isAfterApply) {
+    // NOTE: This method is needed for experimental purposes only
+    private void trackNumberOfValidPolicies(IGUID contextInvariant, IGUID head, boolean allPoliciesAreSatisfied) {
 
         int headIndex = versionsProcessed.indexOf(head);
         long now = System.nanoTime();
@@ -1028,8 +1033,7 @@ public class SOSContextService implements ContextService {
             }
         }
 
-        // TODO - remove the isAfterApply check (needs to be tested)
-        if (!allPoliciesAreSatisfied && !isAfterApply) {
+        if (!allPoliciesAreSatisfied) {
             newListOfHeads.remove(new Integer(headIndex)); // NOTE: Must create a new integer to avoid to use the overload remove method by index
         }
 

@@ -83,8 +83,8 @@ ci(s, 'sha384')
 ci(s, 'sha512')
 
 
-throughput <- guid_data("remote/guid_2_004.tsv", showSummary = FALSE, ratio=TRUE)
-latency <- guid_data("remote/guid_2_004.tsv", showSummary = FALSE, ratio=FALSE)
+throughput <- guid_data("remote/guid_2_044.tsv", showSummary = FALSE, ratio=TRUE)
+latency <- guid_data("remote/guid_2_044.tsv", showSummary = FALSE, ratio=FALSE)
 
 mylegend<-g_legend(throughput)
 grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
@@ -93,8 +93,6 @@ grid.arrange(arrangeGrob(throughput + theme(legend.position="none"),
                          top=textGrob('Hash Algorithms Performance', gp=gpar(fontsize=16))),
                    mylegend, nrow=2,heights=c(10, 1))
 
-mem("remote/guid_2_run_3.tsv")
-cpu("remote/guid_2_run_3.tsv")
 
 ##############
 # NB_x

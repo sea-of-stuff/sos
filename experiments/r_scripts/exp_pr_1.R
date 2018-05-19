@@ -20,7 +20,7 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
   
   d$ContextName[d$ContextName == "metadata"] <- "Metadata"
   d <- d[d$ContextName != "multi_metadata", ] # <- "Multi-Metadata"
-  d$ContextName[d$ContextName == "manifest"] <- "Manifest"
+  d <- d[d$ContextName != "manifest", ] # <- "Manifest"
   
   d$ContextName[d$ContextName == "mostly_blue"] <- "D_MB"
   d$ContextName[d$ContextName == "meta_mostly_blue"] <- "MD_MB"

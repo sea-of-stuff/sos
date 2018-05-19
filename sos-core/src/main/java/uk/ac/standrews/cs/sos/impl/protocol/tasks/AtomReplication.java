@@ -123,7 +123,7 @@ public class AtomReplication extends Task {
 
     @Override
     public void performAction() {
-        System.out.println("REPLICATE ATOM");
+
         if (sequential) {
             sequentialDataReplication();
         } else {
@@ -147,8 +147,8 @@ public class AtomReplication extends Task {
                 }
             }
 
-            if (successfulReplicas < replicationFactor)
-                System.out.println("ATOM REPL " + successfulReplicas + "  RF: " + replicationFactor); // REMOVEME
+//            if (successfulReplicas < replicationFactor)
+//                System.out.println("ATOM REPL " + successfulReplicas + "  RF: " + replicationFactor); // REMOVEME
 
             checkReplicaConditionAndSetTaskState(successfulReplicas);
 
