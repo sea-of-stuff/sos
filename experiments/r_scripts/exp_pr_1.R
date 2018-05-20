@@ -53,7 +53,10 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
       theme_bw() +
       theme(axis.text.x=element_blank(),
             axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold"),
+            axis.title=element_text(size=14),
+            plot.title=element_text(size=16),
+            legend.title=element_text(size=15),
+            legend.text=element_text(size=13),
             legend.position="right") +
       labs(title=titlePlot, x="Predicate", y="Time (s)") # , fill="Predicate Functions"
     

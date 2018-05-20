@@ -91,11 +91,11 @@ public class ExperimentalFramework {
 
                 "failure_1/configuration/configuration-sif.json",
                 "failure_2/configuration/configuration-sif.json",
-                "failure_3/configuration/configuration-sif.json",
-                "failure_4/configuration/configuration-sif.json",
+                "failure_3/configuration/configuration-hogun.json",
+                "failure_4/configuration/configuration-hogun.json",
                 "failure_5/configuration/configuration-sif.json",
                 "failure_6/configuration/configuration-sif.json",
-                "failure_7/configuration/configuration-sif.json",
+                "failure_7/configuration/configuration-hogun.json",
                 "failure_8/configuration/configuration-sif.json"
         };
         for(int i = 0; i < configurations.length; i++) {

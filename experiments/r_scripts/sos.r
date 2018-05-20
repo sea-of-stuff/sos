@@ -112,16 +112,17 @@ repl("remote/repl_1_014.tsv", subtype="replicate_atom", yMax=100, titlePlot="Ato
 
 
 manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)", numberOfFiles=100);
+atom_repl_3 <- repl("remote/repl_1_020.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1MB)"); # TODO
 atom_repl_1 <- repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
 atom_repl_2 <- repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=80, titlePlot="Atom replication (Dataset: 100MB)");
-atom_repl_3 <- repl("remote/repl_1_014.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1GB)"); # TODO
+
 
 
 mylegend<-g_legend(manifest_repl)
 grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
+                         atom_repl_3 + theme(legend.position="none"),
                          atom_repl_1 + theme(legend.position="none"),
                          atom_repl_2 + theme(legend.position="none"),
-                         atom_repl_3 + theme(legend.position="none"),
                          nrow=2,
                          top=textGrob('Manifest and Atom Replication\nTime to replicate contents vs replication factor\n', gp=gpar(fontsize=16))),
              mylegend, nrow=2,heights=c(10, 1))
@@ -134,8 +135,8 @@ grid.arrange(arrangeGrob(manifest_repl + theme(legend.position="none"),
 # dataset of all texts
 # dataset of mixed content (important to test the value of meta check optimisation on predicate)
 
-pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run predicates over the text 1MB dataset", yMax=7.5)
-pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run predicates over the mixed_content dataset", yMax=36)
+pr_1("remote/pr_1_005.tsv", predicateOnly=TRUE, titlePlot="Time to run different predicates over 1GB of text files", yMax=7.5)
+pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run different predicates over 1GB of data of text and image files", yMax=36)
 
 ##############
 # PO_A_1
@@ -190,13 +191,13 @@ do_old("remote/do_1_006.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset 
 
 do("remote/do_1_009.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files (~1GB), domain of 10 nodes max", xLabel="Nodes in domain");
 do("remote/do_1_010.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files (~1GB), domain of 10 nodes max", xLabel="Nodes in domain");
-do("remote/do_1_011.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files (~1GB), domain of 10 nodes max", xLabel="Nodes in domain");
+do("remote/do_1_011.tsv", yMax=14, titlePlot="Time to process 1000 text files, of 1MB each, spread evenly across a domain", xLabel="Nodes in domain");
 
-do_2("remote/do_2_005.tsv", yMax=8, titlePlot="Variation over the data-cardinality of the domain", xLabel="Numer of assets");
+do_2("remote/do_2_005.tsv", yMax=8, titlePlot="Time to process a variable number of assets, which are spread evenly across a domain", xLabel="Numer of assets");
 
 do_old("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
 
-do("remote/do_3_002.tsv", yMax=6.5, titlePlot="Variation over the Amount of Data Stored within a Domain of size 6", xLabel="Overall dataset size in domain (MB)", extractDomainSize=FALSE);
+do("remote/do_3_002.tsv", yMax=6.5, titlePlot="Time to process a variable amount of data, stored evenly across a domain of 6 nodes", xLabel="Overall dataset size in domain (MB)", extractDomainSize=FALSE);
 
 
 ##############

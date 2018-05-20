@@ -4,26 +4,22 @@ source("r_scripts/exp_basic.r")
 
 library(ggplot2)
 
-d <- read.csv("remote/failure_1_run_24.tsv", header=TRUE, sep="\t")
+
 d <- read.csv("remote/failure_1_001.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_2_run_5.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_2_011.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_2_012.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_3_run_3.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_3_003.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_3_007.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_4_run_1.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_4_002.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_4_004.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_5_run_2.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_5_run_3.tsv", header=TRUE, sep="\t")
 d <- read.csv("remote/failure_5_001.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_6_run_8.tsv", header=TRUE, sep="\t")
+# d <- read.csv("remote/failure_6_run_8.tsv", header=TRUE, sep="\t")
 
-d <- read.csv("remote/failure_7_run_1.tsv", header=TRUE, sep="\t")
-d <- read.csv("remote/failure_7_001.tsv", header=TRUE, sep="\t")
+d <- read.csv("remote/failure_7_005.tsv", header=TRUE, sep="\t")
+
+d <- read.csv("remote/failure_8_011.tsv", header=TRUE, sep="\t")
 
 # Adding new column to keep track of starting times of iteration
 d$StartTime <- 0
@@ -66,5 +62,5 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
         legend.title=element_text(size=15),
         legend.text=element_text(size=13)) +
   expand_limits(x = 0, y = 0) +
-  labs(title="Number of valid replicas in codomain over time", x="Time (s)", y="Number of valid replicas")
+  labs(title="Number of valid assets over time for the context policy satisfied function", x="Time (s)", y="Number of valid assets")
 

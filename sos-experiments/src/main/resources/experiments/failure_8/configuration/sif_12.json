@@ -17,12 +17,12 @@
 
         },
         "policiesThread": {
-          "initialDelay": 60,
-          "period": 30
+          "initialDelay": 10000,
+          "period": 25
         },
         "checkPoliciesThread": {
           "initialDelay": 20,
-          "period": 25
+          "period": 20
         },
         "getdataThread": {
           "initialDelay": 60,
@@ -97,7 +97,7 @@
       },
       {
         "guid" : "SHA256_16_867ab9daa29ed55ec7761ba4218076cfeaa1f308d6b13cee3e5323b273b24b1f",
-        "hostname" : "192.168.1.4",
+        "hostname" : "192.168.1.11",
         "port" : 8080,
         "certificate" : "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALP7CzG4PPjmUr9AN/VmO2fARdj2ZvF6mjxom9DDjiZ62SIghpQQ1hJnBat/Zvqu64OMVjL/zm1i3BM+pnfgn1sCAwEAAQ=="
       }

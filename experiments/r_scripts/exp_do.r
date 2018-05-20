@@ -80,7 +80,10 @@ do <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=FA
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 
             axis.text=element_text(size=14),
-            axis.title=element_text(size=16,face="bold")) +
+            axis.title=element_text(size=14),
+            plot.title=element_text(size=16),
+            legend.title=element_text(size=15),
+            legend.text=element_text(size=13)) +
       ylim(0, yMax) +
       labs(title=titlePlot, x=xLabel, y="Time (s)")
   }
@@ -114,7 +117,10 @@ do_2 <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=
     theme_bw() +
     theme(axis.text.x=element_text(angle=90,hjust=1), 
           axis.text=element_text(size=14),
-          axis.title=element_text(size=16,face="bold")) +
+          axis.title=element_text(size=14),
+          plot.title=element_text(size=16),
+          legend.title=element_text(size=15),
+          legend.text=element_text(size=13)) +
     ylim(0, 13) +
     labs(title=titlePlot, x=xLabel, y="Time (s)") +
   scale_color_discrete(name='Domain Size')

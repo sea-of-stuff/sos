@@ -44,7 +44,12 @@ public class Experiment_Failure_8 extends Experiment_Failure implements Experime
             InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.experiment, "Experiment Unit Index", System.nanoTime(), index);
             long start = System.currentTimeMillis();
 
-            disableAllExceptFirstSlaveNode();
+            ExperimentConfiguration.Experiment.Node firstSlaveNode = experiment.getNodes().get(0);
+            ExperimentConfiguration.Experiment.Node secondSlaveNode = experiment.getNodes().get(1);
+            ExperimentConfiguration.Experiment.Node thirdSlaveNode = experiment.getNodes().get(2);
+
+            disableNode(secondSlaveNode);
+            disableNode(thirdSlaveNode);
 
             System.out.println("Running Policies");
             cms.runPolicies();
@@ -54,51 +59,27 @@ public class Experiment_Failure_8 extends Experiment_Failure implements Experime
 
             rest_a_bit(15 * 1000);
 
-            ExperimentConfiguration.Experiment.Node firstSlaveNode = experiment.getNodes().get(0);
-            ExperimentConfiguration.Experiment.Node secondSlaveNode = experiment.getNodes().get(1);
-            ExperimentConfiguration.Experiment.Node thirdSlaveNode = experiment.getNodes().get(2);
-
             System.out.println("B -- " + (System.currentTimeMillis() - start) / 1000.0 + " s");
             disableNode(firstSlaveNode);
 
-            reEnableNode(firstSlaveNode, 45);
-            reEnableNode(secondSlaveNode, 0);
+            cms.runPolicies();
+
+            enableNode(firstSlaveNode, 45);
+            enableNode(secondSlaveNode, 0);
             System.out.println("C -- " + (System.currentTimeMillis() - start) / 1000.0 + " s");
 
-            rest_a_bit(35 * 1000);
+            cms.runPolicies();
+
+            rest_a_bit(20 * 1000);
             disableNode(firstSlaveNode);
+            enableNode(thirdSlaveNode, 0);
             System.out.println("D -- " + (System.currentTimeMillis() - start) / 1000.0 + " s");
 
-            reEnableNode(thirdSlaveNode, 10);
-            System.out.println("E -- " + (System.currentTimeMillis() - start) / 1000.0 + " s");
+            cms.runPolicies();
 
-            rest_a_bit(90 * 1000); // 1 minute
+            rest_a_bit(60 * 1000); // 1 minute
 
             writePolicyCheckStats();
-        }
-
-        private void disableAllExceptFirstSlaveNode() throws ExperimentException {
-
-            try {
-                // Disable all slave nodes, except the first one
-                Runnable task = () -> {
-                    try {
-                        changeRESTAPIonAllNodes(0, true);
-                    } catch (ExperimentException e) {
-                        e.printStackTrace();
-                    }
-                };
-
-                Thread thread = new Thread(task);
-                thread.start();
-                thread.join();
-
-                ExperimentConfiguration.Experiment.Node slaveNode = experiment.getNodes().iterator().next();
-                reEnableNode(slaveNode, 0);
-
-            } catch (InterruptedException e) {
-                throw new ExperimentException(e);
-            }
         }
 
         private void disableNode(ExperimentConfiguration.Experiment.Node slaveNode) throws ExperimentException {
@@ -112,35 +93,18 @@ public class Experiment_Failure_8 extends Experiment_Failure implements Experime
             }
         }
 
-        private void reEnableNode(ExperimentConfiguration.Experiment.Node slaveNode, int delay) throws ExperimentException {
+        private void enableNode(ExperimentConfiguration.Experiment.Node slaveNode, int delay) throws ExperimentException {
 
-            try {
+            rest_a_bit("Enabling nodes", delay * 1000);
 
-                // Re-Enable node after 60 seconds
-                Runnable task = () -> {
-                    try {
-                        rest_a_bit("ReEnabling nodes", delay * 1000);
+            Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
+            ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, false);
+            TasksQueue.instance().performSyncTask(toggleRESTAPITask);
 
-                        Node remoteNode = new BasicNode(slaveNode.getSsh().getHost(), 8080);
-                        ToggleRESTAPI toggleRESTAPITask = new ToggleRESTAPI(remoteNode, false);
-                        TasksQueue.instance().performSyncTask(toggleRESTAPITask);
-
-                        if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
-                            throw new ExperimentException("Re-Enable REST request was not successful");
-                        }
-                    } catch (ExperimentException e) {
-                        e.printStackTrace();
-                    }
-                };
-
-                Thread thread = new Thread(task);
-                thread.start();
-
-                thread.join();
-
-            } catch (InterruptedException e) {
-                throw new ExperimentException(e);
+            if (toggleRESTAPITask.getState() != TaskState.SUCCESSFUL) {
+                throw new ExperimentException("Enable REST request was not successful");
             }
+
         }
 
     }
