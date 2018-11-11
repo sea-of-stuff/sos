@@ -62,5 +62,6 @@ ggplot(data=d, aes(x=d$User.Measure, y=d$User.Measure_2, color=d$User.Measure_3,
         legend.title=element_text(size=15),
         legend.text=element_text(size=13)) +
   expand_limits(x = 0, y = 0) +
-  labs(title="Number of valid assets over time for the context policy satisfied function", x="Time (s)", y="Number of valid assets")
+  labs(title="Percentage of valid assets over time for the context policy satisfied function", x="Time (s)", y="Percentage of valid assets")
+
 

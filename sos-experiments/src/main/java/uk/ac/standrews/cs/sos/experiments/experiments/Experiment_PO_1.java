@@ -1,15 +1,23 @@
 package uk.ac.standrews.cs.sos.experiments.experiments;
 
+import uk.ac.standrews.cs.guid.GUIDFactory;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.sos.exceptions.ConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.context.ContextException;
+import uk.ac.standrews.cs.sos.exceptions.context.ContextNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.userrole.RoleNotFoundException;
 import uk.ac.standrews.cs.sos.experiments.Experiment;
 import uk.ac.standrews.cs.sos.experiments.ExperimentConfiguration;
 import uk.ac.standrews.cs.sos.experiments.ExperimentUnit;
 import uk.ac.standrews.cs.sos.experiments.exceptions.ExperimentException;
+import uk.ac.standrews.cs.sos.model.Context;
+import uk.ac.standrews.cs.sos.model.Role;
 import uk.ac.standrews.cs.sos.services.ContextService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * The experiment PO_A_1 investigates the performance of contexts when the policies operate on data, metadata, roles, etc
@@ -35,16 +43,23 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
 
         private ContextService cms;
 
+        private List<IGUID> tmpList;
+        private IGUID tmp;
+
         @Override
         public void setup() throws ExperimentException {
             System.out.println("Node GUID is " + node.guid().toMultiHash());
 
             try {
+                System.out.println("Adding users/roles to node");
+                addFolderUSROToNode(node, experiment);
+
                 cms = node.getCMS();
 
                 System.out.println("Adding content to node");
                 String datasetPath = experiment.getExperimentNode().getDatasetPath();
-                addFolderContentToNode(node, new File(datasetPath), -1);
+                Role role = node.getUSRO().getRole(GUIDFactory.recreateGUID("SHA256_16_485bc6e643077d0d825d92f883ecb7bc18f5d62242e4752dd9772f21a6886317"));
+                tmpList = addFolderContentToNode(node, new File(datasetPath), role);
 
                 System.out.println("Adding contexts to node");
                 addContexts();
@@ -53,6 +68,10 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
                 cms.runPredicates();
             } catch (ContextException | IOException e) {
                 throw new ExperimentException(e);
+            } catch (GUIDGenerationException e) {
+                e.printStackTrace();
+            } catch (RoleNotFoundException e) {
+                e.printStackTrace();
             }
         }
 
@@ -69,16 +88,28 @@ public class Experiment_PO_1 extends BaseExperiment implements Experiment {
             rest_a_bit(2000);
         }
 
-        private void addContexts() throws ContextException {
+        @Override
+        public void finish() {
 
+            try {
+                if (tmp != null && tmpList != null) {
+                    Context context = cms.getContext(tmp);
+                    deleteData(node, context, tmpList);
+                }
+            } catch (ContextNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void addContexts() throws ContextException {
             // addContext(cms, experiment, "no_policies");
             addContext(cms, experiment, "do_nothing_policy");
 
             // Must have multiple nodes up and running
-            addContext(cms, experiment, "data_replication_1");
+            tmp = addContext(cms, experiment, "data_replication_1");
             addContext(cms, experiment, "manifest_replication_1");
 
-            // TODO - manifest & data replication, all versions replication?
+            addContext(cms, experiment, "grant_access");
         }
 
     }

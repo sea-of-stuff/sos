@@ -42,7 +42,7 @@
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "hogun-12.cluster",
+        "host" : "hogun-1.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",
@@ -53,7 +53,7 @@
       "certificatefile" : "hogun_12.crt",
       "keyfile" : "hogun_12.key",
       "dataset" : "text_1MB",
-      "sendUSRO" : false,
+      "sendUSRO" : true,
       "behaviour": {
         "start": 0,
         "stop": -1,

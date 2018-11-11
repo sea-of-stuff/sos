@@ -21,7 +21,7 @@ import uk.ac.standrews.cs.sos.SetUpTest;
 import uk.ac.standrews.cs.sos.impl.protocol.tasks.Void;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -60,7 +60,7 @@ public class TasksQueueTest extends SetUpTest {
         try {
             Thread.sleep(8000);
         } catch (InterruptedException e) {
-            assertTrue(false);
+            fail();
         }
 
         assertEquals(voidTask.getState(), TaskState.SUCCESSFUL);
@@ -77,7 +77,7 @@ public class TasksQueueTest extends SetUpTest {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            assertTrue(false);
+            fail();
         }
 
         assertEquals(voidTask.getState(), TaskState.SUCCESSFUL);
@@ -102,7 +102,7 @@ public class TasksQueueTest extends SetUpTest {
         try {
             Thread.sleep(40000);
         } catch (InterruptedException e) {
-            assertTrue(false);
+            fail();
         }
 
         assertEquals(voidTask.getState(), TaskState.ERROR);

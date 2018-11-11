@@ -118,6 +118,7 @@ public class Experiment_REPL_2 extends BaseExperiment implements Experiment {
             }
         }
 
+        // FIXME - add different types of manifests
         void addManifestsToNode(ManifestsDataService manifestsDataService, NodesCollection codomain, int replicationFactor) throws IOException {
 
             for (int i = 0; i < 100; i++) {

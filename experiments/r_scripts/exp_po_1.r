@@ -11,6 +11,10 @@ po_1 <- function(datafile, titlePlot="NO TITLE") {
   d$Message[d$Message == "data_replication_1"] <- "Atom Replication"
   d$Message[d$Message == "do_nothing_policy"] <- "Void Policy"
   d$Message[d$Message == "manifest_replication_1"] <- "Manifest Replication"
+  d$Message[d$Message == "grant_access"] <- "Grant Access"
+  
+  d$Message<-factor(d$Message, levels=c("Void Policy", "Grant Access", "Manifest Replication", "Atom Replication"))
+  
   
   d$Measures <- d$User.Measure / 1000000000.0; # Nanoseconds to seconds
   

@@ -46,12 +46,13 @@ pr_1 <- function(datafile, predicateOnly=TRUE, titlePlot, includeImageContexts=F
     
     ggplot(data=dd, aes(x=dd$ContextName, y=dd$Measures)) + # fill=dd$ContextName)
       geom_point(size=1, stroke=1) +
-      geom_text(aes(label=dd$ContextName),hjust=0, vjust=2.5, angle=90) +
+      # geom_text(aes(label=dd$ContextName),hjust=0, vjust=2.5, angle=90) +
       scale_shape_manual(values=seq(0,15)) +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       ylim(0, yMax) +
       theme_bw() +
-      theme(axis.text.x=element_blank(),
+      theme( # axis.text.x=element_blank(),
+            axis.text.x=element_text(angle=90,hjust=1),
             axis.text=element_text(size=14),
             axis.title=element_text(size=14),
             plot.title=element_text(size=16),

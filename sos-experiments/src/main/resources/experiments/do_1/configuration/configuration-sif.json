@@ -242,7 +242,7 @@
       "java" : "/usr/local/jdk/bin/java",
       "ssh" : {
         "type" : 1,
-        "host" : "sif-12.cluster",
+        "host" : "sif-1.cluster",
         "user" : "sic2",
         "known_hosts": "/Users/sic2/.ssh/known_hosts",
         "config": "/Users/sic2/.ssh/config",

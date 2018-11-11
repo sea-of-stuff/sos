@@ -295,6 +295,7 @@ public interface ExperimentUnit {
         IGUID context = cms.addContext(new File(contextPath));
         InstrumentFactory.instance().measure(StatsTYPE.experiment, StatsTYPE.none, "Added context " + context_name + " " + context.toShortString());
 
+        System.out.println("Added context " + context_name + " ID " + context.toMultiHash());
         return context;
     }
 

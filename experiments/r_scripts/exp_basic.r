@@ -157,6 +157,7 @@ guid <- function(datafile, statsType, showSummary=FALSE, ratio) {
     dd <- summarySE(d, measurevar="Measures", groupvars=c("Subtype", "Size"))
     ggplot(data=dd, aes(x=dd$Size, y=dd$Measures, color=dd$Subtype)) + 
       geom_point() +
+      geom_line() +
       geom_errorbar(aes(ymin=dd$Measures-dd$ci, ymax=dd$Measures+dd$ci),width=.2) +
       theme_bw() +
       theme(axis.text.x=element_text(angle=90,hjust=1), 

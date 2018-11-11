@@ -110,6 +110,9 @@ public class NodesCollectionImpl implements NodesCollection {
         try {
             switch (type) {
                 case LOCAL:
+                    if (nodesRefs.isEmpty()) {
+                        nodesRefs.add(SOSLocalNode.settings.guid());
+                    }
                     return new NodesCollectionImpl(nodesRefs.iterator().next());
                 case SPECIFIED:
                     return new NodesCollectionImpl(nodesRefs);

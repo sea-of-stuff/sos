@@ -108,13 +108,14 @@ nb("output/nb_1_test3.tsv", titlePlot="Normal Behaviour exp.")
 
 repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
 repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=80, titlePlot="Atom replication (Dataset: 100MB)");
-repl("remote/repl_1_014.tsv", subtype="replicate_atom", yMax=100, titlePlot="Atom replication (Dataset: 1GB)");
+repl("remote/repl_1_020.tsv", subtype="replicate_atom", yMax=.8, titlePlot="Atom replication (Dataset: 1MB)");
 
+repl("remote/mr_002.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)", numberOfFiles=100);
 
 manifest_repl <- repl("remote/mr_001.tsv", subtype="replicate_manifest", yMax=1.2, titlePlot="Manifest replication (100 manifests)", numberOfFiles=100);
-atom_repl_3 <- repl("remote/repl_1_020.tsv", subtype="replicate_atom", yMax=1000, titlePlot="Atom replication (Dataset: 1MB)"); # TODO
-atom_repl_1 <- repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=11, titlePlot="Atom replication (Dataset: 10MB)");
-atom_repl_2 <- repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=80, titlePlot="Atom replication (Dataset: 100MB)");
+atom_repl_3 <- repl("remote/repl_1_020.tsv", subtype="replicate_atom", yMax=1.2, titlePlot="Atom replication (Dataset: 1MB)");
+atom_repl_1 <- repl("remote/repl_1_004.tsv", subtype="replicate_atom", yMax=12, titlePlot="Atom replication (Dataset: 10MB)");
+atom_repl_2 <- repl("remote/repl_1_011.tsv", subtype="replicate_atom", yMax=85, titlePlot="Atom replication (Dataset: 100MB)");
 
 
 
@@ -143,6 +144,9 @@ pr_1("remote/pr_1_007.tsv", predicateOnly=TRUE, titlePlot="Time to run different
 ##############
 
 po_1("remote/po_1_002.tsv", titlePlot = "Time to run the policy functions over the R_1MBx1000 dataset")
+po_1("remote/po_1_003.tsv", titlePlot = "Time to run the policy functions over the R_1MBx1000 dataset")
+
+po_1("remote/po_1_adobe_10.tsv", titlePlot = "Time to run the policy functions over the R_1MBx1000 dataset")
 
 ##############
 # PO_A_3 - LEGACY
@@ -172,14 +176,14 @@ co("remote/co_1_016.tsv", titlePlot="Policy over Codomain. RF=1")
 co("remote/co_2_010.tsv", titlePlot="Policy over Codomain. RF=[1,10]")
 
 
-co1 <- co("remote/co_1_016.tsv", titlePlot="Replication Factor=1") #  1GB dataset.
-co2 <- co("remote/co_2_010.tsv", titlePlot="Replication Factor=[1,10]")
+co1 <- co("remote/co_1_016.tsv", titlePlot="Replication Factor is 1") #  1GB dataset.
+co2 <- co("remote/co_2_010.tsv", titlePlot="Replication Factor ranges from 1 to 10")
 
 mylegend<-g_legend(co1)
 grid.arrange(arrangeGrob(co1 + theme(legend.position="none"),
                          co2 + theme(legend.position="none"),
                          nrow=1,
-                         top=textGrob('Policy over Codomain', gp=gpar(fontsize=16))),
+                         top=textGrob('Time to Enforce and Verify a Replication Policy over a Codomain', gp=gpar(fontsize=16))),
              mylegend, nrow=2, heights=c(10, 1))
 
 ##############
@@ -193,7 +197,13 @@ do("remote/do_1_009.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1
 do("remote/do_1_010.tsv", yMax=15, titlePlot="DO_1 (10 iterations), Dataset of 1000 text files (~1GB), domain of 10 nodes max", xLabel="Nodes in domain");
 do("remote/do_1_011.tsv", yMax=14, titlePlot="Time to process 1000 text files, of 1MB each, spread evenly across a domain", xLabel="Nodes in domain");
 
-do_2("remote/do_2_005.tsv", yMax=8, titlePlot="Time to process a variable number of assets, which are spread evenly across a domain", xLabel="Numer of assets");
+do("remote/do_1_012.tsv", yMax=14, titlePlot="Time to process 1000 text files, of 1MB each, spread evenly across a domain", xLabel="Nodes in domain");
+
+do("remote/do_1_adobe_001.tsv", yMax=14, titlePlot="Time to process 1000 text files, of 1MB each, spread evenly across a domain", xLabel="Nodes in domain");
+
+
+
+do_2("remote/do_2_005.tsv", yMax=8, titlePlot="Time to process a variable number of assets, which are spread evenly across a domain", xLabel="Number of assets");
 
 do_old("remote/do_3_test4.tsv", yMax=.75, titlePlot="DO_3 (10 iterations), Same number of files (60) but different text file datasets.", xLabel="Overall dataset size in domain", extractDomainSize=FALSE);
 

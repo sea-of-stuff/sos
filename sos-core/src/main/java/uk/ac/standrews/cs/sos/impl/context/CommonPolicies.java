@@ -77,7 +77,6 @@ public class CommonPolicies {
 
                     boolean dataIsAlreadyProtected = (manifestType == ManifestType.ATOM_PROTECTED);
                     try (Data data = ((Atom) contentManifest).getData()) {
-
                         NodesCollection nodes = commonUtilities.getNodes(codomain, NodeType.STORAGE);
                         commonUtilities.replicateData(data, nodes, factor, dataIsAlreadyProtected);
                     } catch (IOException e) {

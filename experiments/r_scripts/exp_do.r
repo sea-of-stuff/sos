@@ -123,6 +123,7 @@ do_2 <- function(datafile, titlePlot="NO TITLE", xLabel="No Label", showSummary=
           legend.text=element_text(size=13)) +
     ylim(0, 13) +
     labs(title=titlePlot, x=xLabel, y="Time (s)") +
+    scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
   scale_color_discrete(name='Domain Size')
   }
     

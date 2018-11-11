@@ -79,7 +79,6 @@ public class AtomManifest extends BasicManifest implements Atom {
         for (LocationBundle location : getLocations()) {
 
             Data data = LocationUtility.getData(location.getLocation());
-
             if (!(data instanceof EmptyData)) {
                 return data;
             }

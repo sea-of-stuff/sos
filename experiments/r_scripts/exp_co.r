@@ -36,8 +36,9 @@ co <- function(datafile, titlePlot="NO TITLE") {
           plot.title=element_text(size=16),
           legend.title=element_text(size=15),
           legend.text=element_text(size=13)) +
-    labs(title=titlePlot, x="Nodes in Domain", y="Time (s)") +
+    labs(title=titlePlot, x="Nodes in Codomain", y="Time (s)") +
     scale_color_discrete(name='Function') +
     scale_x_continuous(breaks=seq(0,10,1)) +
+    expand_limits(y=0) +
     guides(col=guide_legend(nrow=1))
 }

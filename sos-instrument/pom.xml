@@ -33,12 +33,10 @@
 
     <properties>
         <javasysmon.version>0.3.4</javasysmon.version>
-        <commons.lang3.version>3.6</commons.lang3.version>
+        <commons.lang3.version>3.8.1</commons.lang3.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.outr.javasysmon/javasysmon_2.10 -->
-        <!-- https://github.com/jezhumble/javasysmon/ -->
         <dependency>
             <groupId>com.outr.javasysmon</groupId>
             <artifactId>javasysmon_2.10</artifactId>
