@@ -36,7 +36,6 @@ import static uk.ac.standrews.cs.sos.constants.Internals.TIMEOUT_LIMIT_S;
  */
 public class TasksQueue {
 
-
     private ExecutorService service;
     private ScheduledExecutorService canceller; // Will schedule jobs to delete
     private final Set<Task> submittedToService;
